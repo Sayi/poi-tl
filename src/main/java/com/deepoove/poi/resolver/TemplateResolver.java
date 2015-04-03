@@ -146,7 +146,7 @@ public class TemplateResolver {
 		if (null == runs || runs.isEmpty())
 			return null;
 		String text = paragraph.getText();
-		logger.info("Paragrah's text is:" + text);
+		logger.debug("Paragrah's text is:" + text);
 		List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<Pair<RunEdge, RunEdge>>();
 		List<String> tags = new ArrayList<String>();
 		calcTagPosInParagraph(text, pairs, tags);
@@ -227,7 +227,7 @@ public class TemplateResolver {
 				calc += run.toString().length();
 				continue;
 			}
-			logger.info(str);
+			logger.debug(str);
 			if (str.length() + calc < leftInAll) {
 				calc += str.length();
 				continue;
@@ -293,7 +293,7 @@ public class TemplateResolver {
 	}
 
 	private static <T> ElementTemplate parseTemplateFactory(String text, T obj) {
-		logger.info("parse text:" + text);
+		logger.debug("parse text:" + text);
 		// temp ,future need to word analyze
 		if (tagPattern.matcher(text).matches()) {
 			String tag = varPattern.matcher(text).replaceAll("").trim();

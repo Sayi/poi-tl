@@ -74,8 +74,8 @@ public class RenderAPI {
 		if (null == elementTemplates || elementTemplates.isEmpty())
 			return;
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.info("tag-name:" + runTemplate.getTagName());
-			logger.info(runTemplate.getClass().toString());
+			logger.debug("tag-name:" + runTemplate.getTagName());
+			logger.debug(runTemplate.getClass().toString());
 			RenderPolicy policy = template.getPolicy(TextRunTemplate.class);
 			policy.render(runTemplate,
 					new TextRenderData(runTemplate.getSource()), template);
@@ -92,8 +92,8 @@ public class RenderAPI {
 				|| null == datas || datas.isEmpty())
 			return;
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.info("tag-name:" + runTemplate.getTagName());
-			logger.info(runTemplate.getClass().toString());
+			logger.debug("tag-name:" + runTemplate.getTagName());
+			logger.debug(runTemplate.getClass().toString());
 			RenderPolicy policy = template.getPolicy(runTemplate.getTagName());
 			if (null == policy)
 				policy = template.getPolicy(runTemplate.getClass());

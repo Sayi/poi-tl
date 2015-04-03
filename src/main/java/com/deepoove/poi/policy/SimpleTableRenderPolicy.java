@@ -67,7 +67,7 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 
 		} else {
 			int size = datas.size();
-			XWPFTable table = doc.createTable(1 + size, headers.size());
+			XWPFTable table = doc.insertNewTable(run, 1 + size, headers.size());
 			CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
 			width.setW(BigInteger.valueOf(tableData.getWidth()));
 			createHeader(table, headers);
