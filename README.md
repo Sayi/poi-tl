@@ -39,9 +39,7 @@
 详细文档请参见:[poi-tl文档](http://deepoove.com/poi-tl/)
 
 # 建议和完善
-* 丰富表格样式
-* 语法自动扩展
-* 支持文本框
+见issue。
 
 欢迎朋友们create issue、pull request.
 
