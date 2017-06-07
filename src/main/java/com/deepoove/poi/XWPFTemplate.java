@@ -27,6 +27,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.SimpleTableRenderPolicy;
@@ -45,45 +46,44 @@ import com.deepoove.poi.template.run.TextRunTemplate;
  */
 public class XWPFTemplate {
 	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-	private NiceXWPFDocument doc;
+	private Map<String, RenderPolicy> policys = new HashMap<String, RenderPolicy>(12);
+
 	private List<ElementTemplate> eleTemplates;
-	private Map<String, RenderPolicy> policys;
+	private NiceXWPFDocument doc;
 
-	private XWPFTemplate() {
-		policys = new HashMap<String, RenderPolicy>();
-	}
+	private XWPFTemplate() {}
 
+	@Deprecated
 	public static XWPFTemplate create(String filePath) {
-		return create(new File(filePath));
+		return compile(filePath);
 	}
 
+	@Deprecated
 	public static XWPFTemplate create(File file) {
-		XWPFTemplate xwpfTemplate = new XWPFTemplate();
+		return compile(file);
+	}
+
+	/**
+	 * @version 0.0.4
+	 */
+	public static XWPFTemplate compile(String filePath) {
+		return compile(new File(filePath));
+	}
+
+	public static XWPFTemplate compile(File file) {
 		try {
-			NiceXWPFDocument doc = new NiceXWPFDocument(new FileInputStream(
-					file));
-			xwpfTemplate.doc = doc;
-			xwpfTemplate.parseElementTemplates();
-			xwpfTemplate.initPolicy();
+			XWPFTemplate instance = new XWPFTemplate();
+			instance.doc = new NiceXWPFDocument(new FileInputStream(file));
+			instance.eleTemplates = TemplateResolver.parseElementTemplates(instance.doc);
+			instance.initPolicy();
+			return instance;
 		} catch (FileNotFoundException e) {
-			logger.error("cannot find the file", e);
+			logger.error("Cannot find the file", e);
+			throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
 		} catch (IOException e) {
-			logger.error("create template failed", e);
+			logger.error("Compile template failed", e);
+			throw new ResolverException("Compile template failed");
 		}
-		return xwpfTemplate;
-	}
-
-	private List<ElementTemplate> parseElementTemplates() {
-		if (null == eleTemplates) {
-			eleTemplates = TemplateResolver.parseElementTemplates(doc);
-		}
-		return eleTemplates;
-	}
-
-	private void initPolicy() {
-		registerPolicy(TextRunTemplate.class, new TextRenderPolicy());
-		registerPolicy(PictureRunTemplate.class, new PictureRenderPolicy());
-		registerPolicy(TableRunTemplate.class, new SimpleTableRenderPolicy());
 	}
 
 	public void registerPolicy(Class<?> templateClass, RenderPolicy policy) {
@@ -103,7 +103,11 @@ public class XWPFTemplate {
 	}
 
 	public void write(OutputStream out) throws IOException {
-		doc.write(out);
+		this.doc.write(out);
+	}
+
+	public void close() throws IOException {
+		this.doc.close();
 	}
 
 	public List<ElementTemplate> getElementTemplates() {
@@ -112,6 +116,12 @@ public class XWPFTemplate {
 
 	public NiceXWPFDocument getXWPFDocument() {
 		return this.doc;
+	}
+
+	private void initPolicy() {
+		registerPolicy(TextRunTemplate.class, new TextRenderPolicy());
+		registerPolicy(PictureRunTemplate.class, new PictureRenderPolicy());
+		registerPolicy(TableRunTemplate.class, new SimpleTableRenderPolicy());
 	}
 
 }

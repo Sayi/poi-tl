@@ -94,18 +94,12 @@ public class RenderAPI {
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("tag-name:" + runTemplate.getTagName());
 			logger.debug(runTemplate.getClass().toString());
-			RenderPolicy policy = template.getPolicy(runTemplate.getTagName());
+			RenderPolicy policy = null == template.getPolicy(runTemplate.getTagName())
+							? template.getPolicy(runTemplate.getClass())
+							: template.getPolicy(runTemplate.getTagName()); 
 			if (null == policy)
-				policy = template.getPolicy(runTemplate.getClass());
-			if (null == policy)
-				throw new RenderException("cannot find render policy: "
-						+ runTemplate.getTagName());
-			// Method method = policy.getMethod("render", ElementTemplate.class,
-			// RenderData.class, XWPFTemplate.class);
-			// method.invoke(policy.newInstance(),
-			// runTemplate,datas.get(runTemplate.getTagName()), template);
-			policy.render(runTemplate, datas.get(runTemplate.getTagName()),
-					template);
+				throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
+			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
 
 		}
 	}
