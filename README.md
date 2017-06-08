@@ -7,7 +7,9 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 * 依赖服务器上安装软件openoffice来调用转化
 * 依赖windows的word库，不具有跨平台性
 
-因此基于poi开发了一套拥有简洁API的跨平台的模板引擎：poi-tl。
+因此基于poi开发了一套拥有简洁API的跨平台的模板引擎：poi-tl。核心API只需要一行代码：
+
+	XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);;
 
 **PS：此版本是开源版本，本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，复杂动态渲染样式超级复杂的word报告的下载和打印。**
 
@@ -42,7 +44,7 @@ V0.0.3
     }};
 
     //render
-    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);;
+    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);
 
     //out document
     FileOutputStream out = new FileOutputStream("out.docx");
@@ -60,9 +62,7 @@ V0.0.3
 	obj.setTitle(new TextRenderData("9d55b8",
 				"Deeply in love with the things you love,\\n just deepoove."));
 		
-		
 	XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(obj);
-
 	FileOutputStream out = new FileOutputStream("out.docx");
 	template.write(out);
 	template.close();
@@ -70,9 +70,13 @@ V0.0.3
 	out.close();
 
 # 渲染图
+* word模板文件  
 ![](src/test/resources/temp3.png)
+* word渲染后生成的文件  
 ![](src/test/resources/tempv3.png)
+* word模板文件  
 ![](src/test/resources/temp4.png)
+* word渲染后生成的文件  
 ![](src/test/resources/tempv4.png)
 
 # 文档
