@@ -48,7 +48,7 @@
 <pre><code>
 XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(new HashMap&lt;String, Object&gt;(){{
         put("date", "2015-04-01");
-}};);
+}});
 
 FileOutputStream out = new FileOutputStream("out.docx");
 template.write(out);
