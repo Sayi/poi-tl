@@ -20,7 +20,7 @@
   <header>
     <div class="inner">
       <h1>poi-tl</h1>
-      <h2>word模板渲染组件 ver 0.0.3</h2>
+      <h2>word模板渲染组件 ver 0.0.4</h2>
       <a href="https://github.com/Sayi/poi-tl" class="button"><small>View project on</small> GitHub</a>
     </div>
   </header>
@@ -37,7 +37,7 @@
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
     &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-    &lt;version&gt;0.0.3&lt;/version&gt;
+    &lt;version&gt;0.0.4&lt;/version&gt;
 &lt;/dependency&gt;
 </code></pre>
 
@@ -45,18 +45,17 @@
 <h3>示例</h3>
 <p>模板内容：{{date}}</p>
 <p>代码如下：</p>
-<pre><code>//read template
-XWPFTemplate doc = XWPFTemplate.create("/Users/Sayi/template.docx");
-
-//render
-RenderAPI.render(doc, new HashMap&lt;String, Object&gt;(){{
+<pre><code>
+XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(new HashMap&lt;String, Object&gt;(){{
         put("date", "2015-04-01");
 }};);
 
-//out document
 FileOutputStream out = new FileOutputStream("out.docx");
-doc.write(out);
+template.write(out);
+template.close();
+out.flush();
 out.close();
+
 </code></pre>
 
 
