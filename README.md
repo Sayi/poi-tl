@@ -2,7 +2,7 @@
 基于word的模板渲染(替换)组件  
 对docx格式的文档增加模板语法，增加渲染模板的方便性，目前支持对段落、页眉、页脚、表格的文本、图片、表单渲染。
 
-#Change log
+# Change log
 
 V0.0.4 
 1. 增加新的api:XWPFTemplate.compile  
@@ -59,6 +59,11 @@ V0.0.3
 	out.flush();
 	out.close();
 
+# 渲染图
+![](src/test/resources/temp3.png)
+![](src/test/resources/tempv3.png)
+![](src/test/resources/temp4.png)
+![](src/test/resources/tempv4.png)
 
 # 文档
 详细文档请参见:[poi-tl文档](http://deepoove.com/poi-tl/)
