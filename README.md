@@ -11,7 +11,7 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 
 	XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
-**PS：此版本是开源版本，本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，复杂动态渲染样式超级复杂的word报告的下载和打印。**
+**PS：此版本是开源版本，本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
 
 
 # Change log
