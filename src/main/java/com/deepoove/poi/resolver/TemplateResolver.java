@@ -280,7 +280,7 @@ public class TemplateResolver {
 		if (TAG_PATTERN.matcher(text).matches()) {
 			String tag = VAR_PATTERN.matcher(text).replaceAll("").trim();
 			GramerSymbol symbol = GramerSymbolFactory.getGramerSymbol(tag);
-			String tagName = symbol == GramerSymbol.TEXT ? tag : tag.substring(0);
+			String tagName = symbol == GramerSymbol.TEXT ? tag : tag.substring(1);
 
 			if (obj.getClass() == XWPFRun.class)
 				return RunTemplate.createRunTemplate(symbol, tagName, (XWPFRun) obj);

@@ -32,6 +32,7 @@ import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.SimpleTableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.PictureRunTemplate;
@@ -84,6 +85,15 @@ public class XWPFTemplate {
 			logger.error("Compile template failed", e);
 			throw new ResolverException("Compile template failed");
 		}
+	}
+	
+	public XWPFTemplate render(Map<String, Object> datas) {
+		RenderAPI.render(this, datas);
+		return this;
+	}
+	public XWPFTemplate render(Object datasource) {
+		RenderAPI.render(this, datasource);
+		return this;
 	}
 
 	public void registerPolicy(Class<?> templateClass, RenderPolicy policy) {

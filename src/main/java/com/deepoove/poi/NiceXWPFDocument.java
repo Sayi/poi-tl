@@ -54,85 +54,17 @@ public class NiceXWPFDocument extends XWPFDocument {
 	public NiceXWPFDocument(InputStream in) throws IOException {
 		super(in);
 	}
-
-	public void createPicture(String blipId, int id, int width, int height) {
-		addPicture(blipId, id, width, height, createParagraph().createRun());
-	}
-
-	public void addPicture(String blipId, int id, int width, int height,
-			XWPFRun run) {
-		final int EMU = 9525;
-		width *= EMU;
-		height *= EMU;
-		// String blipId =
-		// getAllPictures().get(id).getPackageRelationship().getId();
-
-		CTInline inline = run.getCTR().addNewDrawing().addNewInline();
-
-		String picXml = ""
-				+ "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
-				+ "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-				+ "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
-				+ "         <pic:nvPicPr>" + "            <pic:cNvPr id=\""
-				+ id
-				+ "\" name=\"Generated\"/>"
-				+ "            <pic:cNvPicPr/>"
-				+ "         </pic:nvPicPr>"
-				+ "         <pic:blipFill>"
-				+ "            <a:blip r:embed=\""
-				+ blipId
-				+ "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
-				+ "            <a:stretch>"
-				+ "               <a:fillRect/>"
-				+ "            </a:stretch>"
-				+ "         </pic:blipFill>"
-				+ "         <pic:spPr>"
-				+ "            <a:xfrm>"
-				+ "               <a:off x=\"0\" y=\"0\"/>"
-				+ "               <a:ext cx=\""
-				+ width
-				+ "\" cy=\""
-				+ height
-				+ "\"/>"
-				+ "            </a:xfrm>"
-				+ "            <a:prstGeom prst=\"rect\">"
-				+ "               <a:avLst/>"
-				+ "            </a:prstGeom>"
-				+ "         </pic:spPr>"
-				+ "      </pic:pic>"
-				+ "   </a:graphicData>" + "</a:graphic>";
-
-		// CTGraphicalObjectData graphicData =
-		// inline.addNewGraphic().addNewGraphicData();
-		XmlToken xmlToken = null;
-		try {
-			xmlToken = XmlToken.Factory.parse(picXml);
-		} catch (XmlException xe) {
-			xe.printStackTrace();
-		}
-		inline.set(xmlToken);
-		// graphicData.set(xmlToken);
-
-		inline.setDistT(0);
-		inline.setDistB(0);
-		inline.setDistL(0);
-		inline.setDistR(0);
-
-		CTPositiveSize2D extent = inline.addNewExtent();
-		extent.setCx(width);
-		extent.setCy(height);
-
-		CTNonVisualDrawingProps docPr = inline.addNewDocPr();
-		docPr.setId(id);
-		docPr.setName("Picture " + id);
-		docPr.setDescr("Generated");
-	}
-
+	
+	/**
+	 * 合并行单元格
+	 * @param table
+	 * @param row
+	 * @param fromCol
+	 * @param toCol
+	 */
 	public void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
 			int toCol) {
-
 		for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
-
 			XWPFTableCell cell = table.getRow(row).getCell(colIndex);
 			CTTcPr tcPr = cell.getCTTc().getTcPr();
 			if (null == tcPr)
@@ -148,6 +80,13 @@ public class NiceXWPFDocument extends XWPFDocument {
 		}
 	}
 
+	/**
+	 * 合并列单元格
+	 * @param table
+	 * @param col
+	 * @param fromRow
+	 * @param toRow
+	 */
 	public void mergeCellsVertically(XWPFTable table, int col, int fromRow,
 			int toRow) {
 
@@ -232,8 +171,83 @@ public class NiceXWPFDocument extends XWPFDocument {
 		verify.toParent();
 		try {
 			return true;// (verify.getObject() == this.getDocument().getBody());
-		} finally {
+		}
+		finally {
 			verify.dispose();
 		}
 	}
+	
+	public void createPicture(String blipId, int id, int width, int height) {
+		addPicture(blipId, id, width, height, createParagraph().createRun());
+	}
+
+	public void addPicture(String blipId, int id, int width, int height,
+			XWPFRun run) {
+		final int EMU = 9525;
+		width *= EMU;
+		height *= EMU;
+		// String blipId =
+		// getAllPictures().get(id).getPackageRelationship().getId();
+
+		CTInline inline = run.getCTR().addNewDrawing().addNewInline();
+
+		String picXml = ""
+				+ "<a:graphic xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\">"
+				+ "   <a:graphicData uri=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+				+ "      <pic:pic xmlns:pic=\"http://schemas.openxmlformats.org/drawingml/2006/picture\">"
+				+ "         <pic:nvPicPr>" + "            <pic:cNvPr id=\""
+				+ id
+				+ "\" name=\"Generated\"/>"
+				+ "            <pic:cNvPicPr/>"
+				+ "         </pic:nvPicPr>"
+				+ "         <pic:blipFill>"
+				+ "            <a:blip r:embed=\""
+				+ blipId
+				+ "\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\"/>"
+				+ "            <a:stretch>"
+				+ "               <a:fillRect/>"
+				+ "            </a:stretch>"
+				+ "         </pic:blipFill>"
+				+ "         <pic:spPr>"
+				+ "            <a:xfrm>"
+				+ "               <a:off x=\"0\" y=\"0\"/>"
+				+ "               <a:ext cx=\""
+				+ width
+				+ "\" cy=\""
+				+ height
+				+ "\"/>"
+				+ "            </a:xfrm>"
+				+ "            <a:prstGeom prst=\"rect\">"
+				+ "               <a:avLst/>"
+				+ "            </a:prstGeom>"
+				+ "         </pic:spPr>"
+				+ "      </pic:pic>"
+				+ "   </a:graphicData>" + "</a:graphic>";
+
+		// CTGraphicalObjectData graphicData =
+		// inline.addNewGraphic().addNewGraphicData();
+		XmlToken xmlToken = null;
+		try {
+			xmlToken = XmlToken.Factory.parse(picXml);
+		} catch (XmlException xe) {
+			xe.printStackTrace();
+		}
+		inline.set(xmlToken);
+		// graphicData.set(xmlToken);
+
+		inline.setDistT(0);
+		inline.setDistB(0);
+		inline.setDistL(0);
+		inline.setDistR(0);
+
+		CTPositiveSize2D extent = inline.addNewExtent();
+		extent.setCx(width);
+		extent.setCy(height);
+
+		CTNonVisualDrawingProps docPr = inline.addNewDocPr();
+		docPr.setId(id);
+		docPr.setName("Picture " + id);
+		docPr.setDescr("Generated");
+	}
+
 }

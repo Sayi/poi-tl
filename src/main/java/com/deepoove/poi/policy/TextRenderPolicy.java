@@ -31,12 +31,11 @@ public class TextRenderPolicy implements RenderPolicy {
 	private static final String LINE_CHARACTOR = "\\n";
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object renderData,
-			XWPFTemplate template) {
+	public void render(ElementTemplate runTemplateP, Object renderData, XWPFTemplate template) {
 		RunTemplate runTemplate = (RunTemplate) runTemplateP;
 		XWPFRun run = runTemplate.getRun();
 		if (null == renderData) {
-			//support String to set blank
+			// support String to set blank
 			run.setText("", 0);
 			return;
 		}
@@ -49,8 +48,7 @@ public class TextRenderPolicy implements RenderPolicy {
 		}
 		String data = textRenderData.getText();
 		styleRun(run, textRenderData.getStyle());
-		if (null == data)
-			data = "";
+		if (null == data) data = "";
 
 		if (data.contains(LINE_CHARACTOR)) {
 			// String[] lines = data.split("\\n");
@@ -81,18 +79,12 @@ public class TextRenderPolicy implements RenderPolicy {
 			Boolean bold = style.isBold();
 			Boolean italic = style.isItalic();
 			Boolean strike = style.isStrike();
-			if (null != color)
-				run.setColor(color);
-			if (0 != fontSize)
-				run.setFontSize(fontSize);
-			if (null != fontFamily)
-				run.setFontFamily(fontFamily);
-			if (null != bold)
-				run.setBold(bold);
-			if (null != italic)
-				run.setItalic(italic);
-			if (null != strike)
-				run.setStrike(strike);
+			if (null != color) run.setColor(color);
+			if (0 != fontSize) run.setFontSize(fontSize);
+			if (null != fontFamily) run.setFontFamily(fontFamily);
+			if (null != bold) run.setBold(bold);
+			if (null != italic) run.setItalic(italic);
+			if (null != strike) run.setStrikeThrough(strike);
 		}
 	}
 

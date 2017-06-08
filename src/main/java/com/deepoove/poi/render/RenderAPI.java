@@ -15,6 +15,10 @@
  */
 package com.deepoove.poi.render;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -32,13 +36,16 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.TextRunTemplate;
 
+/**
+ * @author Sayi
+ * @version
+ * @since 0.0.3
+ */
 public class RenderAPI {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(RenderAPI.class);
+	private static final Logger logger = LoggerFactory.getLogger(RenderAPI.class);
 
-	public static void debug(XWPFTemplate template,
-			Map<String, Object> datas) {
+	public static void debug(XWPFTemplate template, Map<String, Object> datas) {
 		List<ElementTemplate> all = template.getElementTemplates();
 		Set<String> tagtKeys = new HashSet<String>();
 
@@ -67,41 +74,61 @@ public class RenderAPI {
 	}
 
 	public static void selfRender(XWPFTemplate template) {
-		if (null == template)
-			throw new POIXMLException(
-					"template is null,should be setted first.");
+		if (null == template) throw new POIXMLException("template is null,should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty())
-			return;
+		if (null == elementTemplates || elementTemplates.isEmpty()) return;
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("tag-name:" + runTemplate.getTagName());
 			logger.debug(runTemplate.getClass().toString());
 			RenderPolicy policy = template.getPolicy(TextRunTemplate.class);
-			policy.render(runTemplate,
-					new TextRenderData(runTemplate.getSource()), template);
+			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
 
 		}
 	}
 
 	public static void render(XWPFTemplate template, Map<String, Object> datas) {
-		if (null == template)
-			throw new POIXMLException(
-					"template is null,should be setted first.");
+		if (null == template) throw new POIXMLException("template is null,should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty()
-				|| null == datas || datas.isEmpty())
+		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
+				|| datas.isEmpty())
 			return;
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("tag-name:" + runTemplate.getTagName());
 			logger.debug(runTemplate.getClass().toString());
 			RenderPolicy policy = null == template.getPolicy(runTemplate.getTagName())
-							? template.getPolicy(runTemplate.getClass())
-							: template.getPolicy(runTemplate.getTagName()); 
-			if (null == policy)
-				throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
+					? template.getPolicy(runTemplate.getClass())
+					: template.getPolicy(runTemplate.getTagName());
+			if (null == policy) throw new RenderException(
+					"cannot find render policy: [" + runTemplate.getTagName() + "]");
 			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
 
 		}
+	}
+
+	public static void render(XWPFTemplate template, Object dataSrouce) {
+		render(template, convert2Map(dataSrouce));
+	}
+
+	private static Map<String, Object> convert2Map(Object dataSrouce) {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		try {
+			Class<?> clazz = dataSrouce.getClass();
+			while (clazz != Object.class) {
+				Field[] fields = clazz.getDeclaredFields();
+				for (Field f : fields) {
+					PropertyDescriptor pd = new PropertyDescriptor(f.getName(),
+							dataSrouce.getClass());
+					Method readMethod = pd.getReadMethod();
+					Object value = readMethod.invoke(dataSrouce);
+					ret.put(f.getName(), value);
+				}
+				clazz = clazz.getSuperclass();
+			}
+		} catch (Exception e) {
+			logger.error("Convert datasource failed.", e);
+			throw new RenderException("Convert datasource failed.");
+		}
+		return ret;
 	}
 
 }
