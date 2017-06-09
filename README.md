@@ -55,8 +55,8 @@ V0.0.3
 # 示例-JavaBean渲染
 
 	DataSourceTest obj = new DataSourceTest();
-	obj.setHeader_version("v0.0.3");
-	obj.setHello("v0.0.3");
+	obj.setHeader_version("v0.0.4");
+	obj.setHello("v0.0.4");
 	obj.setWebsite("http://www.deepoove.com/poi-tl");
 	obj.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
 	obj.setTitle(new TextRenderData("9d55b8",
