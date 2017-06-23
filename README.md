@@ -1,17 +1,20 @@
 # poi-tl
+
+[![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl)  
+
 Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文档增加模板语法，增加渲染模板的方便性，目前支持对段落、页眉、页脚、表格的文本、图片、表单渲染。
 
 对于word模板替换，我们不仅要考虑复杂的模板格式，还要考虑字体，颜色，处理页眉页脚，使用稍显复杂的poi的API等，现实项目中又有许多需求需要后台动态生成数据然后替换word模板，供前台下载或者打印，为了避免：
-* java操作word使用poi的复杂性
-* 转化为xml操作word的难度
+* java操作word使用apache poi的复杂性
+* 使用freemarker，转化为xml操作word的难度
 * 依赖服务器上安装软件openoffice来调用转化
-* 依赖windows的word库，不具有跨平台性
+* 依赖windows的word lib库，不具有跨平台性
 
 因此基于poi开发了一套拥有简洁API的跨平台的模板引擎：poi-tl。核心API只需要一行代码：
 
 	XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
-**PS：此版本是开源版本，本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
+**PS：本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
 
 
 # Change log
