@@ -38,7 +38,22 @@ V0.0.3
         <version>0.0.4</version>
     </dependency>
 
-# 示例-Map渲染
+# 语法
+所有的语法结构都是以 {{ 开始以 }} 结束(**在下一版本中，语法将支持自定义**)，文档的样式继承模板标签的样式，也可以在渲染数据中指定,实现了样式的最大自由化。
+
+* {{template}}
+
+普通文本，渲染数据为：String或者TextRenderData
+
+* {{@template}}
+
+图片,渲染数据为：PictureRenderData
+
+* {{#template}}
+
+表格，渲染数据为：TableRenderData
+
+# 示例1-Map渲染
     
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
@@ -55,7 +70,7 @@ V0.0.3
     template.close();
     out.close();
 
-# 示例-JavaBean渲染
+# 示例2-JavaBean渲染
 
 	DataSourceTest obj = new DataSourceTest();
 	obj.setHeader_version("v0.0.4");
