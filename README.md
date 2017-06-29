@@ -58,7 +58,7 @@ V0.0.3
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
             put("date", "2015-04-01");
-	    put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
+            put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
 				add(new TextRenderData("d0d0d0", ""));
 				add(new TextRenderData("d0d0d0", "introduce"));
 			}},new ArrayList<Object>(){{
