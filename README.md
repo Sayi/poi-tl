@@ -58,6 +58,14 @@ V0.0.3
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
             put("date", "2015-04-01");
+	    put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
+				add(new TextRenderData("d0d0d0", ""));
+				add(new TextRenderData("d0d0d0", "introduce"));
+			}},new ArrayList<Object>(){{
+				add("1;add new # gramer");
+				add("2;support insert table");
+				add("3;support more style");
+			}}, "no datas", 10600));
             put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
     }};
 
