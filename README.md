@@ -19,6 +19,10 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 
 # Change log
 
+V0.0.5 
+1. bugfix: 解决0.0.4版本解析模板时CTSignedTwips类加载不到的问题  
+2. new feature: 支持对有序列表和无序列表的插入 
+
 V0.0.4 
 1. 增加新的api:XWPFTemplate.compile  
 2. 渲染数据除了支持Map以外，还支持JavaBean渲染 
@@ -35,7 +39,7 @@ V0.0.3
     <dependency>
         <groupId>com.deepoove</groupId>
         <artifactId>poi-tl</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.5</version>
     </dependency>
 
 # 语法
@@ -53,11 +57,16 @@ V0.0.3
 
 表格，渲染数据为：TableRenderData
 
-# 示例1-Map渲染
+* {{*template}}
+
+列表，渲染数据为：NumbericRenderData
+
+# Usage1-Map渲染
     
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
             put("date", "2015-04-01");
+            //表格模板
             put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
 				add(new TextRenderData("d0d0d0", ""));
 				add(new TextRenderData("d0d0d0", "introduce"));
@@ -66,6 +75,7 @@ V0.0.3
 				add("2;support insert table");
 				add("3;support more style");
 			}}, "no datas", 10600));
+		    //图片模板
             put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
     }};
 
@@ -78,12 +88,13 @@ V0.0.3
     template.close();
     out.close();
 
-# 示例2-JavaBean渲染
+# Usage2-JavaBean渲染
 
 	DataSourceTest obj = new DataSourceTest();
 	obj.setHeader_version("v0.0.4");
 	obj.setHello("v0.0.4");
 	obj.setWebsite("http://www.deepoove.com/poi-tl");
+	//图片模板
 	obj.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
 	obj.setTitle(new TextRenderData("9d55b8",
 				"Deeply in love with the things you love,\\n just deepoove."));
@@ -95,6 +106,35 @@ V0.0.3
 	out.flush();
 	out.close();
 
+# Usage3-插入列表
+
+	Map<String, Object> datas = new HashMap<String, Object>() {{
+		//1. 2. 3.
+		put("number123", getData(FMT_DECIMAL));
+		//1) 2) 3)
+		put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
+		//无序
+		put("bullet", getData(FMT_BULLET));
+		//A B C
+		put("ABC", getData(FMT_UPPER_LETTER));
+		//a b c
+		put("abc", getData(FMT_LOWER_LETTER));
+		//ⅰ ⅱ ⅲ
+		put("iiiiii", getData(FMT_LOWER_ROMAN));
+		//Ⅰ Ⅱ Ⅲ
+		put("IIIII", getData(FMT_UPPER_ROMAN));
+		//自定义有序列表显示 (one) (two) (three)
+		put("custom_number", getData(Pair.of(STNumberFormat.CARDINAL_TEXT, "(%1)")));
+		//自定义无序列表显示：定义无序符号
+		put("custom_bullet", getData(Pair.of(STNumberFormat.BULLET, "♬")));
+	}};
+	XWPFTemplate template = XWPFTemplate.compile("src/test/resources/numberic.docx").render(datas);
+	FileOutputStream out = new FileOutputStream("out.docx");
+	template.write(out);
+	out.flush();
+	out.close();
+	template.close();
+
 # 渲染图
 * word模板文件  
 ![](src/test/resources/temp3.png)
@@ -104,6 +144,10 @@ V0.0.3
 ![](src/test/resources/temp4.png)
 * word渲染后生成的文件  
 ![](src/test/resources/tempv4.png)
+* word模板文件  
+![](src/test/resources/temp5.png)
+* word渲染后生成的文件  
+![](src/test/resources/tempv5.png)
 
 # 文档
 详细文档高级扩展请参见:[poi-tl文档](http://deepoove.com/poi-tl/)
