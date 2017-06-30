@@ -21,7 +21,7 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 
 V0.0.5 
 1. bugfix: 解决0.0.4版本解析模板时CTSignedTwips类加载不到的问题  
-2. new feature: 支持对有序列表和无序列表的插入 
+2. new feature: 新增列表语法*，支持对有序列表和无序列表的插入 
 
 V0.0.4 
 1. 增加新的api:XWPFTemplate.compile  
