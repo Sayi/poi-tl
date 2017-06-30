@@ -23,8 +23,9 @@ import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
 /**
+ * 列表模板
  * @author Sayi
- * @version 0.0.4
+ * @version 0.0.5
  */
 public class NumbericRenderTest {
 
