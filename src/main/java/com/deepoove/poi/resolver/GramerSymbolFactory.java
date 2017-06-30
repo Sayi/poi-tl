@@ -9,6 +9,8 @@ public class GramerSymbolFactory {
 			return GramerSymbol.IMAGE;
 		case '#':
 			return GramerSymbol.TABLE;
+		case '*':
+			return GramerSymbol.NUMBERIC;
 		default:
 			return GramerSymbol.TEXT;
 		}

@@ -46,6 +46,12 @@ public class TableRenderData implements RenderData {
 		this(null, datas, null, 0);
 	}
 
+	/**
+	 * @param headers 表格头
+	 * @param datas 表格数据
+	 * @param noDatadesc 没有数据显示的文案
+	 * @param width 宽度
+	 */
 	public TableRenderData(List<RenderData> headers, List<Object> datas,
 			String noDatadesc, int width) {
 		this.headers = headers;

@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.exception.ResolverException;
+import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.SimpleTableRenderPolicy;
@@ -35,6 +36,7 @@ import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.template.run.NumbericRunTemplate;
 import com.deepoove.poi.template.run.PictureRunTemplate;
 import com.deepoove.poi.template.run.TableRunTemplate;
 import com.deepoove.poi.template.run.TextRunTemplate;
@@ -86,11 +88,12 @@ public class XWPFTemplate {
 			throw new ResolverException("Compile template failed");
 		}
 	}
-	
+
 	public XWPFTemplate render(Map<String, Object> datas) {
 		RenderAPI.render(this, datas);
 		return this;
 	}
+
 	public XWPFTemplate render(Object datasource) {
 		RenderAPI.render(this, datasource);
 		return this;
@@ -132,6 +135,7 @@ public class XWPFTemplate {
 		registerPolicy(TextRunTemplate.class, new TextRenderPolicy());
 		registerPolicy(PictureRunTemplate.class, new PictureRenderPolicy());
 		registerPolicy(TableRunTemplate.class, new SimpleTableRenderPolicy());
+		registerPolicy(NumbericRunTemplate.class, new NumbericRenderPolicy());
 	}
 
 }

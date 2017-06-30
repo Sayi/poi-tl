@@ -63,7 +63,9 @@ public class RunTemplate extends ElementTemplate {
 			template = new PictureRunTemplate();
 		} else if (parseGramer == GramerSymbol.TABLE) {
 			template = new TableRunTemplate();
-		} else {
+		} else if (parseGramer == GramerSymbol.NUMBERIC) {
+			template = new NumbericRunTemplate();
+		}else {
 			// if (parseGramer == GramerSymbol.TEXT) {
 			template = new TextRunTemplate();
 		}

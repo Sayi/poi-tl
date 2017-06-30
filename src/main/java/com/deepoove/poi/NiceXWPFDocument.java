@@ -165,6 +165,17 @@ public class NiceXWPFDocument extends XWPFDocument {
 		}
 		return null;
 	}
+	
+	/**
+	 * 在某个段落起始处插入段落
+	 * @param run
+	 * @return
+	 */
+	public XWPFParagraph insertNewParagraph(XWPFRun run) {
+//		XmlCursor cursor = run.getCTR().newCursor();
+		XmlCursor cursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();
+		return insertNewParagraph(cursor);
+	}
 
 	private boolean isCursorInBody(XmlCursor cursor) {
 		XmlCursor verify = cursor.newCursor();
@@ -249,5 +260,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 		docPr.setName("Picture " + id);
 		docPr.setDescr("Generated");
 	}
+
+	
 
 }
