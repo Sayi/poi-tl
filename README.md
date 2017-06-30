@@ -114,11 +114,11 @@ V0.0.3
 	Map<String, Object> datas = new HashMap<String, Object>() {{
 		//1. 2. 3.
 		put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
-						add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
-						add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-						add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
-					}
-				}));
+				add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
+				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+				add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
+			}
+		}));
 		//1) 2) 3)
 		put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
 		//无序
