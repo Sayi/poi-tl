@@ -259,7 +259,7 @@ public class TemplateResolver {
 		if (null == destRun || null == srcRun) return;
 		destRun.setBold(srcRun.isBold());
 		destRun.setColor(srcRun.getColor());
-		destRun.setCharacterSpacing(srcRun.getCharacterSpacing());
+		//destRun.setCharacterSpacing(srcRun.getCharacterSpacing());
 		destRun.setFontFamily(srcRun.getFontFamily());
 		int fontSize = srcRun.getFontSize();
 		if (-1 != fontSize) destRun.setFontSize(fontSize);
