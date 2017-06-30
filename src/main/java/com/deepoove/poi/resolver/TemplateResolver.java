@@ -50,8 +50,8 @@ public class TemplateResolver {
 	public static final Pattern VAR_PATTERN;
 
 	static {
-		RULER_REGEX = escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX) + "(#|@|\\*)?\\w+"
-				+ escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
+		RULER_REGEX = escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX) + GramerSymbol.GRAMER_SIGN
+				+ "?\\w+" + escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
 		EXTRA_REGEX = "(" + escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX) + ")|("
 				+ escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX) + ")";
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
@@ -84,14 +84,6 @@ public class TemplateResolver {
 		List<RunTemplate> result = new ArrayList<RunTemplate>();
 		if (null != paragraphs && !paragraphs.isEmpty()) {
 			for (XWPFParagraph paragraph : paragraphs) {
-				if (null != paragraph.getNumFmt()){
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
-				System.out.println(paragraph.getText());
-				System.out.println(paragraph.getNumFmt());
-				System.out.println(paragraph.getNumIlvl());
-				System.out.println(paragraph.getNumLevelText());
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
-				}
 				List<RunTemplate> parseRun = parseRun(paragraph);
 				if (null != parseRun) result.addAll(parseRun);
 			}

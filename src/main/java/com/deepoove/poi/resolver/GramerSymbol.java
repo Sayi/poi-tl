@@ -21,6 +21,7 @@ public enum GramerSymbol {
 
 	public static final String GRAMER_PREFIX = "{{";
 	public static final String GRAMER_SUFFIX = "}}";
+	public static final String GRAMER_SIGN = "(#|@|\\*)";
 
 	private char symbol;
 
