@@ -64,16 +64,16 @@ public class NumbericRenderData implements RenderData {
 	 */
 	public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN,
 			"%1.");
-	/**
-	 * 一、 二、 三、
-	 */
-	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND = Pair
-			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "%1、");
-	/**
-	 * (一) (二) (三)
-	 */
-	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
-			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
+//	/**
+//	 * 一、 二、 三、
+//	 */
+//	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND = Pair
+//			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "%1、");
+//	/**
+//	 * (一) (二) (三)
+//	 */
+//	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
+//			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
 
 	public NumbericRenderData(Pair<Enum, String> numFmt, List<TextRenderData> numbers) {
 		this.numFmt = numFmt;

@@ -1,8 +1,6 @@
 package com.deepoove.poi.tl;
 
 import static com.deepoove.poi.data.NumbericRenderData.FMT_BULLET;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_CHINESE_COUNTING_THOUSAND;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES;
 import static com.deepoove.poi.data.NumbericRenderData.FMT_DECIMAL;
 import static com.deepoove.poi.data.NumbericRenderData.FMT_DECIMAL_PARENTHESES;
 import static com.deepoove.poi.data.NumbericRenderData.FMT_LOWER_LETTER;
@@ -41,10 +39,6 @@ public class NumbericRenderTest {
 				put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
 				//无序
 				put("bullet", getData(FMT_BULLET));
-				//一、二、三、
-				put("chinese123", getData(FMT_CHINESE_COUNTING_THOUSAND));
-				//(一)、(二)、(三)
-				put("chinese123_kuohao", getData(FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES));
 				//A B C
 				put("ABC", getData(FMT_UPPER_LETTER));
 				//a b c
@@ -74,9 +68,9 @@ public class NumbericRenderTest {
 	private NumbericRenderData getData(Pair<Enum, String> pair) {
 		return new NumbericRenderData(pair, new ArrayList<TextRenderData>() {
 			{
+				add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
 				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+				add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
 			}
 		});
 	}

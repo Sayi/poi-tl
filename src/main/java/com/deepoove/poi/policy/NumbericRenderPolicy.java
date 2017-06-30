@@ -19,6 +19,7 @@ import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -76,11 +77,29 @@ public class NumbericRenderPolicy implements RenderPolicy {
 				XWPFParagraph paragraph = doc.insertNewParagraph(run);
 				paragraph.setNumID(numID);
 				XWPFRun run1 = paragraph.createRun();
+				styleRun(run1, line.getStyle());
 				run1.setText(line.getText());
 			}
 			// doc.insertNewParagraph(run);
 		}
 		runTemplate.getRun().setText("", 0);
+	}
+	
+	private void styleRun(XWPFRun run, Style style) {
+		if (null != style) {
+			String color = style.getColor();
+			String fontFamily = style.getFontFamily();
+			int fontSize = style.getFontSize();
+			Boolean bold = style.isBold();
+			Boolean italic = style.isItalic();
+			Boolean strike = style.isStrike();
+			if (null != color) run.setColor(color);
+			if (0 != fontSize) run.setFontSize(fontSize);
+			if (null != fontFamily) run.setFontFamily(fontFamily);
+			if (null != bold) run.setBold(bold);
+			if (null != italic) run.setItalic(italic);
+			if (null != strike) run.setStrikeThrough(strike);
+		}
 	}
 
 }
