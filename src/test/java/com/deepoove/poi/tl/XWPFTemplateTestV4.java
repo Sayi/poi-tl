@@ -118,7 +118,7 @@ public class XWPFTemplateTestV4 {
 	@Test
 	public void testRenderMerge() throws Exception{
 		Map<String, Object> datas = new HashMap<String, Object>(){{
-			put("author", "92");
+			put("author", "deepoove");
 			put("date", "2016-09-40");
 			put("dfa", "自动化");
 			put("fafd", "技术");
@@ -126,7 +126,7 @@ public class XWPFTemplateTestV4 {
 		
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);;
 		
-		FileOutputStream out = new FileOutputStream("out_实验报告模板.docx");
+		FileOutputStream out = new FileOutputStream("out.docx");
 		template.write(out);
 		out.flush();
 		out.close();

@@ -174,7 +174,70 @@ public class NiceXWPFDocument extends XWPFDocument {
 	public XWPFParagraph insertNewParagraph(XWPFRun run) {
 //		XmlCursor cursor = run.getCTR().newCursor();
 		XmlCursor cursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();
-		return insertNewParagraph(cursor);
+		if (isCursorInBody(cursor)) {
+            String uri = CTP.type.getName().getNamespaceURI();
+            /*
+             * TODO DO not use a coded constant, find the constant in the OOXML
+             * classes instead, as the child of type CT_Paragraph is defined in the 
+             * OOXML schema as 'p'
+             */
+            String localPart = "p";
+            // creates a new Paragraph, cursor is positioned inside the new
+            // element
+            cursor.beginElement(localPart, uri);
+            // move the cursor to the START token to the paragraph just created
+            cursor.toParent();
+            CTP p = (CTP) cursor.getObject();
+            XWPFParagraph newP = new XWPFParagraph(p, this);
+            XmlObject o = null;
+            /*
+             * move the cursor to the previous element until a) the next
+             * paragraph is found or b) all elements have been passed
+             */
+            while (!(o instanceof CTP) && (cursor.toPrevSibling())) {
+                o = cursor.getObject();
+            }
+            /*
+             * if the object that has been found is a) not a paragraph or b) is
+             * the paragraph that has just been inserted, as the cursor in the
+             * while loop above was not moved as there were no other siblings,
+             * then the paragraph that was just inserted is the first paragraph
+             * in the body. Otherwise, take the previous paragraph and calculate
+             * the new index for the new paragraph.
+             */
+            if ((!(o instanceof CTP)) || (CTP) o == p) {
+                paragraphs.add(0, newP);
+            } else {
+                int pos = paragraphs.indexOf(getParagraph((CTP) o)) + 1;
+                paragraphs.add(pos, newP);
+            }
+
+            /*
+             * create a new cursor, that points to the START token of the just
+             * inserted paragraph
+             */
+            XmlCursor newParaPos = p.newCursor();
+            try {
+                /*
+                 * Calculate the paragraphs index in the list of all body
+                 * elements
+                 */
+                int i = 0;
+                cursor.toCursor(newParaPos);
+                while (cursor.toPrevSibling()) {
+                    o = cursor.getObject();
+                    if (o instanceof CTP || o instanceof CTTbl)
+                        i++;
+                }
+                bodyElements.add(i, newP);
+                cursor.toCursor(newParaPos);
+                cursor.toEndToken();
+                return newP;
+            } finally {
+                newParaPos.dispose();
+            }
+        }
+        return null;
 	}
 
 	private boolean isCursorInBody(XmlCursor cursor) {
@@ -260,7 +323,5 @@ public class NiceXWPFDocument extends XWPFDocument {
 		docPr.setName("Picture " + id);
 		docPr.setDescr("Generated");
 	}
-
-	
 
 }
