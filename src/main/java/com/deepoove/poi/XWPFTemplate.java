@@ -20,26 +20,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
-import com.deepoove.poi.policy.NumbericRenderPolicy;
-import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.SimpleTableRenderPolicy;
-import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.run.NumbericRunTemplate;
-import com.deepoove.poi.template.run.PictureRunTemplate;
-import com.deepoove.poi.template.run.TableRunTemplate;
-import com.deepoove.poi.template.run.TextRunTemplate;
 
 /**
  * 模板
@@ -49,18 +41,30 @@ import com.deepoove.poi.template.run.TextRunTemplate;
  */
 public class XWPFTemplate {
 	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-	private Map<String, RenderPolicy> policys = new HashMap<String, RenderPolicy>(12);
+	private NiceXWPFDocument doc;
+	private Configure config;
 
 	private List<ElementTemplate> eleTemplates;
-	private NiceXWPFDocument doc;
 
-	private XWPFTemplate() {}
+	private XWPFTemplate() {
+		config = new Configure();
+	}
 
+	/**
+	 * @param filePath
+	 * @return
+	 * @deprecated @see compile()
+	 */
 	@Deprecated
 	public static XWPFTemplate create(String filePath) {
 		return compile(filePath);
 	}
 
+	/**
+	 * @param file
+	 * @return
+	 * @deprecated @see compile()
+	 */
 	@Deprecated
 	public static XWPFTemplate create(File file) {
 		return compile(file);
@@ -77,8 +81,8 @@ public class XWPFTemplate {
 		try {
 			XWPFTemplate instance = new XWPFTemplate();
 			instance.doc = new NiceXWPFDocument(new FileInputStream(file));
-			instance.eleTemplates = TemplateResolver.parseElementTemplates(instance.doc);
-			instance.initPolicy();
+			instance.eleTemplates = new TemplateResolver(instance.config)
+					.parseElementTemplates(instance.doc);
 			return instance;
 		} catch (FileNotFoundException e) {
 			logger.error("Cannot find the file", e);
@@ -99,20 +103,37 @@ public class XWPFTemplate {
 		return this;
 	}
 
+	/**
+	 * @param templateClass
+	 * @param policy
+	 * @deprecated 1.0.0
+	 */
+	@Deprecated
 	public void registerPolicy(Class<?> templateClass, RenderPolicy policy) {
-		policys.put(templateClass.getName(), policy);
+		this.registerPolicy(templateClass.getName(), policy);
 	}
 
+	/**
+	 * 自定义模板对应的策略
+	 * 
+	 * @param templateName
+	 * @param policy
+	 */
 	public void registerPolicy(String templateName, RenderPolicy policy) {
-		policys.put(templateName, policy);
+		config.customPolicy(templateName, policy);
 	}
 
+	/**
+	 * @param clazz
+	 * @return
+	 */
+	@Deprecated
 	public RenderPolicy getPolicy(Class<? extends ElementTemplate> clazz) {
-		return policys.get(clazz.getName());
+		return config.getCustomPolicys().get(clazz.getName());
 	}
 
-	public RenderPolicy getPolicy(String tagName) {
-		return policys.get(tagName);
+	public RenderPolicy getPolicy(String templateName) {
+		return config.getCustomPolicys().get(templateName);
 	}
 
 	public void write(OutputStream out) throws IOException {
@@ -131,11 +152,8 @@ public class XWPFTemplate {
 		return this.doc;
 	}
 
-	private void initPolicy() {
-		registerPolicy(TextRunTemplate.class, new TextRenderPolicy());
-		registerPolicy(PictureRunTemplate.class, new PictureRenderPolicy());
-		registerPolicy(TableRunTemplate.class, new SimpleTableRenderPolicy());
-		registerPolicy(NumbericRunTemplate.class, new NumbericRenderPolicy());
+	public Configure getConfig() {
+		return config;
 	}
 
 }

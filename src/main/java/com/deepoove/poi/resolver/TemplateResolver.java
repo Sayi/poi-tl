@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.resolver;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,9 +35,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.NiceXWPFDocument;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.cell.CellTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.RegexUtils;
+import com.deepoove.poi.util.StyleUtils;
 
 /**
  * @author Sayi
@@ -44,43 +48,58 @@ import com.deepoove.poi.template.run.RunTemplate;
  */
 public class TemplateResolver {
 	private static final Logger logger = LoggerFactory.getLogger(TemplateResolver.class);
-	public static final String RULER_REGEX;
-	public static final String EXTRA_REGEX;
-	public static final Pattern TAG_PATTERN;
-	public static final Pattern VAR_PATTERN;
+	
+	public final String RULER_REGEX;
+	public final String EXTRA_REGEX;
+	
+	public final Pattern TAG_PATTERN;
+	public final Pattern VAR_PATTERN;
 
-	static {
-		RULER_REGEX = escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX) + GramerSymbol.GRAMER_SIGN
-				+ "?\\w+" + escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
-		EXTRA_REGEX = "(" + escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX) + ")|("
-				+ escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX) + ")";
+	public Configure config;
+	
+	public TemplateResolver(Configure config) {
+		String signRegex = getGramarRegex(config);
+		String prefixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX);
+		String suffixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
+		RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
+		EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
 		VAR_PATTERN = Pattern.compile(EXTRA_REGEX);
+		this.config = config;
 	}
 
-	public static List<ElementTemplate> parseElementTemplates(NiceXWPFDocument doc) {
+	public  List<ElementTemplate> parseElementTemplates(NiceXWPFDocument doc) {
 		if (null == doc) return null;
 		List<ElementTemplate> rts = new ArrayList<ElementTemplate>();
 		rts.addAll(parseParagraph(doc.getParagraphs()));
 		rts.addAll(parseTable(doc.getTables()));
-		List<XWPFHeader> headers = doc.getHeaderList();
-		if (null != headers) {
-			for (XWPFHeader header : headers) {
-				rts.addAll(parseParagraph(header.getParagraphs()));
-				rts.addAll(parseTable(header.getTables()));
-			}
-		}
-		List<XWPFFooter> footers = doc.getFooterList();
-		if (null != footers) {
-			for (XWPFFooter footer : footers) {
-				rts.addAll(parseParagraph(footer.getParagraphs()));
-				rts.addAll(parseTable(footer.getTables()));
-			}
-		}
+		rts.addAll(parseHeader(doc.getHeaderList()));
+		rts.addAll(parseFooter(doc.getFooterList()));
 		return rts;
 	}
 
-	private static List<RunTemplate> parseParagraph(List<XWPFParagraph> paragraphs) {
+	public List<ElementTemplate> parseHeader(List<XWPFHeader> headers) {
+		List<ElementTemplate> result = new ArrayList<ElementTemplate>();
+		if (null != headers) {
+			for (XWPFHeader header : headers) {
+				result.addAll(parseParagraph(header.getParagraphs()));
+				result.addAll(parseTable(header.getTables()));
+			}
+		}
+		return result;
+	}
+	public List<ElementTemplate> parseFooter(List<XWPFFooter> footers) {
+		List<ElementTemplate> result = new ArrayList<ElementTemplate>();
+		if (null != footers) {
+			for (XWPFFooter footer : footers) {
+				result.addAll(parseParagraph(footer.getParagraphs()));
+				result.addAll(parseTable(footer.getTables()));
+			}
+		}
+		return result;
+	}
+
+	public  List<RunTemplate> parseParagraph(List<XWPFParagraph> paragraphs) {
 		List<RunTemplate> result = new ArrayList<RunTemplate>();
 		if (null != paragraphs && !paragraphs.isEmpty()) {
 			for (XWPFParagraph paragraph : paragraphs) {
@@ -91,7 +110,7 @@ public class TemplateResolver {
 		return result;
 	}
 
-	private static List<ElementTemplate> parseTable(List<XWPFTable> tables) {
+	public List<ElementTemplate> parseTable(List<XWPFTable> tables) {
 		List<ElementTemplate> result = new ArrayList<ElementTemplate>();
 		if (null != tables && !tables.isEmpty()) {
 			for (XWPFTable tb : tables) {
@@ -102,15 +121,7 @@ public class TemplateResolver {
 		return result;
 	}
 
-	@SuppressWarnings("unused")
-	private static CellTemplate parseCell(XWPFTableCell cell) {
-		if (null == cell) return null;
-		String text = cell.getText();
-		if (null == text || "".equals(text.trim())) return null;
-		return (CellTemplate) parseTemplateFactory(text, cell);
-	}
-
-	public static List<ElementTemplate> parseTable(XWPFTable table) {
+	public  List<ElementTemplate> parseTable(XWPFTable table) {
 		if (null == table) return null;
 		List<XWPFTableRow> rows = table.getRows();
 		if (null == rows) return null;
@@ -132,7 +143,7 @@ public class TemplateResolver {
 	 * @param paragraph
 	 * @return
 	 */
-	public static List<RunTemplate> parseRun(XWPFParagraph paragraph) {
+	public  List<RunTemplate> parseRun(XWPFParagraph paragraph) {
 		List<XWPFRun> runs = paragraph.getRuns();
 		if (null == runs || runs.isEmpty()) return null;
 		String text = paragraph.getText();
@@ -169,7 +180,7 @@ public class TemplateResolver {
 				String substring = text2.substring(runEdge2 + 1, text2.length());
 				if (left_r == right_r) {
 					XWPFRun insertNewRun = paragraph.insertNewRun(right_r + 1);
-					styleRun(insertNewRun, runs.get(right_r));
+					StyleUtils.styleRun(insertNewRun, runs.get(right_r));
 					insertNewRun.setText(substring, 0);
 				} else runs.get(right_r).setText(substring, 0);
 			}
@@ -184,7 +195,7 @@ public class TemplateResolver {
 				XWPFRun xwpfRun = runs.get(left_r);
 				runs.get(left_r).setText(substring, 0);
 				XWPFRun insertNewRun = paragraph.insertNewRun(left_r + 1);
-				styleRun(insertNewRun, xwpfRun);
+				StyleUtils.styleRun(insertNewRun, xwpfRun);
 				insertNewRun.setText(tags.get(--tagIndex), 0);
 				runTemplate = parseRun(runs.get(left_r + 1));
 			}
@@ -240,7 +251,7 @@ public class TemplateResolver {
 		}
 	}
 
-	private static void calcTagPosInParagraph(String text, List<Pair<RunEdge, RunEdge>> pairs,
+	private  void calcTagPosInParagraph(String text, List<Pair<RunEdge, RunEdge>> pairs,
 			List<String> tags) {
 		String group = null;
 		int start = 0, end = 0;
@@ -255,52 +266,42 @@ public class TemplateResolver {
 		}
 	}
 
-	private static void styleRun(XWPFRun destRun, XWPFRun srcRun) {
-		if (null == destRun || null == srcRun) return;
-		destRun.setBold(srcRun.isBold());
-		destRun.setColor(srcRun.getColor());
-//		destRun.setCharacterSpacing(srcRun.getCharacterSpacing());
-		destRun.setFontFamily(srcRun.getFontFamily());
-		int fontSize = srcRun.getFontSize();
-		if (-1 != fontSize) destRun.setFontSize(fontSize);
-		destRun.setItalic(srcRun.isItalic());
-		destRun.setStrikeThrough(srcRun.isStrikeThrough());
-		destRun.setUnderline(srcRun.getUnderline());
-	}
 
-	public static RunTemplate parseRun(XWPFRun run) {
+	public  RunTemplate parseRun(XWPFRun run) {
 		String text = null;
 		if (null == run || StringUtils.isBlank(text = run.getText(0))) return null;
 		return (RunTemplate) parseTemplateFactory(text, run);
 	}
 
-	private static <T> ElementTemplate parseTemplateFactory(String text, T obj) {
+	private <T> ElementTemplate parseTemplateFactory(String text, T obj) {
 		logger.debug("parse text:" + text);
 		// temp ,future need to word analyze
 		if (TAG_PATTERN.matcher(text).matches()) {
 			String tag = VAR_PATTERN.matcher(text).replaceAll("").trim();
-			GramerSymbol symbol = GramerSymbolFactory.getGramerSymbol(tag);
-			String tagName = symbol == GramerSymbol.TEXT ? tag : tag.substring(1);
-
-			if (obj.getClass() == XWPFRun.class)
-				return RunTemplate.createRunTemplate(symbol, tagName, (XWPFRun) obj);
-			else if (obj.getClass() == XWPFTableCell.class)
-				return CellTemplate.create(symbol, tagName, (XWPFTableCell) obj);
+			if (obj.getClass() == XWPFRun.class) {
+				return TemplateFactory.createRunTemplate(tag, config.getGramerChars(),
+						(XWPFRun) obj);
+			} else if (obj.getClass() == XWPFTableCell.class)
+				// return CellTemplate.create(symbol, tagName, (XWPFTableCell)
+				// obj);
+				return null;
 		}
 		return null;
 	}
 
-	private static String escapeExprSpecialWord(String keyword) {
-		if (StringUtils.isNotBlank(keyword)) {
-			String[] fbsArr = { "\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}",
-					"|" };
-			for (String key : fbsArr) {
-				if (keyword.contains(key)) {
-					keyword = keyword.replace(key, "\\" + key);
-				}
+	private String getGramarRegex(Configure config) {
+		List<Character> gramerChar = config.getGramerChars();
+		StringBuffer reg = new StringBuffer("(");
+		for (int i = 0; ; i++){
+			Character chara = gramerChar.get(i);
+			String escapeExprSpecialWord = RegexUtils.escapeExprSpecialWord(chara.toString());
+			if (i == gramerChar.size() - 1) {
+				reg.append(escapeExprSpecialWord).append(")?");
+				break;
 			}
+			else reg.append(escapeExprSpecialWord).append("|");
 		}
-		return keyword;
+		return reg.toString();
 	}
 
 }

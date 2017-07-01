@@ -17,7 +17,7 @@ package com.deepoove.poi.template.cell;
 
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
-import com.deepoove.poi.resolver.GramerSymbol;
+import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 
 public class CellTemplate extends ElementTemplate {

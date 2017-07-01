@@ -35,7 +35,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.resolver.GramerSymbol;
+import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 
 /**
@@ -55,7 +55,7 @@ public class RunTemplate extends ElementTemplate {
 		this.tagName = tagName;
 		this.run = run;
 	}
-
+	
 	public static RunTemplate createRunTemplate(GramerSymbol parseGramer,
 			String tagName, XWPFRun run) {
 		RunTemplate template = null;
@@ -72,9 +72,11 @@ public class RunTemplate extends ElementTemplate {
 		template.source = GramerSymbol.GRAMER_PREFIX + parseGramer.toString()
 				+ tagName + GramerSymbol.GRAMER_SUFFIX;
 		template.tagName = tagName;
+		template.sign = parseGramer.getSymbol();
 		template.run = run;
 		return template;
 	}
+	
 
 	public Integer getRunPos() {
 		XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
@@ -118,5 +120,7 @@ public class RunTemplate extends ElementTemplate {
 	public void setRun(XWPFRun run) {
 		this.run = run;
 	}
+
+	
 
 }

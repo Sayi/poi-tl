@@ -15,7 +15,8 @@ public class TemplateParserTest {
 
 	@Test
 	public void TestRule() {
-		Pattern compile = Pattern.compile(TemplateResolver.RULER_REGEX);
+		Pattern compile = Pattern.compile("");
+//		Pattern compile = Pattern.compile(TemplateResolver.RULER_REGEX);
 //		System.out.println(compile.matcher("{{123}}").matches());
 //		System.out.println(compile.matcher("{{@ada_123}}").matches());
 //		System.out.println(compile.matcher("{{#ada_123}}").matches());
@@ -41,7 +42,7 @@ public class TemplateParserTest {
 //		System.out.println( m.replaceAll("").trim());
 		
 		String str = "ada{{sayi}}dsfsad{dfds{{@ada}}dsfsad{{qishi}}{{youdou}}";
-		toConsole(str.split(TemplateResolver.RULER_REGEX));
+		//toConsole(str.split(TemplateResolver.RULER_REGEX));
 		//toConsole(compile.split(str));
 		Matcher matcher = compile.matcher(str);
 		matcher.matches();

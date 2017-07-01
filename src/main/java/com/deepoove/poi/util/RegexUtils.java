@@ -13,43 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.template;
+package com.deepoove.poi.util;
 
-public class ElementTemplate {
-	protected Character sign;
-	protected String tagName;
-	protected String source;
+import org.apache.commons.lang3.StringUtils;
 
-	public ElementTemplate() {}
+/**
+ * 正则工具类
+ * 
+ * @author Sayi
+ * @version
+ */
+public final class RegexUtils {
 
-	/**
-	 * @return the tagName
-	 */
-	public String getTagName() {
-		return tagName;
-	}
-
-	/**
-	 * @param tagName
-	 *            the tagName to set
-	 */
-	public void setTagName(String tagName) {
-		this.tagName = tagName;
-	}
-
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
-	public Character getSign() {
-		return sign;
-	}
-
-	public void setSign(Character sign) {
-		this.sign = sign;
+	public static String escapeExprSpecialWord(String keyword) {
+		if (StringUtils.isNotBlank(keyword)) {
+			String[] fbsArr = { "\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}",
+					"|" };
+			for (String key : fbsArr) {
+				if (keyword.contains(key)) {
+					keyword = keyword.replace(key, "\\" + key);
+				}
+			}
+		}
+		return keyword;
 	}
 }

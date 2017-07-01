@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.resolver;
+package com.deepoove.poi.config;
 
+/**
+ * 默认模板语法
+ * @author Sayi
+ * @version 
+ */
 public enum GramerSymbol {
 
 	IMAGE('@'), TEXT('\0'), TABLE('#'), NUMBERIC('*');
 
 	public static final String GRAMER_PREFIX = "{{";
 	public static final String GRAMER_SUFFIX = "}}";
-	public static final String GRAMER_SIGN = "(#|@|\\*)";
-
+	
 	private char symbol;
 
 	private GramerSymbol(char symbol) {

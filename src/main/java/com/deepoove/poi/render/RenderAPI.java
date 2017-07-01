@@ -30,11 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.run.TextRunTemplate;
+import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * @author Sayi
@@ -80,9 +81,9 @@ public class RenderAPI {
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("tag-name:" + runTemplate.getTagName());
 			logger.debug(runTemplate.getClass().toString());
-			RenderPolicy policy = template.getPolicy(TextRunTemplate.class);
+			RenderPolicy policy = template.getConfig().getDefaultPolicys()
+					.get(Character.valueOf('\0'));
 			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
-
 		}
 	}
 
@@ -92,12 +93,17 @@ public class RenderAPI {
 		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
 				|| datas.isEmpty())
 			return;
+		Configure config = template.getConfig();
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("tag-name:" + runTemplate.getTagName());
 			logger.debug(runTemplate.getClass().toString());
-			RenderPolicy policy = null == template.getPolicy(runTemplate.getTagName())
-					? template.getPolicy(runTemplate.getClass())
-					: template.getPolicy(runTemplate.getTagName());
+			RenderPolicy policy = config.getCustomPolicy(runTemplate.getTagName());
+			if (null == policy) {
+				if (runTemplate instanceof RunTemplate) {
+					Character sign = runTemplate.getSign();
+					policy = config.getDefaultPolicy(sign);
+				}
+			}
 			if (null == policy) throw new RenderException(
 					"cannot find render policy: [" + runTemplate.getTagName() + "]");
 			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
