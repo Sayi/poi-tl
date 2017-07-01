@@ -35,10 +35,10 @@ import com.deepoove.poi.template.run.RunTemplate;
 public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object data,
+	public void render(ElementTemplate eleTemplate, Object data,
 			XWPFTemplate template) {
 		NiceXWPFDocument doc = template.getXWPFDocument();
-		RunTemplate runTemplate = (RunTemplate) runTemplateP;
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		try {
 			XmlCursor newCursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();

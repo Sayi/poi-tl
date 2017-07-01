@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data;
 
+import com.deepoove.poi.util.BytePictureUtils;
+
 /**
  * 图片渲染数据
  * 
@@ -42,12 +44,23 @@ public class PictureRenderData implements RenderData {
 	 */
 	private transient byte[] data;
 
+	/**
+	 * @param width
+	 * @param height
+	 * @param path  本地图片路径
+	 */
 	public PictureRenderData(int width, int height, String path) {
 		this.width = width;
 		this.height = height;
 		this.path = path;
 	}
 
+	/**
+	 * @param width
+	 * @param height
+	 * @param path 标识图片后缀，如.png、.jpg等
+	 * @param data 图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
+	 */
 	public PictureRenderData(int width, int height, String path, byte[] data) {
 		this.width = width;
 		this.height = height;

@@ -34,85 +34,91 @@ import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * 简单的表格处理，暂无样式
+ * 
  * @author Sayi 卅一
  *
  */
 public class SimpleTableRenderPolicy implements RenderPolicy {
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object data,
-			XWPFTemplate template) {
+	public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
 		NiceXWPFDocument doc = template.getXWPFDocument();
-		RunTemplate runTemplate = (RunTemplate) runTemplateP;
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		if (null == data) return;
-		
+
 		TableRenderData tableData = (TableRenderData) data;
 		List<RenderData> headers = tableData.getHeaders();
 		List<Object> datas = tableData.getDatas();
+
 		if (datas == null || datas.isEmpty()) {
-			//XWPFTable table = doc.createTable(2, headers.size());
-			XWPFTable table = doc.insertNewTable(run ,2, headers.size());
-			if (null == table){
+			if (headers == null || headers.isEmpty()) {
+				runTemplate.getRun().setText("", 0);
+				return;
+			}
+			// XWPFTable table = doc.createTable(2, headers.size());
+			XWPFTable table = doc.insertNewTable(run, 2, headers.size());
+			if (null == table) {
 				logger.warn("cannot insert table.");
 				return;
 			}
 			CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
 			width.setW(BigInteger.valueOf(tableData.getWidth()));
-			//width.setType(STTblWidth.);
+			// width.setType(STTblWidth.);
 			createHeader(table, headers);
-			doc.mergeCellsHorizonal(table, 1, 0, 2);
+			doc.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
 			XWPFTableCell cell = table.getRow(1).getCell(0);
 			cell.setText(tableData.getNoDatadesc());
 
 		} else {
-			int size = datas.size();
-			XWPFTable table = doc.insertNewTable(run, 1 + size, headers.size());
+			int maxColom = 0;
+			int row = datas.size();
+			int startRow = 1;
+			if (headers == null || headers.isEmpty()) {
+				startRow = 0;
+				maxColom = getMaxColumFromData(datas);
+			} else {
+				row++;
+				maxColom = headers.size();
+			}
+			XWPFTable table = doc.insertNewTable(run, row, maxColom);
 			CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
 			width.setW(BigInteger.valueOf(tableData.getWidth()));
 			createHeader(table, headers);
-			int i = 1;
 			for (Object obj : datas) {
+				if (null == obj) continue;
 				String str = obj.toString();
 				String[] split = str.split(";");
 				int length = split.length;
 				for (int m = 0; m < length; m++) {
-					table.getRow(i).getCell(m).setText(split[m]);
+					table.getRow(startRow).getCell(m).setText(split[m]);
 				}
-				i++;
+				startRow++;
 			}
 		}
-
-		
-		
-		//doc.getDocument().getBody().insertNewTbl(arg0)
-		
 		runTemplate.getRun().setText("", 0);
+	}
 
-		//XWPFTable table = new XWPFTable(doc.getDocument().getBody().addNewTbl(), doc, 2, headers.size());
-		//doc.insertTable(0, table);
-//		XmlCursor newCursor =
-//		doc.getDocument().getBody().getPArray(1).newCursor();
-//		XWPFParagraph paragraph = run.getParagraph();
-//		XmlCursor cursor = paragraph.getCTP().newCursor();
-//		XWPFTable t1 = doc.insertNewTbl(cursor);
-//		t1.getRow(0).getCell(0).setText("are you sure?");
-//		XWPFTableCell cell = t1.getRow(0).addNewTableCell();
-//		cell.setText("what are you?");
-		//XWPFTable tableOne = run.getParagraph().getBody().insertNewTbl(c);
-//		run.getCTR().newCursor();
-
+	private int getMaxColumFromData(List<Object> datas) {
+		int maxColom = 0;
+		for (Object obj : datas) {
+			if (null == obj) continue;
+			String str = obj.toString();
+			String[] split = str.split(";");
+			if (split.length > maxColom) maxColom = split.length;
+		}
+		return maxColom;
 	}
 
 	private void createHeader(XWPFTable table, List<RenderData> headers) {
+		if (null == headers || headers.isEmpty()) return;
 		int i = 0;
 		for (RenderData head : headers) {
 			TextRenderData textHead = (TextRenderData) head;
 			Style style = textHead.getStyle();
 			String color = null == style ? null : style.getColor();
 			table.getRow(0).getCell(i).setText(textHead.getText());
-			if (null != color)
-				table.getRow(0).getCell(i).setColor(color);
+			if (null != color) table.getRow(0).getCell(i).setColor(color);
 			i++;
 		}
 	}

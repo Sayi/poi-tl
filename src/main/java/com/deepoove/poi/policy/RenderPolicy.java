@@ -22,10 +22,9 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.ElementTemplate;
 
 public interface RenderPolicy {
-	
+
 	Logger logger = LoggerFactory.getLogger(RenderPolicy.class);
 
-	void render(ElementTemplate runTemplate, Object data,
-			XWPFTemplate template);
+	void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
 
 }

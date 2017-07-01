@@ -69,7 +69,8 @@ public class SimpleTable {
  }
 
  public static void createSimpleTable() throws Exception {
-     XWPFDocument doc = new XWPFDocument();
+     @SuppressWarnings("resource")
+	XWPFDocument doc = new XWPFDocument();
 
      XWPFTable table = doc.createTable(3, 3);
 
@@ -113,7 +114,8 @@ public class SimpleTable {
   */
  public static void createStyledTable() throws Exception {
  	// Create a new document from scratch
-     XWPFDocument doc = new XWPFDocument();
+     @SuppressWarnings("resource")
+	XWPFDocument doc = new XWPFDocument();
  	// -- OR --
      // open an existing empty document with styles already defined
      //XWPFDocument doc = new XWPFDocument(new FileInputStream("base_document.docx"));

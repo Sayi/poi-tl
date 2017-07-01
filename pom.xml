@@ -10,7 +10,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>0.0.6</version>
+	<version>1.0.0-beta</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>

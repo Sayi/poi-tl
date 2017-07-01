@@ -34,8 +34,8 @@ public class PictureRenderPolicy implements RenderPolicy {
 	protected final Logger logger = LoggerFactory.getLogger(PictureRenderPolicy.class);
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object renderData, XWPFTemplate doc) {
-		RunTemplate runTemplate = (RunTemplate) runTemplateP;
+	public void render(ElementTemplate eleTemplate, Object renderData, XWPFTemplate doc) {
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		if (renderData == null) { return; }
 		PictureRenderData pictureRenderData = null;

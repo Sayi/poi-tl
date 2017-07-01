@@ -21,6 +21,7 @@ import com.deepoove.poi.tl.datasource.DataSourceTest;
  */
 public class XWPFTemplateTestV4 {
 
+	@SuppressWarnings("serial")
 	@Test
 	public void testV4() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>(){{
@@ -52,13 +53,14 @@ public class XWPFTemplateTestV4 {
 		
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);;
 
-		FileOutputStream out = new FileOutputStream("out.docx");
+		FileOutputStream out = new FileOutputStream("out_PB.docx");
 		template.write(out);
 		out.flush();
 		out.close();
 		template.close();
 	}
 	
+	@SuppressWarnings("serial")
 	@Test
 	public void testRenderObject() throws Exception {
 		DataSourceTest obj = new DataSourceTest();
@@ -85,13 +87,14 @@ public class XWPFTemplateTestV4 {
 		
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(obj);
 
-		FileOutputStream out = new FileOutputStream("out.docx");
+		FileOutputStream out = new FileOutputStream("out_PB.docx");
 		template.write(out);
 		template.close();
 		out.flush();
 		out.close();
 	}
 	
+	@SuppressWarnings("serial")
 	@Test
 	public void testRender2() throws Exception{
 		Map<String, Object> datas = new HashMap<String, Object>(){{
@@ -115,6 +118,7 @@ public class XWPFTemplateTestV4 {
 		template.close();
 	}
 	
+	@SuppressWarnings("serial")
 	@Test
 	public void testRenderMerge() throws Exception{
 		Map<String, Object> datas = new HashMap<String, Object>(){{
@@ -126,7 +130,7 @@ public class XWPFTemplateTestV4 {
 		
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);;
 		
-		FileOutputStream out = new FileOutputStream("out.docx");
+		FileOutputStream out = new FileOutputStream("out_template.docx");
 		template.write(out);
 		out.flush();
 		out.close();

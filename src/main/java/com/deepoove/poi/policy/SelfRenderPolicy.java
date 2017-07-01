@@ -29,9 +29,9 @@ import com.deepoove.poi.template.run.RunTemplate;
 public class SelfRenderPolicy implements RenderPolicy {
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object renderData,
+	public void render(ElementTemplate eleTemplate, Object renderData,
 			XWPFTemplate template) {
-		RunTemplate runTemplate = (RunTemplate) runTemplateP;
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		run.setText(runTemplate.getSource(), 0);
 	}

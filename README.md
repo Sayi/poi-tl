@@ -39,7 +39,7 @@ V0.0.3
     <dependency>
         <groupId>com.deepoove</groupId>
         <artifactId>poi-tl</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
     </dependency>
 
 # 语法
@@ -144,17 +144,17 @@ V0.0.3
 
 # 渲染图
 * word模板文件  
-![](src/test/resources/temp3.png)
+![](dist/temp3.png)
 * word渲染后生成的文件  
-![](src/test/resources/tempv3.png)
+![](dist/tempv3.png)
 * word模板文件  
-![](src/test/resources/temp4.png)
+![](dist/temp4.png)
 * word渲染后生成的文件  
-![](src/test/resources/tempv4.png)
+![](dist/tempv4.png)
 * word模板文件  
-![](src/test/resources/temp5.png)
+![](dist/temp5.png)
 * word渲染后生成的文件  
-![](src/test/resources/tempv5.png)
+![](dist/tempv5.png)
 
 # 文档
 详细文档高级扩展请参见:[poi-tl文档](http://deepoove.com/poi-tl/)

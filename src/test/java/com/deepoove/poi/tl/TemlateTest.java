@@ -16,6 +16,7 @@ import com.deepoove.poi.render.RenderAPI;
 
 public class TemlateTest {
 
+	@SuppressWarnings("serial")
 	@Test
 	public void testName() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>(){{

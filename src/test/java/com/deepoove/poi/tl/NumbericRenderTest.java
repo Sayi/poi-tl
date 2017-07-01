@@ -58,7 +58,7 @@ public class NumbericRenderTest {
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/numberic.docx")
 				.render(datas);
 
-		FileOutputStream out = new FileOutputStream("out.docx");
+		FileOutputStream out = new FileOutputStream("out_numberic.docx");
 		template.write(out);
 		out.flush();
 		out.close();

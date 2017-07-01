@@ -22,17 +22,17 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.StyleUtils;
 
 public class TextRenderPolicy implements RenderPolicy {
 
 	private static final String LINE_CHARACTOR = "\\n";
 
 	@Override
-	public void render(ElementTemplate runTemplateP, Object renderData, XWPFTemplate template) {
-		RunTemplate runTemplate = (RunTemplate) runTemplateP;
+	public void render(ElementTemplate eleTemplate, Object renderData, XWPFTemplate template) {
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		if (null == renderData) {
 			// support String to set blank
@@ -44,10 +44,10 @@ public class TextRenderPolicy implements RenderPolicy {
 		if (renderData instanceof TextRenderData) {
 			textRenderData = (TextRenderData) renderData;
 		} else {
-			textRenderData = new TextRenderData(String.valueOf(renderData));
+			textRenderData = new TextRenderData(renderData.toString());
 		}
 		String data = textRenderData.getText();
-		styleRun(run, textRenderData.getStyle());
+		StyleUtils.styleRun(run, textRenderData.getStyle());
 		if (null == data) data = "";
 
 		if (data.contains(LINE_CHARACTOR)) {
@@ -71,21 +71,5 @@ public class TextRenderPolicy implements RenderPolicy {
 		}
 	}
 
-	private void styleRun(XWPFRun run, Style style) {
-		if (null != style) {
-			String color = style.getColor();
-			String fontFamily = style.getFontFamily();
-			int fontSize = style.getFontSize();
-			Boolean bold = style.isBold();
-			Boolean italic = style.isItalic();
-			Boolean strike = style.isStrike();
-			if (null != color) run.setColor(color);
-			if (0 != fontSize) run.setFontSize(fontSize);
-			if (null != fontFamily) run.setFontFamily(fontFamily);
-			if (null != bold) run.setBold(bold);
-			if (null != italic) run.setItalic(italic);
-			if (null != strike) run.setStrikeThrough(strike);
-		}
-	}
-
+	
 }
