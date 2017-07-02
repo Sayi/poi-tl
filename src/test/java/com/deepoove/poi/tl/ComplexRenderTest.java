@@ -14,6 +14,7 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.tl.mypolicy.MyTableRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -109,19 +110,34 @@ public class ComplexRenderTest {
 						add(new TextRenderData("d0d0d0", "过户时间"));
 						add(new TextRenderData("d0d0d0", "过户方式"));
 					}
-				}, null, "无记录", 9500));
+				}, new ArrayList<Object>() {
+					{
+						add("1;add new # gramer;3");
+						add("1;add new # gramer;3");
+					}
+				}, "无记录", 9500));
 
 			}
 		};
 
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx")
-				.render(datas);
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
+		//动态持有XWPFTable对象
+		template.registerPolicy("table", new MyTableRenderPolicy());
+		template.render(datas);
 
 		FileOutputStream out = new FileOutputStream("out_complex.docx");
 		template.write(out);
 		out.flush();
 		out.close();
 		template.close();
+		
+		
+//		//输出流，便于在servlet下载
+//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//		template.write(bos);
+//		bos.flush();
+//		bos.close();
+//		template.close();
 	}
 
 	

@@ -36,7 +36,7 @@ public class PluginTest {
 		XWPFTemplate template = XWPFTemplate
 				.compile(new File("src/test/resources/plugin.docx"), plugin);
 		
-		//自定义渲染策略
+		//自定义策略
 		template.registerPolicy("text", new SelfRenderPolicy());
 		
 		//渲染

@@ -28,7 +28,7 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
- * 支持表格内的文本模板动态操作table
+ * 支持表格内的文本模板动态持有XWPFTable对象
  * @author Sayi 卅一
  * @version 0.0.3
  */
@@ -50,7 +50,7 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 			XWPFTable table = doc.getTable((CTTbl) object);
 			render(table, data);
 		} catch (Exception e) {
-			logger.error("dynamic table error:" + e.getMessage());
+			logger.error("dynamic table error:" + e.getMessage(), e);
 		}
 	}
 
