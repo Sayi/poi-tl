@@ -47,7 +47,7 @@ import com.deepoove.poi.util.StyleUtils;
  * @version 0.0.1
  */
 public class TemplateResolver {
-	private static final Logger logger = LoggerFactory.getLogger(TemplateResolver.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateResolver.class);
 	
 	public final String RULER_REGEX;
 	public final String EXTRA_REGEX;
@@ -144,60 +144,84 @@ public class TemplateResolver {
 	 * @return
 	 */
 	public  List<RunTemplate> parseRun(XWPFParagraph paragraph) {
+		if (null  == paragraph) return null;
 		List<XWPFRun> runs = paragraph.getRuns();
 		if (null == runs || runs.isEmpty()) return null;
 		String text = paragraph.getText();
-		logger.debug("Paragrah's text is:" + text);
-		List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<Pair<RunEdge, RunEdge>>();
+		LOGGER.debug("The Paragrah's text is:{}", text);
+		
+		List<Pair<RunEdge, RunEdge>> runEdgeListPairs = new ArrayList<Pair<RunEdge, RunEdge>>();
 		List<String> tags = new ArrayList<String>();
-		calcTagPosInParagraph(text, pairs, tags);
-
-		List<RunTemplate> rts = new ArrayList<RunTemplate>();
-		if (pairs.isEmpty()) return rts;
-		RunTemplate runTemplate;
-		calcRunPosInParagraph(runs, pairs);
-		for (Pair<RunEdge, RunEdge> pai : pairs) {
-			logger.debug(pai.getLeft().toString());
-			logger.debug(pai.getRight().toString());
+		
+		Matcher matcher = TAG_PATTERN.matcher(text);
+		while (matcher.find()) {
+			tags.add(matcher.group());
+			runEdgeListPairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
+					new RunEdge(matcher.end(), matcher.group())));
 		}
+		if (tags.isEmpty()) return null;
+		
+		//search then calculate run edge
+		searchRunEdge(runs, runEdgeListPairs);
+		for (Pair<RunEdge, RunEdge> pair : runEdgeListPairs) {
+			LOGGER.debug(pair.getLeft().toString());
+			LOGGER.debug(pair.getRight().toString());
+		}
+		
 		// split and merge
-		Pair<RunEdge, RunEdge> pair2 = pairs.get(0);
-		int length = pairs.size();
-		int tagIndex = length;
-		for (int n = length - 1; n >= 0; n--) {
-			pair2 = pairs.get(n);
-			RunEdge left2 = pair2.getLeft();
-			RunEdge right2 = pair2.getRight();
-			int left_r = left2.getRunPos();
-			int right_r = right2.getRunPos();
-			int runEdge = left2.getRunEdge();
-			int runEdge2 = right2.getRunEdge();
-			String text1 = runs.get(left_r).getText(0);
-			String text2 = runs.get(right_r).getText(0);
-			if (runEdge2 + 1 >= text2.length()) {
-				if (left_r != right_r) paragraph.removeRun(right_r);
+		List<RunTemplate> rts = new ArrayList<RunTemplate>();
+		
+		int size = runEdgeListPairs.size();
+		int tagIndex = size;
+		RunTemplate runTemplate;
+		Pair<RunEdge, RunEdge> runEdgePair;
+		for (int n = size - 1; n >= 0; n--) {
+			runEdgePair = runEdgeListPairs.get(n);
+			RunEdge startEdge = runEdgePair.getLeft();
+			RunEdge endEdge = runEdgePair.getRight();
+			int startRunPos = startEdge.getRunPos();
+			int endRunPos = endEdge.getRunPos();
+			int startOffset = startEdge.getRunEdge();
+			int endOffset = endEdge.getRunEdge();
+			
+			String startText = runs.get(startRunPos).getText(0);
+			String endText = runs.get(endRunPos).getText(0);
+			if (endOffset + 1 >= endText.length()) {
+				//end run 无需split，若不是start run，直接remove
+				if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
 			} else {
-				String substring = text2.substring(runEdge2 + 1, text2.length());
-				if (left_r == right_r) {
-					XWPFRun insertNewRun = paragraph.insertNewRun(right_r + 1);
-					StyleUtils.styleRun(insertNewRun, runs.get(right_r));
-					insertNewRun.setText(substring, 0);
-				} else runs.get(right_r).setText(substring, 0);
+				//split end run, set extra in a run
+				String extra = endText.substring(endOffset + 1, endText.length());
+				if (startRunPos == endRunPos) {
+					XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
+					StyleUtils.styleRun(extraRun, runs.get(endRunPos));
+					extraRun.setText(extra, 0);
+				} else {
+					XWPFRun extraRun = runs.get(endRunPos);
+					extraRun.setText(extra, 0);
+				}
 			}
-			for (int m = right_r - 1; m > left_r; m--) {
+			
+			//remove extra run
+			for (int m = endRunPos - 1; m > startRunPos; m--) {
 				paragraph.removeRun(m);
 			}
-			if (runEdge <= 0) {
-				runs.get(left_r).setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(left_r));
+			
+			if (startOffset <= 0) {
+				//start run 无需split
+				XWPFRun templateRun = runs.get(startRunPos);
+				templateRun.setText(tags.get(--tagIndex), 0);
+				runTemplate = parseRun(runs.get(startRunPos));
 			} else {
-				String substring = text1.substring(0, runEdge);
-				XWPFRun xwpfRun = runs.get(left_r);
-				runs.get(left_r).setText(substring, 0);
-				XWPFRun insertNewRun = paragraph.insertNewRun(left_r + 1);
-				StyleUtils.styleRun(insertNewRun, xwpfRun);
-				insertNewRun.setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(left_r + 1));
+				//split start run, set extra in a run
+				String extra = startText.substring(0, startOffset);
+				XWPFRun extraRun = runs.get(startRunPos);
+				extraRun.setText(extra, 0);
+				
+				XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
+				StyleUtils.styleRun(templateRun, extraRun);
+				templateRun.setText(tags.get(--tagIndex), 0);
+				runTemplate = parseRun(runs.get(startRunPos + 1));
 			}
 
 			if (null != runTemplate) {
@@ -207,65 +231,58 @@ public class TemplateResolver {
 		return rts;
 	}
 
-	private static void calcRunPosInParagraph(List<XWPFRun> runs,
-			List<Pair<RunEdge, RunEdge>> pairs) {
-		int size = runs.size(), pos = 0, calc = 0;
+	private void searchRunEdge(List<XWPFRun> runs, List<Pair<RunEdge, RunEdge>> pairs) {
+		int size = runs.size();
+		int cursor = 0;// 游标
+		
+		int pos = 0;
+		//计算第0个模板
 		Pair<RunEdge, RunEdge> pair = pairs.get(pos);
-		RunEdge leftEdge = pair.getLeft();
-		RunEdge rightEdge = pair.getRight();
-		int leftInAll = leftEdge.getAllPos();
-		int rightInAll = rightEdge.getAllPos();
+		RunEdge startEdge = pair.getLeft();
+		RunEdge endEdge = pair.getRight();
+		int start = startEdge.getAllPos();
+		int end = endEdge.getAllPos();
 		for (int i = 0; i < size; i++) {
 			XWPFRun run = runs.get(i);
-			String str = run.getText(0);
-			if (null == str) {
-				logger.warn("found the empty text run,may be produce bug:" + run);
-				calc += run.toString().length();
+			String text = run.getText(0);
+			//游标略过empty run
+			if (null == text) {
+				LOGGER.warn("found the empty text run,may be produce bug:" + run);
+				cursor += run.toString().length();
 				continue;
 			}
-			logger.debug(str);
-			if (str.length() + calc < leftInAll) {
-				calc += str.length();
+			LOGGER.debug(text);
+			//起始位置不足，游标指向下一run
+			if (text.length() + cursor < start) {
+				cursor += text.length();
 				continue;
 			}
-			for (int j = 0; j < str.length(); j++) {
-				if (calc + j == leftInAll) {
-					leftEdge.setRunPos(i);
-					leftEdge.setRunEdge(j);
-					leftEdge.setText(str);
+			//索引text
+			for (int offset = 0; offset < text.length(); offset++) {
+				if (cursor + offset == start) {
+					startEdge.setRunPos(i);
+					startEdge.setRunEdge(offset);
+					startEdge.setText(text);
 				}
-				if (calc + j == rightInAll - 1) {
-					rightEdge.setRunPos(i);
-					rightEdge.setRunEdge(j);
-					rightEdge.setText(str);
+				if (cursor + offset == end - 1) {
+					endEdge.setRunPos(i);
+					endEdge.setRunEdge(offset);
+					endEdge.setText(text);
 
 					if (pos == pairs.size() - 1) break;
+					
+					//计算下一个模板
 					pair = pairs.get(++pos);
-					leftEdge = pair.getLeft();
-					rightEdge = pair.getRight();
-					leftInAll = leftEdge.getAllPos();
-					rightInAll = rightEdge.getAllPos();
+					startEdge = pair.getLeft();
+					endEdge = pair.getRight();
+					start = startEdge.getAllPos();
+					end = endEdge.getAllPos();
 				}
 			}
-			calc += str.length();
+			//游标指向下一run
+			cursor += text.length();
 		}
 	}
-
-	private  void calcTagPosInParagraph(String text, List<Pair<RunEdge, RunEdge>> pairs,
-			List<String> tags) {
-		String group = null;
-		int start = 0, end = 0;
-		Matcher matcher = TAG_PATTERN.matcher(text);
-		while (matcher.find()) {
-			group = matcher.group();
-			tags.add(group);
-			start = text.indexOf(group, end);
-			end = start + group.length();
-			pairs.add(new ImmutablePair<RunEdge, RunEdge>(new RunEdge(start, group),
-					new RunEdge(end, group)));
-		}
-	}
-
 
 	public  RunTemplate parseRun(XWPFRun run) {
 		String text = null;
@@ -274,7 +291,7 @@ public class TemplateResolver {
 	}
 
 	private <T> ElementTemplate parseTemplateFactory(String text, T obj) {
-		logger.debug("parse text:" + text);
+		LOGGER.debug("parse text:" + text);
 		// temp ,future need to word analyze
 		if (TAG_PATTERN.matcher(text).matches()) {
 			String tag = VAR_PATTERN.matcher(text).replaceAll("").trim();
