@@ -17,7 +17,6 @@ package com.deepoove.poi.render;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -46,20 +46,22 @@ public class RenderAPI {
 
 	private static final Logger logger = LoggerFactory.getLogger(RenderAPI.class);
 
+	/**
+	 * 协助调试：判断是否有缺失模板
+	 * 
+	 * @param template
+	 * @param datas
+	 */
 	public static void debug(XWPFTemplate template, Map<String, Object> datas) {
 		List<ElementTemplate> all = template.getElementTemplates();
-		Set<String> tagtKeys = new HashSet<String>();
-
-		if (all == null || all.isEmpty()) {
-			if (null == datas || datas.isEmpty()) {
-				logger.debug("no template gramer find or no render data find");
-				return;
-			}
+		logger.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
+		if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty())) {
+			logger.debug("No template gramer find and no render data find");
+			return;
 		}
-
-		logger.debug("template tag size is :" + (null == all ? 0 : all.size()));
+		Set<String> tagtKeys = new HashSet<String>();
 		for (ElementTemplate ele : all) {
-			logger.debug("parse the tag:" + ele.getTagName());
+			logger.debug("Parse the tag：{}", ele.getTagName());
 			tagtKeys.add(ele.getTagName());
 		}
 
@@ -70,19 +72,23 @@ public class RenderAPI {
 		Iterator<String> iterator = copySet.iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			logger.warn("cannot find the gramer tag in template:" + key);
+			logger.warn("Cannot find the gramer tag in template:" + key);
 		}
 	}
 
+	/**
+	 * 自我渲染
+	 * 
+	 * @param template
+	 */
 	public static void selfRender(XWPFTemplate template) {
-		if (null == template) throw new POIXMLException("template is null,should be setted first.");
+		if (null == template) throw new POIXMLException("Template is null,should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
 		if (null == elementTemplates || elementTemplates.isEmpty()) return;
+		RenderPolicy policy = null;
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.debug("tag-name:" + runTemplate.getTagName());
-			logger.debug(runTemplate.getClass().toString());
-			RenderPolicy policy = template.getConfig().getDefaultPolicys()
-					.get(Character.valueOf('\0'));
+			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
+			policy = template.getConfig().getDefaultPolicys().get(Character.valueOf('\0'));
 			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
 		}
 	}
@@ -94,10 +100,10 @@ public class RenderAPI {
 				|| datas.isEmpty())
 			return;
 		Configure config = template.getConfig();
+		RenderPolicy policy = null;
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.debug("tag-name:" + runTemplate.getTagName());
-			logger.debug(runTemplate.getClass().toString());
-			RenderPolicy policy = config.getCustomPolicy(runTemplate.getTagName());
+			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
+			policy = config.getCustomPolicy(runTemplate.getTagName());
 			if (null == policy) {
 				if (runTemplate instanceof RunTemplate) {
 					Character sign = runTemplate.getSign();
@@ -121,12 +127,12 @@ public class RenderAPI {
 			Class<?> clazz = dataSrouce.getClass();
 			while (clazz != Object.class) {
 				Field[] fields = clazz.getDeclaredFields();
+				PropertyDescriptor pd = null;
 				for (Field f : fields) {
-					PropertyDescriptor pd = new PropertyDescriptor(f.getName(),
-							dataSrouce.getClass());
-					Method readMethod = pd.getReadMethod();
-					Object value = readMethod.invoke(dataSrouce);
-					ret.put(f.getName(), value);
+					pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
+					Name annotation = f.getAnnotation(Name.class);
+					Object value = pd.getReadMethod().invoke(dataSrouce);
+					ret.put(null == annotation ? f.getName() : annotation.value(), value);
 				}
 				clazz = clazz.getSuperclass();
 			}

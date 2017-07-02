@@ -40,12 +40,21 @@ public class Configure {
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
 	private List<Character> gramerChars = new ArrayList<Character>();
 
-	public Configure() {
+	private Configure() {
 		plugin(GramerSymbol.TEXT.getSymbol(), new TextRenderPolicy());
 		plugin(GramerSymbol.IMAGE.getSymbol(), new PictureRenderPolicy());
 		plugin(GramerSymbol.TABLE.getSymbol(), new SimpleTableRenderPolicy());
 		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
 	}
+	
+	/**
+	 * 获取默认配置
+	 * @return
+	 */
+	public static Configure createDefault(){
+		return new Configure();
+	}
+
 
 	/**
 	 * 新增语法插件

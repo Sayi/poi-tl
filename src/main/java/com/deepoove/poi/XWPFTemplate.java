@@ -46,9 +46,7 @@ public class XWPFTemplate {
 
 	private List<ElementTemplate> eleTemplates;
 
-	private XWPFTemplate() {
-		config = new Configure();
-	}
+	private XWPFTemplate() {}
 
 	/**
 	 * @param filePath
@@ -78,8 +76,29 @@ public class XWPFTemplate {
 	}
 
 	public static XWPFTemplate compile(File file) {
+		return compile(file, Configure.createDefault());
+	}
+
+	/**
+	 * @param filePath
+	 * @param config
+	 * @return
+	 * @version 1.0.0
+	 */
+	public static XWPFTemplate compile(String filePath, Configure config) {
+		return compile(new File(filePath), config);
+	}
+
+	/**
+	 * @param file
+	 * @param config
+	 * @return
+	 * @version 1.0.0
+	 */
+	public static XWPFTemplate compile(File file, Configure config) {
 		try {
 			XWPFTemplate instance = new XWPFTemplate();
+			instance.config = config;
 			instance.doc = new NiceXWPFDocument(new FileInputStream(file));
 			instance.eleTemplates = new TemplateResolver(instance.config)
 					.parseElementTemplates(instance.doc);
