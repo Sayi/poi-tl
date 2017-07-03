@@ -82,31 +82,7 @@ out.close();
   </ul>
 </p>
 
-<h3>高级：扩展</h3>
-
-<p>
-  
-  <ul>
-    <li>
-      <p>实现自定义渲染器,继承RenderPolicy接口，实现render方法</p>
-      <pre><code>
-  @Override
-  public void render(ElementTemplate runTemplateP, Object renderData,
-      XWPFTemplate template) {
-    RunTemplate runTemplate = (RunTemplate) runTemplateP;
-    XWPFRun run = runTemplate.getRun();
-    ......
-  }
-      </code></pre>
-    </li>
-    <li><p>支持模板自定义渲染</p>
-    <p>通过给XWPFTemplate对象注册标签对应的渲染器，如下：
-    <pre><code>doc.registerPolicy("template", new MyRenderPolicy()); </code></pre></p></li>
-    <li><p>动态表格渲染</p>
-    <p>为了方便对模板中已存在的表格进行动态处理，组件自带了渲染器抽象类DynamicTableRenderPolicy，通过注册表格内的任意标签为自己的渲染器即可
-  </ul>
-</p>
-<h3>文档</h3>
+<h3>详细文档</h3>
 <p> <a href="https://github.com/Sayi/poi-tl/wiki/1.%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3">详细Wiki文档</a>
   <p>
 
