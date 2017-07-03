@@ -15,7 +15,7 @@ import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderAPI;
 
-public class TemlateTest {
+public class TemplateTest {
 
 	@SuppressWarnings({ "serial", "deprecation" })
 	@Test

@@ -96,7 +96,7 @@ public class XWPFTemplateTestV4 {
 	
 	@SuppressWarnings("serial")
 	@Test
-	public void testRender2() throws Exception{
+	public void testRenderJavaObject() throws Exception{
 		Map<String, Object> datas = new HashMap<String, Object>(){{
 			put("score", "92");
 			put("emblem", new PictureRenderData(150, 150, "src/test/resources/emblem.png"));
