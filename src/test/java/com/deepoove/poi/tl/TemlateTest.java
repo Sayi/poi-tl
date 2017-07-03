@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TableRenderData;
@@ -16,7 +17,7 @@ import com.deepoove.poi.render.RenderAPI;
 
 public class TemlateTest {
 
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "deprecation" })
 	@Test
 	public void testName() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>(){{
@@ -31,6 +32,11 @@ public class TemlateTest {
 				add("2;support insert table");
 				add("3;support more style");
 			}}, "no datas", 10600));
+			put("unorderlist", new NumbericRenderData(new ArrayList<TextRenderData>(){{
+				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+			}}));
 			put("website", "http://www.deepoove.com/poi-tl");
 		}};
 

@@ -74,6 +74,17 @@ public class RenderAPI {
 			String key = iterator.next();
 			logger.warn("Cannot find the gramer tag in template:" + key);
 		}
+		tagtKeys.removeAll(keySet);
+		iterator = tagtKeys.iterator();
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+			logger.warn("Cannot find the feild in java Map or Object:" + key);
+		}
+		
+	}
+	
+	public static void debug(XWPFTemplate template, Object datas) {
+		debug(template, convert2Map(datas));
 	}
 
 	/**

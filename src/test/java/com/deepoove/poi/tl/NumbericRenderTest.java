@@ -36,6 +36,7 @@ public class NumbericRenderTest {
 			{
 				//1. 2. 3.
 				put("number123", getData(FMT_DECIMAL));
+				put("number123_dulplicate", getData(FMT_DECIMAL));
 				//1) 2) 3)
 				put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
 				//无序

@@ -9,8 +9,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
-import com.deepoove.poi.resolver.TemplateResolver;
-
 public class TemplateParserTest {
 
 	@Test
