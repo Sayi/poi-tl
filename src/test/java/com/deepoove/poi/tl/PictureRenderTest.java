@@ -36,7 +36,7 @@ public class PictureRenderTest {
 
 	@SuppressWarnings("serial")
 	@Test
-	public void testNumbericRender() throws Exception {
+	public void testPictureRender() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{
 				//本地图片
