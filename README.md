@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl)  
 
+[中文文档 Wiki](https://github.com/Sayi/poi-tl/wiki/1.%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3)
+
+[English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
+
 Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文档增加模板语法，增加渲染模板的方便性，目前支持对段落、页眉、页脚、表格的文本、图片、表单渲染。
 
 对于word模板替换，我们不仅要考虑复杂的模板格式，还要考虑字体，颜色，处理页眉页脚，使用稍显复杂的poi的API等，现实项目中又有许多需求需要后台动态生成数据然后替换word模板，供前台下载或者打印，为了避免：
@@ -19,6 +23,14 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 
 # Change log
 
+v1.0.0
+1. 以插件的思想进行了重新设计
+2. **高度扩展性：语法即插件，像新增插件一样新增语法**
+3. 新增工具类BytePictureUtils，便于操作图片的byte[]数据
+4. 新增Annotation @Name
+5. NiceXWPFDocument新增插入段落insertNewParagraph方法
+6. 新增代码生成工具类CodeGenUtils 
+
 V0.0.5 
 1. bugfix: 解决0.0.4版本解析模板时CTSignedTwips类加载不到的问题  
 2. new feature: 新增列表语法*，支持对有序列表和无序列表的插入 
@@ -35,7 +47,7 @@ V0.0.3
 3. 支持单元格的合并  
 4. 丰富文本样式
 
-# 使用
+# 依赖
     <dependency>
         <groupId>com.deepoove</groupId>
         <artifactId>poi-tl</artifactId>
@@ -43,7 +55,7 @@ V0.0.3
     </dependency>
 
 # 语法
-所有的语法结构都是以 {{ 开始，以 }} 结束(**在下一版本中，语法将支持自定义**)，文档的样式继承模板标签的样式，也可以在渲染数据中指定,实现了样式的最大自由化。
+所有的语法结构都是以 {{ 开始，以 }} 结束，文档的样式继承模板标签的样式，也可以在渲染数据中指定,实现了样式的最大自由化。
 
 * {{template}}
 
@@ -61,7 +73,7 @@ V0.0.3
 
 列表，渲染数据为：NumbericRenderData
 
-# Usage1-Map渲染
+# Usage
     
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
@@ -75,6 +87,12 @@ V0.0.3
 				add("2;support insert table");
 				add("3;support more style");
 			}}, "no datas", 10600));
+			//列表 1. 2. 3.
+		    put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
+			    add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
+			    add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+			    add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
+		    }}));
 		    //图片模板
             put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
     }};
@@ -87,60 +105,6 @@ V0.0.3
     template.write(out);
     template.close();
     out.close();
-
-# Usage2-JavaBean渲染
-
-	DataSourceTest obj = new DataSourceTest();
-	obj.setHeader_version("v0.0.4");
-	obj.setHello("v0.0.4");
-	obj.setWebsite("http://www.deepoove.com/poi-tl");
-	//图片模板
-	obj.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-	obj.setTitle(new TextRenderData("9d55b8",
-				"Deeply in love with the things you love,\\n just deepoove."));
-		
-	XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(obj);
-	FileOutputStream out = new FileOutputStream("out.docx");
-	template.write(out);
-	template.close();
-	out.flush();
-	out.close();
-
-# Usage3-插入列表
-
-	/**
-	 * file:NumbericRenderTest.java
-	 */
-	Map<String, Object> datas = new HashMap<String, Object>() {{
-		//1. 2. 3.
-		put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
-			add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
-			add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-			add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
-		}}));
-		//1) 2) 3)
-		put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
-		//无序
-		put("bullet", getData(FMT_BULLET));
-		//A B C
-		put("ABC", getData(FMT_UPPER_LETTER));
-		//a b c
-		put("abc", getData(FMT_LOWER_LETTER));
-		//ⅰ ⅱ ⅲ
-		put("iiiiii", getData(FMT_LOWER_ROMAN));
-		//Ⅰ Ⅱ Ⅲ
-		put("IIIII", getData(FMT_UPPER_ROMAN));
-		//自定义有序列表显示 (one) (two) (three)
-		put("custom_number", getData(Pair.of(STNumberFormat.CARDINAL_TEXT, "(%1)")));
-		//自定义无序列表显示：定义无序符号
-		put("custom_bullet", getData(Pair.of(STNumberFormat.BULLET, "♬")));
-	}};
-	XWPFTemplate template = XWPFTemplate.compile("src/test/resources/numberic.docx").render(datas);
-	FileOutputStream out = new FileOutputStream("out.docx");
-	template.write(out);
-	out.flush();
-	out.close();
-	template.close();
 
 # 渲染图
 * word模板文件  
@@ -156,9 +120,7 @@ V0.0.3
 * word渲染后生成的文件  
 ![](dist/tempv5.png)
 
-# 文档
-详细文档高级扩展请参见:[poi-tl文档](http://deepoove.com/poi-tl/)
 
 # 建议和完善
-问题可以在issue中提问，任何bug可以直接pull request。
+问题、BUG可以在issue中提问，任何feature可以直接pull request。
 
