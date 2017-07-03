@@ -61,7 +61,7 @@ public class RunTemplate extends ElementTemplate {
 	 * @param tagName
 	 * @param run
 	 * @return
-	 * @deprecated {@link TemplateFactory}
+	 * @deprecated 
 	 */
 	public static RunTemplate createRunTemplate(GramerSymbol parseGramer,
 			String tagName, XWPFRun run) {

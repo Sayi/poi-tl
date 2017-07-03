@@ -113,7 +113,6 @@ public final class BytePictureUtils {
 	/**
 	 * 通过网络地址获取BufferedImage
 	 * 
-	 * @param path
 	 * @return
 	 */
 	public static BufferedImage getUrlBufferedImage(String urlPath) {

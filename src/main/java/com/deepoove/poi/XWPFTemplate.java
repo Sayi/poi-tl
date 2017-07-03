@@ -51,7 +51,6 @@ public class XWPFTemplate {
 	/**
 	 * @param filePath
 	 * @return
-	 * @deprecated @see compile()
 	 */
 	@Deprecated
 	public static XWPFTemplate create(String filePath) {
@@ -61,7 +60,6 @@ public class XWPFTemplate {
 	/**
 	 * @param file
 	 * @return
-	 * @deprecated @see compile()
 	 */
 	@Deprecated
 	public static XWPFTemplate create(File file) {
