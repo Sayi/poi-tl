@@ -51,7 +51,7 @@ V0.0.3
     <dependency>
         <groupId>com.deepoove</groupId>
         <artifactId>poi-tl</artifactId>
-        <version>0.0.6</version>
+        <version>1.0.0</version>
     </dependency>
 
 # 语法
@@ -87,13 +87,13 @@ V0.0.3
 				add("2;support insert table");
 				add("3;support more style");
 			}}, "no datas", 10600));
-			//列表 1. 2. 3.
-		    put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
+            //列表 1. 2. 3.
+            put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
 			    add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
 			    add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
 			    add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
 		    }}));
-		    //图片模板
+            //图片模板
             put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
     }};
 
@@ -122,5 +122,5 @@ V0.0.3
 
 
 # 建议和完善
-问题、BUG可以在issue中提问，任何feature可以直接pull request。
+问题、BUG可以在issue中提问，feature可以pull request。
 
