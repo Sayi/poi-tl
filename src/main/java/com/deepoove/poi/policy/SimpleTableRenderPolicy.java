@@ -21,7 +21,9 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
@@ -62,9 +64,8 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 				logger.warn("cannot insert table.");
 				return;
 			}
-			CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
-			width.setW(BigInteger.valueOf(tableData.getWidth()));
-			// width.setType(STTblWidth.);
+			widthTable(table, tableData.getWidth());
+			
 			createHeader(table, headers);
 			doc.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
 			XWPFTableCell cell = table.getRow(1).getCell(0);
@@ -82,8 +83,7 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 				maxColom = headers.size();
 			}
 			XWPFTable table = doc.insertNewTable(run, row, maxColom);
-			CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
-			width.setW(BigInteger.valueOf(tableData.getWidth()));
+			widthTable(table, tableData.getWidth());
 			createHeader(table, headers);
 			for (Object obj : datas) {
 				if (null == obj) continue;
@@ -97,6 +97,19 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 			}
 		}
 		runTemplate.getRun().setText("", 0);
+	}
+
+	private void widthTable(XWPFTable table, int width) {
+		CTTblPr tblPr = table.getCTTbl().getTblPr();
+		if (null == tblPr){
+			tblPr = table.getCTTbl().addNewTblPr();
+		}
+		CTTblWidth tblW = tblPr.getTblW();
+		if (tblW == null){
+			tblW = tblPr.addNewTblW();
+		}
+		tblW.setType(STTblWidth.DXA);
+		tblW.setW(BigInteger.valueOf(width));
 	}
 
 	private int getMaxColumFromData(List<Object> datas) {
