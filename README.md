@@ -16,7 +16,9 @@ Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文
 
 因此基于poi开发了一套拥有简洁API的跨平台的模板引擎：poi-tl。核心API只需要一行代码：
 
-	XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
+```java
+XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
+```
 
 **PS：本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
 
@@ -48,11 +50,14 @@ V0.0.3
 4. 丰富文本样式
 
 # 依赖
-    <dependency>
-        <groupId>com.deepoove</groupId>
-        <artifactId>poi-tl</artifactId>
-        <version>1.0.0</version>
-    </dependency>
+
+```xml
+<dependency>
+    <groupId>com.deepoove</groupId>
+    <artifactId>poi-tl</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 # 语法
 所有的语法结构都是以 {{ 开始，以 }} 结束，文档的样式继承模板标签的样式，也可以在渲染数据中指定,实现了样式的最大自由化。
@@ -74,7 +79,8 @@ V0.0.3
 列表，渲染数据为：NumbericRenderData
 
 # Usage
-    
+ 
+ ```java
     Map<String, Object> datas = new HashMap<String, Object>(){{
             put("author", new TextRenderData("000000", "Sayi"));
             put("date", "2015-04-01");
@@ -105,6 +111,7 @@ V0.0.3
     template.write(out);
     template.close();
     out.close();
+```
 
 # 渲染图
 * word模板文件  
