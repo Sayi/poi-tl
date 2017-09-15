@@ -25,6 +25,10 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 # Change log
 
+v1.1.0 2017-09-15
+1. 修复老版本office打开表格模板时出错
+2. 新增列表字符样式：设置编号颜色、字体、粗体、斜体等
+
 v1.0.0
 1. 以插件的思想进行了重新设计
 2. **高度扩展性：语法即插件，像新增插件一样新增语法**
@@ -55,7 +59,7 @@ V0.0.3
 <dependency>
     <groupId>com.deepoove</groupId>
     <artifactId>poi-tl</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
