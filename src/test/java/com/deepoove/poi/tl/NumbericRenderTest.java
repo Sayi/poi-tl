@@ -21,6 +21,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enu
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.style.Style;
 
 /**
  * 列表模板
@@ -53,6 +54,19 @@ public class NumbericRenderTest {
 				put("custom_number", getData(Pair.of(STNumberFormat.CARDINAL_TEXT, "(%1)")));
 				//自定义无序列表显示：定义无序符号
 				put("custom_bullet", getData(Pair.of(STNumberFormat.BULLET, "♬")));
+				//自定义编号样式
+				Style fmtStyle = new Style("f44336");
+				fmtStyle.setBold(true);
+				fmtStyle.setItalic(true);
+				fmtStyle.setStrike(true);
+				fmtStyle.setFontSize(24);
+				put("custom_style", new NumbericRenderData(FMT_LOWER_ROMAN, fmtStyle, new ArrayList<TextRenderData>() {
+		            {
+		                add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
+		                add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+		                add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
+		            }
+		        }));
 			}
 		};
 
