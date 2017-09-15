@@ -35,7 +35,6 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.GramerSymbol;
-import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
@@ -44,13 +43,15 @@ import com.deepoove.poi.template.run.RunTemplate;
  * @author Sayi
  * @version 1.0.0
  */
-public class TemplateFactory extends ElementTemplate {
+public class TemplateFactory{
+	
+	public static final char EMPTY_CHAR = '\0'; 
 
 	public static RunTemplate createRunTemplate(String tag, List<Character> gramerChars, XWPFRun run) {
 		RunTemplate template = new RunTemplate();
 		
 		char fisrtChar = tag.charAt(0);
-		Character symbol = Character.valueOf('\0');
+		Character symbol = Character.valueOf(EMPTY_CHAR);
 		for (Character chara : gramerChars){
 			if (chara.equals(fisrtChar)){
 				symbol = Character.valueOf(fisrtChar);
@@ -58,7 +59,7 @@ public class TemplateFactory extends ElementTemplate {
 			}
 		}
 		template.setSource(GramerSymbol.GRAMER_PREFIX + tag + GramerSymbol.GRAMER_SUFFIX);
-		template.setTagName(symbol.equals(Character.valueOf('\0')) ? tag : tag.substring(1));
+		template.setTagName(symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1));
 		template.setSign(symbol);
 		template.setRun(run);
 		return template;
