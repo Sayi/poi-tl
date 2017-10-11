@@ -1,5 +1,6 @@
 package com.deepoove.poi.tl;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,7 +137,31 @@ public class XWPFTemplateTestV4 {
 		out.close();
 		template.close();
 	}
-	
-	
+
+	@SuppressWarnings("serial")
+	@Test
+	public void testCompileInputStream1() throws Exception{
+		Map<String, Object> datas = new HashMap<String, Object>(){{
+			put("score", "92");
+			put("emblem", new PictureRenderData(150, 150, "src/test/resources/emblem.png"));
+			put("college", "自动化");
+			put("profession", "自动化技术");
+			put("class", "2017级一(1)班");
+			put("studentId", "001715");
+			put("studentName", "约翰史密斯");
+			put("teacher", "汤姆汉克斯");
+			put("date", "2017-06-01");
+		}};
+
+		XWPFTemplate template = XWPFTemplate.compile(new FileInputStream("src/test/resources/实验报告模板.docx")).render(datas);;
+
+		FileOutputStream out = new FileOutputStream("out_实验报告模板_inputstream1.docx");
+		template.write(out);
+		out.flush();
+		out.close();
+		template.close();
+	}
+
+
 
 }
