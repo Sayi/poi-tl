@@ -15,9 +15,6 @@
  */
 package com.deepoove.poi.policy;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -28,7 +25,7 @@ import com.deepoove.poi.util.StyleUtils;
 
 public class TextRenderPolicy implements RenderPolicy {
 
-	private static final String LINE_CHARACTOR = "\\n";
+	static final String REGEX_LINE_CHARACTOR = "\\n";
 
 	@Override
 	public void render(ElementTemplate eleTemplate, Object renderData, XWPFTemplate template) {
@@ -49,25 +46,14 @@ public class TextRenderPolicy implements RenderPolicy {
 		String data = textRenderData.getText();
 		StyleUtils.styleRun(run, textRenderData.getStyle());
 		if (null == data) data = "";
-
-		if (data.contains(LINE_CHARACTOR)) {
-			// String[] lines = data.split("\\n");
-			int from = 0, end = 0;
-			List<String> lines = new ArrayList<String>();
-			while (-1 != (end = data.indexOf(LINE_CHARACTOR, from))) {
-				lines.add(data.substring(from, end));
-				from = end + LINE_CHARACTOR.length();
-			}
-			lines.add(data.substring(from));
-			Object[] linesArray = lines.toArray();
-			run.setText(linesArray[0].toString(), 0); // set first line into
-														// XWPFRun
-			for (int i = 1; i < linesArray.length; i++) {
-				run.addBreak(); // add break and insert new text
-				run.setText(linesArray[i].toString());
-			}
-		} else {
-			run.setText(data, 0);
+		
+		String[] split = data.split(REGEX_LINE_CHARACTOR);
+		if (null != split){
+		    run.setText(split[0], 0); 
+		    for (int i = 1; i < split.length; i++) {
+                run.addBreak(); 
+                run.setText(split[i]);
+            }
 		}
 	}
 
