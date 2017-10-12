@@ -1,6 +1,7 @@
 package com.deepoove.poi.tl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,6 +74,16 @@ public class TemplateParserTest {
 	public void toConsole(String[] str){
 		if (str == null) System.out.println("null");
 		for (String s : str) System.out.println(s);
+	}
+	
+	
+	@Test
+	public void testBreak(){
+	    String data = "deeply love this things you love, just deepoove.";
+	    String[] split = data.split("\\n");
+	    boolean contains = data.contains("\\n");
+	    System.out.println(contains);
+	    System.out.println(Arrays.toString(split));
 	}
 	
 	

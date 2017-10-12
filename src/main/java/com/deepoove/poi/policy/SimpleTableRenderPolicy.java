@@ -18,6 +18,7 @@ package com.deepoove.poi.policy;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -91,7 +92,16 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 				String[] split = str.split(";");
 				int length = split.length;
 				for (int m = 0; m < length; m++) {
-					table.getRow(startRow).getCell(m).setText(split[m]);
+				    XWPFTableCell cell = table.getRow(startRow).getCell(m);
+				    //new break line
+				    String[] fragment = split[m].split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
+			        if (null != fragment){
+			            cell.setText(fragment[0]);
+			            for (int i = 1; i < fragment.length; i++) {
+			                XWPFParagraph addParagraph = cell.addParagraph();
+			                addParagraph.createRun().setText(fragment[i]);
+			            }
+			        }
 				}
 				startRow++;
 			}

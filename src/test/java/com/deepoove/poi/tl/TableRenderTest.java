@@ -13,8 +13,6 @@ import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
 /**
- * 列表模板
- * 
  * @author Sayi
  * @version 1.0.0
  */
@@ -49,10 +47,10 @@ public class TableRenderTest {
 				// 有表格头 没有数据
 				put("no_content_table", new TableRenderData(new ArrayList<RenderData>() {
 					{
-						add(new TextRenderData("1E915D", "province"));
-						add(new TextRenderData("1E915D", "city"));
+						add(new TextRenderData("1E915D", "province1"));
+						add(new TextRenderData("1E915D", "city1"));
 					}
-				}, null, "no datas", 8000));
+				}, null, "no datas", 5670));
 				put("no_content_table2", new TableRenderData(new ArrayList<RenderData>() {
 					{
 						add(new TextRenderData("1E915D", "province"));
