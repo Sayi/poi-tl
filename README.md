@@ -27,7 +27,7 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 v1.2.0 2017-10-12
 1. 新增api：`XWPFTemplate compile(InputStream inputStream)`
-2. **不兼容升级：文本模板换行符由原先的\\n替换成更符合语言的\n**
+2. **不兼容升级：文本模板换行符由原先的\\\n替换成更符合语言的\n**
 
 v1.1.0 2017-09-15
 1. 修复老版本office打开表格模板时出错
