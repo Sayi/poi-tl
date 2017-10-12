@@ -77,6 +77,16 @@ public class XWPFTemplate {
 	public static XWPFTemplate compile(File file) {
 		return compile(file, Configure.createDefault());
 	}
+	
+    /**
+     * template file as InputStream
+     * @param inputStream
+     * @return
+     * @version 1.2.0
+     */
+    public static XWPFTemplate compile(InputStream inputStream) {
+        return compile(inputStream, Configure.createDefault());
+    }
 
 	/**
 	 * @param filePath
@@ -87,6 +97,7 @@ public class XWPFTemplate {
 	public static XWPFTemplate compile(String filePath, Configure config) {
 		return compile(new File(filePath), config);
 	}
+	
 
 	/**
 	 * @param file
@@ -96,35 +107,20 @@ public class XWPFTemplate {
 	 */
 	public static XWPFTemplate compile(File file, Configure config) {
 		try {
-			XWPFTemplate instance = new XWPFTemplate();
-			instance.config = config;
-			instance.doc = new NiceXWPFDocument(new FileInputStream(file));
-			instance.eleTemplates = new TemplateResolver(instance.config)
-					.parseElementTemplates(instance.doc);
-			return instance;
-		} catch (FileNotFoundException e) {
-			logger.error("Cannot find the file", e);
-			throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
-		} catch (IOException e) {
-			logger.error("Compile template failed", e);
-			throw new ResolverException("Compile template failed");
-		}
+            return compile(new FileInputStream(file), config);
+        } catch (FileNotFoundException e) {
+            logger.error("Cannot find the file", e);
+            throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
+        }
 	}
 
-	/**
-	 * template file as InputStream
-	 * @param inputStream
-	 * @return
-	 */
-	public static XWPFTemplate compile(InputStream inputStream) {
-		return compile(inputStream, Configure.createDefault());
-	}
 
 	/**
 	 * template file as InputStream
 	 * @param inputStream
 	 * @param config
 	 * @return
+	 * @version 1.2.0
 	 */
 	public static XWPFTemplate compile(InputStream inputStream, Configure config) {
 		try {
