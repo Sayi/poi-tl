@@ -31,8 +31,8 @@ public class TableRenderTest {
 					}
 				}, new ArrayList<Object>() {
 					{
-						add("beijing;beijing");
-						add("zhejiang;hangzhou");
+						add("beijing;bei\njing");
+						add("zhejiang;hang\nzhou");
 					}
 				}, "no datas", 0));
 				// 没有表格头 没有数据

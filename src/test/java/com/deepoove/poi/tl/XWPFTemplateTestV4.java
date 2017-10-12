@@ -29,7 +29,7 @@ public class XWPFTemplateTestV4 {
 			put("header_version", "ver 0.0.3");
 			put("hello", "ver 0.0.3");
 			put("logo", new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-			put("title", new TextRenderData("9d55b8", "Deeply in love with the things you love,\\n just deepoove."));
+			put("title", new TextRenderData("9d55b8", "Deeply in love with the things you love,\n just deepoove."));
 			put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
 				add(new TextRenderData("d0d0d0", ""));
 				add(new TextRenderData("d0d0d0", "introduce"));
