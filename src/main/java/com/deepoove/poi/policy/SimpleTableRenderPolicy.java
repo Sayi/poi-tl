@@ -140,7 +140,15 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
 			TextRenderData textHead = (TextRenderData) head;
 			Style style = textHead.getStyle();
 			String color = null == style ? null : style.getColor();
-			table.getRow(0).getCell(i).setText(textHead.getText());
+			XWPFTableCell cell = table.getRow(0).getCell(i);
+			String[] fragment = textHead.getText().split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
+            if (null != fragment){
+                cell.setText(fragment[0]);
+                for (int j = 1; j < fragment.length; j++) {
+                    XWPFParagraph addParagraph = cell.addParagraph();
+                    addParagraph.createRun().setText(fragment[j]);
+                }
+            }
 			if (null != color) table.getRow(0).getCell(i).setColor(color);
 			i++;
 		}

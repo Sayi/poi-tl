@@ -26,7 +26,7 @@ public class TableRenderTest {
 				// 有表格头 有数据
 				put("table", new TableRenderData(new ArrayList<RenderData>() {
 					{
-						add(new TextRenderData("1E915D", "province"));
+						add(new TextRenderData("1E915D", "prov\nince"));
 						add(new TextRenderData("1E915D", "city"));
 					}
 				}, new ArrayList<Object>() {
