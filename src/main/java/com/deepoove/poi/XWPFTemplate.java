@@ -18,6 +18,7 @@ package com.deepoove.poi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -104,6 +105,35 @@ public class XWPFTemplate {
 		} catch (FileNotFoundException e) {
 			logger.error("Cannot find the file", e);
 			throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
+		} catch (IOException e) {
+			logger.error("Compile template failed", e);
+			throw new ResolverException("Compile template failed");
+		}
+	}
+
+	/**
+	 * template file as InputStream
+	 * @param inputStream
+	 * @return
+	 */
+	public static XWPFTemplate compile(InputStream inputStream) {
+		return compile(inputStream, Configure.createDefault());
+	}
+
+	/**
+	 * template file as InputStream
+	 * @param inputStream
+	 * @param config
+	 * @return
+	 */
+	public static XWPFTemplate compile(InputStream inputStream, Configure config) {
+		try {
+			XWPFTemplate instance = new XWPFTemplate();
+			instance.config = config;
+			instance.doc = new NiceXWPFDocument(inputStream);
+			instance.eleTemplates = new TemplateResolver(instance.config)
+					.parseElementTemplates(instance.doc);
+			return instance;
 		} catch (IOException e) {
 			logger.error("Compile template failed", e);
 			throw new ResolverException("Compile template failed");
