@@ -25,6 +25,10 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 # Change log
 
+v1.2.0 2017-10-12
+1. 新增api：`XWPFTemplate compile(InputStream inputStream)`
+2. **不兼容升级：文本模板换行符由原先的\\n替换成更符合语言的\n**
+
 v1.1.0 2017-09-15
 1. 修复老版本office打开表格模板时出错
 2. 新增列表字符样式：设置编号颜色、字体、粗体、斜体等
@@ -59,7 +63,7 @@ V0.0.3
 <dependency>
     <groupId>com.deepoove</groupId>
     <artifactId>poi-tl</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -85,36 +89,41 @@ V0.0.3
 # Usage
  
  ```java
-    Map<String, Object> datas = new HashMap<String, Object>(){{
-            put("author", new TextRenderData("000000", "Sayi"));
-            put("date", "2015-04-01");
-            //表格模板
-            put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
-				add(new TextRenderData("d0d0d0", ""));
-				add(new TextRenderData("d0d0d0", "introduce"));
-			}},new ArrayList<Object>(){{
-				add("1;add new # gramer");
-				add("2;support insert table");
-				add("3;support more style");
-			}}, "no datas", 10600));
-            //列表 1. 2. 3.
-            put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
-			    add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
-			    add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-			    add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
-		    }}));
-            //图片模板
-            put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
-    }};
+Map<String, Object> datas = new HashMap<String, Object>(){{
 
-    //render
-    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);
+        put("author", new TextRenderData("000000", "Sayi"));
 
-    //out document
-    FileOutputStream out = new FileOutputStream("out.docx");
-    template.write(out);
-    template.close();
-    out.close();
+        put("date", "2015-04-01");
+
+        //表格模板
+        put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
+            add(new TextRenderData("d0d0d0", ""));
+            add(new TextRenderData("d0d0d0", "introduce"));
+        }},new ArrayList<Object>(){{
+            add("1;add new # gramer");
+            add("2;support insert table");
+            add("3;support more style");
+        }}, "no datas", 10600));
+
+        //列表 1. 2. 3.
+        put("number123", new NumbericRenderData(FMT_DECIMAL, new ArrayList<TextRenderData>() {{
+            add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
+            add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+            add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
+        }}));
+        
+        //图片模板
+        put("logo",  new PictureRenderData(100, 100, "/Users/Sayi/image.png"));
+}};
+
+//render
+XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);
+
+//out document
+FileOutputStream out = new FileOutputStream("out.docx");
+template.write(out);
+template.close();
+out.close();
 ```
 
 # 渲染图
