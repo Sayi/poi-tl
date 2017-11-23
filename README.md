@@ -24,41 +24,6 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 **PS：本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
 
-
-# Change log
-
-v1.2.0 2017-10-12
-1. 新增api：`XWPFTemplate compile(InputStream inputStream)`
-2. **不兼容升级：文本模板换行符由原先的\\\n替换成更符合语言的\n**
-
-v1.1.0 2017-09-15
-1. 修复老版本office打开表格模板时出错
-2. 新增列表字符样式：设置编号颜色、字体、粗体、斜体等
-
-v1.0.0
-1. 以插件的思想进行了重新设计
-2. **高度扩展性：语法即插件，像新增插件一样新增语法**
-3. 新增工具类BytePictureUtils，便于操作图片的byte[]数据
-4. 新增Annotation @Name
-5. NiceXWPFDocument新增插入段落insertNewParagraph方法
-6. 新增代码生成工具类CodeGenUtils 
-
-V0.0.5 
-1. bugfix: 解决0.0.4版本解析模板时CTSignedTwips类加载不到的问题  
-2. new feature: 新增列表语法*，支持对有序列表和无序列表的插入 
-
-V0.0.4 
-1. 增加新的api:XWPFTemplate.compile  
-2. 渲染数据除了支持Map以外，还支持JavaBean渲染 
-3. 升级poi组件至最新版本3.16
-
-V0.0.3  
-1. 新增表单语法#  
-2. 支持表单插入  
-2. 渲染器支持对table动态处理DynamicTableRenderPolicy  
-3. 支持单元格的合并  
-4. 丰富文本样式
-
 # 依赖
 
 ```xml
@@ -127,6 +92,42 @@ template.write(out);
 template.close();
 out.close();
 ```
+
+
+# Change log
+
+v1.2.0 2017-10-12
+1. 新增api：`XWPFTemplate compile(InputStream inputStream)`
+2. **不兼容升级：文本模板换行符由原先的\\\n替换成更符合语言的\n**
+
+v1.1.0 2017-09-15
+1. 修复老版本office打开表格模板时出错
+2. 新增列表字符样式：设置编号颜色、字体、粗体、斜体等
+
+v1.0.0
+1. 以插件的思想进行了重新设计
+2. **高度扩展性：语法即插件，像新增插件一样新增语法**
+3. 新增工具类BytePictureUtils，便于操作图片的byte[]数据
+4. 新增Annotation @Name
+5. NiceXWPFDocument新增插入段落insertNewParagraph方法
+6. 新增代码生成工具类CodeGenUtils 
+
+V0.0.5 
+1. bugfix: 解决0.0.4版本解析模板时CTSignedTwips类加载不到的问题  
+2. new feature: 新增列表语法*，支持对有序列表和无序列表的插入 
+
+V0.0.4 
+1. 增加新的api:XWPFTemplate.compile  
+2. 渲染数据除了支持Map以外，还支持JavaBean渲染 
+3. 升级poi组件至最新版本3.16
+
+V0.0.3  
+1. 新增表单语法#  
+2. 支持表单插入  
+2. 渲染器支持对table动态处理DynamicTableRenderPolicy  
+3. 支持单元格的合并  
+4. 丰富文本样式
+
 
 # 渲染图
 * word模板文件  
