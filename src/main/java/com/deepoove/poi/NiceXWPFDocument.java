@@ -152,10 +152,12 @@ public class NiceXWPFDocument extends XWPFDocument {
 				cursor.toCursor(tableCursor);
 				while (cursor.toPrevSibling()) {
 					o = cursor.getObject();
-					if (o instanceof CTP || o instanceof CTTbl)
+					if (o instanceof CTP || o instanceof CTTbl){
 						i++;
+					}
 				}
-				bodyElements.add(i, newT);
+				bodyElements.add(i > bodyElements.size() ? bodyElements.size() : i, newT);
+//				bodyElements.add(i, newT);
 				cursor.toCursor(tableCursor);
 				cursor.toEndToken();
 				return newT;
