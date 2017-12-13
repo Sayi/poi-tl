@@ -53,6 +53,18 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 列表，渲染数据为：NumbericRenderData
 
+# 样式
+样式继承模板的样式，这样我们无需再去处理文本样式，只需要提前设计好模板样式即可。
+即如果模板{{template}}是红色微软雅黑加粗四号字体，则替换后的文本也是红色微软雅黑加粗四号字体。
+
+当然，poi-tl也提供了通过代码设置样式的方法。具体参见com.deepoove.poi.data.style.Style类。
+* 颜色
+* 字体
+* 字号
+* 粗体
+* 斜体
+* 删除线
+
 # Usage
  
  ```java
@@ -92,7 +104,6 @@ template.write(out);
 template.close();
 out.close();
 ```
-
 
 # Change log
 
