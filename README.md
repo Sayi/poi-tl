@@ -6,9 +6,9 @@
 
 [English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
 
-[文章：poi-tl处理Word表格(Table)的最佳实践](https://github.com/Sayi/sayi.github.com/issues/21)
-
 Java对word的模板进行渲染(替换)的跨平台组件，对docx格式的文档增加模板语法，增加渲染模板的方便性，目前支持对段落、页眉、页脚、表格的文本、图片、表单渲染。
+
+# 为什么使用poi-tl
 
 对于word模板替换，我们不仅要考虑复杂的模板格式，还要考虑字体，颜色，处理页眉页脚，使用稍显复杂的poi的API等，现实项目中又有许多需求需要后台动态生成数据然后替换word模板，供前台下载或者打印，为了避免：
 * java操作word使用apache poi的复杂性
@@ -48,6 +48,8 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 * {{#template}}
 
 表格，渲染数据为：TableRenderData
+
+[文章：poi-tl处理Word表格(Table)的最佳实践](https://github.com/Sayi/sayi.github.com/issues/21)
 
 * {{*template}}
 
