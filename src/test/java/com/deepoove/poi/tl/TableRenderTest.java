@@ -55,7 +55,7 @@ public class TableRenderTest {
 					{
 						add(new TextRenderData("1E915D", "province"));
 					}
-				}, null, "no datas", 8000));
+				}, null, "no datas", 8310));
 			}
 		};
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/table.docx").render(datas);
