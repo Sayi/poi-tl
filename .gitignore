@@ -2,6 +2,7 @@
 .classpath
 .project
 .settings/
+*.iml
 bin/
 
 # Package Files #
