@@ -58,6 +58,7 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 # 样式
 文档的样式继承模板标签的样式，这样我们只需要提前设计好模板样式即可，即如果模板{{L}}是红色微软雅黑加粗四号字体，则替换后的文本也是红色微软雅黑加粗四号字体。
 ![](dist/style.png)
+
 也可以在渲染数据中指定,实现了样式的最大自由化，通过代码设置样式的方法，具体参见com.deepoove.poi.data.style.Style类。
 * 颜色
 * 字体
@@ -150,6 +151,9 @@ V0.0.3
 
 ![](dist/demo.png)
 ![](dist/demo_result.png)
+
+# License
+Apache License 2.0
 
 # 建议和完善
 问题、BUG可以在issue中提问，feature可以pull request。
