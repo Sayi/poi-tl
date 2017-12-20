@@ -22,7 +22,7 @@ Java word的模板引擎，对docx格式的文档增加模板语法，简化样�
 XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 ```
 
-**PS：本项目在国内某大型垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
+**PS：本项目在国内某大型(almost)垂直行业互联网公司已稳定运行一年以上，负责动态渲染样式超级复杂的word报告的下载和打印。**
 
 # 依赖
 
@@ -56,8 +56,8 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 列表，渲染数据为：NumbericRenderData
 
 # 样式
-文档的样式继承模板标签的样式，这样我们只需要提前设计好模板样式即可，即如果模板{{template}}是红色微软雅黑加粗四号字体，则替换后的文本也是红色微软雅黑加粗四号字体。
-
+文档的样式继承模板标签的样式，这样我们只需要提前设计好模板样式即可，即如果模板{{L}}是红色微软雅黑加粗四号字体，则替换后的文本也是红色微软雅黑加粗四号字体。
+![](dist/style.png)
 也可以在渲染数据中指定,实现了样式的最大自由化，通过代码设置样式的方法，具体参见com.deepoove.poi.data.style.Style类。
 * 颜色
 * 字体
@@ -72,7 +72,7 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 Map<String, Object> datas = new HashMap<String, Object>(){{
 
         put("author", new TextRenderData("000000", "Sayi"));
-
+        //文本模板
         put("date", "2015-04-01");
 
         //表格模板
@@ -141,20 +141,15 @@ V0.0.3
 4. 丰富文本样式
 
 
-# 渲染图
-* word模板文件  
-![](dist/temp3.png)
-* word渲染后生成的文件  
-![](dist/tempv3.png)
-* word模板文件  
-![](dist/temp4.png)
-* word渲染后生成的文件  
-![](dist/tempv4.png)
-* word模板文件  
-![](dist/temp5.png)
-* word渲染后生成的文件  
-![](dist/tempv5.png)
+# 示例图
+* 示例一 
 
+![](dist/temp3.png)
+![](dist/tempv3.png)
+* 示例二  
+
+![](dist/demo.png)
+![](dist/demo_result.png)
 
 # 建议和完善
 问题、BUG可以在issue中提问，feature可以pull request。
