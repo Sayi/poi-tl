@@ -62,7 +62,7 @@ public class RunEdge {
 	}
 
 	public String getTag() {
-		return text;
+		return tag;
 	}
 
 	public void setTag(String tag) {

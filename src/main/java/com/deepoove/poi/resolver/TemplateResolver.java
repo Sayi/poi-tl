@@ -144,19 +144,27 @@ public class TemplateResolver {
 		if (null  == paragraph) return null;
 		List<XWPFRun> runs = paragraph.getRuns();
 		if (null == runs || runs.isEmpty()) return null;
-		String text = paragraph.getText();
-		LOGGER.debug("The Paragrah's text is:{}", text);
+		
+		List<Pair<RunEdge, RunEdge>> runEdgeListPairs = buildRunEdges(paragraph);
+		if (runEdgeListPairs.isEmpty()) return null;
+		
+		// split and merge
+		return mergeRuns(paragraph, runEdgeListPairs);
+	}
+
+    
+    private List<Pair<RunEdge, RunEdge>> buildRunEdges(XWPFParagraph paragraph) {
+        String text = paragraph.getText();
+        List<XWPFRun> runs = paragraph.getRuns();
 		
 		List<Pair<RunEdge, RunEdge>> runEdgeListPairs = new ArrayList<Pair<RunEdge, RunEdge>>();
-		List<String> tags = new ArrayList<String>();
 		
 		Matcher matcher = TAG_PATTERN.matcher(text);
 		while (matcher.find()) {
-			tags.add(matcher.group());
 			runEdgeListPairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
 					new RunEdge(matcher.end(), matcher.group())));
 		}
-		if (tags.isEmpty()) return null;
+		if (runEdgeListPairs.isEmpty()) return runEdgeListPairs;
 		
 		//search then calculate run edge
 		searchRunEdge(runs, runEdgeListPairs);
@@ -164,69 +172,8 @@ public class TemplateResolver {
 			LOGGER.debug(pair.getLeft().toString());
 			LOGGER.debug(pair.getRight().toString());
 		}
-		
-		// split and merge
-		List<RunTemplate> rts = new ArrayList<RunTemplate>();
-		
-		int size = runEdgeListPairs.size();
-		int tagIndex = size;
-		RunTemplate runTemplate;
-		Pair<RunEdge, RunEdge> runEdgePair;
-		for (int n = size - 1; n >= 0; n--) {
-			runEdgePair = runEdgeListPairs.get(n);
-			RunEdge startEdge = runEdgePair.getLeft();
-			RunEdge endEdge = runEdgePair.getRight();
-			int startRunPos = startEdge.getRunPos();
-			int endRunPos = endEdge.getRunPos();
-			int startOffset = startEdge.getRunEdge();
-			int endOffset = endEdge.getRunEdge();
-			
-			String startText = runs.get(startRunPos).getText(0);
-			String endText = runs.get(endRunPos).getText(0);
-			if (endOffset + 1 >= endText.length()) {
-				//end run 无需split，若不是start run，直接remove
-				if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
-			} else {
-				//split end run, set extra in a run
-				String extra = endText.substring(endOffset + 1, endText.length());
-				if (startRunPos == endRunPos) {
-					XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
-					StyleUtils.styleRun(extraRun, runs.get(endRunPos));
-					extraRun.setText(extra, 0);
-				} else {
-					XWPFRun extraRun = runs.get(endRunPos);
-					extraRun.setText(extra, 0);
-				}
-			}
-			
-			//remove extra run
-			for (int m = endRunPos - 1; m > startRunPos; m--) {
-				paragraph.removeRun(m);
-			}
-			
-			if (startOffset <= 0) {
-				//start run 无需split
-				XWPFRun templateRun = runs.get(startRunPos);
-				templateRun.setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(startRunPos));
-			} else {
-				//split start run, set extra in a run
-				String extra = startText.substring(0, startOffset);
-				XWPFRun extraRun = runs.get(startRunPos);
-				extraRun.setText(extra, 0);
-				
-				XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
-				StyleUtils.styleRun(templateRun, extraRun);
-				templateRun.setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(startRunPos + 1));
-			}
-
-			if (null != runTemplate) {
-				rts.add(runTemplate);
-			}
-		}
-		return rts;
-	}
+        return runEdgeListPairs;
+    }
 
 	private void searchRunEdge(List<XWPFRun> runs, List<Pair<RunEdge, RunEdge>> pairs) {
 		int size = runs.size();
@@ -280,6 +227,71 @@ public class TemplateResolver {
 			cursor += text.length();
 		}
 	}
+	
+	private List<RunTemplate> mergeRuns(XWPFParagraph paragraph,
+            List<Pair<RunEdge, RunEdge>> runEdgeListPairs) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        List<RunTemplate> rts = new ArrayList<RunTemplate>();
+        
+        int size = runEdgeListPairs.size();
+        RunTemplate runTemplate;
+        Pair<RunEdge, RunEdge> runEdgePair;
+        for (int n = size - 1; n >= 0; n--) {
+            runEdgePair = runEdgeListPairs.get(n);
+            RunEdge startEdge = runEdgePair.getLeft();
+            RunEdge endEdge = runEdgePair.getRight();
+            int startRunPos = startEdge.getRunPos();
+            int endRunPos = endEdge.getRunPos();
+            int startOffset = startEdge.getRunEdge();
+            int endOffset = endEdge.getRunEdge();
+            
+            String startText = runs.get(startRunPos).getText(0);
+            String endText = runs.get(endRunPos).getText(0);
+            if (endOffset + 1 >= endText.length()) {
+                //end run 无需split，若不是start run，直接remove
+                if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
+            } else {
+                //split end run, set extra in a run
+                String extra = endText.substring(endOffset + 1, endText.length());
+                if (startRunPos == endRunPos) {
+                    XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
+                    StyleUtils.styleRun(extraRun, runs.get(endRunPos));
+                    extraRun.setText(extra, 0);
+                } else {
+                    XWPFRun extraRun = runs.get(endRunPos);
+                    extraRun.setText(extra, 0);
+                }
+            }
+            
+            //remove extra run
+            for (int m = endRunPos - 1; m > startRunPos; m--) {
+                paragraph.removeRun(m);
+            }
+            
+            if (startOffset <= 0) {
+                //start run 无需split
+                XWPFRun templateRun = runs.get(startRunPos);
+                templateRun.setText(startEdge.getTag(), 0);
+                runTemplate = parseRun(runs.get(startRunPos));
+            } else {
+                //split start run, set extra in a run
+                String extra = startText.substring(0, startOffset);
+                XWPFRun extraRun = runs.get(startRunPos);
+                extraRun.setText(extra, 0);
+                
+                XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
+                StyleUtils.styleRun(templateRun, extraRun);
+                templateRun.setText(startEdge.getTag(), 0);
+                runTemplate = parseRun(runs.get(startRunPos + 1));
+            }
+
+            if (null != runTemplate) {
+                rts.add(runTemplate);
+            }
+        }
+        return rts;
+    }
+
 
 	public  RunTemplate parseRun(XWPFRun run) {
 		String text = null;
