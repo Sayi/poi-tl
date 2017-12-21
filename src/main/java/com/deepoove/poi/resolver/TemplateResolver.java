@@ -49,9 +49,6 @@ import com.deepoove.poi.util.StyleUtils;
 public class TemplateResolver {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateResolver.class);
 	
-	public final String RULER_REGEX;
-	public final String EXTRA_REGEX;
-	
 	public final Pattern TAG_PATTERN;
 	public final Pattern VAR_PATTERN;
 
@@ -61,8 +58,8 @@ public class TemplateResolver {
 		String signRegex = getGramarRegex(config);
 		String prefixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX);
 		String suffixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
-		RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
-		EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
+		String RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
+		String EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
 		VAR_PATTERN = Pattern.compile(EXTRA_REGEX);
 		this.config = config;
@@ -307,8 +304,8 @@ public class TemplateResolver {
 	}
 
 	private String getGramarRegex(Configure config) {
-		List<Character> gramerChar = config.getGramerChars();
-		StringBuffer reg = new StringBuffer("(");
+		List<Character> gramerChar = new ArrayList<Character>(config.getGramerChars());
+		StringBuilder reg = new StringBuilder("(");
 		for (int i = 0; ; i++){
 			Character chara = gramerChar.get(i);
 			String escapeExprSpecialWord = RegexUtils.escapeExprSpecialWord(chara.toString());

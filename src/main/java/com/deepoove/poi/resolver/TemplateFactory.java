@@ -30,7 +30,7 @@
  */
 package com.deepoove.poi.resolver;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -38,7 +38,6 @@ import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
- * basic docx element：run
  * 
  * @author Sayi
  * @version 1.0.0
@@ -47,7 +46,7 @@ public class TemplateFactory{
 	
 	public static final char EMPTY_CHAR = '\0'; 
 
-	public static RunTemplate createRunTemplate(String tag, List<Character> gramerChars, XWPFRun run) {
+	public static RunTemplate createRunTemplate(String tag, Set<Character> gramerChars, XWPFRun run) {
 		RunTemplate template = new RunTemplate();
 		
 		char fisrtChar = tag.charAt(0);

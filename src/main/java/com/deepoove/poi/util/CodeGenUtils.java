@@ -14,7 +14,6 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.SimpleTableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * @author Sayi
@@ -41,13 +40,7 @@ public final class CodeGenUtils {
 		sb.append(importStr);
 		sb.append("public class " + upCaseFirstChar(className) + "{").append("\n");
 		for (ElementTemplate runTemplate : elementTemplates) {
-			policy = config.getCustomPolicy(runTemplate.getTagName());
-			if (null == policy) {
-				if (runTemplate instanceof RunTemplate) {
-					Character sign = runTemplate.getSign();
-					policy = config.getDefaultPolicy(sign);
-				}
-			}
+		    policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
 			if (null == policy) 
 				throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
 			

@@ -35,11 +35,10 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 
 /**
- * basic docx element：run
+ * basic docx template element：run
  * 
  * @author Sayi
  * @version 0.0.1
@@ -56,35 +55,6 @@ public class RunTemplate extends ElementTemplate {
 		this.run = run;
 	}
 	
-	/**
-	 * @param parseGramer
-	 * @param tagName
-	 * @param run
-	 * @return
-	 * @deprecated 
-	 */
-	public static RunTemplate createRunTemplate(GramerSymbol parseGramer,
-			String tagName, XWPFRun run) {
-		RunTemplate template = null;
-		if (parseGramer == GramerSymbol.IMAGE) {
-			template = new PictureRunTemplate();
-		} else if (parseGramer == GramerSymbol.TABLE) {
-			template = new TableRunTemplate();
-		} else if (parseGramer == GramerSymbol.NUMBERIC) {
-			template = new NumbericRunTemplate();
-		}else {
-			// if (parseGramer == GramerSymbol.TEXT) {
-			template = new TextRunTemplate();
-		}
-		template.source = GramerSymbol.GRAMER_PREFIX + parseGramer.toString()
-				+ tagName + GramerSymbol.GRAMER_SUFFIX;
-		template.tagName = tagName;
-		template.sign = parseGramer.getSymbol();
-		template.run = run;
-		return template;
-	}
-	
-
 	public Integer getRunPos() {
 		XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
 		List<XWPFRun> runs = paragraph.getRuns();

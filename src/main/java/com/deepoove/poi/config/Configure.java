@@ -15,10 +15,10 @@
  */
 package com.deepoove.poi.config;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
@@ -38,7 +38,7 @@ public class Configure {
 	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(6);
 	// Low priority
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
-	private List<Character> gramerChars = new ArrayList<Character>();
+	private Set<Character> gramerChars = new HashSet<Character>();
 
 	private Configure() {
 		plugin(GramerSymbol.TEXT.getSymbol(), new TextRenderPolicy());
@@ -81,6 +81,17 @@ public class Configure {
 	public void customPolicy(String tagName, RenderPolicy policy) {
 		customPolicys.put(tagName, policy);
 	}
+	
+	/**
+	 * 获取标签策略
+	 * @param tagName 模板名称
+	 * @param sign 语法
+	 * @return
+	 */
+	public RenderPolicy getPolicy(String tagName, Character sign) {
+        RenderPolicy policy = getCustomPolicy(tagName);
+        return null == policy ? getDefaultPolicy(sign) : policy;
+    }
 
 	public Map<Character, RenderPolicy> getDefaultPolicys() {
 		return defaultPolicys;
@@ -90,7 +101,7 @@ public class Configure {
 		return customPolicys;
 	}
 
-	public List<Character> getGramerChars() {
+	public Set<Character> getGramerChars() {
 		return gramerChars;
 	}
 
@@ -101,5 +112,5 @@ public class Configure {
 	public RenderPolicy getDefaultPolicy(Character sign) {
 		return defaultPolicys.get(sign);
 	}
-
+	
 }
