@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.mypolicy;
+package com.deepoove.poi.policy;
 
 import java.util.Iterator;
 
@@ -28,7 +28,8 @@ public class ListDataRenderPolicy implements RenderPolicy {
 
         if (dataList == null || !(dataList instanceof Iterable)) {
             logger.warn("Error render {}, should be Iterable:{}", runTemplate.getTagName(),
-                    dataList.getClass());
+                    "");
+            run.setText("", 0);
             return;
         }
 

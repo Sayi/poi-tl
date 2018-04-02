@@ -135,6 +135,29 @@ public class TemplateResolver {
 	}
 
 	/**
+	 * 
+	 * @Title: parseTableRow   
+	 * @Description: 解析一行
+	 * @param: @param row
+	 * @param: @return      
+	 * @return: List<ElementTemplate>      
+	 * @throws
+	 */
+	public List<ElementTemplate> parseTableRow(XWPFTableRow row)
+	{
+		if (null == row)
+			return null;
+		List<ElementTemplate> rts = new ArrayList<ElementTemplate>();
+		List<XWPFTableCell> cells = row.getTableCells();
+		for (XWPFTableCell cell : cells)
+		{
+			rts.addAll(parseParagraph(cell.getParagraphs()));
+			rts.addAll(parseTable(cell.getTables()));
+		}
+		return rts;
+	}
+	
+	/**
 	 * running string Algorithm
 	 * 
 	 * @param paragraph

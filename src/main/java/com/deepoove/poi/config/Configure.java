@@ -20,10 +20,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.ListDataRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.SimpleTableRenderPolicy;
+import com.deepoove.poi.policy.TableListRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
 /**
@@ -45,6 +47,11 @@ public class Configure {
 		plugin(GramerSymbol.IMAGE.getSymbol(), new PictureRenderPolicy());
 		plugin(GramerSymbol.TABLE.getSymbol(), new SimpleTableRenderPolicy());
 		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
+		
+		TableListRenderPolicy clrp = new TableListRenderPolicy();
+		plugin(GramerSymbol.LIST.getSymbol(), new ListDataRenderPolicy());
+		plugin(GramerSymbol.TABLELIST.getSymbol(), clrp);
+		
 	}
 	
 	/**
