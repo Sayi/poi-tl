@@ -125,7 +125,7 @@ public class RenderAPI {
 		render(template, convert2Map(dataSrouce));
 	}
 
-	private static Map<String, Object> convert2Map(Object dataSrouce) {
+	public static Map<String, Object> convert2Map(Object dataSrouce) {
 		Map<String, Object> ret = new HashMap<String, Object>();
 		try {
 			Class<?> clazz = dataSrouce.getClass();
