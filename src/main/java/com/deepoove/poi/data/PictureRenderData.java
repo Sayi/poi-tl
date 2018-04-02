@@ -15,6 +15,14 @@
  */
 package com.deepoove.poi.data;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -53,6 +61,34 @@ public class PictureRenderData implements RenderData {
 		this.width = width;
 		this.height = height;
 		this.path = path;
+	}
+	
+	public PictureRenderData(String loaclFilepath) {
+
+		this.path = loaclFilepath;
+		File file = new File(loaclFilepath);
+		if(file.exists())
+		{
+
+			BufferedImage sourceImg;
+			try
+			{
+				sourceImg = ImageIO.read(new FileInputStream(file));
+				this.width = sourceImg.getWidth();
+				this.height = sourceImg.getHeight();
+			}
+			catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 	}
 
 	/**
