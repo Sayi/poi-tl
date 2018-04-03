@@ -51,10 +51,10 @@ public class MembershipApplicationTest {
 		ma.setBmFocusresources("政府管辖环卫的职能部门");
 		ma.setBmhangye("市政环卫");
 		ma.setBmHaveResource("因为本人从事记者有5年，有部分媒体资源。");
-		ma.setBmIdcard("430524198510252422");
+		ma.setBmIdcard("43052419851025242");
 		ma.setBmMobile("15220228888");
 		ma.setBmNation("汉");
-		ma.setBmOrgaddress("长沙市芙蓉区八一路418号昊天大厦商务楼12楼 （八一路与迎宾路交汇处）");
+		ma.setBmOrgaddress("长沙市芙蓉区八一路");
 		ma.setBmOrgname("长沙市邵阳商会");
 		ma.setBmOrgSession("四");
 		ma.setBmPhone("0731-84325689");
@@ -63,7 +63,7 @@ public class MembershipApplicationTest {
 		ma.setBmRealname("赵一");
 		ma.setBmSex("女");
 		ma.setBmSintroduction("各位领导，同仁，大家好！"
-+"我叫赵艳平，来自邵阳市隆回县司门前镇众乐村。今年29岁，大学本科毕业，毕业后几年一直从事记者编辑工作，2015年，我从媒体转行，从事保洁外包工作，虽然隔行如隔山，但是在团队的勤奋和努力下，现与合伙人周剑萍，在保洁外包方面取得一定的成绩。其实，我一直想加入邵阳商会，但忌惮自己生意做得一般般，不好意思加入大咖的组织。现今，经过自己和团队的努力，我们的工作在各方面取得了一点小成绩，所以才斗胆申请加入邵阳商会。我为人诚实守信、性格活泼开朗，如果有幸加入大家庭，我会积极主动融入组织，贡献自己的绵薄之力。");
++"我叫赵艳，来自邵阳市。今年29岁，大学本科毕业，毕业后几年一直从事记者编辑工作，2015年，我从媒体转行，从事保洁外包工作，虽然隔行如隔山，但是在团队的勤奋和努力下，现与合伙人周剑，在保洁外包方面取得一定的成绩。其实，我一直想加入***会，但忌惮自己生意做得一般般，不好意思加入大咖的组织。现今，经过自己和团队的努力，我们的工作在各方面取得了一点小成绩，所以才斗胆申请加入邵阳商会。我为人诚实守信、性格活泼开朗，如果有幸加入大家庭，我会积极主动融入组织，贡献自己的绵薄之力。");
 		ma.setBmStartTime("2017年5月 日");
 		ma.setCardBackImagePath(new PictureRenderData("E:\\git\\poi-tl\\src\\test\\resources\\image2.png"));
 		ma.setCardInImagePath(new PictureRenderData("E:\\git\\poi-tl\\src\\test\\resources\\image1.png"));
@@ -76,7 +76,7 @@ public class MembershipApplicationTest {
 		mac1.setBmcEmployeenumStr("800人");
 		mac1.setBmcFixedassets("2000万");
 		mac1.setBmcIncomeMain("市政环卫保洁外包服务，医院、学校、大型商场、小区物业、社区保洁外包服务，大型开荒以及懒人家政平台到家服务");
-		mac1.setBmcName("长沙绿佳清洁服务有限公司");
+		mac1.setBmcName("长沙**清洁服务有限公司");
 		mac1.setBmcNature("有限责任");
 		mac1.setBmcOutputaccount("3000万");
 		mac1.setBmcPosition("副总经理");
