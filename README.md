@@ -61,7 +61,7 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 * {{^template}}Num
 
-table循环，template为数据，Num为向多少行来循环，渲染数据为：TableListRenderPolicy
+table循环，template为数据，Num为向上取Num行来循环，渲染数据为：TableListRenderPolicy
 
 * {{-template}}
 table循环内数据。
