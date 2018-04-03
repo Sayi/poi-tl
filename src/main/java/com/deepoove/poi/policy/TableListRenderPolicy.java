@@ -116,69 +116,72 @@ public class TableListRenderPolicy implements RenderPolicy
 		}
 		int copyRow = Integer.parseInt(tableListValue);
 
-		if (data == null)
+		try
+		{
+			if (data == null)
+			{
+				return;
+			}
+
+			List dataList = (List) data;
+			if (dataList.isEmpty())
+			{
+				return;
+			}
+			Collections.reverse(dataList);
+			List<XWPFTableRow> copyRowList = new ArrayList<XWPFTableRow>();
+			for (int i = 0; i < copyRow; i++)
+			{
+				copyRowList.add(table.getRow(index - 1 - i));
+			}
+
+			Map dataMap = null;
+			for (int i = 0; i < dataList.size(); i++)
+			{
+				Object dataObj = dataList.get(i);
+				if (dataObj instanceof Map)
+				{
+					dataMap = (Map) dataObj;
+				}
+				else
+				{
+					dataMap = RenderAPI.convert2Map(dataObj);
+				}
+				CTTbl ctTbl = table.getCTTbl();
+				for (int j = 0; j < copyRowList.size(); j++)
+				{
+					XWPFTableRow xtr = copyRowList.get(j);
+					XWPFTableRow xtrNew = table.insertNewTableRow(index);
+					copyPro(xtr, xtrNew);
+					changeRowValue(template, dataMap, xtrNew);
+					// XWPFTableRow formatRow = table.getRow(index);
+					// formatRow.getTableCells().get(0).setText("1");
+					// changeRowValue(template, dataMap, formatRow);
+					// formatRow = table.getRow(index+1);
+					// formatRow.getTableCells().get(0).setText("2");
+					// changeRowValue(template, dataMap, formatRow);
+					// formatRow = table.getRow(index+2);
+					// changeRowValue(template, dataMap, formatRow);
+				}
+			}
+		}
+		finally
 		{
 			deleteModel(table, index, copyRow);
-			return;
 		}
 
-		List dataList = (List) data;
-		if (dataList.isEmpty())
-		{
-			return;
-		}
-		Collections.reverse(dataList);
-		List<XWPFTableRow> copyRowList = new ArrayList<XWPFTableRow>();
-		for(int i=0;i<copyRow;i++)
-		{
-			copyRowList.add(table.getRow(index-1-i));
-		}
-		
-		Map dataMap = null;
-		for (int i = 0; i < dataList.size(); i++)
-		{
-			Object dataObj = dataList.get(i);
-			if (dataObj instanceof Map)
-			{
-				dataMap = (Map) dataObj;
-			}
-			else
-			{
-				dataMap = RenderAPI.convert2Map(dataObj);
-			}
-			CTTbl ctTbl = table.getCTTbl();
-			for(int j=0;j<copyRowList.size();j++)
-			{
-				XWPFTableRow xtr = copyRowList.get(j);
-				XWPFTableRow xtrNew = table.insertNewTableRow(index);
-				copyPro(xtr,xtrNew);
-				changeRowValue(template, dataMap, xtrNew);
-//					XWPFTableRow formatRow = table.getRow(index);
-//					formatRow.getTableCells().get(0).setText("1");
-//					changeRowValue(template, dataMap, formatRow);
-//					 formatRow = table.getRow(index+1);
-//					 formatRow.getTableCells().get(0).setText("2");
-//					 changeRowValue(template, dataMap, formatRow);
-//					 formatRow = table.getRow(index+2);
-//					 changeRowValue(template, dataMap, formatRow);
-			}
-		}
-		
-		deleteModel(table, index, copyRow);
-		
-//		int formatInt = index - 1;
-//		XWPFTableRow formatRow = table.getRow(formatInt);
-//		for (int i = 0; i < 5; i++)
-//		{
-//			formatInt++;
-//			if (table.addRow(formatRow, formatInt))
-//			{
-//				XWPFTableRow formatRow1 = table.getRow(formatInt + 1);
-//			}
-//
-//		}
-//		
-		
+		// int formatInt = index - 1;
+		// XWPFTableRow formatRow = table.getRow(formatInt);
+		// for (int i = 0; i < 5; i++)
+		// {
+		// formatInt++;
+		// if (table.addRow(formatRow, formatInt))
+		// {
+		// XWPFTableRow formatRow1 = table.getRow(formatInt + 1);
+		// }
+		//
+		// }
+		//
 
 		// if (macList == null || macList.isEmpty())
 		// {
@@ -195,7 +198,6 @@ public class TableListRenderPolicy implements RenderPolicy
 		// {
 		// dataMap = RenderAPI.convert2Map(data);
 		// }
-		
 
 		// StyleUtils.styleRun(insertNewRun, run);
 		// XWPFTableRow row = table.insertNewTableRow(formatInt);
@@ -251,9 +253,9 @@ public class TableListRenderPolicy implements RenderPolicy
 
 	private void deleteModel(XWPFTable table, int index, int copyRow)
 	{
-		for(int i=0;i<copyRow;i++)
+		for (int i = 0; i < copyRow; i++)
 		{
-			table.removeRow(index-1-i);
+			table.removeRow(index - 1 - i);
 		}
 	}
 
@@ -276,14 +278,14 @@ public class TableListRenderPolicy implements RenderPolicy
 			// 段落属性
 			targetCell.getParagraphs().get(0).getCTP().setPPr(sourceCell.getParagraphs().get(0).getCTP().getPPr());
 			List<XWPFRun> runs = sourceCell.getParagraphs().get(0).getRuns();
-			for(int i=0;i<runs.size();i++)
+			for (int i = 0; i < runs.size(); i++)
 			{
 				XWPFRun extraRun = targetCell.getParagraphs().get(0).insertNewRun(i);
 				StyleUtils.styleRun(extraRun, runs.get(i));
 				extraRun.setText(runs.get(i).getText(0), 0);
 			}
-//			targetCell.setText(sourceCell.getText());
-//			XWPFRun
+			// targetCell.setText(sourceCell.getText());
+			// XWPFRun
 		}
 	}
 

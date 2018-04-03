@@ -41,7 +41,8 @@ import com.deepoove.poi.template.ElementTemplate;
  * @version
  * @since 0.0.3
  */
-public class RenderAPI {
+public class RenderAPI
+{
 
 	private static final Logger logger = LoggerFactory.getLogger(RenderAPI.class);
 
@@ -51,15 +52,18 @@ public class RenderAPI {
 	 * @param template
 	 * @param datas
 	 */
-	public static void debug(XWPFTemplate template, Map<String, Object> datas) {
+	public static void debug(XWPFTemplate template, Map<String, Object> datas)
+	{
 		List<ElementTemplate> all = template.getElementTemplates();
 		logger.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
-		if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty())) {
+		if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty()))
+		{
 			logger.debug("No template gramer find and no render data find");
 			return;
 		}
 		Set<String> tagtKeys = new HashSet<String>();
-		for (ElementTemplate ele : all) {
+		for (ElementTemplate ele : all)
+		{
 			logger.debug("Parse the tag：{}", ele.getTagName());
 			tagtKeys.add(ele.getTagName());
 		}
@@ -69,20 +73,23 @@ public class RenderAPI {
 
 		copySet.removeAll(tagtKeys);
 		Iterator<String> iterator = copySet.iterator();
-		while (iterator.hasNext()) {
+		while (iterator.hasNext())
+		{
 			String key = iterator.next();
 			logger.warn("Cannot find the gramer tag in template:" + key);
 		}
 		tagtKeys.removeAll(keySet);
 		iterator = tagtKeys.iterator();
-		while (iterator.hasNext()) {
+		while (iterator.hasNext())
+		{
 			String key = iterator.next();
 			logger.warn("Cannot find the feild in java Map or Object:" + key);
 		}
-		
+
 	}
-	
-	public static void debug(XWPFTemplate template, Object datas) {
+
+	public static void debug(XWPFTemplate template, Object datas)
+	{
 		debug(template, convert2Map(datas));
 	}
 
@@ -91,56 +98,80 @@ public class RenderAPI {
 	 * 
 	 * @param template
 	 */
-	public static void selfRender(XWPFTemplate template) {
-		if (null == template) throw new POIXMLException("Template is null,should be setted first.");
+	public static void selfRender(XWPFTemplate template)
+	{
+		if (null == template)
+			throw new POIXMLException("Template is null,should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty()) return;
+		if (null == elementTemplates || elementTemplates.isEmpty())
+			return;
 		RenderPolicy policy = null;
-		for (ElementTemplate runTemplate : elementTemplates) {
+		for (ElementTemplate runTemplate : elementTemplates)
+		{
 			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = template.getConfig().getDefaultPolicys().get(Character.valueOf('\0'));
 			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
 		}
 	}
 
-	public static void render(XWPFTemplate template, Map<String, Object> datas) {
-		if (null == template) throw new POIXMLException("template is null, should be setted first.");
+	public static void render(XWPFTemplate template, Map<String, Object> datas)
+	{
+		if (null == template)
+			throw new POIXMLException("template is null, should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
-				|| datas.isEmpty())
+		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas || datas.isEmpty())
 			return;
 		Configure config = template.getConfig();
 		RenderPolicy policy = null;
-		for (ElementTemplate runTemplate : elementTemplates) {
+		for (ElementTemplate runTemplate : elementTemplates)
+		{
 			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-			if (null == policy) throw new RenderException(
-					"cannot find render policy: [" + runTemplate.getTagName() + "]");
+			if (null == policy)
+				throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
 			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
 
 		}
 	}
 
-	public static void render(XWPFTemplate template, Object dataSrouce) {
+	public static void render(XWPFTemplate template, Object dataSrouce)
+	{
 		render(template, convert2Map(dataSrouce));
 	}
 
-	public static Map<String, Object> convert2Map(Object dataSrouce) {
+	public static Map<String, Object> convert2Map(Object dataSrouce)
+	{
 		Map<String, Object> ret = new HashMap<String, Object>();
-		try {
+		try
+		{
 			Class<?> clazz = dataSrouce.getClass();
-			while (clazz != Object.class) {
+			while (clazz != Object.class)
+			{
 				Field[] fields = clazz.getDeclaredFields();
 				PropertyDescriptor pd = null;
-				for (Field f : fields) {
-					pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
-					Name annotation = f.getAnnotation(Name.class);
-					Object value = pd.getReadMethod().invoke(dataSrouce);
-					ret.put(null == annotation ? f.getName() : annotation.value(), value);
+				for (Field f : fields)
+				{
+					try
+					{
+						//不是final
+						if ( !java.lang.reflect.Modifier.isFinal(f.getModifiers()))
+						{
+							pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
+							Name annotation = f.getAnnotation(Name.class);
+							Object value = pd.getReadMethod().invoke(dataSrouce);
+							ret.put(null == annotation ? f.getName() : annotation.value(), value);
+
+						}
+					}
+					catch (Exception e)
+					{
+					}
 				}
 				clazz = clazz.getSuperclass();
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			logger.error("Convert datasource failed.", e);
 			throw new RenderException("Convert datasource failed.");
 		}

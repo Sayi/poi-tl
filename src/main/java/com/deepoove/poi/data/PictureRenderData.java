@@ -74,15 +74,21 @@ public class PictureRenderData implements RenderData {
 			try
 			{
 				sourceImg = ImageIO.read(new FileInputStream(file));
-				this.width = sourceImg.getWidth();
-				this.height = sourceImg.getHeight();
+				int width = sourceImg.getWidth();
+				int maxWidth= 550;
+				if(width>maxWidth)
+				{
+					this.width = maxWidth;
+					this.height = sourceImg.getHeight()*maxWidth/width;
+				}
+				else
+				{
+					this.width = sourceImg.getWidth();
+					this.height = sourceImg.getHeight();
+				}
+				
 			}
-			catch (FileNotFoundException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (IOException e)
+			catch (Exception e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
