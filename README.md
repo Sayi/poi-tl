@@ -55,6 +55,17 @@ XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 
 列表，渲染数据为：NumbericRenderData
 
+* {{%template}}
+
+循环，数据为：文本或图片，渲染数据为：ListDataRenderPolicy
+
+* {{^template}}Num
+
+table循环，template为数据，Num为向多少行来循环，渲染数据为：TableListRenderPolicy
+
+* {{-template}}
+table循环内数据。
+
 # 样式
 文档的样式继承模板标签的样式，这样我们只需要提前设计好模板样式即可，即如果模板{{L}}是红色微软雅黑加粗四号字体，则替换后的文本也是红色微软雅黑加粗四号字体。
 ![](dist/style.png)
