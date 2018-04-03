@@ -108,8 +108,9 @@ public class TableListRenderPolicy implements RenderPolicy
 			return;
 		}
 
+		//循环的行数
 		tableListValue = tableListValue.replace(getTagStr(tagName), "");
-
+		
 		if (!validateNumber(tableListValue))
 		{
 			return;
@@ -128,10 +129,12 @@ public class TableListRenderPolicy implements RenderPolicy
 			{
 				return;
 			}
+			//将数据按顺序插入table
 			Collections.reverse(dataList);
 			List<XWPFTableRow> copyRowList = new ArrayList<XWPFTableRow>();
 			for (int i = 0; i < copyRow; i++)
 			{
+				//取出所有待循环row
 				copyRowList.add(table.getRow(index - 1 - i));
 			}
 
@@ -147,107 +150,22 @@ public class TableListRenderPolicy implements RenderPolicy
 				{
 					dataMap = RenderAPI.convert2Map(dataObj);
 				}
-				CTTbl ctTbl = table.getCTTbl();
 				for (int j = 0; j < copyRowList.size(); j++)
 				{
 					XWPFTableRow xtr = copyRowList.get(j);
+					//复制行并且复制样式和替换数据
 					XWPFTableRow xtrNew = table.insertNewTableRow(index);
 					copyPro(xtr, xtrNew);
 					changeRowValue(template, dataMap, xtrNew);
-					// XWPFTableRow formatRow = table.getRow(index);
-					// formatRow.getTableCells().get(0).setText("1");
-					// changeRowValue(template, dataMap, formatRow);
-					// formatRow = table.getRow(index+1);
-					// formatRow.getTableCells().get(0).setText("2");
-					// changeRowValue(template, dataMap, formatRow);
-					// formatRow = table.getRow(index+2);
-					// changeRowValue(template, dataMap, formatRow);
 				}
 			}
 		}
 		finally
 		{
+			//删除循环row
 			deleteModel(table, index, copyRow);
 		}
 
-		// int formatInt = index - 1;
-		// XWPFTableRow formatRow = table.getRow(formatInt);
-		// for (int i = 0; i < 5; i++)
-		// {
-		// formatInt++;
-		// if (table.addRow(formatRow, formatInt))
-		// {
-		// XWPFTableRow formatRow1 = table.getRow(formatInt + 1);
-		// }
-		//
-		// }
-		//
-
-		// if (macList == null || macList.isEmpty())
-		// {
-		// table.removeRow(formatInt);
-		// return;
-		// }
-
-		// Map dataMap = new HashMap();
-		// if(data instanceof Map)
-		// {
-		// dataMap = (Map) data;
-		// }
-		// else
-		// {
-		// dataMap = RenderAPI.convert2Map(data);
-		// }
-
-		// StyleUtils.styleRun(insertNewRun, run);
-		// XWPFTableRow row = table.insertNewTableRow(formatInt);
-		// createCell(row,"第二联系人");
-		// createCell(row,"姓 名");
-		// createCell(row,mac.getBmcName());
-		// createCell(row,"关 系");
-		// createCell(row,mac.getBmcRelationName());
-		// createCell(row,"手 机");
-		// createCell(row,mac.getBmcMobile());
-		// createCell(row,"QQ/E-mail");
-		// createCell(row,mac.getBmcQq());
-
-		// MembershipApplicationContact mac = macList.get(0);
-
-		// XWPFTableCell cell = table.getRow(formatInt).getCell(1);
-		// new break line
-		// String[] fragment = mac.getBmcMobile().split("\\n");
-		// if (null != fragment)
-		// {
-		// cell.setText(fragment[0]);
-		// for (int i = 1; i < fragment.length; i++)
-		// {
-		// XWPFParagraph addParagraph = cell.addParagraph();
-		// addParagraph.createRun().setText(fragment[i]);
-		// }
-		// }
-		//
-
-		// startRow++;
-
-		// Map map = RenderAPI.convert2Map(mac);
-		// List<XWPFTableCell> tableCells = formatRow.getTableCells();
-		// for(int j=0;j<tableCells.size();j++)
-		// {
-		// XWPFTableCell xtc = tableCells.get(j);
-		// String cellValue = xtc.getText();
-		//
-		// Matcher m = pattern.matcher(cellValue);
-		// while(m.find())
-		// {
-		// String key=m.group(1);
-		// cellValue = cellValue.replace("${"+key+"}", (String)map.get(key));
-		// }
-		// xtc.setText(cellValue);
-		//// xtc.getParagraphArray(pos)
-		//// XWPFParagraph addParagraph = cell.addParagraph();
-		//// addParagraph.createRun().setText(fragment[i]);
-		// System.out.println(xtc.getText());
-		// }
 
 	}
 
