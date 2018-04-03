@@ -55,7 +55,7 @@ public class MembershipApplicationTest {
 		ma.setBmMobile("15220228888");
 		ma.setBmNation("汉");
 		ma.setBmOrgaddress("长沙市芙蓉区八一路");
-		ma.setBmOrgname("长沙市邵阳商会");
+		ma.setBmOrgname("长沙市*商会");
 		ma.setBmOrgSession("四");
 		ma.setBmPhone("0731-84325689");
 		ma.setBmPolitic("团员");
