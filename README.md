@@ -22,7 +22,7 @@ Java word的模板引擎，对docx格式的文档增加模板语法，简化样�
 XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
 ```
 
-**打个广告：我们正在招人，坐标杭州，阿里系公司，E轮融资，行业独角兽(almost)，欢迎联系我 adasai90@gmail.com**
+**打个广告：我们正在招人，坐标杭州，阿里系公司，E轮融资，行业独角兽(almost)，我相信你一定能找到我的联系方式，欢迎投递简历。**
 
 # 依赖
 
