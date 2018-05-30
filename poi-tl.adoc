@@ -1,0 +1,60 @@
+= The Dangerous and Thrilling Documentation Chronicles
+Kismet Rainbow Chameleon <kismet@asciidoctor.org>
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: right
+:icons: font
+:source-highlighter: prettify
+:numbered:
+
+This journey begins...
+
+== About the Author
+
+You can contact {author} at {email}.
+{firstname} loves to hear from other chroniclers.
+
+P.S. And yes, my middle name really is {middlename}.
+What else would you expect from a member of the Rocky Mountain {lastname} Clan?
+
+{authorinitials}
+
+
+
+== hello
+this is my joy
+
+* [*] checked
+* [x] also checked
+* [ ] not checked
+*     normal list item
+
+NOTE: Asciidoctor supports font-based admonition icons, powered by Font Awesome!
+
+== tool
+
+=== hi, tool
+
+this is my joy
+
+[source,java]
+public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+    this.embeddedValueResolver = new EmbeddedValueResolver(applicationContext.getBeanFactory());
+}
+
+=== end
+this is my joy
+
+[quote, Monty Python and the Holy Grail]
+____
+Dennis: Come and see the violence inherent in the system. Help! Help! I'm being repressed!
+
+King Arthur: Bloody peasant!
+
+Dennis: Oh, what a giveaway! Did you hear that? Did you hear that, eh? That's what I'm on about! Did you see him repressing me? You saw him, Didn't you?
+____
+
+== Final
+this is my joy
