@@ -162,6 +162,7 @@ public class XWPFTemplate {
 	 * @param templateName
 	 * @param policy
 	 */
+	@Deprecated
 	public void registerPolicy(String templateName, RenderPolicy policy) {
 		config.customPolicy(templateName, policy);
 	}
@@ -175,6 +176,7 @@ public class XWPFTemplate {
 		return config.getCustomPolicys().get(clazz.getName());
 	}
 
+	@Deprecated
 	public RenderPolicy getPolicy(String templateName) {
 		return config.getCustomPolicys().get(templateName);
 	}

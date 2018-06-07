@@ -24,9 +24,6 @@ public enum GramerSymbol {
 
 	IMAGE('@'), TEXT('\0'), TABLE('#'), NUMBERIC('*');
 
-	public static final String GRAMER_PREFIX = "{{";
-	public static final String GRAMER_SUFFIX = "}}";
-	
 	private char symbol;
 
 	private GramerSymbol(char symbol) {

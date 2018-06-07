@@ -46,7 +46,7 @@ public class ListDataRenderPolicy implements RenderPolicy {
             StyleUtils.styleRun(insertNewRun, run);
             RunTemplate createRunTemplate = TemplateFactory.createRunTemplate(
                     runTemplate.getSign() + runTemplate.getTagName(),
-                    template.getConfig().getGramerChars(), insertNewRun);
+                    template.getConfig(), insertNewRun);
             
             policy.render(createRunTemplate, next, template);
 

@@ -33,12 +33,15 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  * @version 1.0.0
  */
 public class Configure {
-
+    
 	// Highest priority
 	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(6);
 	// Low priority
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
 	private Set<Character> gramerChars = new HashSet<Character>();
+	
+	private String gramerPrefix = "{{";
+	private String gramerSuffix = "}}";
 
 	private Configure() {
 		plugin(GramerSymbol.TEXT.getSymbol(), new TextRenderPolicy());
@@ -52,7 +55,15 @@ public class Configure {
 	 * @return
 	 */
 	public static Configure createDefault(){
-		return new Configure();
+		return newBuilder().build();
+	}
+	
+	/**
+	 * 获取构建器
+	 * @return
+	 */
+	public static ConfigureBuilder newBuilder(){
+	    return new ConfigureBuilder();
 	}
 
 
@@ -92,7 +103,7 @@ public class Configure {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
     }
-
+	
 	public Map<Character, RenderPolicy> getDefaultPolicys() {
 		return defaultPolicys;
 	}
@@ -104,13 +115,45 @@ public class Configure {
 	public Set<Character> getGramerChars() {
 		return gramerChars;
 	}
+	
+	public String getGramerPrefix() {
+        return gramerPrefix;
+    }
 
-	public RenderPolicy getCustomPolicy(String tagName) {
+    public String getGramerSuffix() {
+        return gramerSuffix;
+    }
+
+	private RenderPolicy getCustomPolicy(String tagName) {
 		return customPolicys.get(tagName);
 	}
 
-	public RenderPolicy getDefaultPolicy(Character sign) {
+	private RenderPolicy getDefaultPolicy(Character sign) {
 		return defaultPolicys.get(sign);
 	}
+    
+    public static class ConfigureBuilder {
+        private Configure config = new Configure();
+        public ConfigureBuilder() {
+        }
+        
+        public ConfigureBuilder buildGramer(String prefix, String suffix){
+            config.gramerPrefix = prefix;
+            config.gramerSuffix = suffix;
+            return this;
+        }
+        public ConfigureBuilder addPlugin(char c, RenderPolicy policy){
+            config.plugin(c, policy);
+            return this;
+        }
+        public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy){
+            config.customPolicy(tagName, policy);
+            return this;
+        }
+        public Configure build(){
+            return config;
+        }
+        
+    }
 	
 }
