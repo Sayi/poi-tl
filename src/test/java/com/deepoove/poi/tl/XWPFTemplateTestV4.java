@@ -69,8 +69,10 @@ public class XWPFTemplateTestV4 {
 		obj.setHello("v0.0.3");
 		obj.setWebsite("http://www.deepoove.com/poi-tl");
 		obj.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-		obj.setTitle(new TextRenderData("9d55b8",
-				"Deeply in love with the things you love,\\n just deepoove."));
+		TextRenderData textRenderData = new TextRenderData("9d55b8",
+                "Deeply in love with the things you love,\\n just deepoove.");
+		textRenderData.getStyle().setUnderLine(true);
+		obj.setTitle(textRenderData);
 		obj.setChangeLog(new TableRenderData(new ArrayList<RenderData>() {
 			{
 				add(new TextRenderData("d0d0d0", ""));

@@ -17,12 +17,14 @@ package com.deepoove.poi.util;
 
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 import com.deepoove.poi.data.style.Style;
@@ -49,12 +51,24 @@ public final class StyleUtils {
         Boolean bold = style.isBold();
         Boolean italic = style.isItalic();
         Boolean strike = style.isStrike();
+        Boolean underLine = style.isUnderLine();
         if (null != color) run.setColor(color);
         if (0 != fontSize) run.setFontSize(fontSize);
-        if (null != fontFamily) run.setFontFamily(fontFamily);
+        if (null != fontFamily) {
+            run.setFontFamily(fontFamily);
+            CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+            CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
+            fonts.setAscii(fontFamily);
+            fonts.setHAnsi(fontFamily);
+            fonts.setCs(fontFamily);
+            fonts.setEastAsia(fontFamily);
+        }
         if (null != bold) run.setBold(bold);
         if (null != italic) run.setItalic(italic);
         if (null != strike) run.setStrikeThrough(strike);
+        if (Boolean.TRUE.equals(underLine)){
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
     }
 
     /**
