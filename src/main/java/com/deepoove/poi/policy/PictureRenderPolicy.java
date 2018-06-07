@@ -28,6 +28,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.BytePictureUtils;
 
 public class PictureRenderPolicy implements RenderPolicy {
 
@@ -45,17 +46,13 @@ public class PictureRenderPolicy implements RenderPolicy {
 			logger.warn("Error render data,should be pictureRenderData:" + renderData.getClass());
 			return;
 		}
-		String blipId;
 		try {
 			byte[] data = pictureRenderData.getData();
 			if (null == data) {
 				FileInputStream is = new FileInputStream(pictureRenderData.getPath());
-				blipId = doc.getXWPFDocument().addPictureData(is,
-						suggestFileType(pictureRenderData.getPath()));
-			} else {
-				blipId = doc.getXWPFDocument().addPictureData(data,
-						suggestFileType(pictureRenderData.getPath()));
-			}
+				data = BytePictureUtils.toByteArray(is);
+			} 
+			String blipId = doc.getXWPFDocument().addPictureData(data, suggestFileType(pictureRenderData.getPath()));
 			doc.getXWPFDocument().addPicture(blipId,
 					doc.getXWPFDocument()
 							.getNextPicNameNumber(suggestFileType(pictureRenderData.getPath())),
@@ -65,6 +62,8 @@ public class PictureRenderPolicy implements RenderPolicy {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} finally {
+		    
 		}
 	}
 
