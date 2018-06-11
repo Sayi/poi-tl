@@ -31,6 +31,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -45,6 +46,8 @@ import com.deepoove.poi.template.run.RunTemplate;
  *
  */
 public class SimpleTableRenderPolicy implements RenderPolicy {
+    
+    private MiniTableRenderPolicy miniTableRenderPolicy = new MiniTableRenderPolicy();
 
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
@@ -52,7 +55,13 @@ public class SimpleTableRenderPolicy implements RenderPolicy {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;
         XWPFRun run = runTemplate.getRun();
         if (null == data) return;
-
+        
+        //兼容新的数据结构体
+        if (data instanceof MiniTableRenderData){
+            miniTableRenderPolicy.render(eleTemplate, data, template);
+            return;
+        }
+        
         TableRenderData tableData = (TableRenderData) data;
         List<RenderData> headers = tableData.getHeaders();
         List<Object> datas = tableData.getDatas();

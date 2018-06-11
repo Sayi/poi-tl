@@ -34,9 +34,15 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 /**
  * 对原生poi的扩展
@@ -167,6 +173,46 @@ public class NiceXWPFDocument extends XWPFDocument {
 		}
 		return null;
 	}
+	
+	/**
+	 * 设置表格的宽度
+	 * 
+	 * @param table
+	 * @param width
+	 * @param rows
+	 * @param cols
+	 */
+	public void widthTable(XWPFTable table, int width, int rows, int cols) {
+        CTTblPr tblPr = table.getCTTbl().getTblPr();
+        if (null == tblPr) {
+            tblPr = table.getCTTbl().addNewTblPr();
+        }
+        CTTblWidth tblW = tblPr.getTblW();
+        if (tblW == null) {
+            tblW = tblPr.addNewTblW();
+        }
+        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
+        tblW.setW(BigInteger.valueOf(width));
+
+        if (0 != width) {
+            CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
+            if (null == tblGrid) {
+                tblGrid = table.getCTTbl().addNewTblGrid();
+            }
+
+            for (int j = 0; j < cols; j++) {
+                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                addNewGridCol.setW(BigInteger.valueOf(width / cols));
+            }
+        }
+        CTTblBorders tblBorders = tblPr.getTblBorders();
+        tblBorders.getBottom().setSz(BigInteger.valueOf(4));
+        tblBorders.getLeft().setSz(BigInteger.valueOf(4));
+        tblBorders.getTop().setSz(BigInteger.valueOf(4));
+        tblBorders.getRight().setSz(BigInteger.valueOf(4));
+        tblBorders.getInsideH().setSz(BigInteger.valueOf(4));
+        tblBorders.getInsideV().setSz(BigInteger.valueOf(4));
+    }
 	
 	/**
 	 * 在某个段落起始处插入段落
