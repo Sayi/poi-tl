@@ -45,7 +45,7 @@ public class NumbericRenderPolicy implements RenderPolicy {
         Pair<Enum, String> numFmt = numbericData.getNumFmt();
         Style fmtStyle = numbericData.getFmtStyle();
         if (datas == null || datas.isEmpty()) {
-            runTemplate.getRun().setText("", 0);
+            run.setText("", 0);
             return;
         } else {
 
@@ -93,7 +93,7 @@ public class NumbericRenderPolicy implements RenderPolicy {
             }
             // doc.insertNewParagraph(run);
         }
-        runTemplate.getRun().setText("", 0);
+        run.setText("", 0);
     }
 
 }

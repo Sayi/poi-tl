@@ -24,12 +24,33 @@ package com.deepoove.poi.data.style;
  */
 public class Style {
 
+    /**
+     * 文字颜色
+     */
     private String color;
+    /**
+     * 字体
+     */
     private String fontFamily;
+    /**
+     * 字体大小
+     */
     private int fontSize;
+    /**
+     * 粗体
+     */
     private Boolean isBold;
+    /**
+     * 斜体
+     */
     private Boolean isItalic;
+    /**
+     * 删除线
+     */
     private Boolean isStrike;
+    /**
+     * 下划线
+     */
     private Boolean isUnderLine;
 
     public Style() {}

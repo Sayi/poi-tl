@@ -26,6 +26,10 @@ import com.deepoove.poi.data.style.Style;
  */
 public class TextRenderData implements RenderData {
 	private Style style;
+	
+	/**
+	 * \n 表示换行
+	 */
 	private String text;
 
 	public TextRenderData() {

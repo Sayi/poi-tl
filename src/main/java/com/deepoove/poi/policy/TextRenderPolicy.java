@@ -23,6 +23,11 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
+/**
+ * 
+ * @author Sayi
+ * @version 
+ */
 public class TextRenderPolicy implements RenderPolicy {
 
 	static final String REGEX_LINE_CHARACTOR = "\\n";
@@ -56,6 +61,4 @@ public class TextRenderPolicy implements RenderPolicy {
             }
 		}
 	}
-
-	
 }

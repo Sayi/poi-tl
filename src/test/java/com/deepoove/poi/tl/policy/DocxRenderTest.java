@@ -53,6 +53,8 @@ public class DocxRenderTest {
                 put("title", "Hello, poi tl.");
                 
                 put("docx_template", new DocxRenderData(new File("src/test/resources/merge_xwpf_template.docx"), dataList));
+                
+                put("docx_template2", new DocxRenderData(new File("src/test/resources/merge_picture.docx")));
 
                 put("newline", "End.");
                 

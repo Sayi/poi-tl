@@ -54,7 +54,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
 
         if (!tableData.isSetBody()) {
             if (!tableData.isSetHeader()) {
-                runTemplate.getRun().setText("", 0);
+                run.setText("", 0);
                 return;
             }
             int row = 2;
@@ -85,7 +85,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
                 renderRow(table, startRow++, obj);
             }
         }
-        runTemplate.getRun().setText("", 0);
+        run.setText("", 0);
     }
 
     private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run, RowRenderData headers,

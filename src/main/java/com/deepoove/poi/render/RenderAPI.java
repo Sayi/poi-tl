@@ -105,7 +105,7 @@ public class RenderAPI {
 	}
 
 	public static void render(XWPFTemplate template, Map<String, Object> datas) {
-		if (null == template) throw new POIXMLException("template is null, should be setted first.");
+		if (null == template) throw new POIXMLException("Template is null, should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
 		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
 				|| datas.isEmpty())

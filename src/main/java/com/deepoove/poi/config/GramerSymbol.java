@@ -17,25 +17,49 @@ package com.deepoove.poi.config;
 
 /**
  * 默认模板语法
+ * 
  * @author Sayi
- * @version 
+ * @version
  */
 public enum GramerSymbol {
 
-	IMAGE('@'), TEXT('\0'), TABLE('#'), NUMBERIC('*'), DOCX_TEMPLATE('+');
+    /**
+     * 图片
+     */
+    IMAGE('@'),
 
-	private char symbol;
+    /**
+     * 文本
+     */
+    TEXT('\0'),
 
-	private GramerSymbol(char symbol) {
-		this.symbol = symbol;
-	}
+    /**
+     * 表格
+     */
+    TABLE('#'),
 
-	public char getSymbol() {
-		return this.symbol;
-	}
+    /**
+     * 列表
+     */
+    NUMBERIC('*'),
 
-	public String toString() {
-		return String.valueOf(this.symbol);
-	}
+    /**
+     * word文档模板
+     */
+    DOCX_TEMPLATE('+');
+
+    private char symbol;
+
+    private GramerSymbol(char symbol) {
+        this.symbol = symbol;
+    }
+
+    public char getSymbol() {
+        return this.symbol;
+    }
+
+    public String toString() {
+        return String.valueOf(this.symbol);
+    }
 
 }

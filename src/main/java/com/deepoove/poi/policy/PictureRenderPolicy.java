@@ -16,9 +16,7 @@
 package com.deepoove.poi.policy;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
@@ -43,6 +41,7 @@ public class PictureRenderPolicy implements RenderPolicy {
 		if (renderData instanceof PictureRenderData) {
 			pictureRenderData = (PictureRenderData) renderData;
 		} else {
+		    run.setText("", 0);
 			logger.warn("Error render data,should be pictureRenderData:" + renderData.getClass());
 			return;
 		}
@@ -58,13 +57,9 @@ public class PictureRenderPolicy implements RenderPolicy {
 							.getNextPicNameNumber(suggestFileType(pictureRenderData.getPath())),
 					pictureRenderData.getWidth(), pictureRenderData.getHeight(), run);
 			run.setText("", 0);
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-		    
-		}
+		} catch (Exception e) {
+			logger.error("render picture docx error", e);
+		} 
 	}
 
 	private int suggestFileType(String imgFile) {

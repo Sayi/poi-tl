@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.policy;
 
 import static com.deepoove.poi.data.NumbericRenderData.FMT_BULLET;
 import static com.deepoove.poi.data.NumbericRenderData.FMT_DECIMAL;

@@ -44,7 +44,7 @@ public class MiniTableRenderTest {
                 put("no_content_table", new MiniTableRenderData(header, null, "备注内容为空", 0));
 
                 // A4 纸宽度最大的表格
-                put("width_table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2), "备注内容为空", 8310));
+                put("width_table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2), "备注内容为空", 8410));
             }
         };
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/table_render.docx")

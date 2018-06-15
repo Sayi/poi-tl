@@ -4,24 +4,29 @@ import java.util.List;
 
 /**
  * 行数据
+ * 
  * @author Sayi
- * @version  1.3.0
+ * @version 1.3.0
  */
-public class RowRenderData implements RenderData{
-    
+public class RowRenderData implements RenderData {
+
     private List<TextRenderData> rowData;
-    
+
+    /**
+     * 行背景色
+     */
     private String backgroundColor;
-    
+
     public RowRenderData(List<TextRenderData> rowData) {
         this.rowData = rowData;
     }
+
     public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
         this.rowData = rowData;
         this.backgroundColor = backgroundColor;
     }
-    
-    public int size(){
+
+    public int size() {
         return null == rowData ? 0 : rowData.size();
     }
 
@@ -40,7 +45,5 @@ public class RowRenderData implements RenderData{
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
-    
-    
 
 }

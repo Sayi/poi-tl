@@ -20,9 +20,11 @@ import java.util.List;
 /**
  * 简单的表格渲染数据
  * 
+ * @see {@link MiniTableRenderData}
  * @author Sayi
  * @version 0.0.3
  */
+@Deprecated
 public class TableRenderData implements RenderData {
 
 	private List<RenderData> headers;
