@@ -22,7 +22,7 @@ package com.deepoove.poi.config;
  */
 public enum GramerSymbol {
 
-	IMAGE('@'), TEXT('\0'), TABLE('#'), NUMBERIC('*');
+	IMAGE('@'), TEXT('\0'), TABLE('#'), NUMBERIC('*'), DOCX_TEMPLATE('+');
 
 	private char symbol;
 

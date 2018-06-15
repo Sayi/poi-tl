@@ -11,10 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.policy.DocxRenderPolicy;
 
 /**
  * 模板循坏
@@ -48,7 +46,7 @@ public class DocxRenderTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testDocxRender() throws Exception {
+    public void testDocxTemplateRender() throws Exception {
         
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
@@ -61,11 +59,32 @@ public class DocxRenderTest {
             }
         };
 
-        Configure configure = Configure.newBuilder()
-                .customPolicy("docx_template", new DocxRenderPolicy()) 
-                .build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx", configure)
-                .render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx").render(datas);
+
+        FileOutputStream out = new FileOutputStream("out_docx_template_render.docx");
+        template.write(out);
+        out.flush();
+        out.close();
+        template.close();
+
+    }
+    
+    @SuppressWarnings("serial")
+    @Test
+    public void testDocxRender() throws Exception {
+        
+        Map<String, Object> datas = new HashMap<String, Object>() {
+            {
+                put("title", "Hello, poi tl.");
+                
+                put("docx_template", new DocxRenderData(new File("src/test/resources/merge_xwpf_template.docx")));
+
+                put("newline", "End.");
+                
+            }
+        };
+
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_docx_render.docx");
         template.write(out);

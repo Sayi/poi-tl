@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -48,6 +49,7 @@ public class Configure {
 		plugin(GramerSymbol.IMAGE.getSymbol(), new PictureRenderPolicy());
 		plugin(GramerSymbol.TABLE.getSymbol(), new SimpleTableRenderPolicy());
 		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
+		plugin(GramerSymbol.DOCX_TEMPLATE.getSymbol(), new DocxRenderPolicy());
 	}
 	
 	/**
