@@ -33,6 +33,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.exception.RenderException;
+import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
@@ -111,40 +112,67 @@ public class RenderAPI {
 			return;
 		Configure config = template.getConfig();
 		RenderPolicy policy = null;
+		
+		int docxNum = 0;
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-			if (null == policy) throw new RenderException(
-					"cannot find render policy: [" + runTemplate.getTagName() + "]");
+			if (null == policy) throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
+			if (policy instanceof DocxRenderPolicy) {
+			    docxNum++;
+			    continue;
+			}
 			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
-
 		}
+		try {
+		    if (docxNum >= 1) template.reload(template.getXWPFDocument().generate());
+            for (int i = 0; i < docxNum; i++) {
+                elementTemplates = template.getElementTemplates();
+                if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
+                        || datas.isEmpty())
+                    break;
+                for (ElementTemplate runTemplate : elementTemplates) {
+                    logger.debug("Docx TagName:{}, Sign:{}", runTemplate.getTagName(),
+                            runTemplate.getSign());
+                    policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
+                    if (null != policy && policy instanceof DocxRenderPolicy) {
+                        policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
+                        break;
+                    }
+                }
+            }
+		} catch (Exception e) {
+		    logger.error("render docx error", e);
+		}
+		
 	}
 
 	public static void render(XWPFTemplate template, Object dataSrouce) {
 		render(template, convert2Map(dataSrouce));
 	}
 
-	private static Map<String, Object> convert2Map(Object dataSrouce) {
-		Map<String, Object> ret = new HashMap<String, Object>();
-		try {
-			Class<?> clazz = dataSrouce.getClass();
-			while (clazz != Object.class) {
-				Field[] fields = clazz.getDeclaredFields();
-				PropertyDescriptor pd = null;
-				for (Field f : fields) {
-					pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
-					Name annotation = f.getAnnotation(Name.class);
-					Object value = pd.getReadMethod().invoke(dataSrouce);
-					ret.put(null == annotation ? f.getName() : annotation.value(), value);
-				}
-				clazz = clazz.getSuperclass();
-			}
-		} catch (Exception e) {
-			logger.error("Convert datasource failed.", e);
-			throw new RenderException("Convert datasource failed.");
-		}
-		return ret;
-	}
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> convert2Map(Object dataSrouce) {
+        if (dataSrouce instanceof Map) return (Map<String, Object>) dataSrouce;
+        Map<String, Object> ret = new HashMap<String, Object>();
+        Class<?> clazz = dataSrouce.getClass();
+        while (clazz != Object.class) {
+            Field[] fields = clazz.getDeclaredFields();
+            PropertyDescriptor pd = null;
+            for (Field f : fields) {
+                try {
+                    pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
+                    Name annotation = f.getAnnotation(Name.class);
+                    Object value = pd.getReadMethod().invoke(dataSrouce);
+                    ret.put(null == annotation ? f.getName() : annotation.value(), value);
+                } catch (Exception e) {
+                    logger.error("Convert datasource field failed:{}", f.getName(), e);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+
+        return ret;
+    }
 
 }

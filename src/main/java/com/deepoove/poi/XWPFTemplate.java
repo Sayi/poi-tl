@@ -135,6 +135,16 @@ public class XWPFTemplate {
 			throw new ResolverException("Compile template failed");
 		}
 	}
+	
+	public void reload(NiceXWPFDocument doc) {
+	    try {
+            this.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.doc = doc;
+        this.eleTemplates = new TemplateResolver(this.config).parseElementTemplates(doc);
+    }
 
 	public XWPFTemplate render(Map<String, Object> datas) {
 		RenderAPI.render(this, datas);
@@ -200,5 +210,7 @@ public class XWPFTemplate {
 	public Configure getConfig() {
 		return config;
 	}
+
+    
 
 }

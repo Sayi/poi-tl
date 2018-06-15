@@ -15,3 +15,4 @@ hs_err_pid*
 /target/
 out*.docx
 out_*
+merge_all
