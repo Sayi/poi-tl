@@ -12,7 +12,7 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
-public class ConfigureTest {
+public class ConfigurePluginTest {
 
     @SuppressWarnings("serial")
     @Test
@@ -33,7 +33,7 @@ public class ConfigureTest {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config.docx", configure)
                 .render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_text_config.docx");
+        FileOutputStream out = new FileOutputStream("out_config.docx");
         template.write(out);
         out.flush();
         out.close();

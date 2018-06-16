@@ -1,6 +1,5 @@
 package com.deepoove.poi.tl;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,17 +13,16 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.tl.datasource.DataSourceTest;
+import com.deepoove.poi.tl.source.DataSourceTest;
 
 /**
  * @author Sayi
- * @version 0.0.4
  */
-public class XWPFTemplateTestV4 {
+public class XWPFTemplateTest {
 
 	@SuppressWarnings("serial")
 	@Test
-	public void testV4() throws Exception {
+	public void testRenderMap() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>(){{
 			put("header_version", "ver 0.0.3");
 			put("hello", "ver 0.0.3");
@@ -52,9 +50,9 @@ public class XWPFTemplateTestV4 {
 		}};
 		
 		
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(datas);;
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);;
 
-		FileOutputStream out = new FileOutputStream("out_PB.docx");
+		FileOutputStream out = new FileOutputStream("out_template.docx");
 		template.write(out);
 		out.flush();
 		out.close();
@@ -88,38 +86,16 @@ public class XWPFTemplateTestV4 {
 		obj.setBaseProp("1232456");
 		
 		
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx").render(obj);
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(obj);
 
-		FileOutputStream out = new FileOutputStream("out_PB.docx");
+		FileOutputStream out = new FileOutputStream("out_template_object.docx");
 		template.write(out);
 		template.close();
 		out.flush();
 		out.close();
 	}
 	
-	@SuppressWarnings("serial")
-	@Test
-	public void testRenderJavaObject() throws Exception{
-		Map<String, Object> datas = new HashMap<String, Object>(){{
-			put("score", "92");
-			put("emblem", new PictureRenderData(150, 150, "src/test/resources/emblem.png"));
-			put("college", "自动化");
-			put("profession", "自动化技术");
-			put("class", "2017级一(1)班");
-			put("studentId", "001715");
-			put("studentName", "约翰史密斯");
-			put("teacher", "汤姆汉克斯");
-			put("date", "2017-06-01");
-		}};
-
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/实验报告模板.docx").render(datas);;
-
-		FileOutputStream out = new FileOutputStream("out_实验报告模板.docx");
-		template.write(out);
-		out.flush();
-		out.close();
-		template.close();
-	}
+	
 	
 	@SuppressWarnings("serial")
 	@Test
@@ -131,38 +107,16 @@ public class XWPFTemplateTestV4 {
 			put("fafd", "技术");
 		}};
 		
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);;
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template_run_merge.docx").render(datas);;
 		
-		FileOutputStream out = new FileOutputStream("out_template.docx");
+		FileOutputStream out = new FileOutputStream("out_template_run_merge.docx");
 		template.write(out);
 		out.flush();
 		out.close();
 		template.close();
 	}
 
-	@SuppressWarnings("serial")
-	@Test
-	public void testCompileInputStream1() throws Exception{
-		Map<String, Object> datas = new HashMap<String, Object>(){{
-			put("score", "92");
-			put("emblem", new PictureRenderData(150, 150, "src/test/resources/emblem.png"));
-			put("college", "自动化");
-			put("profession", "自动化技术");
-			put("class", "2017级一(1)班");
-			put("studentId", "001715");
-			put("studentName", "约翰史密斯");
-			put("teacher", "汤姆汉克斯");
-			put("date", "2017-06-01");
-		}};
-
-		XWPFTemplate template = XWPFTemplate.compile(new FileInputStream("src/test/resources/实验报告模板.docx")).render(datas);;
-
-		FileOutputStream out = new FileOutputStream("out_实验报告模板_inputstream1.docx");
-		template.write(out);
-		out.flush();
-		out.close();
-		template.close();
-	}
+	
 
 
 

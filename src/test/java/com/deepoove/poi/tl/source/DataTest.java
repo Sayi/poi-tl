@@ -1,9 +1,9 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.source;
 
 import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.PictureRenderData;
 
-public class Data{
+public class DataTest{
     @Name("Question")
     private String question;
     @Name("A")
@@ -16,7 +16,7 @@ public class Data{
     private String d;
     private PictureRenderData logo;
     
-    public Data() {
+    public DataTest() {
     }
     
     public String getQuestion() {

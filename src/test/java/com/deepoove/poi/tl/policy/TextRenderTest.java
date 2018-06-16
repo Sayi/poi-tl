@@ -23,6 +23,7 @@ public class TextRenderTest {
                 put("title", "Hello, poi tl.");
                 put("text", new TextRenderData("28a745", "我是绿色的文字"));
                 
+                // 指定文本样式
 				TextRenderData textRenderData = new TextRenderData("just deepoove.");
 				Style style = new Style("FF5722");
 				textRenderData.setStyle(style);
@@ -34,8 +35,10 @@ public class TextRenderTest {
 				style.setFontFamily("微软雅黑");
                 put("word", textRenderData);
                 
+                // 换行
                 put("newline", "我是换行的文字,\n End.");
                 
+                // 从文件读取文字
                 File file = new File("src/test/resources/word.txt");
                 FileInputStream in=new FileInputStream(file);  
                 int size=in.available();  

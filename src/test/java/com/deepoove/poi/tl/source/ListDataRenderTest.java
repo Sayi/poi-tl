@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.source;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -11,12 +11,10 @@ import org.junit.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.tl.mypolicy.ListDataRenderPolicy;
 
-public class ListDataTest {
+public class ListDataRenderTest {
     
     @SuppressWarnings("serial")
-    @Test
     public void testListData() throws Exception {
         
         Map<String, Object> datas = new HashMap<String, Object>(){{
@@ -37,12 +35,12 @@ public class ListDataTest {
         }};
         
         
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx");
         template.registerPolicy("website", new ListDataRenderPolicy());
         
         template.render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_PB.docx");
+        FileOutputStream out = new FileOutputStream("out_template.docx");
         template.write(out);
         out.flush();
         out.close();

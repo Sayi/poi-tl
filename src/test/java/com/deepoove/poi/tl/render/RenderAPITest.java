@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.render;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ public class RenderAPITest {
 			}
 		};
 
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/PB.docx");
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx");
 
 		// 测试是否映射正确
 		RenderAPI.debug(template, datas);
@@ -76,7 +76,7 @@ public class RenderAPITest {
 		// 测试是否可以自渲染
 		RenderAPI.selfRender(template);
 
-		FileOutputStream out = new FileOutputStream("out_PB.docx");
+		FileOutputStream out = new FileOutputStream("out_self.docx");
 		template.write(out);
 		out.flush();
 		out.close();

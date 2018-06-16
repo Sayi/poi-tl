@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.source;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -7,14 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.tl.mypolicy.MyTableRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -26,7 +23,6 @@ import com.deepoove.poi.util.BytePictureUtils;
 public class ComplexRenderTest {
 
 	@SuppressWarnings("serial")
-	@Test
 	public void testComplexDocx() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{

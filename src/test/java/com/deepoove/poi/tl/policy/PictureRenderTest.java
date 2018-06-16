@@ -40,11 +40,11 @@ public class PictureRenderTest {
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{
 				//本地图片
-				put("localPicture", new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+				put("localPicture", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
 				//本地图片byte数据
 				put("localBytePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getLocalByteArray(new File("src/test/resources/logo.png"))));
 				//网路图片 
-				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854?v=3&s=40")));
+				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
 				// java 图片
 				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));
 			}
