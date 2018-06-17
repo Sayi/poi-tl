@@ -24,6 +24,8 @@ import java.util.List;
  * @version 1.3.0
  */
 public class MiniTableRenderData implements RenderData {
+	
+	public static final int WIDTH_A4_FULL = 8310;
 
     private RowRenderData headers;
     private List<RowRenderData> datas;
@@ -37,6 +39,10 @@ public class MiniTableRenderData implements RenderData {
 
     public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas) {
         this(headers, datas, null, 0);
+    }
+    
+    public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas, int width) {
+        this(headers, datas, null, width);
     }
     
     public MiniTableRenderData(List<RowRenderData> datas) {

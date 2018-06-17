@@ -1,68 +1,75 @@
 package com.deepoove.poi.tl.source;
 
 import com.deepoove.poi.config.Name;
+import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.TableRenderData;
-import com.deepoove.poi.data.TextRenderData;
 
 public class DataSourceTest extends DataSourceBaseTest {
 
-	@Name("header_version")
-	private String headerVersion;
-	private String hello;
-	private PictureRenderData logo;
-	private TextRenderData title;
-	private TableRenderData changeLog;
-	private String website;
+	private String what;
+	private NumbericRenderData feature;
+	@Name("solution_compare")
+	private MiniTableRenderData solutionCompare;
+	private PictureRenderData portrait;
+	private String author;
+	private String introduce;
+	private String header;
 
-	public DataSourceTest() {}
-
-	public String getHeaderVersion() {
-		return headerVersion;
+	public void setWhat(String what) {
+		this.what = what;
 	}
 
-	public void setHeaderVersion(String headerVersion) {
-		this.headerVersion = headerVersion;
+	public String getWhat() {
+		return this.what;
 	}
 
-	public String getHello() {
-		return hello;
+	public void setFeature(NumbericRenderData feature) {
+		this.feature = feature;
 	}
 
-	public void setHello(String hello) {
-		this.hello = hello;
+	public NumbericRenderData getFeature() {
+		return this.feature;
 	}
 
-	public PictureRenderData getLogo() {
-		return logo;
+	public MiniTableRenderData getSolutionCompare() {
+		return solutionCompare;
 	}
 
-	public void setLogo(PictureRenderData logo) {
-		this.logo = logo;
+	public void setSolutionCompare(MiniTableRenderData solutionCompare) {
+		this.solutionCompare = solutionCompare;
 	}
 
-	public TextRenderData getTitle() {
-		return title;
+	public void setPortrait(PictureRenderData portrait) {
+		this.portrait = portrait;
 	}
 
-	public void setTitle(TextRenderData title) {
-		this.title = title;
+	public PictureRenderData getPortrait() {
+		return this.portrait;
 	}
 
-	public TableRenderData getChangeLog() {
-		return changeLog;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
-	public void setChangeLog(TableRenderData changeLog) {
-		this.changeLog = changeLog;
+	public String getAuthor() {
+		return this.author;
 	}
 
-	public String getWebsite() {
-		return website;
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
 	}
 
-	public void setWebsite(String website) {
-		this.website = website;
+	public String getIntroduce() {
+		return this.introduce;
+	}
+
+	public void setHeader(String header) {
+		this.header = header;
+	}
+
+	public String getHeader() {
+		return this.header;
 	}
 
 }

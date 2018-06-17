@@ -1,5 +1,6 @@
 package com.deepoove.poi.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,11 +17,23 @@ public class RowRenderData implements RenderData {
      * 行背景色
      */
     private String backgroundColor;
+    
+    public RowRenderData() {
+    }
 
     public RowRenderData(List<TextRenderData> rowData) {
         this.rowData = rowData;
     }
-
+    
+    public static RowRenderData build(String...row) {
+    	RowRenderData instance = new RowRenderData();
+    	instance.rowData = new ArrayList<TextRenderData>();
+    	for (String col : row) {
+    		instance.rowData.add(new TextRenderData(col));
+    	}
+    	return instance;
+    }
+    
     public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
         this.rowData = rowData;
         this.backgroundColor = backgroundColor;

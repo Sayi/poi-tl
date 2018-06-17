@@ -14,7 +14,7 @@ public class NiceXWPFDocumentTest {
     @SuppressWarnings("resource")
     @Test
     public void testMerge() throws Exception{
-        NiceXWPFDocument doc = new NiceXWPFDocument(new FileInputStream(new File("src/test/resources/text_render.docx")));
+        NiceXWPFDocument doc = new NiceXWPFDocument(new FileInputStream(new File("src/test/resources/docx_render.docx")));
         NiceXWPFDocument docMerge = new NiceXWPFDocument(new FileInputStream(new File("src/test/resources/merge_all.docx")));
         doc = doc.merge(docMerge);
         

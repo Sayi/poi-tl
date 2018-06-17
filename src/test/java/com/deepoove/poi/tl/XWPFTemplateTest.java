@@ -2,16 +2,19 @@ package com.deepoove.poi.tl;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RenderData;
-import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.tl.source.DataSourceTest;
 
@@ -20,37 +23,49 @@ import com.deepoove.poi.tl.source.DataSourceTest;
  */
 public class XWPFTemplateTest {
 
+	RowRenderData header;
+	List<RowRenderData> tableDatas;
+
+	@Before
+	public void init() {
+		header = new RowRenderData(Arrays.asList(new TextRenderData("FFFFFF", "Word处理解决方案"),
+				new TextRenderData("FFFFFF", "是否跨平台"), new TextRenderData("FFFFFF", "易用性")), "ff9800");
+		RowRenderData row0 = RowRenderData.build("Poi-tl", "纯Java组件，跨平台", "简单：模板引擎功能，并对POI进行了一些封装");
+		RowRenderData row1 = RowRenderData.build("Apache Poi", "纯Java组件，跨平台", "简单，缺少一些功能的封装");
+		RowRenderData row2 = RowRenderData.build("Freemarker", "XML操作，跨平台", "复杂，需要理解XML结构");
+		RowRenderData row3 = RowRenderData.build("OpenOffice", "需要安装OpenOffice软件", "复杂，需要了解OpenOffice的API");
+		RowRenderData row4 = RowRenderData.build("Jacob、winlib", "Windows平台", "复杂，不推荐使用");
+		tableDatas = Arrays.asList(row0, row1, row2, row3, row4);
+	}
+
 	@SuppressWarnings("serial")
 	@Test
 	public void testRenderMap() throws Exception {
-		Map<String, Object> datas = new HashMap<String, Object>(){{
-			put("header_version", "ver 0.0.3");
-			put("hello", "ver 0.0.3");
-			put("logo", new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-			put("title", new TextRenderData("9d55b8", "Deeply in love with the things you love,\n just deepoove."));
-			put("changeLog", new TableRenderData(new ArrayList<RenderData>(){{
-				add(new TextRenderData("d0d0d0", ""));
-				add(new TextRenderData("d0d0d0", "introduce"));
-			}},new ArrayList<Object>(){{
-				add("1;add new # gramer");
-				add("2;support insert table");
-				add("3;support more style");
-			}}, "no datas", 10600));
-			put("unorderlist", new NumbericRenderData(new ArrayList<TextRenderData>(){{
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-			}}));
-			put("orderlist", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL, new ArrayList<TextRenderData>(){{
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-				add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-			}}));
-			put("website", "http://www.deepoove.com/poi-tl");
-		}};
-		
-		
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);;
+		Map<String, Object> datas = new HashMap<String, Object>() {
+			{
+				put("header", "Deeply love what you love.");
+				put("name", "Poi-tl");
+				put("what",
+						"Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
+				put("author", new TextRenderData("000000", "Sayi卅一"));
+				put("introduce", "http://www.deepoove.com");
+				put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+
+				put("solution_compare", new MiniTableRenderData(header, tableDatas, 8310));
+
+				put("feature", new NumbericRenderData(new ArrayList<TextRenderData>() {
+					{
+						add(new TextRenderData("Plug-in grammar, add new grammar by yourself"));
+						add(new TextRenderData(
+								"Supports word text, local pictures, web pictures, table, list, header, footer..."));
+						add(new TextRenderData("Templates, not just templates, but also style templates"));
+					}
+				}));
+			}
+		};
+
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(datas);
+		;
 
 		FileOutputStream out = new FileOutputStream("out_template.docx");
 		template.write(out);
@@ -58,34 +73,28 @@ public class XWPFTemplateTest {
 		out.close();
 		template.close();
 	}
-	
+
 	@SuppressWarnings("serial")
 	@Test
 	public void testRenderObject() throws Exception {
 		DataSourceTest obj = new DataSourceTest();
-		obj.setHeaderVersion("v0.0.3");
-		obj.setHello("v0.0.3");
-		obj.setWebsite("http://www.deepoove.com/poi-tl");
-		obj.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-		TextRenderData textRenderData = new TextRenderData("9d55b8",
-                "Deeply in love with the things you love,\\n just deepoove.");
-		textRenderData.getStyle().setUnderLine(true);
-		obj.setTitle(textRenderData);
-		obj.setChangeLog(new TableRenderData(new ArrayList<RenderData>() {
+		obj.setHeader("Deeply love what you love.");
+		obj.setName("Poi-tl");
+		obj.setWhat("Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
+		obj.setAuthor("Sayi卅一");
+		obj.setIntroduce("http://www.deepoove.com");
+		obj.setPortrait(new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+		obj.setSolutionCompare(new MiniTableRenderData(header, tableDatas, 8310));
+		obj.setFeature(new NumbericRenderData(new ArrayList<TextRenderData>() {
 			{
-				add(new TextRenderData("d0d0d0", ""));
-				add(new TextRenderData("d0d0d0", "introduce"));
+				add(new TextRenderData("Plug-in grammar, add new grammar by yourself"));
+				add(new TextRenderData(
+						"Supports word text, local pictures, web pictures, table, list, header, footer..."));
+				add(new TextRenderData("Templates, not just templates, but also style templates"));
 			}
-		}, new ArrayList<Object>() {
-			{
-				add("1;add new # gramer");
-				add("2;support insert table");
-				add("3;support more style");
-			}
-		}, "no datas", 10600));
-		obj.setBaseProp("1232456");
+		}));
 		
-		
+
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx").render(obj);
 
 		FileOutputStream out = new FileOutputStream("out_template_object.docx");
@@ -94,30 +103,6 @@ public class XWPFTemplateTest {
 		out.flush();
 		out.close();
 	}
-	
-	
-	
-	@SuppressWarnings("serial")
-	@Test
-	public void testRenderMerge() throws Exception{
-		Map<String, Object> datas = new HashMap<String, Object>(){{
-			put("author", "deepoove");
-			put("date", "2016-09-40");
-			put("dfa", "自动化");
-			put("fafd", "技术");
-		}};
-		
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template_run_merge.docx").render(datas);;
-		
-		FileOutputStream out = new FileOutputStream("out_template_run_merge.docx");
-		template.write(out);
-		out.flush();
-		out.close();
-		template.close();
-	}
-
-	
-
 
 
 }

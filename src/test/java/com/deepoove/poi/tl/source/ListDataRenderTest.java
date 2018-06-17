@@ -6,12 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
+@Deprecated
 public class ListDataRenderTest {
     
     @SuppressWarnings("serial")

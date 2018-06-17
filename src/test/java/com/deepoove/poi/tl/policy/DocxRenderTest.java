@@ -60,6 +60,10 @@ public class DocxRenderTest {
 
 				// 合并文档merge_picture.docx
 				put("docx_template2", new DocxRenderData(new File("src/test/resources/merge_picture.docx")));
+				
+				put("docx_template3", new DocxRenderData(new File("src/test/resources/merge_table.docx")));
+				
+				put("docx_template4", new DocxRenderData(new File("src/test/resources/merge_all.docx")));
 
 				put("newline", "Why poi-tl?");
 
@@ -68,7 +72,7 @@ public class DocxRenderTest {
 
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx").render(datas);
 
-		FileOutputStream out = new FileOutputStream("out_docx_template_render.docx");
+		FileOutputStream out = new FileOutputStream("out_docx_render.docx");
 		template.write(out);
 		out.flush();
 		out.close();

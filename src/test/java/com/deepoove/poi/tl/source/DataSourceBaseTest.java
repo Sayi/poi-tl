@@ -2,14 +2,14 @@ package com.deepoove.poi.tl.source;
 
 public class DataSourceBaseTest {
 
-	protected String baseProp;
+	protected String name;
 
-	public String getBaseProp() {
-		return baseProp;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setBaseProp(String baseProp) {
-		this.baseProp = baseProp;
+	public String getName() {
+		return this.name;
 	}
 
 }

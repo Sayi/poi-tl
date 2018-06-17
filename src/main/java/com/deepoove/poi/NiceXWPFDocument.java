@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -471,7 +472,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private String extractMergePart(NiceXWPFDocument docMerge) throws InvalidFormatException {
         CTBody bodyMerge = docMerge.getDocument().getBody();
-        mergeStyles(docMerge);
+        Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
         Map<String, String> blipIdsMap = mergePicture(docMerge);
         
@@ -479,6 +480,16 @@ public class NiceXWPFDocument extends XWPFDocument {
         optionsOuter.setSaveOuter();
         String appendString = bodyMerge.xmlText(optionsOuter);
         String addPart = ridSectPr(appendString);
+        
+		for (String styleId : styleIdsMap.keySet()) {
+			addPart = addPart
+					.replaceAll("<w:pStyle\\sw:val=\"" + styleId + "\"",
+							"<w:pStyle w:val=\"" + styleIdsMap.get(styleId) + "\"")
+					.replaceAll("<w:tblStyle\\sw:val=\"" + styleId + "\"",
+							"<w:tblStyle w:val=\"" + styleIdsMap.get(styleId) + "\"")
+					.replaceAll("<w:rStyle\\sw:val=\"" + styleId + "\"",
+							"<w:rStyle w:val=\"" + styleIdsMap.get(styleId) + "\"");
+		}
         for (String relaId : blipIdsMap.keySet()) {
             addPart = addPart.replaceAll("r:embed=\"" + relaId + "\"",
                     "r:embed=\"" + blipIdsMap.get(relaId) + "\"");
@@ -545,7 +556,8 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     @SuppressWarnings("unchecked")
-    private void mergeStyles(NiceXWPFDocument docMerge){
+    private Map<String, String> mergeStyles(NiceXWPFDocument docMerge){
+    	Map<String, String> styleIdsMap = new HashMap<String, String>();
         XWPFStyles styles = this.getStyles();
         XWPFStyles stylesMerge = docMerge.getStyles();
         try {
@@ -553,13 +565,17 @@ public class NiceXWPFDocument extends XWPFDocument {
             listStyleField.setAccessible(true);
             List<XWPFStyle> lists = (List<XWPFStyle>) listStyleField.get(stylesMerge);
             for (XWPFStyle xwpfStyle : lists) {
-                if (!styles.styleExist(xwpfStyle.getStyleId())) {
-                    styles.addStyle(xwpfStyle);
+                if (styles.styleExist(xwpfStyle.getStyleId())) {
+                	String id = xwpfStyle.getStyleId();
+                	xwpfStyle.setStyleId(UUID.randomUUID().toString());
+                	styleIdsMap.put(id, xwpfStyle.getStyleId());
                 }
+                styles.addStyle(xwpfStyle);
             }
         } catch (Exception e) {
             logger.error("merge style error", e);
         }
+        return styleIdsMap;
     }
 
 }

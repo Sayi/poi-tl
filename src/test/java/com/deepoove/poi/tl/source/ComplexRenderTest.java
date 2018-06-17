@@ -20,6 +20,7 @@ import com.deepoove.poi.util.BytePictureUtils;
  * @author Sayi
  * @version 1.0.0
  */
+@Deprecated
 public class ComplexRenderTest {
 
 	@SuppressWarnings("serial")
