@@ -1,7 +1,10 @@
 package com.deepoove.poi.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.deepoove.poi.data.style.TableStyle;
 
 /**
  * 行数据
@@ -13,10 +16,7 @@ public class RowRenderData implements RenderData {
 
     private List<TextRenderData> rowData;
 
-    /**
-     * 行背景色
-     */
-    private String backgroundColor;
+    private TableStyle style;
     
     public RowRenderData() {
     }
@@ -34,9 +34,17 @@ public class RowRenderData implements RenderData {
     	return instance;
     }
     
+    public static RowRenderData build(TextRenderData...row) {
+    	RowRenderData instance = new RowRenderData();
+    	instance.rowData = null == row ? null : Arrays.asList(row);
+    	return instance;
+    }
+    
     public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
         this.rowData = rowData;
-        this.backgroundColor = backgroundColor;
+        TableStyle style = new TableStyle();
+        style.setBackgroundColor(backgroundColor);
+        this.style = style;
     }
 
     public int size() {
@@ -51,12 +59,12 @@ public class RowRenderData implements RenderData {
         this.rowData = rowData;
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
+	public TableStyle getStyle() {
+		return style;
+	}
 
-    public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
-    }
+	public void setStyle(TableStyle style) {
+		this.style = style;
+	}
 
 }

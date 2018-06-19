@@ -18,16 +18,25 @@ package com.deepoove.poi.util;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.data.style.TableStyle;
 
 /**
  * 样式工具类
@@ -139,5 +148,34 @@ public final class StyleUtils {
             }
         }
     }
+
+	public static void styleTable(XWPFTable table, TableStyle style) {
+		if (null == table || null == style)
+			return;
+		CTTblPr tblPr = table.getCTTbl().getTblPr();
+		if (null == tblPr) {
+			tblPr = table.getCTTbl().addNewTblPr();
+		}
+		if (null != style.getAlign()) {
+			CTJc jc = tblPr.isSetJc() ? tblPr.getJc() : tblPr.addNewJc();
+			jc.setVal(style.getAlign());
+		}
+		if (null != style.getBackgroundColor()) {
+			CTShd ctshd = tblPr.isSetShd() ? tblPr.getShd() : tblPr.addNewShd();
+			ctshd.setColor("auto");
+			ctshd.setVal(STShd.CLEAR);
+			ctshd.setFill(style.getBackgroundColor());
+		}
+	}
+
+	public static void styleTableParagraph(XWPFParagraph par, TableStyle style) {
+		if (null != par && null != style && null != style.getAlign()) {
+			CTP ctp = par.getCTP();
+			CTPPr CTPpr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+			CTJc jc = CTPpr.isSetJc() ? CTPpr.getJc() : CTPpr.addNewJc();
+			jc.setVal(style.getAlign());
+		}
+
+	}
 
 }

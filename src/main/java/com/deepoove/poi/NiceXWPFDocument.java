@@ -41,6 +41,7 @@ import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -51,7 +52,6 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -94,20 +94,16 @@ public class NiceXWPFDocument extends XWPFDocument {
 	 */
 	public void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
 			int toCol) {
-		for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
-			XWPFTableCell cell = table.getRow(row).getCell(colIndex);
-			CTTcPr tcPr = cell.getCTTc().getTcPr();
-			if (null == tcPr)
-				tcPr = cell.getCTTc().addNewTcPr();
-			CTHMerge hMerge = tcPr.addNewHMerge();
-			if (colIndex == fromCol) {
-				// The first merged cell is set with RESTART merge value
-				hMerge.setVal(STMerge.RESTART);
-			} else {
-				// Cells which join (merge) the first one, are set with CONTINUE
-				hMerge.setVal(STMerge.CONTINUE);
-			}
+		if (toCol <= fromCol) return;
+		XWPFTableCell cell = table.getRow(row).getCell(fromCol);
+		CTTcPr tcPr = cell.getCTTc().getTcPr();
+		if (null == tcPr)
+			tcPr = cell.getCTTc().addNewTcPr();
+		XWPFTableRow rowTable = table.getRow(row);
+		for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
+			rowTable.getCtRow().removeTc(colIndex);
 		}
+		spanCellsAcrossRow(table, row, fromCol, toCol - fromCol + 1);
 	}
 
 	/**
@@ -137,8 +133,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 		}
 	}
 
-	@Deprecated
-	public void spanCellsAcrossRow(XWPFTable table, int rowNum, int colNum,
+	private void spanCellsAcrossRow(XWPFTable table, int rowNum, int colNum,
 			int span) {
 		XWPFTableCell cell = table.getRow(rowNum).getCell(colNum);
 		cell.getCTTc().getTcPr().addNewGridSpan();
@@ -211,10 +206,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         if (null == tblPr) {
             tblPr = table.getCTTbl().addNewTblPr();
         }
-        CTTblWidth tblW = tblPr.getTblW();
-        if (tblW == null) {
-            tblW = tblPr.addNewTblW();
-        }
+        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
         tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
         tblW.setW(BigInteger.valueOf(width));
 
@@ -236,6 +228,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         tblBorders.getRight().setSz(BigInteger.valueOf(4));
         tblBorders.getInsideH().setSz(BigInteger.valueOf(4));
         tblBorders.getInsideV().setSz(BigInteger.valueOf(4));
+        
     }
 	
 	/**

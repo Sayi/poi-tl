@@ -29,6 +29,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
@@ -51,6 +52,8 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         MiniTableRenderData tableData = (MiniTableRenderData) data;
         RowRenderData headers = tableData.getHeaders();
         List<RowRenderData> datas = tableData.getDatas();
+        TableStyle style = tableData.getStyle();
+        int width = tableData.getWidth();
 
         if (!tableData.isSetBody()) {
             if (!tableData.isSetHeader()) {
@@ -60,9 +63,9 @@ public class MiniTableRenderPolicy implements RenderPolicy {
             int row = 2;
             int col = headers.size();
             int startRow = 1;
-            int width = tableData.getWidth();
             
             XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
+            StyleUtils.styleTable(table, style);
             doc.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
             XWPFTableCell cell = table.getRow(startRow).getCell(0);
             cell.setText(tableData.getNoDatadesc());
@@ -71,7 +74,6 @@ public class MiniTableRenderPolicy implements RenderPolicy {
             int row = datas.size();
             int col = 0;
             int startRow = 0;
-            int width = tableData.getWidth();
             if (!tableData.isSetHeader()) {
                 col = getMaxColumFromData(datas);
             } else {
@@ -81,6 +83,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
             }
             
             XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
+            StyleUtils.styleTable(table, style);
             for (RowRenderData obj : datas) {
                 renderRow(table, startRow++, obj);
             }
@@ -96,34 +99,38 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         return table;
     }
 
-    private void renderRow(XWPFTable table, int row, RowRenderData rowData) {
-        if (null == rowData || rowData.size() <= 0) return;
-        int i = 0;
-        List<TextRenderData> cellDatas = rowData.getRowData();
-        for (TextRenderData cellData : cellDatas) {
-            XWPFTableCell cell = table.getRow(row).getCell(i);
-            String[] fragment = cellData.getText().split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
-            if (null != fragment) {
-                CTTc ctTc = cell.getCTTc();
-                CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
-                XWPFParagraph par = new XWPFParagraph(ctP, cell);
-                XWPFRun run = par.createRun();
-                StyleUtils.styleRun(run, cellData.getStyle());
-                run.setText(fragment[0]);
-                for (int j = 1; j < fragment.length; j++) {
-                    XWPFParagraph addParagraph = cell.addParagraph();
-                    run = addParagraph.createRun();
-                    StyleUtils.styleRun(run, cellData.getStyle());
-                    run.setText(fragment[j]);
-                }
-            }
-            if (null != rowData.getBackgroundColor()) table.getRow(row).getCell(i).setColor(rowData.getBackgroundColor());
-            i++;
-        }
-    }
-    
+	public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
+		if (null == rowData || rowData.size() <= 0) return;
+		int i = 0;
+		TableStyle style = rowData.getStyle();
+		List<TextRenderData> cellDatas = rowData.getRowData();
+		XWPFTableCell cell = null;
+		for (TextRenderData cellData : cellDatas) {
+			cell = table.getRow(row).getCell(i);
+			String[] fragment = cellData.getText().split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
+			if (null != fragment) {
+				CTTc ctTc = cell.getCTTc();
+				CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
+				XWPFParagraph par = new XWPFParagraph(ctP, cell);
+				StyleUtils.styleTableParagraph(par, style);
+				XWPFRun run = par.createRun();
+				StyleUtils.styleRun(run, cellData.getStyle());
+				run.setText(fragment[0]);
+				for (int j = 1; j < fragment.length; j++) {
+					XWPFParagraph addParagraph = cell.addParagraph();
+					StyleUtils.styleTableParagraph(addParagraph, style);
+					run = addParagraph.createRun();
+					StyleUtils.styleRun(run, cellData.getStyle());
+					run.setText(fragment[j]);
+				}
+			}
 
-    private int getMaxColumFromData(List<RowRenderData> datas) {
+			if (null != style && null != style.getBackgroundColor()) cell.setColor(style.getBackgroundColor());
+			i++;
+		}
+	}
+
+	private int getMaxColumFromData(List<RowRenderData> datas) {
         int maxColom = 0;
         for (RowRenderData obj : datas) {
             if (null == obj) continue;

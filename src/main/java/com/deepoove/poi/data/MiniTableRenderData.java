@@ -17,6 +17,8 @@ package com.deepoove.poi.data;
 
 import java.util.List;
 
+import com.deepoove.poi.data.style.TableStyle;
+
 /**
  * 表格数据
  * 
@@ -25,11 +27,29 @@ import java.util.List;
  */
 public class MiniTableRenderData implements RenderData {
 	
-	public static final int WIDTH_A4_FULL = 8310;
+	/**
+	 * 通用边距的表格宽度：A4(20.9*29.6),页边距为3.17*2.54
+	 */
+	public static final int WIDTH_A4_FULL = 8256;
+	/**
+	 * 窄边距的表格宽度：A4(20.9*29.6),页边距为1.27*1.27
+	 */
+	public static final int WIDTH_A4_NARROW_FULL = 10408;
+	/**
+	 * 适中边距的表格宽度：A4(20.9*29.6),页边距为1.91*2.54
+	 */
+	public static final int WIDTH_A4_MEDIUM_FULL = 9684;
+	/**
+	 * 宽边距的表格宽度：A4(20.9*29.6),页边距为5.08*2.54
+	 */
+	public static final int WIDTH_A4_EXTEND_FULL = 6088;
 
     private RowRenderData headers;
     private List<RowRenderData> datas;
+    
     private String noDatadesc;
+    
+    private TableStyle style;
 
     /**
      * dxa - Specifies that the value is in twentieths of a point (1/1440 of an
@@ -37,17 +57,22 @@ public class MiniTableRenderData implements RenderData {
      */
     private int width;
 
+    public MiniTableRenderData(List<RowRenderData> datas) {
+        this(null, datas);
+    }
+    
     public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas) {
-        this(headers, datas, null, 0);
+        this(headers, datas, WIDTH_A4_FULL);
     }
     
     public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas, int width) {
         this(headers, datas, null, width);
     }
     
-    public MiniTableRenderData(List<RowRenderData> datas) {
-        this(null, datas, null, 0);
+    public MiniTableRenderData(RowRenderData headers, String noDatadesc) {
+        this(headers, null, noDatadesc, WIDTH_A4_FULL);
     }
+    
 
     /**
      * @param headers
@@ -66,6 +91,7 @@ public class MiniTableRenderData implements RenderData {
         this.noDatadesc = noDatadesc;
         this.width = width;
     }
+    
     
     public boolean isSetHeader(){
         return null != headers && headers.size() > 0;
@@ -105,5 +131,15 @@ public class MiniTableRenderData implements RenderData {
     public void setWidth(int width) {
         this.width = width;
     }
+
+	public TableStyle getStyle() {
+		return style;
+	}
+
+	public void setStyle(TableStyle style) {
+		this.style = style;
+	}
+    
+    
 
 }
