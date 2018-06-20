@@ -45,6 +45,8 @@ public class XWPFTemplateTest {
 			{
 				put("header", "Deeply love what you love.");
 				put("name", "Poi-tl");
+				put("word", "模板引擎");
+				put("time", "2018-06-20");
 				put("what",
 						"Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
 				put("author", new TextRenderData("000000", "Sayi卅一"));
@@ -80,6 +82,8 @@ public class XWPFTemplateTest {
 		DataSourceTest obj = new DataSourceTest();
 		obj.setHeader("Deeply love what you love.");
 		obj.setName("Poi-tl");
+		obj.setWord("模板引擎");
+		obj.setTime("2018-06-20");
 		obj.setWhat("Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
 		obj.setAuthor("Sayi卅一");
 		obj.setIntroduce("http://www.deepoove.com");
