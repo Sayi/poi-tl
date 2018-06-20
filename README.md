@@ -10,7 +10,7 @@
 | OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
 
-**Poi-tl(poi template language)**的增强和特性主要有以下几点：
+**Poi-tl(poi template language)** 的增强和特性主要有以下几点：
 * **Word模板引擎**
 * 多个Word文档合并
 * 合并单元格
@@ -18,7 +18,7 @@
 * 简化样式处理
 * 图片处理
 
-核心API只需要一行代码：
+核心API也采用了极简设计，只需要一行代码：
 
 ```java
 XWPFTemplate template = XWPFTemplate.compile("~/file.docx").render(datas);
