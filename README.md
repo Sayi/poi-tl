@@ -10,7 +10,8 @@
 | OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
 
-**Poi-tl(poi template language)** 的增强和特性主要有以下几点：
+
+:memo: **Poi-tl(poi template language)** 的初衷就是在模板设计、样式处理等方面简化Word的处理，特性如下：
 * **Word模板引擎**
 * 多个Word文档合并
 * 合并单元格
