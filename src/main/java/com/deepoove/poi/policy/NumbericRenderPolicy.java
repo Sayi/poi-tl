@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.NumberingWrapper;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
@@ -94,6 +95,13 @@ public class NumbericRenderPolicy implements RenderPolicy {
             // doc.insertNewParagraph(run);
         }
         run.setText("", 0);
+        IRunBody parent = run.getParent();
+        if (parent instanceof XWPFParagraph) {
+            ((XWPFParagraph) parent).removeRun(runTemplate.getRunPos());
+            // To do: 更好的列表样式
+            // ((XWPFParagraph) parent).setSpacingBetween(0,
+            // LineSpacingRule.AUTO);
+        }
     }
 
 }

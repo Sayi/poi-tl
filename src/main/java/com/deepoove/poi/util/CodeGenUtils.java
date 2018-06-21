@@ -8,6 +8,7 @@ import org.apache.poi.POIXMLException;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
+import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -25,6 +26,7 @@ public final class CodeGenUtils {
 			+ "import com.deepoove.poi.data.PictureRenderData;\n"
 			+ "import com.deepoove.poi.data.TableRenderData;\n"
 			+ "import com.deepoove.poi.data.TextRenderData;\n"
+			+ "import com.deepoove.poi.data.DocxRenderData;\n"
 			+ "import com.deepoove.poi.data.NumbericRenderData;\n";
 
 	public static String generateJavaObject(XWPFTemplate template, String packageStr, String className){
@@ -65,7 +67,10 @@ public final class CodeGenUtils {
 			}else if (policy instanceof NumbericRenderPolicy){
 				sb.append("private NumbericRenderData ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("NumbericRenderData", field));
-			}else{
+			}else if (policy instanceof DocxRenderPolicy){
+                sb.append("private DocxRenderData ").append(field).append(";\n");
+                sbGetterSetter.append(genGetterSetter("DocxRenderData", field));
+            }else{
 				sb.append("private Object ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("Object", field));
 			}  

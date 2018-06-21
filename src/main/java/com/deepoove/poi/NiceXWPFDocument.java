@@ -294,7 +294,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                     if (o instanceof CTP || o instanceof CTTbl)
                         i++;
                 }
-                bodyElements.add(i, newP);
+                bodyElements.add(i > bodyElements.size() ? bodyElements.size() : i, newP);
                 cursor.toCursor(newParaPos);
                 cursor.toEndToken();
                 return newP;

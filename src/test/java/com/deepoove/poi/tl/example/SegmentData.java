@@ -2,7 +2,7 @@ package com.deepoove.poi.tl.example;
 
 import com.deepoove.poi.data.PictureRenderData;
 
-public class Segment {
+public class SegmentData {
 
 	private String title;
 	private String content;
