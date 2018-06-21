@@ -43,6 +43,11 @@ public class TextRenderData implements RenderData {
 		this.style = new Style(color);
 		this.text = text;
 	}
+	
+	public TextRenderData(String text, Style style) {
+        this.style = style;
+        this.text = text;
+    }
 
 	public Style getStyle() {
 		return style;

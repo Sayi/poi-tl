@@ -66,7 +66,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
             
             XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
             StyleUtils.styleTable(table, style);
-            doc.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
+            NiceXWPFDocument.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
             XWPFTableCell cell = table.getRow(startRow).getCell(0);
             cell.setText(tableData.getNoDatadesc());
 
@@ -99,6 +99,12 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         return table;
     }
 
+	/**
+	 * 填充表格一行的数据
+	 * @param table 
+	 * @param row 第几行
+	 * @param rowData 行数据：确保行数据的大小不超过表格该行的单元格数量
+	 */
 	public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
 		if (null == rowData || rowData.size() <= 0) return;
 		int i = 0;

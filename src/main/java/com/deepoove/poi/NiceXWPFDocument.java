@@ -86,60 +86,62 @@ public class NiceXWPFDocument extends XWPFDocument {
 	}
 	
 	/**
-	 * 合并行单元格
-	 * @param table
-	 * @param row
-	 * @param fromCol
-	 * @param toCol
-	 */
-	public void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
-			int toCol) {
-		if (toCol <= fromCol) return;
-		XWPFTableCell cell = table.getRow(row).getCell(fromCol);
-		CTTcPr tcPr = cell.getCTTc().getTcPr();
-		if (null == tcPr)
-			tcPr = cell.getCTTc().addNewTcPr();
-		XWPFTableRow rowTable = table.getRow(row);
-		for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
-			rowTable.getCtRow().removeTc(colIndex);
-		}
-		spanCellsAcrossRow(table, row, fromCol, toCol - fromCol + 1);
-	}
+     * 合并行单元格
+     * @param table
+     * @param row
+     * @param fromCol
+     * @param toCol
+     */
+    public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
+            int toCol) {
+        if (toCol <= fromCol) return;
+        XWPFTableCell cell = table.getRow(row).getCell(fromCol);
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        if (null == tcPr)
+            tcPr = cell.getCTTc().addNewTcPr();
+        XWPFTableRow rowTable = table.getRow(row);
+        for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
+            rowTable.getCtRow().removeTc(colIndex);
+            rowTable.removeCell(colIndex);
+        }
+        spanCellsAcrossRow(table, row, fromCol, toCol - fromCol + 1);
+    }
 
-	/**
-	 * 合并列单元格
-	 * @param table
-	 * @param col
-	 * @param fromRow
-	 * @param toRow
-	 */
-	public void mergeCellsVertically(XWPFTable table, int col, int fromRow,
-			int toRow) {
+    /**
+     * 合并列单元格
+     * @param table
+     * @param col
+     * @param fromRow
+     * @param toRow
+     */
+    public static void mergeCellsVertically(XWPFTable table, int col, int fromRow,
+            int toRow) {
 
-		for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
+        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
 
-			XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
-			CTTcPr tcPr = cell.getCTTc().getTcPr();
-			if (null == tcPr)
-				tcPr = cell.getCTTc().addNewTcPr();
-			CTVMerge vMerge = tcPr.addNewVMerge();
-			if (rowIndex == fromRow) {
-				// The first merged cell is set with RESTART merge value
-				vMerge.setVal(STMerge.RESTART);
-			} else {
-				// Cells which join (merge) the first one, are set with CONTINUE
-				vMerge.setVal(STMerge.CONTINUE);
-			}
-		}
-	}
+            XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
+            CTTcPr tcPr = cell.getCTTc().getTcPr();
+            if (null == tcPr)
+                tcPr = cell.getCTTc().addNewTcPr();
+            CTVMerge vMerge = tcPr.addNewVMerge();
+            if (rowIndex == fromRow) {
+                // The first merged cell is set with RESTART merge value
+                vMerge.setVal(STMerge.RESTART);
+            } else {
+                // Cells which join (merge) the first one, are set with CONTINUE
+                vMerge.setVal(STMerge.CONTINUE);
+            }
+        }
+    }
 
-	private void spanCellsAcrossRow(XWPFTable table, int rowNum, int colNum,
-			int span) {
-		XWPFTableCell cell = table.getRow(rowNum).getCell(colNum);
-		cell.getCTTc().getTcPr().addNewGridSpan();
-		cell.getCTTc().getTcPr().getGridSpan()
-				.setVal(BigInteger.valueOf((long) span));
-	}
+    private static void spanCellsAcrossRow(XWPFTable table, int rowNum, int colNum,
+            int span) {
+        XWPFTableCell cell = table.getRow(rowNum).getCell(colNum);
+        cell.getCTTc().getTcPr().addNewGridSpan();
+        cell.getCTTc().getTcPr().getGridSpan()
+                .setVal(BigInteger.valueOf((long) span));
+    }
+	
 
 	/**
 	 * 在某个段落起始处插入表格

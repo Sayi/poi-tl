@@ -24,7 +24,7 @@ public final class CodeGenUtils {
 	
 	private static final String importStr = "import com.deepoove.poi.config.Name;\n"
 			+ "import com.deepoove.poi.data.PictureRenderData;\n"
-			+ "import com.deepoove.poi.data.TableRenderData;\n"
+			+ "import com.deepoove.poi.data.MiniTableRenderData;\n"
 			+ "import com.deepoove.poi.data.TextRenderData;\n"
 			+ "import com.deepoove.poi.data.DocxRenderData;\n"
 			+ "import com.deepoove.poi.data.NumbericRenderData;\n";
@@ -59,7 +59,7 @@ public final class CodeGenUtils {
 				sb.append("private String ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("String", field));
 			}else if (policy instanceof SimpleTableRenderPolicy){
-				sb.append("private TableRenderData ").append(field).append(";\n");
+				sb.append("private MiniTableRenderData ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("TableRenderData", field));
 			}else if (policy instanceof PictureRenderPolicy){
 				sb.append("private PictureRenderData ").append(field).append(";\n");

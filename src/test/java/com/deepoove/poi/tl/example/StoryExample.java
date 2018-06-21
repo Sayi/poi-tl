@@ -11,6 +11,11 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 
+/**
+ * 一篇文章
+ * @author Sayi
+ * @version 
+ */
 public class StoryExample {
 	
 	@Test
