@@ -32,9 +32,9 @@ TIP: 目前只支持DOCX格式的WORD模板。
 [source, groovy]
 compile group: 'com.deepoove', name: 'poi-tl', version: '1.3.0'
 
-== 快速开始
+== 快速开始
 === 2min入门
-新建Word模板template.docx，包含内容{{title}}
+新建Word模板template.docx，包含内容{{title}}
 [example]
 {{title}}
 
@@ -60,7 +60,7 @@ template.close();
 --
 
 === Template：Word模板和样式
-所有的模板标签都是以 `{{` 开头，以 `}}` 结尾。模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
+所有的模板标签都是以 `{{` 开头，以 `}}` 结尾。模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
 
 WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
 
@@ -69,7 +69,7 @@ WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档�
 image::./style.png[align='center'] 
 
 === Data-Model：数据源
-数据源的结构体是个键值对的集合：标签名称对应渲染的数据。除了使用Map之外，还可以使用Java Object，默认Class中的field名称即是模板名称，也可以通过注解@Name设置模板名称。
+数据源的结构体是个键值对的集合：标签名称对应数据模型。除了使用Map之外，还可以使用Java Object，默认Class中的field名称即是标签名称，也可以通过注解@Name设置标签名称。
 
 [source, java]
 ----
@@ -108,10 +108,10 @@ put("author", new TextRenderData("000000", "Sayi卅一"));
 put("introduce", "http://www.deepoove.com");
 --
 
-除了继承模板标签样式，也提供了通过代码设定文本样式的方式。
+除了继承模板标签样式，也提供了通过代码设定文本样式的方式。
 
 [sidebar]
-.`TextRenderData` 的结构体
+.`TextRenderData` 的结构体
 --
 [source, json]
 ----
@@ -136,7 +136,7 @@ put("introduce", "http://www.deepoove.com");
 <6> 字体
 <7> 字号
 --
-NOTE: 结构体只是数据模型的可视化展示，数据模型不是文本型的，而是Java对象。下文中出现的所有结构体也都如此。
+NOTE: 结构体只是数据模型的可视化展示，数据模型不是文本型的，而是Java对象。下文中出现的所有结构体也都如此。
 
 TIP: 文本换行使用 `\n` 字符。
 
@@ -165,10 +165,10 @@ put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUr
 put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));
 ----
 --
-可以指定图片的宽度和高度，也支持 `BufferedImage`，这样我们可以利用Java生成任意图表插入到word文档中。
+可以指定图片的宽度和高度，也支持 `BufferedImage`，这样我们可以利用Java生成任意图表插入到word文档中。
 
 [sidebar]
-.`PictureRenderData` 的结构体
+.`PictureRenderData` 的结构体
 --
 [source, json]
 ----
@@ -196,7 +196,7 @@ image::./table0.png[align='center']
 
 
 [sidebar]
-.`MiniTableRenderData` 的结构体
+.`MiniTableRenderData` 的结构体
 --
 [source, json]
 ----
@@ -224,7 +224,7 @@ image::./table0.png[align='center']
   "width": 8310 <6>
 }
 ----
-<1> 定义表格数据，单元格数据由 `TextRenderData` 指定。
+<1> 定义表格数据，单元格数据由 `TextRenderData` 指定。
 <2> 定义表格头
 <3> 行样式：行数据的对齐方式，行背景色
 <4> 没有数据的展示文案
@@ -249,9 +249,9 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));
 
 NOTE: 表格的宽度怎么定义的:
 
-需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
+需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
 
-1. 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-自定义模板策略]。
+1. 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-自定义模板策略]。
 2. 在一个已有的表格中，动态处理某些行数据：提供了抽象表格策略DynamicTableRenderPolicy，参见link:#example-table[示例-付款通知书]。
 
 === 列表模板{{*var}}
@@ -286,7 +286,7 @@ FMT_UPPER_LETTER //A. B. C.
 [example]
 {{+var}}
 
-`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个模板的不同渲染结果的合并。
+`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个模板的不同渲染结果的合并。
 [sidebar]
 .代码示例
 --
@@ -305,28 +305,28 @@ segments.add(s2);
 
 put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1>
 ----
-<1> segment.docx是一个包含了{{title}}和{{content}}的模板，使用segments集合数据渲染模板后合并
+<1> segment.docx是一个包含了{{title}}和{{content}}的模板，使用segments集合数据渲染模板后合并
 --
 参见link:#example-article[示例-一篇文章]
 
 == 插件机制(Plugin mechanism)
-插件机制使得poi-tl具有高度扩展性，默认的五大內建模板语法是通过插件方式加载的，所以可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。所有的插件配置都是通过如下构建器实现：
+插件机制使得poi-tl具有高度扩展性，默认的五大內建模板语法是通过插件方式加载的，所以可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。所有的插件配置都是通过如下构建器实现：
 [source, java]
 ConfigureBuilder builder = Configure.newBuilder();
 XWPFTemplate.compile("~/template.docx", builder.buid());
 
 [[cus-policy-section]]
 === 自定义模板渲染策略
-比如我们有个模板标签为{{report}}，如果希望在这个位置做些更复杂的事情，我们可以指定该模板对应的策略。你可以通过实现下面的接口实现新的渲染策略：
+比如我们有个模板标签为{{report}}，如果希望在这个位置做些更复杂的事情，我们可以指定该模板对应的策略。你可以通过实现下面的接口实现新的渲染策略：
 [source, java]
 ----
 public interface RenderPolicy {
   void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
 }
 ----
-通过ElementTemplate获得当前模板位置，通过data获得渲染数据，通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在指定位置插入段落，图片，表格等。
+通过ElementTemplate获得当前模板位置，通过data获得渲染数据，通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在指定位置插入段落，图片，表格等。
 
-接下来可以通过构建器自定义模板渲染策略，优先级高于默认模板语法：
+接下来可以通过构建器设定模板的渲染策略：
 [source, java]
 builder.customPolicy("report", new MyRenderPolicy());
 
@@ -341,17 +341,78 @@ builder.addPlugin('%', new PercentRenderPolicy());
 builder.buildGramer("${", "}");
 
 == 示例
-接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。
+接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。
 
 === 软件说明文档
+[example]
+--
+.output
+需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。这个示例向我们展示了poi-tl最基本的能力。下载最终生成的文件link:poi_tl.docx[poi_tl.docx]
+
+image::example_poitl_output.png[align='center']
+--
+
+[example]
+--
+.template
+使用poi-tl语法制作模板，可以看到模板标签不仅仅是模板，同样也是样式标签。
+
+image::example_poitl_template.png[align='center']
+--
 
 
 [[example-table]]
 === 付款通知书
+[example]
+--
+.output
+需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要生成一个订单的表格，还需要在一个已有表格中，填充部分数据。下载最终生成的文件link:payment.docx[payment.docx]
+
+image::example_payment_output.png[align='center']
+--
+
+[example]
+--
+.template
+使用{{#order}}生成poi-tl提供的默认样式的表格，设置{{detail_table}}为自定义模板渲染策略(继承抽象表格策略DynamicTableRenderPolicy)，处理已有表格中部分数据的渲染。
+
+image::example_payment_template.png[align='center']
+--
 
 [[example-article]]
-=== 一篇文章
+=== 一篇文章
+[example]
+--
+.output
+需要生成这样的一系列文章：除了标题作者之外，它的内容是有规律的，内容是由一行蓝色的标题，一段文字，一张图片构成。下载最终生成的文件link:story.docx[story.docx]
+
+image::example_story_output.png[align='center']
+--
+
+[example]
+--
+.template
+文章的内容是个典型的文档模板类型，我们制作一个待合并的文档模板segment.docx(下图右侧)，主模板story.docx看起来很简单，其中{{+segment}}标签将会被文档模板循环合并。
+
+image::example_story_template.png[align='center']
+--
+
 === 个人简历
+[example]
+--
+.output
+需要生成这样的一份流行的个人简历：左侧是个人的基本信息，技术栈是个典型的列表，右侧是个人的工作经历，数量不定。下载最终生成的文件link:resume.docx[resume.docx]
+
+image::example_resume_output.png[align='center']
+--
+
+[example]
+--
+.template
+工作经历是个典型的文档模板类型，我们制作两个模板，一套主模板简历.docx(下图左侧)，一套为文档模板segment.docx(下图右侧)。
+
+image::example_resume_template.png[align='center']
+--
 
 == 工具类Utils
 == License
