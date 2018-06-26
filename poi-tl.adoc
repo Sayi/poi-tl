@@ -64,12 +64,14 @@ template.close();
 
 WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
 
-文档的样式继承模板标签的样式，这样我们只需要提前设计好模板样式即可，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
+*文档的样式继承模板标签的样式*，这样我们只需要提前设计好模板样式即可，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
 
 image::./style.png[align='center'] 
 
 === Data-Model：数据源
-数据源的结构体是个键值对的集合：标签名称对应数据模型。除了使用Map之外，还可以使用Java Object，默认Class中的field名称即是标签名称，也可以通过注解@Name设置标签名称。
+TIP: 数据源的结构体是个键值对的集合：[{标签名称,数据模型}]。除了使用Map之外，还可以使用Java Object。
+
+Map的Key是标签名称，默认Class中的field名称是标签名称，也可以通过注解@Name设置标签名称。
 
 [source, java]
 ----
@@ -347,7 +349,7 @@ builder.buildGramer("${", "}");
 [example]
 --
 .output
-需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。这个示例向我们展示了poi-tl最基本的能力。下载最终生成的文件link:poi_tl.docx[poi_tl.docx]
+需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。下载最终生成的文件link:poi_tl.docx[poi_tl.docx]
 
 image::example_poitl_output.png[align='center']
 --
@@ -360,6 +362,9 @@ image::example_poitl_output.png[align='center']
 image::example_poitl_template.png[align='center']
 --
 
+这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型。同时也向我们展示了无需编码设置样式：模板，不仅仅是标签模板，还是样式模板。
+
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[Junit XWPFTemplateTest]
 
 [[example-table]]
 === 付款通知书
@@ -379,6 +384,71 @@ image::example_payment_output.png[align='center']
 image::example_payment_template.png[align='center']
 --
 
+这个示例向我们展示了poi-tl在表格操作上的一些思考。示例中货物明细和人工费的表格就是一个相当复杂的表格，货物明细是由7列组成，行数不定，人工费是由4列组成，行数不定。
+
+默认表格数据模型(MiniTableRenderData)实现了最基本的样式，当需求中的表格更加复杂的时候，我们完全可以设计好那些固定的部分，将需要动态渲染的部分单元格交给自定义模板渲染策略。
+
+poi-tl提供了抽象表格策略DynamicTableRenderPolicy来实现类似的功能，通过持有table对象获得操作整个表格的能力。
+[source, java]
+----
+public abstract class DynamicTableRenderPolicy implements RenderPolicy {
+  public abstract void render(XWPFTable table, Object data);
+}
+----
+
+新建渲染策略DetailTablePolicy，继承于抽象表格策略。
+[source, java]
+----
+public class DetailTablePolicy extends DynamicTableRenderPolicy {
+
+  // 货品填充数据所在行数
+  int goodsStartRow = 2;
+  // 人工费填充数据所在行数
+  int laborsStartRow = 5;
+
+  @Override
+  public void render(XWPFTable table, Object data) {
+    if (null == data) return;
+    DetailData detailData = (DetailData) data;
+
+    // 人工费循环渲染
+    List<RowRenderData> labors = detailData.getLabors();
+    if (null != labors) {
+      table.removeRow(laborsStartRow);
+      // 循环插入行
+      for (int i = 0; i < labors.size(); i++) {
+        XWPFTableRow insertNewTableRow = table.insertNewTableRow(laborsStartRow);
+        for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
+
+        // 合并单元格
+        NiceXWPFDocument.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
+        // 渲染单行人工费数据
+        MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
+      }
+    }
+
+    // 货品明细
+    List<RowRenderData> goods = detailData.getGoods();
+    if (null != goods) {
+      table.removeRow(goodsStartRow);
+      for (int i = 0; i < goods.size(); i++) {
+        XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
+        for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
+        // 渲染单行货品明细数据
+        MiniTableRenderPolicy.renderRow(table, goodsStartRow, goods.get(i));
+      }
+    }
+  }
+}
+----
+
+将模板标签{{detail_table}}设置成此策略。
+[source, java]
+Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
+
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[Junit PaymentExample]
+
+
 [[example-article]]
 === 一篇文章
 [example]
@@ -397,6 +467,12 @@ image::example_story_output.png[align='center']
 image::example_story_template.png[align='center']
 --
 
+这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。
+
+基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。
+
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/StoryExample.java[Junit StoryExample]
+
 === 个人简历
 [example]
 --
@@ -414,7 +490,17 @@ image::example_resume_output.png[align='center']
 image::example_resume_template.png[align='center']
 --
 
-== 工具类Utils
+看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
+
+因为模版即样式，模版引擎无需考虑样式，只关心数据。
+
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
+
 == License
+Apache License 2.0
+
 == 源码
+link:https://github.com/Sayi/poi-tl[GitHub poi-tl]
+
+== 关于作者
 
