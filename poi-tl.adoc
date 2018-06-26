@@ -16,7 +16,7 @@ v1.3.0
 
 poi-tl（poi template language）是基于Apache POI的Word模板引擎。纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。
 
-TIP: 目前只支持DOCX格式的Word模板。
+TIP: 支持DOCX格式的Word模板。
 
 == Maven
 [source, xml]
