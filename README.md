@@ -1,2 +1,4 @@
 # poi-tl
-基于word的模板渲染组件
+word模板引擎
+
+http://deepoove.com/poi-tl/
