@@ -88,7 +88,7 @@ public class XWPFTemplateTest {
 		obj.setAuthor("Sayi卅一");
 		obj.setIntroduce("http://www.deepoove.com");
 		obj.setPortrait(new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
-		obj.setSolutionCompare(new MiniTableRenderData(header, tableDatas, 8310));
+		obj.setSolutionCompare(new MiniTableRenderData(header, tableDatas));
 		obj.setFeature(new NumbericRenderData(new ArrayList<TextRenderData>() {
 			{
 				add(new TextRenderData("Plug-in grammar, add new grammar by yourself"));
