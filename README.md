@@ -113,5 +113,5 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments));
 ![](dist/demo_result.png)
 
 ## 建议和完善
-欢迎在Issue中提问和交流。
+欢迎在GitHub Issue中提问和交流。
 
