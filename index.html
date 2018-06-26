@@ -481,7 +481,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_license">7. License</a></li>
 <li><a href="#_源码">8. 源码</a></li>
-<li><a href="#_关于作者">9. 关于作者</a></li>
 </ul>
 </div>
 </div>
@@ -498,7 +497,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-目前只支持DOCX格式的WORD模板。
+目前只支持DOCX格式的Word模板。
 </td>
 </tr>
 </table>
@@ -574,7 +573,7 @@ template.close();</code></pre>
 </table>
 </div>
 <div class="paragraph">
-<p><strong>Template + data-model = output</strong></p>
+<p><strong>TDO模式：Template + data-model = output</strong></p>
 </div>
 </div>
 </div>
@@ -614,7 +613,7 @@ template.close();</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-数据源的结构体是个键值对的集合：[{标签名称,数据模型}]。除了使用Map之外，还可以使用Java Object。
+数据源的结构体是个键值对的集合：[{标签名称, 数据模型}]。除了使用Map之外，还可以使用Java Object。
 </td>
 </tr>
 </table>
@@ -881,7 +880,7 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
   "style": { <i class="conum" data-value="5"></i><b>(5)</b>
       "align": "center"
     }
-  "width": 8310 <i class="conum" data-value="6"></i><b>(6)</b>
+  "width": 14.65 <i class="conum" data-value="6"></i><b>(6)</b>
 }</code></pre>
 </div>
 </div>
@@ -909,7 +908,7 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
-<td>表格宽度</td>
+<td>表格宽度，单位cm</td>
 </tr>
 </table>
 </div>
@@ -938,7 +937,8 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));<
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-表格的宽度怎么定义的:
+表格的宽度(单位CM)怎么定义的: 页面宽度-页边距宽度*2=表格的最大宽度。
+默认宽度为A4(20.99*29.6,页边距为3.17*2.54)的最大宽度14.65CM。可以根据需要指定表格宽度。
 </td>
 </tr>
 </table>
@@ -952,7 +952,7 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));<
 <p>完全由自己掌控整个表格的生成：参见<a href="#cus-policy-section">插件机制-自定义模板策略</a>。</p>
 </li>
 <li>
-<p>在一个已有的表格中，动态处理某些行数据：提供了抽象表格策略DynamicTableRenderPolicy，参见<a href="#example-table">示例-付款通知书</a>。</p>
+<p>在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy，参见<a href="#example-table">示例-付款通知书</a>。</p>
 </li>
 </ol>
 </div>
@@ -1046,7 +1046,10 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 <h2 id="_插件机制plugin_mechanism"><a class="anchor" href="#_插件机制plugin_mechanism"></a><a class="link" href="#_插件机制plugin_mechanism">5. 插件机制(Plugin mechanism)</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>插件机制使得poi-tl具有高度扩展性，默认的五大內建模板语法是通过插件方式加载的，所以可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。所有的插件配置都是通过如下构建器实现：</p>
+<p>插件机制使得poi-tl具有高度扩展性，默认的五大內建模板语法是通过插件方式加载的，所以可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。</p>
+</div>
+<div class="paragraph">
+<p>所有的插件配置都是通过如下构建器实现：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1114,11 +1117,11 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。下载最终生成的文件<a href="poi_tl.docx">poi_tl.docx</a></p>
+<p>需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。下载最终生成的文件<a href="example/poi_tl.docx">poi_tl.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_poitl_output.png" alt="example poitl output">
+<img src="example/example_poitl_output.png" alt="example poitl output">
 </div>
 </div>
 </div>
@@ -1131,7 +1134,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_poitl_template.png" alt="example poitl template">
+<img src="example/example_poitl_template.png" alt="example poitl template">
 </div>
 </div>
 </div>
@@ -1158,11 +1161,11 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要生成一个订单的表格，还需要在一个已有表格中，填充部分数据。下载最终生成的文件<a href="payment.docx">payment.docx</a></p>
+<p>需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要生成一个订单的表格，还需要在一个已有表格中，填充部分数据。下载最终生成的文件<a href="example/payment.docx">payment.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_payment_output.png" alt="example payment output">
+<img src="example/example_payment_output.png" alt="example payment output">
 </div>
 </div>
 </div>
@@ -1175,7 +1178,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_payment_template.png" alt="example payment template">
+<img src="example/example_payment_template.png" alt="example payment template">
 </div>
 </div>
 </div>
@@ -1271,11 +1274,11 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>需要生成这样的一系列文章：除了标题作者之外，它的内容是有规律的，内容是由一行蓝色的标题，一段文字，一张图片构成。下载最终生成的文件<a href="story.docx">story.docx</a></p>
+<p>需要生成这样的一系列文章：除了标题作者之外，它的内容是有规律的，内容是由一行蓝色的标题，一段文字，一张图片构成。下载最终生成的文件<a href="example/story.docx">story.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_story_output.png" alt="example story output">
+<img src="example/example_story_output.png" alt="example story output">
 </div>
 </div>
 </div>
@@ -1288,7 +1291,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_story_template.png" alt="example story template">
+<img src="example/example_story_template.png" alt="example story template">
 </div>
 </div>
 </div>
@@ -1318,11 +1321,11 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>需要生成这样的一份流行的个人简历：左侧是个人的基本信息，技术栈是个典型的列表，右侧是个人的工作经历，数量不定。下载最终生成的文件<a href="resume.docx">resume.docx</a></p>
+<p>需要生成这样的一份流行的个人简历：左侧是个人的基本信息，技术栈是个典型的列表，右侧是个人的工作经历，数量不定。下载最终生成的文件<a href="example/resume.docx">resume.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_resume_output.png" alt="example resume output">
+<img src="example/example_resume_output.png" alt="example resume output">
 </div>
 </div>
 </div>
@@ -1335,7 +1338,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
-<img src="example_resume_template.png" alt="example resume template">
+<img src="example/example_resume_template.png" alt="example resume template">
 </div>
 </div>
 </div>
@@ -1373,14 +1376,8 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <h2 id="_源码"><a class="anchor" href="#_源码"></a><a class="link" href="#_源码">8. 源码</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/Sayi/poi-tl">GitHub poi-tl</a></p>
+<p><a href="https://github.com/Sayi/poi-tl">GitHub</a></p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_关于作者"><a class="anchor" href="#_关于作者"></a><a class="link" href="#_关于作者">9. 关于作者</a></h2>
-<div class="sectionbody">
-
 </div>
 </div>
 </div>
