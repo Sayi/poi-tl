@@ -2,7 +2,7 @@
 Sayi 卅一 <adasai90@gmail.com>
 v1.3.0
 :description: word模板引擎
-:keywords: poi, word, docx, template
+:keywords: poi,word,docx,template,模板
 :doctype: book
 :encoding: utf-8
 :lang: en
