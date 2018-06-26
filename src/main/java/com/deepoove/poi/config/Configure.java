@@ -54,7 +54,6 @@ public class Configure {
 	
 	/**
 	 * 获取默认配置
-	 * @return
 	 */
 	public static Configure createDefault(){
 		return newBuilder().build();
@@ -62,7 +61,6 @@ public class Configure {
 	
 	/**
 	 * 获取构建器
-	 * @return
 	 */
 	public static ConfigureBuilder newBuilder(){
 	    return new ConfigureBuilder();
@@ -99,7 +97,6 @@ public class Configure {
 	 * 获取标签策略
 	 * @param tagName 模板名称
 	 * @param sign 语法
-	 * @return
 	 */
 	public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
