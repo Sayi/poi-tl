@@ -199,11 +199,12 @@ public class NiceXWPFDocument extends XWPFDocument {
 	 * 设置表格的宽度
 	 * 
 	 * @param table
-	 * @param width
+	 * @param width 单位cm
 	 * @param rows
 	 * @param cols
 	 */
-	public void widthTable(XWPFTable table, int width, int rows, int cols) {
+	public void widthTable(XWPFTable table, float widthCM, int rows, int cols) {
+	    int width = (int)(widthCM/2.54*1440);
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         if (null == tblPr) {
             tblPr = table.getCTTbl().addNewTblPr();

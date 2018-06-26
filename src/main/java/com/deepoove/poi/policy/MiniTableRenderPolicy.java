@@ -53,7 +53,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         RowRenderData headers = tableData.getHeaders();
         List<RowRenderData> datas = tableData.getDatas();
         TableStyle style = tableData.getStyle();
-        int width = tableData.getWidth();
+        float width = tableData.getWidth();
 
         if (!tableData.isSetBody()) {
             if (!tableData.isSetHeader()) {
@@ -92,7 +92,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
     }
 
     private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run, RowRenderData headers,
-            int row, int col, int width) {
+            int row, int col, float width) {
         XWPFTable table = doc.insertNewTable(run, row, col);
         doc.widthTable(table, width, row, col);
         renderRow(table, 0, headers);

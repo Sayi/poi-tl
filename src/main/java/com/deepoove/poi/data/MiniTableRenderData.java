@@ -28,21 +28,21 @@ import com.deepoove.poi.data.style.TableStyle;
 public class MiniTableRenderData implements RenderData {
 	
 	/**
-	 * 通用边距的表格宽度：A4(20.9*29.6),页边距为3.17*2.54
+	 * 通用边距的表格宽度：A4(20.99*29.6),页边距为3.17*2.54
 	 */
-	public static final int WIDTH_A4_FULL = 8256;
+	public static final float WIDTH_A4_FULL = 14.65f;
 	/**
-	 * 窄边距的表格宽度：A4(20.9*29.6),页边距为1.27*1.27
+	 * 窄边距的表格宽度：A4(20.99*29.6),页边距为1.27*1.27
 	 */
-	public static final int WIDTH_A4_NARROW_FULL = 10408;
+	public static final float WIDTH_A4_NARROW_FULL = 18.45f;
 	/**
-	 * 适中边距的表格宽度：A4(20.9*29.6),页边距为1.91*2.54
+	 * 适中边距的表格宽度：A4(20.99*29.6),页边距为1.91*2.54
 	 */
-	public static final int WIDTH_A4_MEDIUM_FULL = 9684;
+	public static final float WIDTH_A4_MEDIUM_FULL = 17.17f;
 	/**
-	 * 宽边距的表格宽度：A4(20.9*29.6),页边距为5.08*2.54
+	 * 宽边距的表格宽度：A4(20.99*29.6),页边距为5.08*2.54
 	 */
-	public static final int WIDTH_A4_EXTEND_FULL = 6088;
+	public static final float WIDTH_A4_EXTEND_FULL = 10.83f;
 
     private RowRenderData headers;
     private List<RowRenderData> datas;
@@ -52,10 +52,10 @@ public class MiniTableRenderData implements RenderData {
     private TableStyle style;
 
     /**
-     * dxa - Specifies that the value is in twentieths of a point (1/1440 of an
-     * inch).
+     * 最大宽度为：页面宽度-页边距宽度*2
+     * 单位：cm
      */
-    private int width;
+    private float width;
 
     public MiniTableRenderData(List<RowRenderData> datas) {
         this(null, datas);
@@ -65,7 +65,7 @@ public class MiniTableRenderData implements RenderData {
         this(headers, datas, WIDTH_A4_FULL);
     }
     
-    public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas, int width) {
+    public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas, float width) {
         this(headers, datas, null, width);
     }
     
@@ -85,7 +85,7 @@ public class MiniTableRenderData implements RenderData {
      *            宽度
      */
     public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas,
-            String noDatadesc, int width) {
+            String noDatadesc, float width) {
         this.headers = headers;
         this.datas = datas;
         this.noDatadesc = noDatadesc;
@@ -124,11 +124,11 @@ public class MiniTableRenderData implements RenderData {
         this.datas = datas;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         this.width = width;
     }
 

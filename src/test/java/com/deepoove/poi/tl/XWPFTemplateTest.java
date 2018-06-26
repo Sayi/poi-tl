@@ -53,7 +53,7 @@ public class XWPFTemplateTest {
 				put("introduce", "http://www.deepoove.com");
 				put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
 
-				put("solution_compare", new MiniTableRenderData(header, tableDatas, 8310));
+				put("solution_compare", new MiniTableRenderData(header, tableDatas, MiniTableRenderData.WIDTH_A4_FULL));
 
 				put("feature", new NumbericRenderData(new ArrayList<TextRenderData>() {
 					{

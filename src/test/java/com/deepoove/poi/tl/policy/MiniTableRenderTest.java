@@ -43,7 +43,7 @@ public class MiniTableRenderTest {
 				// 有表格头 有数据，宽度自适应
 				put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));
 				// 没有表格头 没有数据，最终不会渲染这个table
-				put("no_table", new MiniTableRenderData(null, null, "备注内容为空", 8522));
+				put("no_table", new MiniTableRenderData(null, null, "备注内容为空", 10));
 				// 有数据，没有表格头
 				put("no_header_table", new MiniTableRenderData(Arrays.asList(row0, row1, row2)));
 				// 有表格头 没有数据
@@ -51,7 +51,7 @@ public class MiniTableRenderTest {
 
 				// 指定宽度的表格
 				// 表格居中
-				MiniTableRenderData  miniTableRenderData = new MiniTableRenderData(header, Arrays.asList(row0, row1, row2), 5310);
+				MiniTableRenderData  miniTableRenderData = new MiniTableRenderData(header, Arrays.asList(row0, row1, row2), 8.00f);
 				TableStyle style = new TableStyle();
 				style.setAlign(STJc.CENTER);
 				miniTableRenderData.setStyle(style);

@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -98,6 +100,18 @@ public class NumbericRenderData implements RenderData {
 
     public NumbericRenderData(List<TextRenderData> numbers) {
         this(FMT_BULLET, numbers);
+    }
+    
+    public static NumbericRenderData build(String... text) {
+        if (null == text) return null;
+        List<TextRenderData> numbers = new ArrayList<TextRenderData>();
+        for (String txt : text) {
+            numbers.add(new TextRenderData(txt));
+        }
+        return new NumbericRenderData(numbers);
+    }
+    public static NumbericRenderData build(TextRenderData... data) {
+        return new NumbericRenderData(null == data ? null : Arrays.asList(data));
     }
 
     public List<TextRenderData> getNumbers() {
