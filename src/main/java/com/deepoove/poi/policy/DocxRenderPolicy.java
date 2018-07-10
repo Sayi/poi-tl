@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
@@ -47,7 +48,7 @@ public class DocxRenderPolicy implements RenderPolicy {
         XWPFRun run = runTemplate.getRun();
         run.setText("", 0);
 
-        List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data);
+        List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data, template.getConfig());
         try {
             doc = doc.merge(docMerges, run);
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class DocxRenderPolicy implements RenderPolicy {
         template.reload(doc);
     }
 
-    private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data) {
+    private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data, Configure configure) {
         List<NiceXWPFDocument> docs = new ArrayList<NiceXWPFDocument>();
         File docx = data.getDocx();
         List<?> dataList = data.getDataList();
@@ -70,7 +71,7 @@ public class DocxRenderPolicy implements RenderPolicy {
             }
         } else {
             for (int i = 0; i < dataList.size(); i++) {
-                XWPFTemplate temp = XWPFTemplate.compile(docx);
+                XWPFTemplate temp = XWPFTemplate.compile(docx, configure);
                 temp.render(dataList.get(i));
                 docs.add(temp.getXWPFDocument());
             }
