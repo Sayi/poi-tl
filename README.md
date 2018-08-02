@@ -22,7 +22,7 @@ Poi-tl的插件机制使得可以基于模板引擎特性扩展出更丰富的�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.3.0</version>
+  <version>1.3.1</version>
 </dependency>
 ```
 

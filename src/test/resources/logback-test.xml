@@ -9,7 +9,7 @@
 	<logger name="com.deepoove.poi" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
-	<root level="error">
+	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
