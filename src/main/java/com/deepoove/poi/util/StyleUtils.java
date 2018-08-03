@@ -17,6 +17,7 @@ package com.deepoove.poi.util;
 
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -61,9 +62,9 @@ public final class StyleUtils {
         Boolean italic = style.isItalic();
         Boolean strike = style.isStrike();
         Boolean underLine = style.isUnderLine();
-        if (null != color) run.setColor(color);
+        if (StringUtils.isNotBlank(color)) run.setColor(color);
         if (0 != fontSize) run.setFontSize(fontSize);
-        if (null != fontFamily) {
+        if (StringUtils.isNotBlank(fontFamily)) {
             run.setFontFamily(fontFamily);
             CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
             CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
@@ -107,7 +108,7 @@ public final class StyleUtils {
      */
     public static void styleRpr(CTParaRPr pr, Style fmtStyle) {
         if (null == pr || null == fmtStyle) return;
-        if (null != fmtStyle.getColor()) {
+        if (StringUtils.isNotBlank(fmtStyle.getColor())) {
             CTColor color = pr.isSetColor() ? pr.getColor() : pr.addNewColor();
             color.setVal(fmtStyle.getColor());
         }
@@ -133,7 +134,7 @@ public final class StyleUtils {
             strike.setVal(fmtStyle.isStrike() ? STOnOff.TRUE : STOnOff.FALSE);
         }
 
-        if (null != fmtStyle.getFontFamily()) {
+        if (StringUtils.isNotBlank(fmtStyle.getFontFamily())) {
             CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
             String fontFamily = fmtStyle.getFontFamily();
             fonts.setAscii(fontFamily);
@@ -160,7 +161,7 @@ public final class StyleUtils {
 			CTJc jc = tblPr.isSetJc() ? tblPr.getJc() : tblPr.addNewJc();
 			jc.setVal(style.getAlign());
 		}
-		if (null != style.getBackgroundColor()) {
+		if (StringUtils.isNotBlank(style.getBackgroundColor())) {
 			CTShd ctshd = tblPr.isSetShd() ? tblPr.getShd() : tblPr.addNewShd();
 			ctshd.setColor("auto");
 			ctshd.setVal(STShd.CLEAR);

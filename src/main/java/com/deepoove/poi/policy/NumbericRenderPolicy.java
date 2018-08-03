@@ -68,8 +68,8 @@ public class NumbericRenderPolicy implements RenderPolicy {
             cTLvl.addNewNumFmt().setVal(fmt);
             cTLvl.addNewLvlText().setVal(val);
             cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+            cTLvl.setIlvl(BigInteger.valueOf(0));
             if (fmt == STNumberFormat.BULLET) {
-                // cTLvl.setIlvl(BigInteger.valueOf(0));
                 cTLvl.addNewLvlJc().setVal(STJc.LEFT);
             } else {
                 // cTLvl.setIlvl(BigInteger.valueOf(0));
