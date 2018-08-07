@@ -27,7 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class ReflectUtils {
 
-	private static final Map<Class<?>, ClassProxy> CACHE_REFLECTOR = new ConcurrentHashMap<Class<?>, ClassProxy>();
+	private static final Map<Class<?>, ClassProxy> CACHE_CLASS_REFLECTOR = new ConcurrentHashMap<Class<?>, ClassProxy>();
+	private static final Map<String, ClassProxy> CACHE_MAP_REFLECTOR = new ConcurrentHashMap<String, ClassProxy>();
 
 	/**
 	 * 获取bean的代理<br>
@@ -36,10 +37,28 @@ public abstract class ReflectUtils {
 	 * @return bean所对应的代理对象
 	 */
 	public static ClassProxy fromCache(Object bean) {
-		if (!CACHE_REFLECTOR.containsKey(bean.getClass())) {
-			CACHE_REFLECTOR.put(bean.getClass(), new ClassProxy(bean));
+		if (!CACHE_CLASS_REFLECTOR.containsKey(bean.getClass())) {
+			CACHE_CLASS_REFLECTOR.put(bean.getClass(), new ClassProxy(bean));
 		}
-		return CACHE_REFLECTOR.get(bean.getClass());
+		return CACHE_CLASS_REFLECTOR.get(bean.getClass());
+	}
+
+	/**
+	 * 获取bean的代理<br>
+	 * 第一次加载后放入缓存中
+	 * @param bean 需要代理对象
+	 * @param tag 如果对同一个对象需要区分则通过传入tag来区分(例如不同的Map)
+	 * @return bean所对应的代理对象
+	 */
+	public static ClassProxy fromCache(Object bean, String tag) {
+		if (bean instanceof Map) {
+			if (!CACHE_MAP_REFLECTOR.containsKey(tag)) {
+				CACHE_MAP_REFLECTOR.put(tag, new ClassProxy(bean));
+			}
+			return CACHE_MAP_REFLECTOR.get(tag);
+		} else {
+			return fromCache(bean);
+		}
 	}
 
 	public static class ClassProxy {
@@ -89,14 +108,20 @@ public abstract class ReflectUtils {
 		 * @return 代理对象对应参数的值
 		 */
 		public Object getMethodValue(String propertyName) {
-			Method method = methodMap.get(propertyName);
-			if (method == null) {
-				throw new RuntimeException("There is no getter for property named '" + propertyName + "'");
-			}
-			try {
-				return method.invoke(bean);
-			} catch (Exception e) {
-				throw new RuntimeException("Attemp to getter property '" + propertyName + "' value cause error!", e);
+			if (this.bean instanceof Map) {
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>) bean;
+				return map.get(propertyName);
+			} else {
+				Method method = methodMap.get(propertyName);
+				if (method == null) {
+					throw new RuntimeException("There is no getter for property named '" + propertyName + "'");
+				}
+				try {
+					return method.invoke(bean);
+				} catch (Exception e) {
+					throw new RuntimeException("Attemp to getter property '" + propertyName + "' value cause error!", e);
+				}
 			}
 		}
 	}

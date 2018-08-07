@@ -27,6 +27,7 @@ import com.deepoove.poi.util.StyleUtils;
 /**
  * 
  * @author Sayi
+ * @author herowzz
  * @version
  */
 public class TextRenderPolicy implements RenderPolicy {
@@ -49,7 +50,7 @@ public class TextRenderPolicy implements RenderPolicy {
 		} else {
 			String value = "";
 			if (eleTemplate.hasObjectRelated())
-				value = ReflectUtils.fromCache(renderData).getValue(eleTemplate.getFullName()).toString();
+				value = ReflectUtils.fromCache(renderData, eleTemplate.getTagName()).getValue(eleTemplate.getFullName()).toString();
 			else
 				value = renderData.toString();
 			textRenderData = new TextRenderData(value);

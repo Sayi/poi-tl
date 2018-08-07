@@ -1,5 +1,8 @@
 package com.deepoove.poi.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,12 +17,16 @@ public class ReflectUtilsTest {
 	private static Province province;
 	private static Group group;
 	private static Model model;
+	private static Map<String, Object> map = new HashMap<String, Object>();
 
 	@BeforeClass
 	public static void postConstruct() {
 		province = new Province("beijing");
 		group = new Group("group1", province);
 		model = new Model(1, "zhangsan", group);
+
+		map.put("id", "123");
+		map.put("model", model);
 	}
 
 	@Test
@@ -29,6 +36,15 @@ public class ReflectUtilsTest {
 		ClassProxy proxy2 = ReflectUtils.fromCache(obj);
 		Assert.assertEquals(proxy1, proxy2);
 		Assert.assertEquals(proxy1.hashCode(), proxy2.hashCode());
+
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("id", "123");
+		map2.put("model", model);
+		ClassProxy proxy3 = ReflectUtils.fromCache(map, "map1");
+		ClassProxy proxy4 = ReflectUtils.fromCache(map2, "map2");
+		ClassProxy proxy5 = ReflectUtils.fromCache(map2, "map1");
+		Assert.assertNotEquals(proxy3, proxy4);
+		Assert.assertEquals(proxy3, proxy5);
 	}
 
 	@Test
@@ -40,6 +56,11 @@ public class ReflectUtilsTest {
 
 		Assert.assertEquals(proxy1.getValue("model.group.name").toString(), group.getName());
 		Assert.assertEquals(proxy1.getValue("model.group.province.name").toString(), province.getName());
+
+		ClassProxy proxyMap = ReflectUtils.fromCache(map, "map");
+		Assert.assertEquals(proxyMap.getValue("map.id").toString(), "123");
+		Assert.assertEquals(proxyMap.getValue("map.model.group.name").toString(), group.getName());
+		Assert.assertEquals(proxyMap.getValue("map.model.group.province.name").toString(), province.getName());
 	}
 
 	@Test
@@ -47,6 +68,10 @@ public class ReflectUtilsTest {
 		Object obj = model;
 		ClassProxy proxy1 = ReflectUtils.fromCache(obj);
 		Assert.assertEquals(proxy1.getMethodValue("name").toString(), model.getName());
+
+		ClassProxy proxyMap = ReflectUtils.fromCache(map, "map");
+		Assert.assertEquals(proxyMap.getMethodValue("id").toString(), "123");
+		Assert.assertEquals(((Model) proxyMap.getMethodValue("model")).getName(), model.getName());
 	}
 
 	public static class Model {
