@@ -57,8 +57,13 @@ public class TemplateFactory{
 				break;
 			}
 		}
+		tag = symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1);
+		template.setFullName(tag);
 		template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
-		template.setTagName(symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1));
+		if(tag != null && tag.indexOf(".") > 0) {
+			tag = tag.substring(0, tag.indexOf("."));
+		}
+		template.setTagName(tag);
 		template.setSign(symbol);
 		template.setRun(run);
 		return template;

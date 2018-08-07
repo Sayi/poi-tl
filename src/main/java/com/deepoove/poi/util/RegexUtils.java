@@ -27,8 +27,7 @@ public final class RegexUtils {
 
 	public static String escapeExprSpecialWord(String keyword) {
 		if (StringUtils.isNotBlank(keyword)) {
-			String[] fbsArr = { "\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}",
-					"|" };
+			String[] fbsArr = { "\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|", "w" };
 			for (String key : fbsArr) {
 				if (keyword.contains(key)) {
 					keyword = keyword.replace(key, "\\" + key);

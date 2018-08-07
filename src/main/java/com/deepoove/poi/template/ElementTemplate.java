@@ -18,9 +18,15 @@ package com.deepoove.poi.template;
 public class ElementTemplate {
 	protected Character sign;
 	protected String tagName;
+	protected String fullName;
 	protected String source;
 
-	public ElementTemplate() {}
+	public ElementTemplate() {
+	}
+
+	public boolean hasObjectRelated() {
+		return fullName.contains(".");
+	}
 
 	/**
 	 * @return the tagName
@@ -30,8 +36,7 @@ public class ElementTemplate {
 	}
 
 	/**
-	 * @param tagName
-	 *            the tagName to set
+	 * @param tagName the tagName to set
 	 */
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
@@ -51,5 +56,13 @@ public class ElementTemplate {
 
 	public void setSign(Character sign) {
 		this.sign = sign;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 }
