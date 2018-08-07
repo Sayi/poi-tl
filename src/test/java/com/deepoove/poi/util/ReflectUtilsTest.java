@@ -6,6 +6,9 @@ import org.junit.Test;
 
 import com.deepoove.poi.util.ReflectUtils.ClassProxy;
 
+/**
+ * @author herowzz
+ */
 public class ReflectUtilsTest {
 
 	private static Province province;
@@ -25,6 +28,7 @@ public class ReflectUtilsTest {
 		ClassProxy proxy1 = ReflectUtils.fromCache(obj);
 		ClassProxy proxy2 = ReflectUtils.fromCache(obj);
 		Assert.assertEquals(proxy1, proxy2);
+		Assert.assertEquals(proxy1.hashCode(), proxy2.hashCode());
 	}
 
 	@Test
