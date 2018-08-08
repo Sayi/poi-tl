@@ -9,6 +9,9 @@ import org.junit.Test;
 
 import com.deepoove.poi.config.Configure;
 
+/**
+ * @author herowzz
+ */
 public class TemplateResolverTest {
 
 	@Test

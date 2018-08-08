@@ -18,6 +18,7 @@ public class ReflectUtilsTest {
 	private static Group group;
 	private static Model model;
 	private static Map<String, Object> map = new HashMap<String, Object>();
+	private static Map<String, Object> mapChn = new HashMap<String, Object>();
 
 	@BeforeClass
 	public static void postConstruct() {
@@ -27,6 +28,9 @@ public class ReflectUtilsTest {
 
 		map.put("id", "123");
 		map.put("model", model);
+
+		mapChn.put("学号", "1001");
+		map.put("学生", mapChn);
 	}
 
 	@Test
@@ -61,6 +65,7 @@ public class ReflectUtilsTest {
 		Assert.assertEquals(proxyMap.getValue("map.id").toString(), "123");
 		Assert.assertEquals(proxyMap.getValue("map.model.group.name").toString(), group.getName());
 		Assert.assertEquals(proxyMap.getValue("map.model.group.province.name").toString(), province.getName());
+		Assert.assertEquals(proxyMap.getValue("map.学生.学号").toString(), "1001");
 	}
 
 	@Test

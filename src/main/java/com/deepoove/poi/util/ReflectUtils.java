@@ -75,7 +75,7 @@ public abstract class ReflectUtils {
 				Method method = methods[i];
 				String methodName = method.getName();
 				if (methodName.startsWith("get")) {
-					String key = methodName.substring(3, methodName.length()).toLowerCase();
+					String key = StringUtils.uncapitalize(methodName.substring(3, methodName.length()));
 					methodMap.put(key, method);
 				}
 			}
