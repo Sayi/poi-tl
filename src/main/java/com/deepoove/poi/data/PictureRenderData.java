@@ -21,7 +21,8 @@ import com.deepoove.poi.util.BytePictureUtils;
  * 图片渲染数据
  * 
  * @author Sayi
- * @version 0.0.3
+ * @author herowzz
+ * @version 0.0.4
  *
  */
 public class PictureRenderData implements RenderData {
@@ -30,10 +31,12 @@ public class PictureRenderData implements RenderData {
 	 * 图片宽度
 	 */
 	private int width;
+
 	/**
 	 * 图片高度
 	 */
 	private int height;
+
 	/**
 	 * 图片路径
 	 */
@@ -45,9 +48,15 @@ public class PictureRenderData implements RenderData {
 	private transient byte[] data;
 
 	/**
+	 * 不存在时显示内容<br>
+	 * 默认为空字符串
+	 */
+	private String noExistShow = " ";
+
+	/**
 	 * @param width 宽度
 	 * @param height 高度
-	 * @param path  本地图片路径
+	 * @param path 本地图片路径
 	 */
 	public PictureRenderData(int width, int height, String path) {
 		this.width = width;
@@ -58,14 +67,35 @@ public class PictureRenderData implements RenderData {
 	/**
 	 * @param width 宽度
 	 * @param height 高度
+	 * @param path 本地图片路径
+	 * @param noExistShow 图片不存在时显示内容
+	 */
+	public PictureRenderData(int width, int height, String path, String noExistShow) {
+		this(width, height, path);
+		this.noExistShow = noExistShow;
+	}
+
+	/**
+	 * @param width 宽度
+	 * @param height 高度
 	 * @param path 标识图片后缀，如.png、.jpg等
 	 * @param data 图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
 	 */
 	public PictureRenderData(int width, int height, String path, byte[] data) {
-		this.width = width;
-		this.height = height;
-		this.path = path;
+		this(width, height, path);
 		this.data = data;
+	}
+
+	/**
+	 * @param width 宽度
+	 * @param height 高度
+	 * @param path 标识图片后缀，如.png、.jpg等
+	 * @param data 图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
+	 * @param noExistShow 图片不存在时显示内容
+	 */
+	public PictureRenderData(int width, int height, String path, byte[] data, String noExistShow) {
+		this(width, height, path, data);
+		this.noExistShow = noExistShow;
 	}
 
 	public int getWidth() {
@@ -98,6 +128,14 @@ public class PictureRenderData implements RenderData {
 
 	public void setData(byte[] data) {
 		this.data = data;
+	}
+
+	public String getNoExistShow() {
+		return noExistShow;
+	}
+
+	public void setNoExistShow(String noExistShow) {
+		this.noExistShow = noExistShow;
 	}
 
 }

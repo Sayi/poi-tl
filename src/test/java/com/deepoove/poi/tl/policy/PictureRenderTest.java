@@ -21,13 +21,13 @@ import com.deepoove.poi.util.BytePictureUtils;
  * @version 1.0.0
  */
 public class PictureRenderTest {
-	
+
 	BufferedImage bufferImage;
-	
+
 	@Before
-	public void init(){
+	public void init() {
 		bufferImage = BytePictureUtils.newBufferImage(100, 100);
-		Graphics2D g = (Graphics2D)bufferImage.getGraphics();
+		Graphics2D g = (Graphics2D) bufferImage.getGraphics();
 		g.setColor(Color.red);
 		g.fillRect(0, 0, 100, 100);
 		g.dispose();
@@ -39,19 +39,22 @@ public class PictureRenderTest {
 	public void testPictureRender() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{
-				//本地图片
+				// 本地图片
 				put("localPicture", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-				//本地图片byte数据
+				// 本地图片byte数据
 				put("localBytePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getLocalByteArray(new File("src/test/resources/logo.png"))));
-				//网路图片 
+				// 网路图片
 				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
 				// java 图片
 				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));
+
+				// 不存在的图片
+				put("noExistDefault", new PictureRenderData(120, 120, "src/test/resources/nonono.png"));
+				put("noExistCustom", new PictureRenderData(100, 120, ".png", BytePictureUtils.getLocalByteArray(new File("src/test/resources/nonono.png")), "图片不存在"));
 			}
 		};
 
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/picture.docx")
-				.render(datas);
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/picture.docx").render(datas);
 
 		FileOutputStream out = new FileOutputStream("out_picture.docx");
 		template.write(out);
@@ -59,6 +62,5 @@ public class PictureRenderTest {
 		out.close();
 		template.close();
 	}
-
 
 }
