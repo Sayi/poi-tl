@@ -57,7 +57,7 @@ public class TemplateResolver {
 		String signRegex = getGramarRegex(config);
 		String prefixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerPrefix());
 		String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
-		String RULER_REGEX = MessageFormat.format("{0}{1}(.?\\w+)+{2}", prefixRegex, signRegex, suffixRegex);
+		String RULER_REGEX = MessageFormat.format("{0}{1}(.?)+?{2}", prefixRegex, signRegex, suffixRegex);
 		String EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
 		VAR_PATTERN = Pattern.compile(EXTRA_REGEX);
@@ -325,17 +325,15 @@ public class TemplateResolver {
 
 	private String getGramarRegex(Configure config) {
 		List<Character> gramerChar = new ArrayList<Character>(config.getGramerChars());
-		StringBuilder reg = new StringBuilder("(");
+		StringBuilder reg = new StringBuilder("([A-Za-z\\u4e00-\\u9fa5");
 		for (int i = 0;; i++) {
 			Character chara = gramerChar.get(i);
-			if (chara == '\0')
-				chara = 'w';
 			String escapeExprSpecialWord = RegexUtils.escapeExprSpecialWord(chara.toString());
 			if (i == gramerChar.size() - 1) {
-				reg.append(escapeExprSpecialWord).append(")?");
+				reg.append(escapeExprSpecialWord).append("])+");
 				break;
 			} else
-				reg.append(escapeExprSpecialWord).append("|");
+				reg.append(escapeExprSpecialWord).append("");
 		}
 		return reg.toString();
 	}

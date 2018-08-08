@@ -21,15 +21,20 @@ public class TextRenderTest {
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{
 				put("title", "Hello, poi tl.");
-				
+
 				User user = new User("herowzz", 18, new Group("一组"));
 				put("user", user);
-				
+
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("id", "12345");
 				map.put("user", user);
+				map.put("姓名", "张三");
 				put("map", map);
-				
+
+				Map<String, Object> mapChn = new HashMap<String, Object>();
+				mapChn.put("学号", "10010");
+				put("学生", mapChn);
+
 				put("text", new TextRenderData("28a745", "我是绿色的文字"));
 
 				// 指定文本样式
