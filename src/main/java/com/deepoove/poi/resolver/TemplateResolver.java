@@ -330,7 +330,7 @@ public class TemplateResolver {
 			Character chara = gramerChar.get(i);
 			String escapeExprSpecialWord = RegexUtils.escapeExprSpecialWord(chara.toString());
 			if (i == gramerChar.size() - 1) {
-				reg.append(escapeExprSpecialWord).append("])+");
+				reg.append(escapeExprSpecialWord).append("])");
 				break;
 			} else
 				reg.append(escapeExprSpecialWord).append("");
