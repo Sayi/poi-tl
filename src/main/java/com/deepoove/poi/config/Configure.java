@@ -36,10 +36,9 @@ import com.deepoove.poi.policy.TextRenderPolicy;
 public class Configure {
     
 	// Highest priority
-	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(6);
+	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
 	// Low priority
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
-	private Set<Character> gramerChars = new HashSet<Character>();
 	
 	private String gramerPrefix = "{{";
 	private String gramerSuffix = "}}";
@@ -76,7 +75,6 @@ public class Configure {
 	 *            策略
 	 */
 	public Configure plugin(char c, RenderPolicy policy) {
-		gramerChars.add(Character.valueOf(c));
 		defaultPolicys.put(Character.valueOf(c), policy);
 		return this;
 	}
@@ -112,7 +110,7 @@ public class Configure {
 	}
 
 	public Set<Character> getGramerChars() {
-		return gramerChars;
+	    return defaultPolicys.keySet();
 	}
 	
 	public String getGramerPrefix() {
