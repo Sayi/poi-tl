@@ -21,7 +21,6 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
-import com.deepoove.poi.util.ReflectUtils;
 import com.deepoove.poi.util.StyleUtils;
 
 /**
@@ -48,12 +47,7 @@ public class TextRenderPolicy implements RenderPolicy {
 		if (renderData instanceof TextRenderData) {
 			textRenderData = (TextRenderData) renderData;
 		} else {
-			String value = "";
-			if (eleTemplate.hasObjectRelated())
-				value = ReflectUtils.fromCache(renderData, eleTemplate.getTagName()).getValue(eleTemplate.getFullName()).toString();
-			else
-				value = renderData.toString();
-			textRenderData = new TextRenderData(value);
+			textRenderData = new TextRenderData(renderData.toString());
 		}
 		String data = textRenderData.getText();
 		StyleUtils.styleRun(run, textRenderData.getStyle());

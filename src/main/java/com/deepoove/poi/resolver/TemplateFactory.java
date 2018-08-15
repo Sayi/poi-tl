@@ -33,26 +33,29 @@ package com.deepoove.poi.resolver;
 import java.util.Set;
 
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.template.run.TableLoopTemplate;
 
 /**
  * 
  * @author Sayi
+ * @author herowzz
  * @version 1.0.0
  */
-public class TemplateFactory{
-	
-	public static final char EMPTY_CHAR = '\0'; 
+public class TemplateFactory {
+
+	public static final char EMPTY_CHAR = '\0';
 
 	public static RunTemplate createRunTemplate(String tag, Configure config, XWPFRun run) {
 		RunTemplate template = new RunTemplate();
 		Set<Character> gramerChars = config.getGramerChars();
 		char fisrtChar = tag.charAt(0);
 		Character symbol = Character.valueOf(EMPTY_CHAR);
-		for (Character chara : gramerChars){
-			if (chara.equals(fisrtChar)){
+		for (Character chara : gramerChars) {
+			if (chara.equals(fisrtChar)) {
 				symbol = Character.valueOf(fisrtChar);
 				break;
 			}
@@ -60,7 +63,7 @@ public class TemplateFactory{
 		tag = symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1);
 		template.setFullName(tag);
 		template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
-		if(tag != null && tag.indexOf(".") > 0) {
+		if (tag != null && tag.indexOf(".") > 0) {
 			tag = tag.substring(0, tag.indexOf("."));
 		}
 		template.setTagName(tag);
@@ -68,7 +71,28 @@ public class TemplateFactory{
 		template.setRun(run);
 		return template;
 	}
-	
-	
+
+	public static TableLoopTemplate createTableLoopTemplate(String tag, Configure config, XWPFTable table) {
+		TableLoopTemplate template = new TableLoopTemplate();
+		Set<Character> gramerChars = config.getGramerChars();
+		char fisrtChar = tag.charAt(0);
+		Character symbol = Character.valueOf(EMPTY_CHAR);
+		for (Character chara : gramerChars) {
+			if (chara.equals(fisrtChar)) {
+				symbol = Character.valueOf(fisrtChar);
+				break;
+			}
+		}
+		tag = symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1);
+		template.setFullName(tag);
+		template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+		if (tag != null && tag.indexOf(".") > 0) {
+			tag = tag.substring(0, tag.indexOf("."));
+		}
+		template.setTagName(tag);
+		template.setSign(symbol);
+		template.setTable(table);
+		return template;
+	}
 
 }

@@ -24,10 +24,6 @@ public class ElementTemplate {
 	public ElementTemplate() {
 	}
 
-	public boolean hasObjectRelated() {
-		return fullName.contains(".");
-	}
-
 	/**
 	 * @return the tagName
 	 */
@@ -59,7 +55,7 @@ public class ElementTemplate {
 	}
 
 	public String getFullName() {
-		return fullName;
+		return fullName.replaceAll("“|”|’|'", "\"");
 	}
 
 	public void setFullName(String fullName) {

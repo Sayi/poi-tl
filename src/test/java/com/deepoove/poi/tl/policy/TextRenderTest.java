@@ -84,6 +84,10 @@ public class TextRenderTest {
 			this.group = group;
 		}
 
+		public String testMethod(String s1, String s2, String s3) {
+			return s1 + " - " + s2 + " - " + s3;
+		}
+
 		public String getName() {
 			return name;
 		}

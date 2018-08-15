@@ -27,7 +27,6 @@ public class TemplateResolverTest {
 		}
 		assertFalse(TAG_PATTERN.matcher("aa{{~name}}vv").find());
 		assertFalse(TAG_PATTERN.matcher("aa{{^name}}vv").find());
-		assertFalse(TAG_PATTERN.matcher("aa{{%name}}vv").find());
 
 		Matcher matcherChn = TAG_PATTERN.matcher("aaa地方{{张三3.家庭2.姊妹1.钱5}}bbb测测");
 		assertTrue(matcherChn.find());
