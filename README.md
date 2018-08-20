@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![poi3.16](https://img.shields.io/badge/apache--poi-3.16-blue.svg) 
 
-:memo:  Word 模板引擎，基于Apache POI进行了一些增强封装，如合并多个Word文档、合并单元格、图片处理等。
+:memo:  Word 模板引擎，基于Apache POI进行了一些增强封装，如合并多个Word文档、合并单元格、图片处理等，插件机制使得可以基于模板引擎特性扩展出更丰富的功能。
 
-Poi-tl的插件机制使得可以基于模板引擎特性扩展出更丰富的功能。
+> **模板和插件构建了整个Poi-tl的核心。**
 
 下表对一些处理Word的解决方案作了一些比较：
 
