@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -33,26 +34,35 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  * @version 1.0.0
  */
 public class Configure {
-
+    
 	// Highest priority
-	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(6);
+	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
 	// Low priority
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
-	private Set<Character> gramerChars = new HashSet<Character>();
+	
+	private String gramerPrefix = "{{";
+	private String gramerSuffix = "}}";
 
 	private Configure() {
 		plugin(GramerSymbol.TEXT.getSymbol(), new TextRenderPolicy());
 		plugin(GramerSymbol.IMAGE.getSymbol(), new PictureRenderPolicy());
 		plugin(GramerSymbol.TABLE.getSymbol(), new SimpleTableRenderPolicy());
 		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
+		plugin(GramerSymbol.DOCX_TEMPLATE.getSymbol(), new DocxRenderPolicy());
 	}
 	
 	/**
 	 * 获取默认配置
-	 * @return
 	 */
 	public static Configure createDefault(){
-		return new Configure();
+		return newBuilder().build();
+	}
+	
+	/**
+	 * 获取构建器
+	 */
+	public static ConfigureBuilder newBuilder(){
+	    return new ConfigureBuilder();
 	}
 
 
@@ -65,7 +75,6 @@ public class Configure {
 	 *            策略
 	 */
 	public Configure plugin(char c, RenderPolicy policy) {
-		gramerChars.add(Character.valueOf(c));
 		defaultPolicys.put(Character.valueOf(c), policy);
 		return this;
 	}
@@ -86,13 +95,12 @@ public class Configure {
 	 * 获取标签策略
 	 * @param tagName 模板名称
 	 * @param sign 语法
-	 * @return
 	 */
 	public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
     }
-
+	
 	public Map<Character, RenderPolicy> getDefaultPolicys() {
 		return defaultPolicys;
 	}
@@ -102,15 +110,47 @@ public class Configure {
 	}
 
 	public Set<Character> getGramerChars() {
-		return gramerChars;
+	    return defaultPolicys.keySet();
 	}
+	
+	public String getGramerPrefix() {
+        return gramerPrefix;
+    }
 
-	public RenderPolicy getCustomPolicy(String tagName) {
+    public String getGramerSuffix() {
+        return gramerSuffix;
+    }
+
+	private RenderPolicy getCustomPolicy(String tagName) {
 		return customPolicys.get(tagName);
 	}
 
-	public RenderPolicy getDefaultPolicy(Character sign) {
+	private RenderPolicy getDefaultPolicy(Character sign) {
 		return defaultPolicys.get(sign);
 	}
+    
+    public static class ConfigureBuilder {
+        private Configure config = new Configure();
+        public ConfigureBuilder() {
+        }
+        
+        public ConfigureBuilder buildGramer(String prefix, String suffix){
+            config.gramerPrefix = prefix;
+            config.gramerSuffix = suffix;
+            return this;
+        }
+        public ConfigureBuilder addPlugin(char c, RenderPolicy policy){
+            config.plugin(c, policy);
+            return this;
+        }
+        public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy){
+            config.customPolicy(tagName, policy);
+            return this;
+        }
+        public Configure build(){
+            return config;
+        }
+        
+    }
 	
 }

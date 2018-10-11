@@ -135,6 +135,20 @@ public class XWPFTemplate {
 			throw new ResolverException("Compile template failed");
 		}
 	}
+	
+	/**
+	 * 重新解析doc
+	 * @param doc
+	 */
+	public void reload(NiceXWPFDocument doc) {
+	    try {
+            this.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.doc = doc;
+        this.eleTemplates = new TemplateResolver(this.config).parseElementTemplates(doc);
+    }
 
 	public XWPFTemplate render(Map<String, Object> datas) {
 		RenderAPI.render(this, datas);
@@ -162,6 +176,7 @@ public class XWPFTemplate {
 	 * @param templateName
 	 * @param policy
 	 */
+	@Deprecated
 	public void registerPolicy(String templateName, RenderPolicy policy) {
 		config.customPolicy(templateName, policy);
 	}
@@ -175,6 +190,7 @@ public class XWPFTemplate {
 		return config.getCustomPolicys().get(clazz.getName());
 	}
 
+	@Deprecated
 	public RenderPolicy getPolicy(String templateName) {
 		return config.getCustomPolicys().get(templateName);
 	}
@@ -198,5 +214,7 @@ public class XWPFTemplate {
 	public Configure getConfig() {
 		return config;
 	}
+
+    
 
 }

@@ -22,7 +22,7 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
- * slef render
+ * self render
  * @author Sayi
  * @version 0.0.3
  */

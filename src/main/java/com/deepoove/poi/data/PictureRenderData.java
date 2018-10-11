@@ -45,8 +45,8 @@ public class PictureRenderData implements RenderData {
 	private transient byte[] data;
 
 	/**
-	 * @param width
-	 * @param height
+	 * @param width 宽度
+	 * @param height 高度
 	 * @param path  本地图片路径
 	 */
 	public PictureRenderData(int width, int height, String path) {
@@ -56,8 +56,8 @@ public class PictureRenderData implements RenderData {
 	}
 
 	/**
-	 * @param width
-	 * @param height
+	 * @param width 宽度
+	 * @param height 高度
 	 * @param path 标识图片后缀，如.png、.jpg等
 	 * @param data 图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
 	 */

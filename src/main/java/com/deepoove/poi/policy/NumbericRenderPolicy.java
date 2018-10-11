@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.NumberingWrapper;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
@@ -45,7 +46,7 @@ public class NumbericRenderPolicy implements RenderPolicy {
         Pair<Enum, String> numFmt = numbericData.getNumFmt();
         Style fmtStyle = numbericData.getFmtStyle();
         if (datas == null || datas.isEmpty()) {
-            runTemplate.getRun().setText("", 0);
+            run.setText("", 0);
             return;
         } else {
 
@@ -67,8 +68,8 @@ public class NumbericRenderPolicy implements RenderPolicy {
             cTLvl.addNewNumFmt().setVal(fmt);
             cTLvl.addNewLvlText().setVal(val);
             cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+            cTLvl.setIlvl(BigInteger.valueOf(0));
             if (fmt == STNumberFormat.BULLET) {
-                // cTLvl.setIlvl(BigInteger.valueOf(0));
                 cTLvl.addNewLvlJc().setVal(STJc.LEFT);
             } else {
                 // cTLvl.setIlvl(BigInteger.valueOf(0));
@@ -93,7 +94,14 @@ public class NumbericRenderPolicy implements RenderPolicy {
             }
             // doc.insertNewParagraph(run);
         }
-        runTemplate.getRun().setText("", 0);
+        run.setText("", 0);
+        IRunBody parent = run.getParent();
+        if (parent instanceof XWPFParagraph) {
+            ((XWPFParagraph) parent).removeRun(runTemplate.getRunPos());
+            // To do: 更好的列表样式
+            // ((XWPFParagraph) parent).setSpacingBetween(0,
+            // LineSpacingRule.AUTO);
+        }
     }
 
 }

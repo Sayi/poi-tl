@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.RegexUtils;
@@ -56,8 +55,8 @@ public class TemplateResolver {
 	
 	public TemplateResolver(Configure config) {
 		String signRegex = getGramarRegex(config);
-		String prefixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX);
-		String suffixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
+		String prefixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerPrefix());
+		String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
 		String RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
 		String EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
@@ -305,8 +304,7 @@ public class TemplateResolver {
 		if (TAG_PATTERN.matcher(text).matches()) {
 			String tag = VAR_PATTERN.matcher(text).replaceAll("").trim();
 			if (obj.getClass() == XWPFRun.class) {
-				return TemplateFactory.createRunTemplate(tag, config.getGramerChars(),
-						(XWPFRun) obj);
+				return TemplateFactory.createRunTemplate(tag, config, (XWPFRun) obj);
 			} else if (obj.getClass() == XWPFTableCell.class)
 				// return CellTemplate.create(symbol, tagName, (XWPFTableCell)
 				// obj);
