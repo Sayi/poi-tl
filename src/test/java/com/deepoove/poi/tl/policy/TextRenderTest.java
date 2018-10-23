@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 
@@ -22,6 +23,12 @@ public class TextRenderTest {
             {
                 put("title", "Hello, poi tl.");
                 put("text", new TextRenderData("28a745", "我是绿色的文字"));
+                
+                // 超链接
+                HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData("Deepoove website.", "http://www.deepoove.com");
+                hyperLinkTextRenderData.getStyle().setBold(true);
+                put("link", hyperLinkTextRenderData);
+                put("maillink", new HyperLinkTextRenderData("发邮件给作者", "mailto:adasai90@gmail.com?subject=poi-tl"));
                 
                 // 指定文本样式
 				TextRenderData textRenderData = new TextRenderData("just deepoove.");

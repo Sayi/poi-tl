@@ -15,9 +15,12 @@
  */
 package com.deepoove.poi.policy;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.XWPFParagraphWrapper;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
@@ -41,7 +44,18 @@ public class TextRenderPolicy implements RenderPolicy {
 			run.setText("", 0);
 			return;
 		}
+		
+		// hyper link 
+		if (renderData instanceof HyperLinkTextRenderData) {
+		    XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph)run.getParent());
+		    XWPFRun insertNewHyperLinkRun = paragraph.insertNewHyperLinkRun(runTemplate.getRunPos(), ((HyperLinkTextRenderData) renderData).getUrl());
+		    StyleUtils.styleRun(insertNewHyperLinkRun, run);
+		    run.setText("", 0);
+		    run = insertNewHyperLinkRun;
+		}
+		
 
+		// text
 		TextRenderData textRenderData = null;
 		if (renderData instanceof TextRenderData) {
 			textRenderData = (TextRenderData) renderData;
@@ -49,12 +63,13 @@ public class TextRenderPolicy implements RenderPolicy {
 			textRenderData = new TextRenderData(renderData.toString());
 		}
 		String data = textRenderData.getText();
-		StyleUtils.styleRun(run, textRenderData.getStyle());
 		if (null == data) data = "";
+		
+		StyleUtils.styleRun(run, textRenderData.getStyle());
 		
 		String[] split = data.split(REGEX_LINE_CHARACTOR);
 		if (null != split){
-		    run.setText(split[0], 0); 
+		    run.setText(split[0], 0);
 		    for (int i = 1; i < split.length; i++) {
                 run.addBreak(); 
                 run.setText(split[i]);

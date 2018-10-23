@@ -25,12 +25,12 @@ import com.deepoove.poi.data.style.Style;
  *
  */
 public class TextRenderData implements RenderData {
-	private Style style;
+	protected Style style;
 	
 	/**
 	 * \n 表示换行
 	 */
-	private String text;
+	protected String text;
 
 	public TextRenderData() {
 	}

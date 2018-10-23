@@ -30,8 +30,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
@@ -89,14 +91,23 @@ public final class StyleUtils {
      */
     public static void styleRun(XWPFRun destRun, XWPFRun srcRun) {
         if (null == destRun || null == srcRun) return;
-        destRun.setBold(srcRun.isBold());
+        CTR ctr = srcRun.getCTR();
+        if (ctr.isSetRPr() && ctr.getRPr().isSetRStyle()){
+            String val = ctr.getRPr().getRStyle().getVal();
+            if (StringUtils.isNotBlank(val)) {
+                CTRPr pr = destRun.getCTR().isSetRPr() ? destRun.getCTR().getRPr() : destRun.getCTR().addNewRPr();
+                CTString rStyle = pr.isSetRStyle() ? pr.getRStyle() : pr.addNewRStyle();
+                rStyle.setVal(val);
+            }
+        }
+        if (Boolean.TRUE.equals(srcRun.isBold())) destRun.setBold(srcRun.isBold());
         destRun.setColor(srcRun.getColor());
         // destRun.setCharacterSpacing(srcRun.getCharacterSpacing());
-        destRun.setFontFamily(srcRun.getFontFamily());
+        if (StringUtils.isNotBlank(srcRun.getFontFamily())) destRun.setFontFamily(srcRun.getFontFamily());
         int fontSize = srcRun.getFontSize();
         if (-1 != fontSize) destRun.setFontSize(fontSize);
-        destRun.setItalic(srcRun.isItalic());
-        destRun.setStrikeThrough(srcRun.isStrikeThrough());
+        if (Boolean.TRUE.equals(srcRun.isItalic())) destRun.setItalic(srcRun.isItalic());
+        if (Boolean.TRUE.equals(srcRun.isStrikeThrough())) destRun.setStrikeThrough(srcRun.isStrikeThrough());
         destRun.setUnderline(srcRun.getUnderline());
     }
 
