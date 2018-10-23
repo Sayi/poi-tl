@@ -42,14 +42,12 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 		XWPFRun run = runTemplate.getRun();
 		run.setText("", 0);
 		try {
-		    //w:tbl-w:tr-w:tc-w:p-w:tr
-			XmlCursor newCursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();
-			newCursor.toParent();
-			//if (newCursor.getObject() instanceof CTTc) 
-			newCursor.toParent();
-			newCursor.toParent();
-			XmlObject object = newCursor.getObject();
-			XWPFTable table = doc.getTable((CTTbl) object);
+			         XWPFTable table = doc.createTable(1, 1);//创建table
+			          table.removeRow(0);//去掉第一行空白的
+//			           table.setColumnWidth(0, 6 * 256);//设置列的宽度
+//			             table.setColumnWidth(1, 10 * 256);
+//			            table.setColumnWidth(2, 6 * 256);
+//			           table.setColumnWidth(3, 10 * 256);
 			render(table, data);
 		} catch (Exception e) {
 			logger.error("dynamic table error:" + e.getMessage(), e);
