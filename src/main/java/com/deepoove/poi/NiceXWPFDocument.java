@@ -86,11 +86,11 @@ public class NiceXWPFDocument extends XWPFDocument {
 	}
 	
 	/**
-     * 合并行单元格
+     * 合并某一行的单元格
      * @param table
-     * @param row
-     * @param fromCol
-     * @param toCol
+     * @param row 合并的行
+     * @param fromCol 合并开始列
+     * @param toCol 合并结束列
      */
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
             int toCol) {
@@ -101,14 +101,14 @@ public class NiceXWPFDocument extends XWPFDocument {
             tcPr = cell.getCTTc().addNewTcPr();
         XWPFTableRow rowTable = table.getRow(row);
         for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
-            rowTable.getCtRow().removeTc(colIndex);
-            rowTable.removeCell(colIndex);
+            rowTable.getCtRow().removeTc(fromCol + 1);
+            rowTable.removeCell(fromCol + 1);
         }
         spanCellsAcrossRow(table, row, fromCol, toCol - fromCol + 1);
     }
 
     /**
-     * 合并列单元格
+     * 合并某一列的单元格
      * @param table
      * @param col
      * @param fromRow
