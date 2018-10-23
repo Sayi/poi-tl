@@ -29,25 +29,22 @@ import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * 支持表格内的文本模板动态持有XWPFTable对象
+ * 
  * @author Sayi 卅一
  * @version 0.0.3
  */
 public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 
 	@Override
-	public void render(ElementTemplate eleTemplate, Object data,
-			XWPFTemplate template) {
+	public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
 		NiceXWPFDocument doc = template.getXWPFDocument();
 		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
 		run.setText("", 0);
 		try {
-			         XWPFTable table = doc.createTable(1, 1);//创建table
-			          table.removeRow(0);//去掉第一行空白的
-//			           table.setColumnWidth(0, 6 * 256);//设置列的宽度
-//			             table.setColumnWidth(1, 10 * 256);
-//			            table.setColumnWidth(2, 6 * 256);
-//			           table.setColumnWidth(3, 10 * 256);
+			XWPFTable table = doc.createTable(1, 1);// 创建table
+			table.removeRow(0);// 去掉第一行空白的
+
 			render(table, data);
 		} catch (Exception e) {
 			logger.error("dynamic table error:" + e.getMessage(), e);
@@ -56,7 +53,7 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 
 	/**
 	 * @param table 表格
-	 * @param data 数据
+	 * @param data  数据
 	 */
 	public abstract void render(XWPFTable table, Object data);
 
