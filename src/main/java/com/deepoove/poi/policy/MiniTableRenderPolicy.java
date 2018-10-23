@@ -17,6 +17,7 @@ package com.deepoove.poi.policy;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -107,29 +108,32 @@ public class MiniTableRenderPolicy implements RenderPolicy {
 	 */
 	public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
 		if (null == rowData || rowData.size() <= 0) return;
-		int i = 0;
 		TableStyle style = rowData.getStyle();
 		List<TextRenderData> cellDatas = rowData.getRowData();
+		int i = 0;
 		XWPFTableCell cell = null;
 		for (TextRenderData cellData : cellDatas) {
-			cell = table.getRow(row).getCell(i);
-			String[] fragment = cellData.getText().split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
-			if (null != fragment) {
-				CTTc ctTc = cell.getCTTc();
-				CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
-				XWPFParagraph par = new XWPFParagraph(ctP, cell);
-				StyleUtils.styleTableParagraph(par, style);
-				XWPFRun run = par.createRun();
-				StyleUtils.styleRun(run, cellData.getStyle());
-				run.setText(fragment[0]);
-				for (int j = 1; j < fragment.length; j++) {
-					XWPFParagraph addParagraph = cell.addParagraph();
-					StyleUtils.styleTableParagraph(addParagraph, style);
-					run = addParagraph.createRun();
-					StyleUtils.styleRun(run, cellData.getStyle());
-					run.setText(fragment[j]);
-				}
-			}
+            cell = table.getRow(row).getCell(i);
+            String cellText = cellData.getText();
+            if (!StringUtils.isBlank(cellText)) {
+                String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
+                if (null != fragment) {
+                    CTTc ctTc = cell.getCTTc();
+                    CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
+                    XWPFParagraph par = new XWPFParagraph(ctP, cell);
+                    StyleUtils.styleTableParagraph(par, style);
+                    XWPFRun run = par.createRun();
+                    StyleUtils.styleRun(run, cellData.getStyle());
+                    run.setText(fragment[0]);
+                    for (int j = 1; j < fragment.length; j++) {
+                        XWPFParagraph addParagraph = cell.addParagraph();
+                        StyleUtils.styleTableParagraph(addParagraph, style);
+                        run = addParagraph.createRun();
+                        StyleUtils.styleRun(run, cellData.getStyle());
+                        run.setText(fragment[j]);
+                    }
+                }
+            }
 
 			if (null != style && null != style.getBackgroundColor()) cell.setColor(style.getBackgroundColor());
 			i++;
