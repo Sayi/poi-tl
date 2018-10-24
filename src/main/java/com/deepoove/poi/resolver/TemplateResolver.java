@@ -198,6 +198,9 @@ public class TemplateResolver {
 			//起始位置不足，游标指向下一run
 			if (text.length() + cursor < start) {
 				cursor += text.length();
+//				if (null != run.getCTR().getBrArray()){
+//				    cursor += run.getCTR().getBrArray().length;
+//				}
 				continue;
 			}
 			//索引text
