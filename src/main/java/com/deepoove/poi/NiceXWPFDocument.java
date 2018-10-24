@@ -487,10 +487,17 @@ public class NiceXWPFDocument extends XWPFDocument {
 					.replaceAll("<w:rStyle\\sw:val=\"" + styleId + "\"",
 							"<w:rStyle w:val=\"" + styleIdsMap.get(styleId) + "\"");
 		}
-        for (String relaId : blipIdsMap.keySet()) {
+		// 图片旧的id和新的id可能有交集
+		Map<String, String> placeHolderblipIdsMap = new HashMap<String, String>();
+		for (String relaId : blipIdsMap.keySet()) {
+		    placeHolderblipIdsMap.put(relaId, blipIdsMap.get(relaId) + "@PoiTL@");
+		}
+        for (String relaId : placeHolderblipIdsMap.keySet()) {
             addPart = addPart.replaceAll("r:embed=\"" + relaId + "\"",
-                    "r:embed=\"" + blipIdsMap.get(relaId) + "\"");
+                    "r:embed=\"" + placeHolderblipIdsMap.get(relaId) + "\"");
         }
+        addPart = addPart.replaceAll("@PoiTL@", "");
+        
         for (BigInteger numId : numIdsMap.keySet()) {
             addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
                     "<w:numId w:val=\"" + numIdsMap.get(numId) + "\"");
@@ -543,7 +550,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
             xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
             cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
-            cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 10));
+            cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
             
             BigInteger numID = numbering.addNum(numbering.addAbstractNum(new XWPFAbstractNum(cTAbstractNum)));
 
