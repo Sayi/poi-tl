@@ -5,10 +5,10 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.policy.DynamicTableRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
+import com.deepoove.poi.util.TableTools;
 
 /**
  * 付款通知书 明细表格的自定义渲染策略<br/>
@@ -38,7 +38,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
                 for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
 
                 // 合并单元格
-                NiceXWPFDocument.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
+                TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
                 MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
             }
         }

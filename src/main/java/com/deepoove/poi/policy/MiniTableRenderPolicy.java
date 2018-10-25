@@ -34,6 +34,7 @@ import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.util.TableTools;
 
 /**
  * 表格处理
@@ -67,7 +68,7 @@ public class MiniTableRenderPolicy implements RenderPolicy {
             
             XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
             StyleUtils.styleTable(table, style);
-            NiceXWPFDocument.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
+            TableTools.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
             XWPFTableCell cell = table.getRow(startRow).getCell(0);
             cell.setText(tableData.getNoDatadesc());
 

@@ -66,6 +66,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.util.TableTools;
+
 /**
  * 对原生poi的扩展
  * 
@@ -91,7 +93,10 @@ public class NiceXWPFDocument extends XWPFDocument {
      * @param row 合并的行
      * @param fromCol 合并开始列
      * @param toCol 合并结束列
+     * 
+     * @see TableTools
      */
+	@Deprecated
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
             int toCol) {
         if (toCol <= fromCol) return;
@@ -113,12 +118,14 @@ public class NiceXWPFDocument extends XWPFDocument {
      * @param col
      * @param fromRow
      * @param toRow
+     * 
+     * @see TableTools
      */
+	@Deprecated
     public static void mergeCellsVertically(XWPFTable table, int col, int fromRow,
             int toRow) {
-
+        if (toRow <= fromRow) return;
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
-
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             CTTcPr tcPr = cell.getCTTc().getTcPr();
             if (null == tcPr)
