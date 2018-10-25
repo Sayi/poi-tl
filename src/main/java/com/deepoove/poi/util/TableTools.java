@@ -36,7 +36,7 @@ public final class TableTools {
      * @param table
      *            表格对象
      * @param row
-     *            行
+     *            行 从0开始
      * @param fromCol
      *            起始列
      * @param toCol
@@ -48,8 +48,8 @@ public final class TableTools {
         CTTcPr tcPr = getTcPr(cell);
         XWPFTableRow rowTable = table.getRow(row);
         for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
-            rowTable.getCtRow().removeTc(colIndex);
-            rowTable.removeCell(colIndex);
+            rowTable.getCtRow().removeTc(fromCol + 1);
+            rowTable.removeCell(fromCol + 1);
         }
 
         tcPr.addNewGridSpan();
@@ -62,13 +62,14 @@ public final class TableTools {
      * @param table
      *            表格对象
      * @param col
-     *            列
+     *            列 从0开始
      * @param fromRow
      *            起始行
      * @param toRow
      *            结束行
      */
     public static void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
+        if (toRow <= fromRow) return;
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             CTTcPr tcPr = getTcPr(cell);
@@ -91,9 +92,10 @@ public final class TableTools {
      * @param widths
      *            每列的宽度，单位CM
      */
-    public static void widthTable(XWPFTable table, float[] widths) {
+    @SuppressWarnings("unused")
+    private static void widthTable(XWPFTable table, float[] colWidths) {
         float widthCM = 0;
-        for (float w : widths) {
+        for (float w : colWidths) {
             widthCM += w;
         }
         long width = (int) (widthCM / 2.54 * 1440);
@@ -108,9 +110,39 @@ public final class TableTools {
                 tblGrid = table.getCTTbl().addNewTblGrid();
             }
 
-            for (float w : widths) {
+            for (float w : colWidths) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
                 addNewGridCol.setW(BigInteger.valueOf((long) (w / 2.54 * 1440)));
+            }
+        }
+    }
+    
+    /**
+     * 表格设置宽度，每列平均分布
+     * 
+     * @param table
+     * @param widthCM
+     * @param cols
+     */
+    public static void widthTable(XWPFTable table, float widthCM, int cols) {
+        int width = (int)(widthCM/2.54*1440);
+        CTTblPr tblPr = table.getCTTbl().getTblPr();
+        if (null == tblPr) {
+            tblPr = table.getCTTbl().addNewTblPr();
+        }
+        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
+        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
+        tblW.setW(BigInteger.valueOf(width));
+
+        if (0 != width) {
+            CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
+            if (null == tblGrid) {
+                tblGrid = table.getCTTbl().addNewTblGrid();
+            }
+
+            for (int j = 0; j < cols; j++) {
+                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                addNewGridCol.setW(BigInteger.valueOf(width / cols));
             }
         }
     }
