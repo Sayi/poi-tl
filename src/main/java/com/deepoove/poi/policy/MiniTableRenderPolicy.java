@@ -52,40 +52,40 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         if (null == data) return;
 
         MiniTableRenderData tableData = (MiniTableRenderData) data;
+
+        if (!tableData.isSetBody() && !tableData.isSetHeader()) {
+            run.setText("", 0);
+            return;
+        }
         RowRenderData headers = tableData.getHeaders();
         List<RowRenderData> datas = tableData.getDatas();
         TableStyle style = tableData.getStyle();
         float width = tableData.getWidth();
 
+        int row, col = 0, startRow = 0;
         if (!tableData.isSetBody()) {
-            if (!tableData.isSetHeader()) {
-                run.setText("", 0);
-                return;
-            }
-            int row = 2;
-            int col = headers.size();
-            int startRow = 1;
-            
-            XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
-            StyleUtils.styleTable(table, style);
-            TableTools.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
-            XWPFTableCell cell = table.getRow(startRow).getCell(0);
-            cell.setText(tableData.getNoDatadesc());
+            row = 2;
+            startRow = 1;
+            col = headers.size();
 
         } else {
-            int row = datas.size();
-            int col = 0;
-            int startRow = 0;
+            row = datas.size();
             if (!tableData.isSetHeader()) {
                 col = getMaxColumFromData(datas);
             } else {
-                startRow++;
                 row++;
+                startRow = 1;
                 col = headers.size();
             }
-            
-            XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
-            StyleUtils.styleTable(table, style);
+
+        }
+        XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
+        StyleUtils.styleTable(table, style);
+        if (!tableData.isSetBody()) {
+            TableTools.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
+            XWPFTableCell cell = table.getRow(startRow).getCell(0);
+            cell.setText(tableData.getNoDatadesc());
+        } else {
             for (RowRenderData obj : datas) {
                 renderRow(table, startRow++, obj);
             }
@@ -93,27 +93,31 @@ public class MiniTableRenderPolicy implements RenderPolicy {
         run.setText("", 0);
     }
 
-    private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run, RowRenderData headers,
-            int row, int col, float width) {
+    private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run,
+            RowRenderData headers, int row, int col, float width) {
         XWPFTable table = doc.insertNewTable(run, row, col);
-        doc.widthTable(table, width, row, col);
+        TableTools.widthTable(table, width, col);
+        TableTools.borderTable(table, 4);
         renderRow(table, 0, headers);
         return table;
     }
 
-	/**
-	 * 填充表格一行的数据
-	 * @param table 
-	 * @param row 第几行
-	 * @param rowData 行数据：确保行数据的大小不超过表格该行的单元格数量
-	 */
-	public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
-		if (null == rowData || rowData.size() <= 0) return;
-		TableStyle style = rowData.getStyle();
-		List<TextRenderData> cellDatas = rowData.getRowData();
-		int i = 0;
-		XWPFTableCell cell = null;
-		for (TextRenderData cellData : cellDatas) {
+    /**
+     * 填充表格一行的数据
+     * 
+     * @param table
+     * @param row
+     *            第几行
+     * @param rowData
+     *            行数据：确保行数据的大小不超过表格该行的单元格数量
+     */
+    public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
+        if (null == rowData || rowData.size() <= 0) return;
+        TableStyle style = rowData.getStyle();
+        List<TextRenderData> cellDatas = rowData.getRowData();
+        int i = 0;
+        XWPFTableCell cell = null;
+        for (TextRenderData cellData : cellDatas) {
             cell = table.getRow(row).getCell(i);
             String cellText = cellData.getText();
             if (!StringUtils.isBlank(cellText)) {
@@ -136,12 +140,13 @@ public class MiniTableRenderPolicy implements RenderPolicy {
                 }
             }
 
-			if (null != style && null != style.getBackgroundColor()) cell.setColor(style.getBackgroundColor());
-			i++;
-		}
-	}
+            if (null != style && null != style.getBackgroundColor())
+                cell.setColor(style.getBackgroundColor());
+            i++;
+        }
+    }
 
-	private int getMaxColumFromData(List<RowRenderData> datas) {
+    private int getMaxColumFromData(List<RowRenderData> datas) {
         int maxColom = 0;
         for (RowRenderData obj : datas) {
             if (null == obj) continue;

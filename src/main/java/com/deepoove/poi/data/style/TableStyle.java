@@ -30,7 +30,10 @@ public class TableStyle {
 	private String backgroundColor;
 
 	/**
-	 * 对齐方式：STJc.LEFT、STJc.CENTER、STJc.RIGHT
+	 * 对齐方式
+	 * STJc.LEFT 左对齐
+	 * STJc.CENTER 居中对齐
+	 * STJc.RIGHT 右对齐
 	 */
 	private STJc.Enum align;
 
