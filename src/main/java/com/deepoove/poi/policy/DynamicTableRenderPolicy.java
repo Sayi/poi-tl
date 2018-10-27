@@ -45,11 +45,10 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 		    //w:tbl-w:tr-w:tc-w:p-w:tr
 			XmlCursor newCursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();
 			newCursor.toParent();
-			//if (newCursor.getObject() instanceof CTTc) 
 			newCursor.toParent();
 			newCursor.toParent();
 			XmlObject object = newCursor.getObject();
-			XWPFTable table = doc.getTable((CTTbl) object);
+			XWPFTable table = doc.getAllTable((CTTbl) object);
 			render(table, data);
 		} catch (Exception e) {
 			logger.error("dynamic table error:" + e.getMessage(), e);

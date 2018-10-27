@@ -78,16 +78,51 @@ import com.deepoove.poi.util.TableTools;
 public class NiceXWPFDocument extends XWPFDocument {
     
     private static Logger logger = LoggerFactory.getLogger(NiceXWPFDocument.class);
+    
+    protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
 
 	public NiceXWPFDocument() {
 		super();
+		init();
 	}
 
 	public NiceXWPFDocument(InputStream in) throws IOException {
 		super(in);
+		init();
 	}
 	
-	/**
+	private void init() {
+	    List<XWPFTable> tables = this.getTables();
+	    if (null != tables) {
+	        List<XWPFTableRow> rows = null;
+	        List<XWPFTableCell> cells = null;
+	        List<XWPFTable> cellTables = null;
+	        allTables.addAll(tables);
+	        for (XWPFTable table : tables) {
+	            rows = table.getRows();
+	            if (null == rows) continue;
+	            for (XWPFTableRow row : rows) {
+	                cells = row.getTableCells();
+	                if (null == cells) continue;
+	                for (XWPFTableCell cell : cells) {
+	                    cellTables = cell.getTables();
+	                    if (null != cellTables) allTables.addAll(cellTables);
+	                }
+	            }
+	        }
+	    }
+    }
+	
+	public XWPFTable getAllTable(CTTbl ctTbl) {
+        for (int i = 0; i < allTables.size(); i++) {
+            if (allTables.get(i).getCTTbl() == ctTbl) {
+                return allTables.get(i);
+            }
+        }
+        return null;
+    }
+
+    /**
      * 合并某一行的单元格
      * @param table
      * @param row 合并的行
