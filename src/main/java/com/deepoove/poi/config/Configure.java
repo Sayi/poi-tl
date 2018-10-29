@@ -33,12 +33,12 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  * @version 1.0.0
  */
 public class Configure {
-    
+
 	// Highest priority
 	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
 	// Low priority
 	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
-	
+
 	private String gramerPrefix = "{{";
 	private String gramerSuffix = "}}";
 
@@ -49,21 +49,20 @@ public class Configure {
 		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
 		plugin(GramerSymbol.DOCX_TEMPLATE.getSymbol(), new DocxRenderPolicy());
 	}
-	
+
 	/**
 	 * 获取默认配置
 	 */
-	public static Configure createDefault(){
+	public static Configure createDefault() {
 		return newBuilder().build();
 	}
-	
+
 	/**
 	 * 获取构建器
 	 */
-	public static ConfigureBuilder newBuilder(){
-	    return new ConfigureBuilder();
+	public static ConfigureBuilder newBuilder() {
+		return new ConfigureBuilder();
 	}
-
 
 	/**
 	 * 新增语法插件
@@ -89,17 +88,20 @@ public class Configure {
 	public void customPolicy(String tagName, RenderPolicy policy) {
 		customPolicys.put(tagName, policy);
 	}
-	
+
 	/**
 	 * 获取标签策略
-	 * @param tagName 模板名称
-	 * @param sign 语法
+	 * 
+	 * @param tagName
+	 *            模板名称
+	 * @param sign
+	 *            语法
 	 */
 	public RenderPolicy getPolicy(String tagName, Character sign) {
-        RenderPolicy policy = getCustomPolicy(tagName);
-        return null == policy ? getDefaultPolicy(sign) : policy;
-    }
-	
+		RenderPolicy policy = getCustomPolicy(tagName);
+		return null == policy ? getDefaultPolicy(sign) : policy;
+	}
+
 	public Map<Character, RenderPolicy> getDefaultPolicys() {
 		return defaultPolicys;
 	}
@@ -109,16 +111,16 @@ public class Configure {
 	}
 
 	public Set<Character> getGramerChars() {
-	    return defaultPolicys.keySet();
+		return defaultPolicys.keySet();
 	}
-	
-	public String getGramerPrefix() {
-        return gramerPrefix;
-    }
 
-    public String getGramerSuffix() {
-        return gramerSuffix;
-    }
+	public String getGramerPrefix() {
+		return gramerPrefix;
+	}
+
+	public String getGramerSuffix() {
+		return gramerSuffix;
+	}
 
 	private RenderPolicy getCustomPolicy(String tagName) {
 		return customPolicys.get(tagName);
@@ -127,29 +129,33 @@ public class Configure {
 	private RenderPolicy getDefaultPolicy(Character sign) {
 		return defaultPolicys.get(sign);
 	}
-    
-    public static class ConfigureBuilder {
-        private Configure config = new Configure();
-        public ConfigureBuilder() {
-        }
-        
-        public ConfigureBuilder buildGramer(String prefix, String suffix){
-            config.gramerPrefix = prefix;
-            config.gramerSuffix = suffix;
-            return this;
-        }
-        public ConfigureBuilder addPlugin(char c, RenderPolicy policy){
-            config.plugin(c, policy);
-            return this;
-        }
-        public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy){
-            config.customPolicy(tagName, policy);
-            return this;
-        }
-        public Configure build(){
-            return config;
-        }
-        
-    }
-	
+
+	public static class ConfigureBuilder {
+		private Configure config = new Configure();
+
+		public ConfigureBuilder() {
+		}
+
+		public ConfigureBuilder buildGramer(String prefix, String suffix) {
+			config.gramerPrefix = prefix;
+			config.gramerSuffix = suffix;
+			return this;
+		}
+
+		public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
+			config.plugin(c, policy);
+			return this;
+		}
+
+		public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
+			config.customPolicy(tagName, policy);
+			return this;
+		}
+
+		public Configure build() {
+			return config;
+		}
+
+	}
+
 }
