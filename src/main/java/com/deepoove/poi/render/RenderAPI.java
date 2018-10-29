@@ -110,13 +110,13 @@ public class RenderAPI {
 		int docxNum = 0;
 		ELObject elObject = ELObject.create(dataModel);
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
 			if (null == policy) throw new RenderException("cannot find render policy: [" + runTemplate.getTagName() + "]");
 			if (policy instanceof DocxRenderPolicy) {
 			    docxNum++;
 			    continue;
 			}
+			logger.debug("Render TemplateName:{}, Sign:{}, policy:{}", runTemplate.getTagName(), runTemplate.getSign(), policy.getClass().getSimpleName());
 			policy.render(runTemplate, elObject.eval(runTemplate.getTagName()), template);
 		}
 		try {
@@ -126,7 +126,7 @@ public class RenderAPI {
                 if (null == elementTemplates || elementTemplates.isEmpty())
                     break;
                 for (ElementTemplate runTemplate : elementTemplates) {
-                    logger.debug("Docx TagName:{}, Sign:{}", runTemplate.getTagName(),
+                    logger.debug("Render Docx TagName:{}, Sign:{}", runTemplate.getTagName(),
                             runTemplate.getSign());
                     policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
                     if (null != policy && policy instanceof DocxRenderPolicy) {

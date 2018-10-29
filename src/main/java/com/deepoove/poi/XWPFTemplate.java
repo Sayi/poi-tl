@@ -30,7 +30,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.RenderAPI;
-import com.deepoove.poi.resolver.TemplateResolver;
+import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.template.ElementTemplate;
 
 /**
@@ -43,7 +43,7 @@ public class XWPFTemplate {
 	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
 	private NiceXWPFDocument doc;
 	private Configure config;
-	private TemplateResolver resolver;
+	private TemplateVisitor resolver;
 
 	private List<ElementTemplate> eleTemplates;
 
@@ -128,8 +128,8 @@ public class XWPFTemplate {
 			XWPFTemplate instance = new XWPFTemplate();
 			instance.config = config;
 			instance.doc = new NiceXWPFDocument(inputStream);
-			instance.resolver = new TemplateResolver(instance.config);
-			instance.eleTemplates = instance.resolver.parseElementTemplates(instance.doc);
+			instance.resolver = new TemplateVisitor(instance.config);
+			instance.eleTemplates = instance.resolver.visitDocument(instance.doc);
 			return instance;
 		} catch (IOException e) {
 			logger.error("Compile template failed", e);
@@ -149,7 +149,7 @@ public class XWPFTemplate {
 			e.printStackTrace();
 		}
 		this.doc = doc;
-		this.eleTemplates = this.resolver.parseElementTemplates(doc);
+		this.eleTemplates = this.resolver.visitDocument(doc);
 	}
 
 	public XWPFTemplate render(Object model) {
