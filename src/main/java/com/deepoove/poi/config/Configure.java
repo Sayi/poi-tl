@@ -16,7 +16,6 @@
 package com.deepoove.poi.config;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +37,7 @@ public class Configure {
 	// Highest priority
 	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
 	// Low priority
-	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>(12);
+	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
 	
 	private String gramerPrefix = "{{";
 	private String gramerSuffix = "}}";

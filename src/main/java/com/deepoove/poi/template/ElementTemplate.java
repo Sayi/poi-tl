@@ -52,4 +52,9 @@ public class ElementTemplate {
 	public void setSign(Character sign) {
 		this.sign = sign;
 	}
+	
+	@Override
+	public String toString() {
+	    return source;
+	}
 }
