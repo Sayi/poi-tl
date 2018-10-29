@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.deepoove.poi.el.ELObject;
-import com.deepoove.poi.el.ExpressionEvalException;
+import com.deepoove.poi.exception.ExpressionEvalException;
 
 public class ELObjectTest {
 

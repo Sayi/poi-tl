@@ -13,35 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.el;
+package com.deepoove.poi.exception;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+public class ExpressionEvalException extends RuntimeException {
 
-/**
- * 对象点缀法访问
- * 
- * @author Sayi
- * @since 1.4.0
- *
- */
-public class ELObject {
+	private static final long serialVersionUID = -2950830923479581904L;
 
-	final Object model;
-
-	final Map<String, Object> cache = new ConcurrentHashMap<String, Object>(32);
-
-	public ELObject(Object model) {
-		this.model = model;
+	public ExpressionEvalException(String msg) {
+		super(msg);
 	}
 
-	public static ELObject create(Object model) {
-		return new ELObject(model);
-	}
-
-	public Object eval(String el) {
-		Dot dot = new Dot(el);
-		return dot.eval(this);
+	public ExpressionEvalException(String msg, Throwable e) {
+		super(msg, e);
 	}
 
 }
