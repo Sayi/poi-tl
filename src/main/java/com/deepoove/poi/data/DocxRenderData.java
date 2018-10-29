@@ -20,18 +20,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 待合并文档和数据集合
  * @author Sayi
  * @version 1.3.0
  */
 public class DocxRenderData implements RenderData {
 
     /**
-     * 合并文档
+     * 待合并文档
      */
     private File docx;
 
     /**
-     * 渲染合并文档模板的数据集合，若合并文档不是个模板，可为空
+     * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
      */
     private List<?> dataList;
 

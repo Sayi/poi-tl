@@ -26,7 +26,7 @@ import com.deepoove.poi.data.style.Style;
  */
 public class TextRenderData implements RenderData {
 	protected Style style;
-	
+
 	/**
 	 * \n 表示换行
 	 */
@@ -43,11 +43,11 @@ public class TextRenderData implements RenderData {
 		this.style = new Style(color);
 		this.text = text;
 	}
-	
+
 	public TextRenderData(String text, Style style) {
-        this.style = style;
-        this.text = text;
-    }
+		this.style = style;
+		this.text = text;
+	}
 
 	public Style getStyle() {
 		return style;
