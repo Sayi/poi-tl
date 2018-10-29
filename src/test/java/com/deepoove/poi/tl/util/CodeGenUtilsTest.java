@@ -19,6 +19,6 @@ public final class CodeGenUtilsTest {
 	public void testObject(){
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx");
 		DataSourceTest vo = new DataSourceTest();
-		RenderAPI.debug(template, vo);
+//		RenderAPI.debug(template, vo);
 	}
 }

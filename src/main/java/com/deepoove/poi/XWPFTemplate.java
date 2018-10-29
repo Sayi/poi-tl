@@ -18,11 +18,10 @@ package com.deepoove.poi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -150,13 +149,8 @@ public class XWPFTemplate {
         this.eleTemplates = new TemplateResolver(this.config).parseElementTemplates(doc);
     }
 
-	public XWPFTemplate render(Map<String, Object> datas) {
-		RenderAPI.render(this, datas);
-		return this;
-	}
-
-	public XWPFTemplate render(Object datasource) {
-		RenderAPI.render(this, datasource);
+	public XWPFTemplate render(Object model) {
+		RenderAPI.render(this, model);
 		return this;
 	}
 

@@ -57,7 +57,7 @@ public class TemplateResolver {
 		String signRegex = getGramarRegex(config);
 		String prefixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerPrefix());
 		String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
-		String RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
+		String RULER_REGEX = MessageFormat.format("{0}{1}\\w+(\\.\\w+)*{2}", prefixRegex, signRegex, suffixRegex);
 		String EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
 		VAR_PATTERN = Pattern.compile(EXTRA_REGEX);

@@ -15,13 +15,11 @@
  */
 package com.deepoove.poi.render;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.poi.POIXMLException;
@@ -30,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.el.ELObject;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -83,10 +81,6 @@ public class RenderAPI {
 		
 	}
 	
-	public static void debug(XWPFTemplate template, Object datas) {
-		debug(template, convert2Map(datas));
-	}
-
 	/**
 	 * 自我渲染
 	 * 
@@ -104,16 +98,17 @@ public class RenderAPI {
 		}
 	}
 
-	public static void render(XWPFTemplate template, Map<String, Object> datas) {
+	public static void render(XWPFTemplate template, Object dataModel) {
 		if (null == template) throw new POIXMLException("Template is null, should be setted first.");
+		Objects.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
-				|| datas.isEmpty())
+		if (null == elementTemplates || elementTemplates.isEmpty())
 			return;
 		Configure config = template.getConfig();
 		RenderPolicy policy = null;
 		
 		int docxNum = 0;
+		ELObject elObject = ELObject.create(dataModel);
 		for (ElementTemplate runTemplate : elementTemplates) {
 			logger.debug("TagName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
@@ -122,21 +117,20 @@ public class RenderAPI {
 			    docxNum++;
 			    continue;
 			}
-			policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
+			policy.render(runTemplate, elObject.eval(runTemplate.getTagName()), template);
 		}
 		try {
 		    if (docxNum >= 1) template.reload(template.getXWPFDocument().generate());
             for (int i = 0; i < docxNum; i++) {
                 elementTemplates = template.getElementTemplates();
-                if (null == elementTemplates || elementTemplates.isEmpty() || null == datas
-                        || datas.isEmpty())
+                if (null == elementTemplates || elementTemplates.isEmpty())
                     break;
                 for (ElementTemplate runTemplate : elementTemplates) {
                     logger.debug("Docx TagName:{}, Sign:{}", runTemplate.getTagName(),
                             runTemplate.getSign());
                     policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
                     if (null != policy && policy instanceof DocxRenderPolicy) {
-                        policy.render(runTemplate, datas.get(runTemplate.getTagName()), template);
+                        policy.render(runTemplate, elObject.eval(runTemplate.getTagName()), template);
                         break;
                     }
                 }
@@ -146,33 +140,5 @@ public class RenderAPI {
 		}
 		
 	}
-
-	public static void render(XWPFTemplate template, Object dataSrouce) {
-		render(template, convert2Map(dataSrouce));
-	}
-
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> convert2Map(Object dataSrouce) {
-        if (dataSrouce instanceof Map) return (Map<String, Object>) dataSrouce;
-        Map<String, Object> ret = new HashMap<String, Object>();
-        Class<?> clazz = dataSrouce.getClass();
-        while (clazz != Object.class) {
-            Field[] fields = clazz.getDeclaredFields();
-            PropertyDescriptor pd = null;
-            for (Field f : fields) {
-                try {
-                    pd = new PropertyDescriptor(f.getName(), dataSrouce.getClass());
-                    Name annotation = f.getAnnotation(Name.class);
-                    Object value = pd.getReadMethod().invoke(dataSrouce);
-                    ret.put(null == annotation ? f.getName() : annotation.value(), value);
-                } catch (Exception e) {
-                    logger.error("Convert datasource field failed:{}", f.getName(), e);
-                }
-            }
-            clazz = clazz.getSuperclass();
-        }
-
-        return ret;
-    }
 
 }
