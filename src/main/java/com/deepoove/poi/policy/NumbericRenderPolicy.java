@@ -3,6 +3,7 @@ package com.deepoove.poi.policy;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.NumberingWrapper;
@@ -24,7 +25,6 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
@@ -32,69 +32,82 @@ import com.deepoove.poi.util.StyleUtils;
  * @author Sayi
  * @version 0.0.5
  */
-public class NumbericRenderPolicy implements RenderPolicy {
+public class NumbericRenderPolicy extends AbstractRenderPolicy {
 
     @Override
-    public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        NiceXWPFDocument doc = template.getXWPFDocument();
-        RunTemplate runTemplate = (RunTemplate) eleTemplate;
-        XWPFRun run = runTemplate.getRun();
-        if (null == data) return;
+    protected boolean validate(Object data) {
+        if (null == data) return false;
 
+        if (!(data instanceof NumbericRenderData)) {
+            logger.error("Error datamodel: correct type is NumbericRenderData, but is "
+                    + data.getClass());
+            return false;
+        }
+
+        if (CollectionUtils.isEmpty(((NumbericRenderData) data).getNumbers())) {
+            logger.error("Empty NumbericRenderData datamodel: {}", data);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+            throws Exception {
+        NiceXWPFDocument doc = template.getXWPFDocument();
+        XWPFRun run = runTemplate.getRun();
         NumbericRenderData numbericData = (NumbericRenderData) data;
         List<TextRenderData> datas = numbericData.getNumbers();
         Pair<Enum, String> numFmt = numbericData.getNumFmt();
         Style fmtStyle = numbericData.getFmtStyle();
-        if (datas == null || datas.isEmpty()) {
-            run.setText("", 0);
-            return;
-        } else {
 
-            XWPFNumbering numbering = doc.getNumbering();
-            if (null == numbering) {
-                numbering = doc.createNumbering();
-            }
-
-            NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
-            CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
-            // if we have an existing document, we must determine the next
-            // free number first.
-            cTAbstractNum.setAbstractNumId(
-                    BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
-
-            Enum fmt = numFmt.getLeft();
-            String val = numFmt.getRight();
-            CTLvl cTLvl = cTAbstractNum.addNewLvl();
-            cTLvl.addNewNumFmt().setVal(fmt);
-            cTLvl.addNewLvlText().setVal(val);
-            cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
-            cTLvl.setIlvl(BigInteger.valueOf(0));
-            if (fmt == STNumberFormat.BULLET) {
-                cTLvl.addNewLvlJc().setVal(STJc.LEFT);
-            } else {
-                // cTLvl.setIlvl(BigInteger.valueOf(0));
-            }
-
-            XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
-            BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
-
-            BigInteger numID = numbering.addNum(abstractNumID);
-            // doc.insertNewParagraph(run);
-            XWPFRun newRun;
-            for (TextRenderData line : datas) {
-                XWPFParagraph paragraph = doc.insertNewParagraph(run);
-                paragraph.setNumID(numID);
-                CTP ctp = paragraph.getCTP();
-                CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
-                CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
-                StyleUtils.styleRpr(pr, fmtStyle);
-                newRun = paragraph.createRun();
-                StyleUtils.styleRun(newRun, line.getStyle());
-                newRun.setText(line.getText());
-            }
-            // doc.insertNewParagraph(run);
+        XWPFNumbering numbering = doc.getNumbering();
+        if (null == numbering) {
+            numbering = doc.createNumbering();
         }
-        run.setText("", 0);
+
+        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
+        // if we have an existing document, we must determine the next
+        // free number first.
+        cTAbstractNum
+                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
+
+        Enum fmt = numFmt.getLeft();
+        String val = numFmt.getRight();
+        CTLvl cTLvl = cTAbstractNum.addNewLvl();
+        cTLvl.addNewNumFmt().setVal(fmt);
+        cTLvl.addNewLvlText().setVal(val);
+        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+        cTLvl.setIlvl(BigInteger.valueOf(0));
+        if (fmt == STNumberFormat.BULLET) {
+            cTLvl.addNewLvlJc().setVal(STJc.LEFT);
+        } else {
+            // cTLvl.setIlvl(BigInteger.valueOf(0));
+        }
+
+        XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
+        BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
+
+        BigInteger numID = numbering.addNum(abstractNumID);
+        // doc.insertNewParagraph(run);
+        XWPFRun newRun;
+        for (TextRenderData line : datas) {
+            XWPFParagraph paragraph = doc.insertNewParagraph(run);
+            paragraph.setNumID(numID);
+            CTP ctp = paragraph.getCTP();
+            CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+            CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
+            StyleUtils.styleRpr(pr, fmtStyle);
+            newRun = paragraph.createRun();
+            StyleUtils.styleRun(newRun, line.getStyle());
+            newRun.setText(line.getText());
+        }
+        // doc.insertNewParagraph(run);
+
+        // 成功后清除标签
+        clearPlaceholder(run);
         IRunBody parent = run.getParent();
         if (parent instanceof XWPFParagraph) {
             ((XWPFParagraph) parent).removeRun(runTemplate.getRunPos());

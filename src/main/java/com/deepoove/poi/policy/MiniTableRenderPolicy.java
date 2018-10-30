@@ -31,7 +31,6 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
@@ -42,21 +41,31 @@ import com.deepoove.poi.util.TableTools;
  * @author Sayi 卅一
  * @since v1.3.0
  */
-public class MiniTableRenderPolicy implements RenderPolicy {
+public class MiniTableRenderPolicy extends AbstractRenderPolicy {
 
     @Override
-    public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        NiceXWPFDocument doc = template.getXWPFDocument();
-        RunTemplate runTemplate = (RunTemplate) eleTemplate;
-        XWPFRun run = runTemplate.getRun();
-        if (null == data) return;
+    protected boolean validate(Object data) {
+        if (null == data) return false;
+        if (!(data instanceof MiniTableRenderData)) {
+            logger.error("Error datamodel: correct type is MiniTableRenderData, but is "
+                    + data.getClass());
+            return false;
+        }
+        if (!((MiniTableRenderData) data).isSetBody()
+                && !((MiniTableRenderData) data).isSetHeader()) {
+            logger.error("Empty MiniTableRenderData datamodel: {}", data);
+            return false;
+        }
+        return true;
+    }
 
+    @Override
+    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+            throws Exception {
+        NiceXWPFDocument doc = template.getXWPFDocument();
+        XWPFRun run = runTemplate.getRun();
         MiniTableRenderData tableData = (MiniTableRenderData) data;
 
-        if (!tableData.isSetBody() && !tableData.isSetHeader()) {
-            run.setText("", 0);
-            return;
-        }
         RowRenderData headers = tableData.getHeaders();
         List<RowRenderData> datas = tableData.getDatas();
         TableStyle style = tableData.getStyle();
@@ -90,7 +99,9 @@ public class MiniTableRenderPolicy implements RenderPolicy {
                 renderRow(table, startRow++, obj);
             }
         }
-        run.setText("", 0);
+
+        // 成功后，才会清除标签，发生异常则保留标签，可以重写doRenderException方法在发生异常后也会清除标签
+        clearPlaceholder(run);
     }
 
     private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run,
