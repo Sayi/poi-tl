@@ -64,54 +64,57 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
-        MiniTableRenderData tableData = (MiniTableRenderData) data;
-
-        RowRenderData headers = tableData.getHeaders();
-        List<RowRenderData> datas = tableData.getDatas();
-        TableStyle style = tableData.getStyle();
-        float width = tableData.getWidth();
-
-        int row, col = 0, startRow = 0;
-        if (!tableData.isSetBody()) {
-            row = 2;
-            startRow = 1;
-            col = headers.size();
-
+        
+        if (!((MiniTableRenderData) data).isSetBody()) {
+            renderNoDataTable(doc, run, (MiniTableRenderData) data);
         } else {
-            row = datas.size();
-            if (!tableData.isSetHeader()) {
-                col = getMaxColumFromData(datas);
-            } else {
-                row++;
-                startRow = 1;
-                col = headers.size();
-            }
-
-        }
-        XWPFTable table = createTableWithHeaders(doc, run, headers, row, col, width);
-        StyleUtils.styleTable(table, style);
-        if (!tableData.isSetBody()) {
-            TableTools.mergeCellsHorizonal(table, 1, 0, headers.size() - 1);
-            XWPFTableCell cell = table.getRow(startRow).getCell(0);
-            cell.setText(tableData.getNoDatadesc());
-        } else {
-            for (RowRenderData obj : datas) {
-                renderRow(table, startRow++, obj);
-            }
+            renderTable(doc, run, (MiniTableRenderData) data);
         }
 
         // 成功后，才会清除标签，发生异常则保留标签，可以重写doRenderException方法在发生异常后也会清除标签
         clearPlaceholder(run);
     }
 
-    private XWPFTable createTableWithHeaders(NiceXWPFDocument doc, XWPFRun run,
-            RowRenderData headers, int row, int col, float width) {
-        XWPFTable table = doc.insertNewTable(run, row, col);
-        TableTools.widthTable(table, width, col);
+	private void renderTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {
+		int row = tableData.getDatas().size(), col = 0;
+        if (!tableData.isSetHeader()) {
+            col = getMaxColumFromData(tableData.getDatas());
+        } else {
+            row++;
+            col = tableData.getHeaders().size();
+        }
+        
+		XWPFTable table = doc.insertNewTable(run, row, col);
+		initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
+		
+		int startRow = 0;
+		if (tableData.isSetHeader()) renderRow(table, startRow++, tableData.getHeaders());
+		for (RowRenderData obj : tableData.getDatas()) {
+			renderRow(table, startRow++, obj);
+		}
+
+	}
+
+	private void renderNoDataTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {
+		int row = 2, col = tableData.getHeaders().size();
+		
+		XWPFTable table = doc.insertNewTable(run, row, col);
+        initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
+		
+		renderRow(table, 0, tableData.getHeaders());
+		
+		TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeaders().size() - 1);
+		XWPFTableCell cell = table.getRow(1).getCell(0);
+		cell.setText(tableData.getNoDatadesc());
+
+	}
+
+	private void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
+		TableTools.widthTable(table, width, col);
         TableTools.borderTable(table, 4);
-        renderRow(table, 0, headers);
-        return table;
-    }
+		StyleUtils.styleTable(table, style);
+	}
+
 
     /**
      * 填充表格一行的数据
@@ -137,15 +140,20 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
                     CTTc ctTc = cell.getCTTc();
                     CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
                     XWPFParagraph par = new XWPFParagraph(ctP, cell);
+                    
                     StyleUtils.styleTableParagraph(par, style);
                     XWPFRun run = par.createRun();
                     StyleUtils.styleRun(run, cellData.getStyle());
+                    
                     run.setText(fragment[0]);
+                    
                     for (int j = 1; j < fragment.length; j++) {
-                        XWPFParagraph addParagraph = cell.addParagraph();
-                        StyleUtils.styleTableParagraph(addParagraph, style);
-                        run = addParagraph.createRun();
+                        par = cell.addParagraph();
+                        
+                        StyleUtils.styleTableParagraph(par, style);
+                        run = par.createRun();
                         StyleUtils.styleRun(run, cellData.getStyle());
+                        
                         run.setText(fragment[j]);
                     }
                 }
