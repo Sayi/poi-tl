@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi.resolver;
 
 import java.util.ArrayList;
@@ -18,42 +33,26 @@ public class RunningRunParagraph {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RunningRunParagraph.class);
 	
-	private static Pattern TAG_PATTERN;
 	private XWPFParagraph paragraph;
 	private List<XWPFRun> runs;
 	
-	List<Pair<RunEdge, RunEdge>> runEdgeListPairs = new ArrayList<Pair<RunEdge, RunEdge>>();
+	List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<Pair<RunEdge, RunEdge>>();
 	
-
 	public RunningRunParagraph(XWPFParagraph paragraph, Pattern pattern) {
-		TAG_PATTERN = pattern;
 		this.paragraph = paragraph;
-		runs = paragraph.getRuns();
+		this.runs = paragraph.getRuns();
 		if (null == runs || runs.isEmpty()) return;
 		
-		String text = paragraph.getText();
-		Matcher matcher = TAG_PATTERN.matcher(text);
-		while (matcher.find()) {
-			runEdgeListPairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
-					new RunEdge(matcher.end(), matcher.group())));
-		}
-		
-		searchRunEdge(runs, runEdgeListPairs);
-		
-		for (Pair<RunEdge, RunEdge> pair : runEdgeListPairs) {
-			LOGGER.debug(pair.getLeft().toString());
-			LOGGER.debug(pair.getRight().toString());
-		}
-		
+		buildRunEdge(pattern);
 	}
 	
 	public List<XWPFRun> refactorRun(){
-		if (runEdgeListPairs.isEmpty()) return null;
+		if (pairs.isEmpty()) return null;
 		List<XWPFRun> templateRuns = new ArrayList<XWPFRun>();
-		int size = runEdgeListPairs.size();
+		int size = pairs.size();
 		Pair<RunEdge, RunEdge> runEdgePair;
 		for (int n = size - 1; n >= 0; n--) {
-			runEdgePair = runEdgeListPairs.get(n);
+			runEdgePair = pairs.get(n);
 			RunEdge startEdge = runEdgePair.getLeft();
 			RunEdge endEdge = runEdgePair.getRight();
 			int startRunPos = startEdge.getRunPos();
@@ -106,8 +105,14 @@ public class RunningRunParagraph {
 		return templateRuns;
 	}
 	
-	private void searchRunEdge(List<XWPFRun> runs, List<Pair<RunEdge, RunEdge>> pairs) {
+	private void buildRunEdge(Pattern pattern) {
+        Matcher matcher = pattern.matcher(paragraph.getText());
+        while (matcher.find()) {
+            pairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
+                    new RunEdge(matcher.end(), matcher.group())));
+        }
 		if (pairs.isEmpty()) return;
+		
 		int size = runs.size();
 		int cursor = 0;// 游标
 
@@ -116,8 +121,8 @@ public class RunningRunParagraph {
 		Pair<RunEdge, RunEdge> pair = pairs.get(pos);
 		RunEdge startEdge = pair.getLeft();
 		RunEdge endEdge = pair.getRight();
-		int start = startEdge.getAllPos();
-		int end = endEdge.getAllPos();
+		int start = startEdge.getAllEdge();
+		int end = endEdge.getAllEdge();
 		for (int i = 0; i < size; i++) {
 			XWPFRun run = runs.get(i);
 			String text = run.getText(0);
@@ -155,13 +160,18 @@ public class RunningRunParagraph {
 					pair = pairs.get(++pos);
 					startEdge = pair.getLeft();
 					endEdge = pair.getRight();
-					start = startEdge.getAllPos();
-					end = endEdge.getAllPos();
+					start = startEdge.getAllEdge();
+					end = endEdge.getAllEdge();
 				}
 			}
 			// 游标指向下一run
 			cursor += text.length();
 		}
+		
+		for (Pair<RunEdge, RunEdge> runEdges : pairs) {
+            LOGGER.debug("[LEFT]:" + runEdges.getLeft().toString());
+            LOGGER.debug("[RIGHT]:" + runEdges.getRight().toString());
+        }
 	}
 
 }

@@ -44,7 +44,9 @@ import com.deepoove.poi.util.StyleUtils;
 /**
  * @author Sayi
  * @version 0.0.1
+ * @see TemplateVisitor
  */
+@Deprecated
 public class TemplateResolver {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateResolver.class);
 	
@@ -183,8 +185,8 @@ public class TemplateResolver {
 		Pair<RunEdge, RunEdge> pair = pairs.get(pos);
 		RunEdge startEdge = pair.getLeft();
 		RunEdge endEdge = pair.getRight();
-		int start = startEdge.getAllPos();
-		int end = endEdge.getAllPos();
+		int start = startEdge.getAllEdge();
+		int end = endEdge.getAllEdge();
 		for (int i = 0; i < size; i++) {
 			XWPFRun run = runs.get(i);
 			String text = run.getText(0);
@@ -221,8 +223,8 @@ public class TemplateResolver {
 					pair = pairs.get(++pos);
 					startEdge = pair.getLeft();
 					endEdge = pair.getRight();
-					start = startEdge.getAllPos();
-					end = endEdge.getAllPos();
+					start = startEdge.getAllEdge();
+					end = endEdge.getAllEdge();
 				}
 			}
 			//游标指向下一run
