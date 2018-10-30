@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.RenderAPI;
-import com.deepoove.poi.tl.source.DataSourceTest;
+import com.deepoove.poi.tl.source.MyDataModel;
 import com.deepoove.poi.util.CodeGenUtils;
 
 public final class CodeGenUtilsTest {
@@ -18,7 +18,7 @@ public final class CodeGenUtilsTest {
 	@Test
 	public void testObject(){
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx");
-		DataSourceTest vo = new DataSourceTest();
+		MyDataModel vo = new MyDataModel();
 //		RenderAPI.debug(template, vo);
 	}
 }

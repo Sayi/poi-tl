@@ -16,7 +16,7 @@ import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.tl.source.DataSourceTest;
+import com.deepoove.poi.tl.source.MyDataModel;
 
 /**
  * @author Sayi
@@ -79,7 +79,7 @@ public class XWPFTemplateTest {
 	@SuppressWarnings("serial")
 	@Test
 	public void testRenderObject() throws Exception {
-		DataSourceTest obj = new DataSourceTest();
+		MyDataModel obj = new MyDataModel();
 		obj.setHeader("Deeply love what you love.");
 		obj.setName("Poi-tl");
 		obj.setWord("模板引擎");

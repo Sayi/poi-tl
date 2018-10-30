@@ -5,7 +5,7 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 
-public class DataSourceTest extends DataSourceBaseTest {
+public class MyDataModel extends DataSourceBaseTest {
 
     private String word;
     private String time;
