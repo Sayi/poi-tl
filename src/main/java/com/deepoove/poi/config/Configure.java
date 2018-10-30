@@ -43,11 +43,11 @@ public class Configure {
 	private String gramerSuffix = "}}";
 
 	private Configure() {
-		plugin(GramerSymbol.TEXT.getSymbol(), new TextRenderPolicy());
-		plugin(GramerSymbol.IMAGE.getSymbol(), new PictureRenderPolicy());
-		plugin(GramerSymbol.TABLE.getSymbol(), new SimpleTableRenderPolicy());
-		plugin(GramerSymbol.NUMBERIC.getSymbol(), new NumbericRenderPolicy());
-		plugin(GramerSymbol.DOCX_TEMPLATE.getSymbol(), new DocxRenderPolicy());
+		plugin(GramerSymbol.TEXT, new TextRenderPolicy());
+		plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
+		plugin(GramerSymbol.TABLE, new SimpleTableRenderPolicy());
+		plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
+		plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
 	}
 
 	/**
@@ -76,6 +76,11 @@ public class Configure {
 		defaultPolicys.put(Character.valueOf(c), policy);
 		return this;
 	}
+
+    Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
+        defaultPolicys.put(symbol.getSymbol(), policy);
+        return this;
+    }
 
 	/**
 	 * 自定义模板

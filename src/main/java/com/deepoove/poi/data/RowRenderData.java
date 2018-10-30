@@ -31,6 +31,9 @@ public class RowRenderData implements RenderData {
 
     private List<TextRenderData> rowData;
 
+    /**
+     * 行样式：背景色、行文字对齐方式
+     */
     private TableStyle style;
     
     public RowRenderData() {

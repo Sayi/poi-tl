@@ -20,6 +20,7 @@ import com.deepoove.poi.template.ElementTemplate;
  * @author Sayi
  * @version 
  */
+@Deprecated
 public final class CodeGenUtils {
 	
 	private static final String importStr = "import com.deepoove.poi.config.Name;\n"

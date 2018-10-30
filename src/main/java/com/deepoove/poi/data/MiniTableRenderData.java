@@ -26,6 +26,23 @@ import com.deepoove.poi.data.style.TableStyle;
  * @version 1.3.0
  */
 public class MiniTableRenderData implements RenderData {
+    
+    /**
+     * 通用边距的表格宽度：A4(20.99*29.6),页边距为3.17*2.54
+     */
+    public static final float WIDTH_A4_FULL = 14.65f;
+    /**
+     * 窄边距的表格宽度：A4(20.99*29.6),页边距为1.27*1.27
+     */
+    public static final float WIDTH_A4_NARROW_FULL = 18.45f;
+    /**
+     * 适中边距的表格宽度：A4(20.99*29.6),页边距为1.91*2.54
+     */
+    public static final float WIDTH_A4_MEDIUM_FULL = 17.17f;
+    /**
+     * 宽边距的表格宽度：A4(20.99*29.6),页边距为5.08*2.54
+     */
+    public static final float WIDTH_A4_EXTEND_FULL = 10.83f;
 
 	/**
 	 * 表格头部数据，可为空
@@ -83,23 +100,6 @@ public class MiniTableRenderData implements RenderData {
 		this.noDatadesc = noDatadesc;
 		this.width = width;
 	}
-
-	/**
-	 * 通用边距的表格宽度：A4(20.99*29.6),页边距为3.17*2.54
-	 */
-	public static final float WIDTH_A4_FULL = 14.65f;
-	/**
-	 * 窄边距的表格宽度：A4(20.99*29.6),页边距为1.27*1.27
-	 */
-	public static final float WIDTH_A4_NARROW_FULL = 18.45f;
-	/**
-	 * 适中边距的表格宽度：A4(20.99*29.6),页边距为1.91*2.54
-	 */
-	public static final float WIDTH_A4_MEDIUM_FULL = 17.17f;
-	/**
-	 * 宽边距的表格宽度：A4(20.99*29.6),页边距为5.08*2.54
-	 */
-	public static final float WIDTH_A4_EXTEND_FULL = 10.83f;
 
 	public boolean isSetHeader() {
 		return null != headers && headers.size() > 0;
