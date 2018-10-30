@@ -59,7 +59,7 @@ public class MiniTableRenderData implements RenderData {
 	private String noDatadesc;
 
 	/**
-	 * 设置表格整体样式：填充色、整个表格对齐方式
+	 * 设置表格整体样式：填充色、整个表格在文档中的对齐方式
 	 */
 	private TableStyle style;
 
