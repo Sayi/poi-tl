@@ -9,10 +9,12 @@ import org.junit.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.tl.ext.CustomTableRenderPolicy;
 
 /**
  * @author Sayi
@@ -56,9 +58,13 @@ public class MiniTableRenderTest {
 				style.setAlign(STJc.CENTER);
 				miniTableRenderData.setStyle(style);
 				put("width_table", miniTableRenderData);
+				
+				// 测试自定义表格策略
+				put("report", new Object());
 			}
 		};
-		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/table.docx").render(datas);
+		Configure config = Configure.newBuilder().customPolicy("report", new CustomTableRenderPolicy()).build();
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/table.docx", config).render(datas);
 
 		FileOutputStream out = new FileOutputStream("out_table.docx");
 		template.write(out);

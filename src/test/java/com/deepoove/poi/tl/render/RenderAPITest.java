@@ -15,7 +15,7 @@ import com.deepoove.poi.render.RenderAPI;
  */
 public class RenderAPITest {
 
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "deprecation" })
 	@Test
 	public void testRenderAPI() throws Exception {
 		Map<String, Object> datas = new HashMap<String, Object>() {
