@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2015 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi;
 
 import java.lang.reflect.Field;
@@ -15,8 +30,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * XWPFParagraph类的增强
+ * 
+ * @author Sayi
+ * @version
+ */
 public class XWPFParagraphWrapper {
-    
+
     private static Logger logger = LoggerFactory.getLogger(XWPFParagraphWrapper.class);
 
     XWPFParagraph paragraph;
@@ -26,16 +47,26 @@ public class XWPFParagraphWrapper {
     }
 
     public XWPFHyperlinkRun createHyperLinkRun(String link) {
-        PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
+        PackageRelationship relationship = paragraph.getDocument().getPackagePart()
+                .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
         CTHyperlink hyperlink = paragraph.getCTP().addNewHyperlink();
         hyperlink.setId(relationship.getId());
         CTR ctr = hyperlink.addNewR();
-        XWPFHyperlinkRun xwpfRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody)paragraph);
+        XWPFHyperlinkRun xwpfRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody) paragraph);
         getRuns().add(xwpfRun);
         getIRuns().add(xwpfRun);
         return xwpfRun;
     }
 
+    /**
+     * 插入超链接
+     * 
+     * @param pos
+     *            位置
+     * @param link
+     *            链接
+     * @return XWPFRun
+     */
     public XWPFRun insertNewHyperLinkRun(int pos, String link) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
             PackageRelationship relationship = paragraph.getDocument().getPackagePart()
@@ -44,14 +75,13 @@ public class XWPFParagraphWrapper {
             hyperlink.setId(relationship.getId());
             CTR ctr = hyperlink.addNewR();
             XWPFHyperlinkRun newRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody) paragraph);
-            
 
             List<IRunElement> iruns = getIRuns();
             List<XWPFRun> runs = getRuns();
             // To update the iruns, find where we're going
             // in the normal runs, and go in there
-            int iPos = iruns .size();
-            if (pos < runs .size()) {
+            int iPos = iruns.size();
+            if (pos < runs.size()) {
                 XWPFRun oldAtPos = runs.get(pos);
                 int oldAt = iruns.indexOf(oldAtPos);
                 if (oldAt != -1) {
@@ -68,7 +98,7 @@ public class XWPFParagraphWrapper {
 
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     private List<XWPFRun> getRuns() {
         try {
@@ -76,11 +106,11 @@ public class XWPFParagraphWrapper {
             runsField.setAccessible(true);
             return (List<XWPFRun>) runsField.get(paragraph);
         } catch (Exception e) {
-            logger.error("cannot get XWPFParagraph'runs", e);
+            logger.error("Cannot get XWPFParagraph'runs", e);
         }
         return null;
     }
-    
+
     @SuppressWarnings("unchecked")
     private List<IRunElement> getIRuns() {
         try {
@@ -88,7 +118,7 @@ public class XWPFParagraphWrapper {
             runsField.setAccessible(true);
             return (List<IRunElement>) runsField.get(paragraph);
         } catch (Exception e) {
-            logger.error("cannot get XWPFParagraph'iRuns", e);
+            logger.error("Cannot get XWPFParagraph'iRuns", e);
         }
         return null;
     }

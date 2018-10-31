@@ -146,7 +146,7 @@ public class XWPFTemplate {
 		try {
 			this.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+		    logger.error("Close failed", e);
 		}
 		this.doc = doc;
 		this.eleTemplates = this.resolver.visitDocument(doc);

@@ -86,8 +86,8 @@ public final class StyleUtils {
     /**
      * 重复样式
      * 
-     * @param destRun
-     * @param srcRun
+     * @param destRun 新建的run
+     * @param srcRun 原始run
      */
     public static void styleRun(XWPFRun destRun, XWPFRun srcRun) {
         if (null == destRun || null == srcRun) return;

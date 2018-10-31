@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ public class TemplateVisitor implements Visitor {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateVisitor.class);
 
 	private Configure config;
-
 	private List<ElementTemplate> eleTemplates;
 	
 	/**
@@ -54,6 +53,9 @@ public class TemplateVisitor implements Visitor {
 	 */
 	private Pattern templatePattern;
     private Pattern gramerPattern;
+
+    static final String FORMAT_TEMPLATE = "{0}{1}\\w+(\\.\\w+)*{2}";
+    static final String FORMAT_GRAMER = "({0})|({1})";
 
 	public TemplateVisitor(Configure config) {
 		this.config = config;
@@ -165,8 +167,8 @@ public class TemplateVisitor implements Visitor {
         String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
 
         templatePattern = Pattern
-                .compile(MessageFormat.format("{0}{1}\\w+(\\.\\w+)*{2}", prefixRegex, signRegex, suffixRegex));
-        gramerPattern = Pattern.compile(MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex));
+                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefixRegex, signRegex, suffixRegex));
+        gramerPattern = Pattern.compile(MessageFormat.format(FORMAT_GRAMER , prefixRegex, suffixRegex));
     }
 
 	private String getGramarRegex(Configure config) {

@@ -56,17 +56,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,13 +73,12 @@ import com.deepoove.poi.util.TableTools;
  */
 public class NiceXWPFDocument extends XWPFDocument {
     
-    private static Logger logger = LoggerFactory.getLogger(NiceXWPFDocument.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NiceXWPFDocument.class);
     
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
 
 	public NiceXWPFDocument() {
 		super();
-		init();
 	}
 
 	public NiceXWPFDocument(InputStream in) throws IOException {
@@ -98,24 +88,24 @@ public class NiceXWPFDocument extends XWPFDocument {
 	
 	private void init() {
 	    List<XWPFTable> tables = this.getTables();
-	    if (null != tables) {
-	        List<XWPFTableRow> rows = null;
-	        List<XWPFTableCell> cells = null;
-	        List<XWPFTable> cellTables = null;
-	        allTables.addAll(tables);
-	        for (XWPFTable table : tables) {
-	            rows = table.getRows();
-	            if (null == rows) continue;
-	            for (XWPFTableRow row : rows) {
-	                cells = row.getTableCells();
-	                if (null == cells) continue;
-	                for (XWPFTableCell cell : cells) {
-	                    cellTables = cell.getTables();
-	                    if (null != cellTables) allTables.addAll(cellTables);
-	                }
-	            }
-	        }
-	    }
+	    if (null == tables) return;
+	    else allTables.addAll(tables);
+	    
+        List<XWPFTableRow> rows = null;
+        List<XWPFTableCell> cells = null;
+        List<XWPFTable> cellTables = null;
+        for (XWPFTable table : tables) {
+            rows = table.getRows();
+            if (null == rows) continue;
+            for (XWPFTableRow row : rows) {
+                cells = row.getTableCells();
+                if (null == cells) continue;
+                for (XWPFTableCell cell : cells) {
+                    cellTables = cell.getTables();
+                    if (null != cellTables) allTables.addAll(cellTables);
+                }
+            }
+        }
     }
 	
 	public XWPFTable getAllTable(CTTbl ctTbl) {
@@ -139,17 +129,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 	@Deprecated
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol,
             int toCol) {
-        if (toCol <= fromCol) return;
-        XWPFTableCell cell = table.getRow(row).getCell(fromCol);
-        CTTcPr tcPr = cell.getCTTc().getTcPr();
-        if (null == tcPr)
-            tcPr = cell.getCTTc().addNewTcPr();
-        XWPFTableRow rowTable = table.getRow(row);
-        for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
-            rowTable.getCtRow().removeTc(fromCol + 1);
-            rowTable.removeCell(fromCol + 1);
-        }
-        spanCellsAcrossRow(table, row, fromCol, toCol - fromCol + 1);
+        TableTools.mergeCellsHorizonal(table, row, fromCol, toCol);
     }
 
     /**
@@ -164,31 +144,8 @@ public class NiceXWPFDocument extends XWPFDocument {
 	@Deprecated
     public static void mergeCellsVertically(XWPFTable table, int col, int fromRow,
             int toRow) {
-        if (toRow <= fromRow) return;
-        for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
-            XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
-            CTTcPr tcPr = cell.getCTTc().getTcPr();
-            if (null == tcPr)
-                tcPr = cell.getCTTc().addNewTcPr();
-            CTVMerge vMerge = tcPr.addNewVMerge();
-            if (rowIndex == fromRow) {
-                // The first merged cell is set with RESTART merge value
-                vMerge.setVal(STMerge.RESTART);
-            } else {
-                // Cells which join (merge) the first one, are set with CONTINUE
-                vMerge.setVal(STMerge.CONTINUE);
-            }
-        }
+	    TableTools.mergeCellsVertically(table, col, fromRow, toRow);
     }
-
-    private static void spanCellsAcrossRow(XWPFTable table, int rowNum, int colNum,
-            int span) {
-        XWPFTableCell cell = table.getRow(rowNum).getCell(colNum);
-        cell.getCTTc().getTcPr().addNewGridSpan();
-        cell.getCTTc().getTcPr().getGridSpan()
-                .setVal(BigInteger.valueOf((long) span));
-    }
-	
 
 	/**
 	 * 在某个段落起始处插入表格
@@ -251,34 +208,8 @@ public class NiceXWPFDocument extends XWPFDocument {
 	 * @param cols
 	 */
 	public void widthTable(XWPFTable table, float widthCM, int rows, int cols) {
-	    int width = (int)(widthCM/2.54*1440);
-        CTTblPr tblPr = table.getCTTbl().getTblPr();
-        if (null == tblPr) {
-            tblPr = table.getCTTbl().addNewTblPr();
-        }
-        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
-        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
-        tblW.setW(BigInteger.valueOf(width));
-
-        if (0 != width) {
-            CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
-            if (null == tblGrid) {
-                tblGrid = table.getCTTbl().addNewTblGrid();
-            }
-
-            for (int j = 0; j < cols; j++) {
-                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(width / cols));
-            }
-        }
-        CTTblBorders tblBorders = tblPr.getTblBorders();
-        tblBorders.getBottom().setSz(BigInteger.valueOf(4));
-        tblBorders.getLeft().setSz(BigInteger.valueOf(4));
-        tblBorders.getTop().setSz(BigInteger.valueOf(4));
-        tblBorders.getRight().setSz(BigInteger.valueOf(4));
-        tblBorders.getInsideH().setSz(BigInteger.valueOf(4));
-        tblBorders.getInsideV().setSz(BigInteger.valueOf(4));
-        
+        TableTools.widthTable(table, widthCM, cols);
+        TableTools.borderTable(table, 4);
     }
 	
 	/**
@@ -483,7 +414,6 @@ public class NiceXWPFDocument extends XWPFDocument {
         this.close();
         return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
-    
 
     /**
      * 
@@ -656,7 +586,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                 styles.addStyle(xwpfStyle);
             }
         } catch (Exception e) {
-            logger.error("merge style error", e);
+            LOG.error("merge style error", e);
         }
         return styleIdsMap;
     }
