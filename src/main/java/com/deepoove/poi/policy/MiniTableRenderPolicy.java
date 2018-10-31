@@ -136,7 +136,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
         Objects.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
 
         TableStyle style = rowData.getStyle();
-        List<TextRenderData> cellList = rowData.getCellDatas();
+        List<TextRenderData> cellList = rowData.getRowData();
         XWPFTableCell cell = null;
 
         for (int i = 0; i < cellList.size(); i++) {
