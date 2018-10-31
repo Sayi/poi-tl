@@ -1,6 +1,6 @@
 = poi-tl
 Sayi 卅一 <adasai90@gmail.com>
-v1.3.1
+v1.4.0
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板
 :doctype: book
@@ -24,13 +24,13 @@ TIP: 支持DOCX格式的Word模板。
 <dependency>
     <groupId>com.deepoove</groupId>
     <artifactId>poi-tl</artifactId>
-    <version>1.3.1</version>
+    <version>1.4.0</version>
 </dependency>
 ----
 
 == Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.3.1'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.4.0'
 
 == 快速开始
 === 2min入门
@@ -60,18 +60,20 @@ template.close();
 --
 
 === Template：Word模板和样式
-所有的模板标签都是以 `{{` 开头，以 `}}` 结尾。模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
+所有的模板标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
 
 WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
 
-*文档的样式继承模板标签的样式*，这样我们只需要提前设计好模板样式即可，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
+poi-tl的一个核心优势是 *数据模型与样式的分离*，同样的数据模型可以用来渲染各种不同样式的模板。
+
+文档的样式继承模板标签的样式，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
 
 image::./style.png[align='center'] 
 
 === Data-Model：数据源
-TIP: 数据源的结构体是个键值对的集合：[{标签名称, 数据模型}]。除了使用Map之外，还可以使用Java Object。
+TIP: 数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。
 
-Map的Key是标签名称，默认Class中的field名称是标签名称，也可以通过注解@Name设置标签名称。
+数据源可以是一个Map，其中Key是标签名称；也可以是一个JavaBean，其中field名称是标签名称，也可以通过注解@Name设置标签名称。
 
 [source, java]
 ----
@@ -81,6 +83,8 @@ private String dNumber;
 // 模板标签m_vin
 private String m_vin;
 ----
+
+poi-tl支持类似EL表达式的对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。
 
 数据模型实现了接口 `public interface RenderData {}` , 有以下5种数据模型：
 
@@ -249,13 +253,13 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));
 ----
 --
 
-NOTE: 表格的宽度(单位CM)怎么定义的: 页面宽度-页边距宽度*2=表格的最大宽度。
-默认宽度为A4(20.99*29.6,页边距为3.17*2.54)的最大宽度14.65CM。可以根据需要指定表格宽度。
+NOTE: 表格的宽度(单位CM)怎么定义的: 页面宽度 - 页边距宽度 * 2 = 表格的最大宽度。
+页面宽度为A4(20.99 * 29.6，页边距为3.17 * 2.54)的文档最大表格宽度14.65CM。可以根据需要指定表格宽度。
 
 
 需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
 
-1. 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-自定义模板策略]。
+1. 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-指定模板策略]。
 2. 在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy，参见link:#example-table[示例-付款通知书]。
 
 === 列表模板{{*var}}
@@ -290,7 +294,7 @@ FMT_UPPER_LETTER //A. B. C.
 [example]
 {{+var}}
 
-`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个模板的不同渲染结果的合并。
+`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个模板的多个渲染结果的合并。
 [sidebar]
 .代码示例
 --
@@ -307,32 +311,37 @@ s2.setTitle("拖拖拉拉的自己");
 s2.setContent("能够今天做完的事情，不要拖到明天，你的事情没有任何人有义务去帮你做；不要做“宅男”、不要当“宅女”，放假的日子约上三五好友出去转转；经常动手做家务，既能分担伴侣的负担，又有一个干净舒适的环境何乐而不为呢？");
 segments.add(s2);
 
-put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1>
+put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> <2>
 ----
-<1> segment.docx是一个包含了{{title}}和{{content}}的模板，使用segments集合数据渲染模板后合并
+<1> 主模板包含标签{{+docx_word}}
+<2> segment.docx是一个包含了{{title}}和{{content}}的待合并模板，使用segments集合数据渲染后合并到主模板
 --
 参见link:#example-article[示例-一篇文章]
 
 == 插件机制(Plugin mechanism)
-插件机制使得poi-tl具有高度扩展性，默认的五大內建模板语法是通过插件方式加载的，所以可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。
+*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的，我们可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。
 
-所有的插件配置都是通过如下构建器实现：
-[source, java]
-ConfigureBuilder builder = Configure.newBuilder();
-XWPFTemplate.compile("~/template.docx", builder.buid());
+插件的核心逻辑是通过poi和poi-tl提供的API操作word文档，实现插件就是实现自己的操作策略。
 
-[[cus-policy-section]]
-=== 自定义模板渲染策略
-比如我们有个模板标签为{{report}}，如果希望在这个位置做些更复杂的事情，我们可以指定该模板对应的策略。你可以通过实现下面的接口实现新的渲染策略：
+=== 新增自己的策略
+你可以通过实现下面的接口实现新的渲染策略：
 [source, java]
 ----
 public interface RenderPolicy {
   void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
 }
 ----
-通过ElementTemplate获得当前模板位置，通过data获得渲染数据，通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在指定位置插入段落，图片，表格等。
+通过ElementTemplate获得当前模板位置，通过data获得渲染数据，通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板位置插入段落，图片，表格等。
 
-接下来可以通过构建器设定模板的渲染策略：
+
+[[cus-policy-section]]
+=== 自定义模板策略
+所有的插件配置都是通过如下构建器实现：
+[source, java]
+ConfigureBuilder builder = Configure.newBuilder();
+XWPFTemplate.compile("~/template.docx", builder.buid());
+
+当我们有个模板标签为{{report}}，如果希望在这个位置做些不一样或者更复杂的事情，我们可以通过构建器设定模板的渲染策略：
 [source, java]
 builder.customPolicy("report", new MyRenderPolicy());
 
@@ -506,3 +515,13 @@ Apache License 2.0
 == 源码
 link:https://github.com/Sayi/poi-tl[GitHub]
 
+== 常见问题
+[qanda]
+是否支持文本框？::
+  不支持，表格布局可以设计出几乎所有优秀专业的文档，请使用表格。
+是否支持生成目录？::
+  暂不支持，参考原生POI API自行扩展。
+是否支持设置多种标题样式?::
+  不能够直接设置，目前支持设置文字字体大小等，或者在已经应用了标题样式的模板中替换文本。
+有没有提供图表、数学公式模板？::
+  暂不支持，如果是简单的图表，可以考虑通过Java提供的 `BufferedImage` 类创建图片后插入。
