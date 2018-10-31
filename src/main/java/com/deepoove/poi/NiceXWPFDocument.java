@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.NumberingWrapper;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -52,6 +53,7 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -61,8 +63,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -433,6 +438,38 @@ public class NiceXWPFDocument extends XWPFDocument {
 		docPr.setName("Picture " + id);
 		docPr.setDescr("Generated");
 	}
+	
+	public BigInteger addNewNumbericId(Pair<Enum, String> numFmt) {
+        XWPFNumbering numbering = this.getNumbering();
+        if (null == numbering) {
+            numbering = this.createNumbering();
+        }
+
+        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
+        // if we have an existing document, we must determine the next
+        // free number first.
+        cTAbstractNum
+                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
+
+        Enum fmt = numFmt.getLeft();
+        String val = numFmt.getRight();
+        CTLvl cTLvl = cTAbstractNum.addNewLvl();
+        cTLvl.addNewNumFmt().setVal(fmt);
+        cTLvl.addNewLvlText().setVal(val);
+        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+        cTLvl.setIlvl(BigInteger.valueOf(0));
+        if (fmt == STNumberFormat.BULLET) {
+            cTLvl.addNewLvlJc().setVal(STJc.LEFT);
+        } else {
+            // cTLvl.setIlvl(BigInteger.valueOf(0));
+        }
+
+        XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
+        BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
+
+        return numbering.addNum(abstractNumID);
+    }
 	
 	/**
 	 *  生成一个新的流文档

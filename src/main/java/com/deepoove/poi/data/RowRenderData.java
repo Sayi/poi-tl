@@ -29,7 +29,7 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class RowRenderData implements RenderData {
 
-    private List<TextRenderData> rowData;
+    private List<TextRenderData> cellDatas;
 
     /**
      * 行样式：背景色、行文字对齐方式
@@ -39,42 +39,42 @@ public class RowRenderData implements RenderData {
     public RowRenderData() {
     }
 
-    public RowRenderData(List<TextRenderData> rowData) {
-        this.rowData = rowData;
+    public RowRenderData(List<TextRenderData> cellDatas) {
+        this.cellDatas = cellDatas;
     }
     
-    public static RowRenderData build(String...row) {
+    public static RowRenderData build(String...cellStr) {
     	RowRenderData instance = new RowRenderData();
-    	instance.rowData = new ArrayList<TextRenderData>();
-    	for (String col : row) {
-    		instance.rowData.add(new TextRenderData(col));
+    	instance.cellDatas = new ArrayList<TextRenderData>();
+    	for (String col : cellStr) {
+    		instance.cellDatas.add(new TextRenderData(col));
     	}
     	return instance;
     }
     
-    public static RowRenderData build(TextRenderData...row) {
+    public static RowRenderData build(TextRenderData...cellDatas) {
     	RowRenderData instance = new RowRenderData();
-    	instance.rowData = null == row ? null : Arrays.asList(row);
+    	instance.cellDatas = null == cellDatas ? null : Arrays.asList(cellDatas);
     	return instance;
     }
     
-    public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
-        this.rowData = rowData;
+    public RowRenderData(List<TextRenderData> cellDatas, String backgroundColor) {
+        this.cellDatas = cellDatas;
         TableStyle style = new TableStyle();
         style.setBackgroundColor(backgroundColor);
         this.style = style;
     }
 
     public int size() {
-        return null == rowData ? 0 : rowData.size();
+        return null == cellDatas ? 0 : cellDatas.size();
     }
 
-    public List<TextRenderData> getRowData() {
-        return rowData;
+    public List<TextRenderData> getCellDatas() {
+        return cellDatas;
     }
 
-    public void setRowData(List<TextRenderData> rowData) {
-        this.rowData = rowData;
+    public void setCellDatas(List<TextRenderData> cellDatas) {
+        this.cellDatas = cellDatas;
     }
 
 	public TableStyle getStyle() {

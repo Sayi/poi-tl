@@ -4,21 +4,12 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xwpf.usermodel.IRunBody;
-import org.apache.poi.xwpf.usermodel.NumberingWrapper;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
@@ -59,42 +50,14 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy {
         XWPFRun run = runTemplate.getRun();
         NumbericRenderData numbericData = (NumbericRenderData) data;
         List<TextRenderData> datas = numbericData.getNumbers();
-        Pair<Enum, String> numFmt = numbericData.getNumFmt();
         Style fmtStyle = numbericData.getFmtStyle();
 
-        XWPFNumbering numbering = doc.getNumbering();
-        if (null == numbering) {
-            numbering = doc.createNumbering();
-        }
-
-        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
-        CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
-        // if we have an existing document, we must determine the next
-        // free number first.
-        cTAbstractNum
-                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
-
-        Enum fmt = numFmt.getLeft();
-        String val = numFmt.getRight();
-        CTLvl cTLvl = cTAbstractNum.addNewLvl();
-        cTLvl.addNewNumFmt().setVal(fmt);
-        cTLvl.addNewLvlText().setVal(val);
-        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
-        cTLvl.setIlvl(BigInteger.valueOf(0));
-        if (fmt == STNumberFormat.BULLET) {
-            cTLvl.addNewLvlJc().setVal(STJc.LEFT);
-        } else {
-            // cTLvl.setIlvl(BigInteger.valueOf(0));
-        }
-
-        XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
-        BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
-
-        BigInteger numID = numbering.addNum(abstractNumID);
-        // doc.insertNewParagraph(run);
+        BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
+        
+        XWPFParagraph paragraph;
         XWPFRun newRun;
         for (TextRenderData line : datas) {
-            XWPFParagraph paragraph = doc.insertNewParagraph(run);
+            paragraph = doc.insertNewParagraph(run);
             paragraph.setNumID(numID);
             CTP ctp = paragraph.getCTP();
             CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
@@ -104,7 +67,6 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy {
             StyleUtils.styleRun(newRun, line.getStyle());
             newRun.setText(line.getText());
         }
-        // doc.insertNewParagraph(run);
 
         // 成功后清除标签
         clearPlaceholder(run);
@@ -116,5 +78,4 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy {
             // LineSpacingRule.AUTO);
         }
     }
-
 }

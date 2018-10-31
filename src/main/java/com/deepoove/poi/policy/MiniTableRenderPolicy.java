@@ -16,12 +16,14 @@
 package com.deepoove.poi.policy;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
@@ -64,7 +66,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
-        
+
         if (!((MiniTableRenderData) data).isSetBody()) {
             renderNoDataTable(doc, run, (MiniTableRenderData) data);
         } else {
@@ -75,46 +77,49 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
         clearPlaceholder(run);
     }
 
-	private void renderTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {
-		int row = tableData.getDatas().size(), col = 0;
+    private void renderTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {
+        // 1.计算行和列
+        int row = tableData.getDatas().size(), col = 0;
         if (!tableData.isSetHeader()) {
             col = getMaxColumFromData(tableData.getDatas());
         } else {
             row++;
             col = tableData.getHeaders().size();
         }
-        
-		XWPFTable table = doc.insertNewTable(run, row, col);
-		initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
-		
-		int startRow = 0;
-		if (tableData.isSetHeader()) renderRow(table, startRow++, tableData.getHeaders());
-		for (RowRenderData obj : tableData.getDatas()) {
-			renderRow(table, startRow++, obj);
-		}
 
-	}
-
-	private void renderNoDataTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {
-		int row = 2, col = tableData.getHeaders().size();
-		
-		XWPFTable table = doc.insertNewTable(run, row, col);
+        // 2.创建表格
+        XWPFTable table = doc.insertNewTable(run, row, col);
         initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
-		
-		renderRow(table, 0, tableData.getHeaders());
-		
-		TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeaders().size() - 1);
-		XWPFTableCell cell = table.getRow(1).getCell(0);
-		cell.setText(tableData.getNoDatadesc());
 
-	}
+        // 3.渲染数据
+        int startRow = 0;
+        if (tableData.isSetHeader()) renderRow(table, startRow++, tableData.getHeaders());
+        for (RowRenderData data : tableData.getDatas()) {
+            renderRow(table, startRow++, data);
+        }
 
-	private void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
-		TableTools.widthTable(table, width, col);
+    }
+
+    private void renderNoDataTable(NiceXWPFDocument doc, XWPFRun run,
+            MiniTableRenderData tableData) {
+        int row = 2, col = tableData.getHeaders().size();
+
+        XWPFTable table = doc.insertNewTable(run, row, col);
+        initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
+
+        renderRow(table, 0, tableData.getHeaders());
+
+        TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeaders().size() - 1);
+        XWPFTableCell cell = table.getRow(1).getCell(0);
+        cell.setText(tableData.getNoDatadesc());
+
+    }
+
+    private void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
+        TableTools.widthTable(table, width, col);
         TableTools.borderTable(table, 4);
-		StyleUtils.styleTable(table, style);
-	}
-
+        StyleUtils.styleTable(table, style);
+    }
 
     /**
      * 填充表格一行的数据
@@ -127,41 +132,48 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
      */
     public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
         if (null == rowData || rowData.size() <= 0) return;
+        XWPFTableRow tableRow = table.getRow(row);
+        Objects.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
+
         TableStyle style = rowData.getStyle();
-        List<TextRenderData> cellDatas = rowData.getRowData();
-        int i = 0;
+        List<TextRenderData> cellList = rowData.getCellDatas();
         XWPFTableCell cell = null;
-        for (TextRenderData cellData : cellDatas) {
-            cell = table.getRow(row).getCell(i);
-            String cellText = cellData.getText();
-            if (!StringUtils.isBlank(cellText)) {
-                String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
-                if (null != fragment) {
-                    CTTc ctTc = cell.getCTTc();
-                    CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
-                    XWPFParagraph par = new XWPFParagraph(ctP, cell);
-                    
-                    StyleUtils.styleTableParagraph(par, style);
-                    XWPFRun run = par.createRun();
-                    StyleUtils.styleRun(run, cellData.getStyle());
-                    
-                    run.setText(fragment[0]);
-                    
-                    for (int j = 1; j < fragment.length; j++) {
-                        par = cell.addParagraph();
-                        
-                        StyleUtils.styleTableParagraph(par, style);
-                        run = par.createRun();
-                        StyleUtils.styleRun(run, cellData.getStyle());
-                        
-                        run.setText(fragment[j]);
-                    }
-                }
+
+        for (int i = 0; i < cellList.size(); i++) {
+            cell = tableRow.getCell(i);
+            if (null == cell) {
+                logger.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
+                break;
             }
 
-            if (null != style && null != style.getBackgroundColor())
+            // 处理单元格样式
+            if (null != style && null != style.getBackgroundColor()) {
                 cell.setColor(style.getBackgroundColor());
-            i++;
+            }
+
+            TextRenderData cellData = cellList.get(i);
+            String cellText = cellData.getText();
+            if (StringUtils.isBlank(cellText)) break;
+
+            String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
+            if (null == fragment) break;
+
+            // 处理单元格数据
+            XWPFParagraph par;
+            XWPFRun run;
+            for (int j = 0; j < fragment.length; j++) {
+                if (0 == j) {
+                    CTTc ctTc = cell.getCTTc();
+                    CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
+                    par = new XWPFParagraph(ctP, cell);
+                } else {
+                    par = cell.addParagraph();
+                }
+                StyleUtils.styleTableParagraph(par, style);
+                run = par.createRun();
+                StyleUtils.styleRun(run, cellData.getStyle());
+                run.setText(fragment[j]);
+            }
         }
     }
 

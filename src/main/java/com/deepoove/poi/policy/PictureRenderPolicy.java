@@ -59,7 +59,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
                 picture.getHeight(), runTemplate.getRun());
     }
 
-    private int suggestFileType(String imgFile) {
+    public static int suggestFileType(String imgFile) {
         int format = 0;
 
         if (imgFile.endsWith(".emf")) format = XWPFDocument.PICTURE_TYPE_EMF;
