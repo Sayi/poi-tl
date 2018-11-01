@@ -352,7 +352,7 @@ TIP: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知
 
 [example]
 --
-示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
+示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
 
 AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。
 [source, java]
@@ -520,7 +520,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 }
 ----
 
-将模板标签{{detail_table}}设置成此策略。
+将模板标签{{detail_table}}设置成此策略。
 [source, java]
 Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
 
@@ -545,7 +545,7 @@ image::example/example_story_output.png[align='center']
 image::example/example_story_template.png[align='center']
 --
 
-这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。
+这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。
 
 基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。
 
@@ -568,9 +568,9 @@ image::example/example_resume_output.png[align='center']
 image::example/example_resume_template.png[align='center']
 --
 
-看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
+看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
 
-因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
+因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
 NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
 
@@ -580,10 +580,15 @@ Apache License 2.0
 == 源码
 link:https://github.com/Sayi/poi-tl[GitHub]
 
+== 打赏个小费
+如果你觉得poi-tl节省了你的时间，给你带来了方便，或者认同这个开源项目，可以为我的付出打赏点小费哦。
+
+image::./pay.jpeg[width=256, height=280]
+
 == 常见问题
 [qanda]
 JDK版本有要求吗？::
-  支持JDK1.6和更高版本。
+  支持JDK1.6和更高版本。
 出现NoSuchMethodError 、ClassNotFoundException异常？::
   poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::

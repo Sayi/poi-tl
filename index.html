@@ -482,7 +482,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_license">7. License</a></li>
 <li><a href="#_源码">8. 源码</a></li>
-<li><a href="#_常见问题">9. 常见问题</a></li>
+<li><a href="#_打赏个小费">9. 打赏个小费</a></li>
+<li><a href="#_常见问题">10. 常见问题</a></li>
 </ul>
 </div>
 </div>
@@ -1128,7 +1129,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<p>示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，<code>doc.insertNewTable()</code> 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。</p>
+<p>示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，<code>doc.insertNewTable()</code> 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。</p>
 </div>
 <div class="paragraph">
 <p>AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。</p>
@@ -1372,7 +1373,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>将模板标签{{detail_table}}设置成此策略。</p>
+<p>将模板标签{{detail_table}}设置成此策略。</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1421,7 +1422,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。</p>
+<p>这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。</p>
 </div>
 <div class="paragraph">
 <p>基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。</p>
@@ -1468,10 +1469,10 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。</p>
+<p>看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。</p>
 </div>
 <div class="paragraph">
-<p>因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。</p>
+<p>因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1505,13 +1506,26 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">9. 常见问题</a></h2>
+<h2 id="_打赏个小费"><a class="anchor" href="#_打赏个小费"></a><a class="link" href="#_打赏个小费">9. 打赏个小费</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果你觉得poi-tl节省了你的时间，给你带来了方便，或者认同这个开源项目，可以为我的付出打赏点小费哦。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./pay.jpeg" alt="pay" width="256" height="280">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">10. 常见问题</a></h2>
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
 <li>
 <p><em>JDK版本有要求吗？</em></p>
-<p>支持JDK1.6和更高版本。</p>
+<p>支持JDK1.6和更高版本。</p>
 </li>
 <li>
 <p><em>出现NoSuchMethodError 、ClassNotFoundException异常？</em></p>
