@@ -11,7 +11,7 @@
 | 方案 | 跨平台 | 样式处理  | 易用性
 | --- | --- | --- | --- |
 | **Poi-tl** | 纯Java组件，跨平台 | :white_check_mark: 不需要编码，模板即样式 | :white_check_mark: 简单：模板引擎，对POI进行封装
-| Apache POI | 纯Java组件，跨平台 | 编码 | 简单, 没有模板引擎功能
+| Apache POI | 纯Java组件，跨平台 | 编码 | 简单，没有模板引擎功能
 | Freemarker | XML操作，跨平台 | 无 | 复杂，需要理解XML结构，基于XML构造模板
 | OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
