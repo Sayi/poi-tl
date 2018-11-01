@@ -64,7 +64,7 @@ template.close();
 
 WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
 
-poi-tl的一个核心优势是 *数据模型与样式的分离*，同样的数据模型可以用来渲染各种不同样式的模板。
+poi-tl的一个核心特点是 *数据模型与样式的分离*，同样的数据模型可以用来渲染各种不同样式的模板。
 
 文档的样式继承模板标签的样式，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
 
@@ -73,7 +73,7 @@ image::./style.png[align='center']
 === Data-Model：数据源
 TIP: 数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。
 
-数据源可以是一个Map，其中Key是标签名称；也可以是一个JavaBean，其中field名称是标签名称，也可以通过注解@Name设置标签名称。
+数据源可以是一个Map，其中Key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。
 
 [source, java]
 ----
@@ -86,9 +86,9 @@ private String m_vin;
 
 poi-tl支持类似EL表达式的对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。
 
-数据模型实现了接口 `public interface RenderData {}` , 有以下5种数据模型：
+数据模型实现了接口 `public interface RenderData {}` , 有以下几种数据模型：
 
-* TextRenderData
+* TextRenderData、HyperLinkTextRenderData
 * PictureRenderData
 * MiniTableRenderData
 * NumbericRenderData
@@ -112,6 +112,7 @@ poi-tl內建了五种模板。
 [source, java]
 put("author", new TextRenderData("000000", "Sayi卅一"));
 put("introduce", "http://www.deepoove.com");
+put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
 --
 
 除了继承模板标签样式，也提供了通过代码设定文本样式的方式。
@@ -141,6 +142,8 @@ put("introduce", "http://www.deepoove.com");
 <5> 下划线
 <6> 字体
 <7> 字号
+
+注：HyperLinkTextRenderData继承于TextRenderData，实现了超链接文本的功能。
 --
 NOTE: 结构体只是数据模型的可视化展示，数据模型不是文本型的，而是Java对象。下文中出现的所有结构体也都如此。
 
@@ -259,8 +262,9 @@ NOTE: 表格的宽度(单位CM)怎么定义的: 页面宽度 - 页边距宽度 *
 
 需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
 
-1. 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-指定模板策略]。
-2. 在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy，参见link:#example-table[示例-付款通知书]。
+*场景一*： 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-新增RenderPolicy策略]。
+
+*场景二*： 在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy，参见link:#example-table[示例-付款通知书]。
 
 === 列表模板{{*var}}
 [example]
@@ -319,36 +323,97 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> 
 参见link:#example-article[示例-一篇文章]
 
 == 插件机制(Plugin mechanism)
-*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的，我们可以轻松的增加新的语法插件，也可以很轻松的处理任意模板标签。
+*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的，我们可以轻松的增加新的语法插件，也可以便捷的自定义任意模板标签的渲染策略。
 
-插件的核心逻辑是通过poi和poi-tl提供的API操作word文档，实现插件就是实现自己的操作策略。
+插件的核心逻辑是在模板的基础上通过poi和poi-tl提供的API操作word文档，实现插件就是实现自己的渲染策略。
 
-=== 新增自己的策略
-你可以通过实现下面的接口实现新的渲染策略：
+[[cus-policy-section]]
+=== 新增RenderPolicy策略
+內建策略是poi-tl自带的一些渲染策略，用来处理文本、图片、列表、表格、文档合并等：
+
+* TextRenderPolicy
+* PictureRenderPolicy
+* NumbericRenderPolicy
+* MiniTableRenderPolicy
+* DocxRenderPolicy
+
+为了新增自己的渲染策略，可以通过实现RenderPolicy接口：
 [source, java]
 ----
 public interface RenderPolicy {
   void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
+} <1> <2> <3>
+----
+<1> ElementTemplate是当前模板标签所在位置
+<2> data是数据模型
+<3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等，实现任何渲染逻辑。
+
+NOTE: 由于需要在模板标签位置操作Word文档，实现RenderPolicy接口需要掌握一些Apache POI API的知识。
+
+[example]
+--
+示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
+
+AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。
+[source, java]
+----
+public class CustomTableRenderPolicy extends AbstractRenderPolicy {
+
+  @Override
+  protected boolean validate(Object data) {
+    return null != data;
+  }
+
+  @Override
+  public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+      throws Exception {
+
+    NiceXWPFDocument doc = template.getXWPFDocument();
+    XWPFRun run = runTemplate.getRun();
+    // 定义行列
+    int row = 10, col = 8;
+    // 插入表格
+    XWPFTable table = doc.insertNewTable(run, row, col);
+
+    // 定义表格宽度、边框和样式
+    TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
+    TableTools.borderTable(table, 4);
+
+    // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
+    // TODO 调用MiniTableRenderPolicy.renderRow方法快速方便的渲染一行数据
+    // TODO 调用TableTools类方法操作表格，比如合并单元格
+    // ......
+    TableTools.mergeCellsHorizonal(table, 0, 0, 7);
+    TableTools.mergeCellsVertically(table, 0, 1, 9);
+    
+    // 清空原先模板
+    clearPlaceholder(run);
+  }
 }
 ----
-通过ElementTemplate获得当前模板位置，通过data获得渲染数据，通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板位置插入段落，图片，表格等。
+--
 
-
-[[cus-policy-section]]
 === 自定义模板策略
-所有的插件配置都是通过如下构建器实现：
+所有的插件都是通过如下构建器来配置：
 [source, java]
 ConfigureBuilder builder = Configure.newBuilder();
 XWPFTemplate.compile("~/template.docx", builder.buid());
 
-当我们有个模板标签为{{report}}，如果希望在这个位置做些不一样或者更复杂的事情，我们可以通过构建器设定模板的渲染策略：
+当我们有个模板标签为{{report}}，它本身是一个文本模板，如果希望在这个位置做些不一样或者更复杂的事情，我们可以通过构建器设定模板的渲染策略：
 [source, java]
 builder.customPolicy("report", new MyRenderPolicy());
 
 === 新增语法插件
-比如增加%语法：{{%var}}，对应自定义的渲染策略 `PercentRenderPolicy`，代码如下：
+比如增加%语法：{{%var}}，对应自定义的渲染策略 `PercentRenderPolicy`，加载插件代码如下：
 [source, java]
 builder.addPlugin('%', new PercentRenderPolicy());
+
+由于內建模板也是通过插件方式加载的，我们甚至可以改变它们的语法：
+[source, java]
+builder.addPlugin('@', new MiniTableRenderPolicy());
+builder.addPlugin('#', new PictureRenderPolicy());
+
+这样{{@var}}就变成了表格模板，{{#var}}变成了图片模板，虽然不建议改变內建模板，但是从中可以看到poi-tl插件的设计思想，深藏功与名。
 
 === 自定义语法
 高度扩展性表现在其本身的语法也可以自定义，如果你不喜欢 `{{}}` 的方式，更偏爱freemarker `${}` 的方式：
@@ -384,7 +449,7 @@ NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/
 [example]
 --
 .output
-需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要生成一个订单的表格，还需要在一个已有表格中，填充部分数据。下载最终生成的文件link:example/payment.docx[payment.docx]
+需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要创建一个订单的表格，还需要在一个已有表格中，填充货物明细和人工费数据。下载最终生成的文件link:example/payment.docx[payment.docx]
 
 image::example/example_payment_output.png[align='center']
 --
@@ -392,7 +457,7 @@ image::example/example_payment_output.png[align='center']
 [example]
 --
 .template
-使用{{#order}}生成poi-tl提供的默认样式的表格，设置{{detail_table}}为自定义模板渲染策略(继承抽象表格策略DynamicTableRenderPolicy)，处理已有表格中部分数据的渲染。
+使用{{#order}}生成poi-tl提供的默认样式的表格，设置{{detail_table}}为自定义模板渲染策略(继承抽象表格策略DynamicTableRenderPolicy)，自定义已有表格中部分单元格的渲染。
 
 image::example/example_payment_template.png[align='center']
 --
@@ -401,7 +466,7 @@ image::example/example_payment_template.png[align='center']
 
 默认表格数据模型(MiniTableRenderData)实现了最基本的样式，当需求中的表格更加复杂的时候，我们完全可以设计好那些固定的部分，将需要动态渲染的部分单元格交给自定义模板渲染策略。
 
-poi-tl提供了抽象表格策略DynamicTableRenderPolicy来实现类似的功能，通过持有table对象获得操作整个表格的能力。
+poi-tl提供了抽象表格策略DynamicTableRenderPolicy来实现这样的功能，{{detail_table}}标签可以在表格内的任意单元格内，DynamicTableRenderPolicy会获取XWPFTable对象进而获得操作整个表格的能力。
 [source, java]
 ----
 public abstract class DynamicTableRenderPolicy implements RenderPolicy {
@@ -434,7 +499,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
 
         // 合并单元格
-        NiceXWPFDocument.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
+        TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
         // 渲染单行人工费数据
         MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
       }
@@ -455,7 +520,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 }
 ----
 
-将模板标签{{detail_table}}设置成此策略。
+将模板标签{{detail_table}}设置成此策略。
 [source, java]
 Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
 
@@ -505,7 +570,7 @@ image::example/example_resume_template.png[align='center']
 
 看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
 
-因为模版即样式，模版引擎无需考虑样式，只关心数据。
+因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
 NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
 
@@ -517,6 +582,10 @@ link:https://github.com/Sayi/poi-tl[GitHub]
 
 == 常见问题
 [qanda]
+JDK版本有要求吗？::
+  支持JDK1.6和更高版本。
+出现NoSuchMethodError 、ClassNotFoundException异常？::
+  poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::
   不支持，表格布局可以设计出几乎所有优秀专业的文档，请使用表格。
 是否支持生成目录？::
