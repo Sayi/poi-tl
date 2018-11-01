@@ -352,7 +352,7 @@ TIP: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知
 
 [example]
 --
-示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
+示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
 
 AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。
 [source, java]
@@ -545,7 +545,7 @@ image::example/example_story_output.png[align='center']
 image::example/example_story_template.png[align='center']
 --
 
-这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。
+这个示例充分展示了poi-tl的文档模板和循环功能。当有一段固定样式的段落，根据集合数据循环填充后展示。示例中标题+文字+图片就是这样的可重复段落。
 
 基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。
 
