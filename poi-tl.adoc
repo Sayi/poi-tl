@@ -520,7 +520,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 }
 ----
 
-将模板标签{{detail_table}}设置成此策略。
+将模板标签{{detail_table}}设置成此策略。
 [source, java]
 Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
 
@@ -568,9 +568,9 @@ image::example/example_resume_output.png[align='center']
 image::example/example_resume_template.png[align='center']
 --
 
-看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
+看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
 
-因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
+因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
 NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
 
@@ -583,7 +583,7 @@ link:https://github.com/Sayi/poi-tl[GitHub]
 == 常见问题
 [qanda]
 JDK版本有要求吗？::
-  支持JDK1.6和更高版本。
+  支持JDK1.6和更高版本。
 出现NoSuchMethodError 、ClassNotFoundException异常？::
   poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::
