@@ -11,7 +11,7 @@
 | 方案 | 跨平台 | 样式处理  | 易用性
 | --- | --- | --- | --- |
 | **Poi-tl** | 纯Java组件，跨平台 | :white_check_mark: 不需要编码，模板即样式 | :white_check_mark: 简单：模板引擎，对POI进行封装
-| Apache POI | 纯Java组件，跨平台 | 编码 | :white_check_mark: 简单, 没有模板引擎功能
+| Apache POI | 纯Java组件，跨平台 | 编码 | 简单, 没有模板引擎功能
 | Freemarker | XML操作，跨平台 | 无 | 复杂，需要理解XML结构，基于XML构造模板
 | OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
@@ -22,7 +22,7 @@
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.3.1</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
@@ -66,7 +66,7 @@ put("localBytePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils
 ### 表格模板 {{#var}}
 ```java
 RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓名"), new TextRenderData("FFFFFF", "学历"));
-RowRenderData row = RowRenderData.build(new TextRenderData("张三"), new TextRenderData("1E915D", "研究生"));
+RowRenderData row = RowRenderData.build("张三", "研究生");
 put("table", new MiniTableRenderData(header, Arrays.asList(row)));
 ```
 
@@ -82,7 +82,7 @@ put("feature", new NumbericRenderData(new ArrayList<TextRenderData>() {
 ```
 
 ### 文档模板 {{+var}}
-`DocxRenderData`数据模型，支持文档的合并，文档模板(重复文档段落)被集合数据循环渲染后合并。
+`DocxRenderData`数据模型，支持Word文档的合并，文档模板(重复文档段落)被集合数据循环渲染后合并。
 ```java
 List<SegmentData> segments = new ArrayList<SegmentData>();
 SegmentData s1 = new SegmentData();
