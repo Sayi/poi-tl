@@ -337,7 +337,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> 
 * MiniTableRenderPolicy
 * DocxRenderPolicy
 
-为了新增自己的渲染策略，可以通过实现RenderPolicy接口：
+我们可以通过实现RenderPolicy接口新增自己的渲染策略：
 [source, java]
 ----
 public interface RenderPolicy {
@@ -346,9 +346,9 @@ public interface RenderPolicy {
 ----
 <1> ElementTemplate是当前模板标签所在位置
 <2> data是数据模型
-<3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等，实现任何渲染逻辑。
+<3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等
 
-NOTE: 由于需要在模板标签位置操作Word文档，实现RenderPolicy接口需要掌握一些Apache POI API的知识。
+TIP: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，*原则上Apache POI支持的操作，都可以在当前模板位置进行渲染*。
 
 [example]
 --

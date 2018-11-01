@@ -1088,7 +1088,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 </ul>
 </div>
 <div class="paragraph">
-<p>为了新增自己的渲染策略，可以通过实现RenderPolicy接口：</p>
+<p>我们可以通过实现RenderPolicy接口新增自己的渲染策略：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1109,18 +1109,18 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等，实现任何渲染逻辑。</td>
+<td>通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等</td>
 </tr>
 </table>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-由于需要在模板标签位置操作Word文档，实现RenderPolicy接口需要掌握一些Apache POI API的知识。
+由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，<strong>原则上Apache POI支持的操作，都可以在当前模板位置进行渲染</strong>。
 </td>
 </tr>
 </table>
