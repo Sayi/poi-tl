@@ -581,7 +581,7 @@ Apache License 2.0
 link:https://github.com/Sayi/poi-tl[GitHub]
 
 == 打赏个小费
-如果你觉得poi-tl节省了你的时间，给你带来了方便，或者认同这个开源项目，可以为我的付出打赏点小费哦。
+poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，如果你觉得它节省了你的时间，给你带来了方便和灵感，或者认同这个开源项目，可以为我的付出打赏点小费哦。
 
 image::./pay.jpeg[width=256, height=280]
 
