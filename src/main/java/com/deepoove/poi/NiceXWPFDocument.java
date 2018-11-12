@@ -425,7 +425,8 @@ public class NiceXWPFDocument extends XWPFDocument {
      */
     public NiceXWPFDocument merge(List<NiceXWPFDocument> docMerges, XWPFRun run) throws Exception {
         if (null == docMerges || docMerges.isEmpty() || null == run) return this;
-        XWPFParagraph paragraph = insertNewParagraph(run);
+//        XWPFParagraph paragraph = insertNewParagraph(run);
+        XWPFParagraph paragraph = (XWPFParagraph)run.getParent();
         CTP ctp = paragraph.getCTP();
         
         CTBody body = this.getDocument().getBody();
