@@ -18,13 +18,13 @@ package com.deepoove.poi.el;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.exception.ExpressionEvalException;
+import com.deepoove.poi.util.ObjectUtils;
 
 /**
  * 点缀对象
@@ -48,7 +48,7 @@ public class Dot {
 	}
 
 	public Dot(String el) {
-		Objects.requireNonNull(el, "EL cannot be null.");
+		ObjectUtils.requireNonNull(el, "EL cannot be null.");
 		if (!EL_PATTERN.matcher(el).matches()) {
 			throw new ExpressionEvalException("Error EL fomart: " + el);
 		}
@@ -73,7 +73,7 @@ public class Dot {
 	}
 
 	private Object evalKey(Object obj) {
-		Objects.requireNonNull(obj, "Cannot read value from null Prefix-Model, Prefix-Model EL: " + target);
+		ObjectUtils.requireNonNull(obj, "Cannot read value from null Prefix-Model, Prefix-Model EL: " + target);
 		final Class<?> objClass = obj.getClass();
 		if (obj instanceof String || obj instanceof Number || obj instanceof java.util.Date || obj instanceof Collection
 				|| objClass.isArray() || objClass.isPrimitive()) {

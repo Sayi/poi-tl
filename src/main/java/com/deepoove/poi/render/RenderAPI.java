@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -33,6 +32,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.util.ObjectUtils;
 
 /**
  * @author Sayi
@@ -45,8 +45,8 @@ public class RenderAPI {
 
 	public static void render(XWPFTemplate template, Object dataModel) {
 
-		Objects.requireNonNull(template, "Template is null, should be setted first.");
-		Objects.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
+		ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
+		ObjectUtils.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
 
 		int docxCount = 0;
 		Configure config = template.getConfig();
@@ -109,7 +109,7 @@ public class RenderAPI {
 	 * @param template
 	 */
 	public static void selfRender(XWPFTemplate template) {
-		Objects.requireNonNull(template, "Template is null, should be setted first.");
+		ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
 		if (null == elementTemplates || elementTemplates.isEmpty())
 			return;
