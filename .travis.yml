@@ -1,3 +1,2 @@
 language: java
-jdk: oraclejdk6
 script: mvn clean install
