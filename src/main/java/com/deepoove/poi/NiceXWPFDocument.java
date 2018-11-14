@@ -573,11 +573,13 @@ public class NiceXWPFDocument extends XWPFDocument {
     private Map<String, String> mergeStyles(NiceXWPFDocument docMerge){
     	Map<String, String> styleIdsMap = new HashMap<String, String>();
         XWPFStyles styles = this.getStyles();
+        if (null == styles) styles = createStyles();
         XWPFStyles stylesMerge = docMerge.getStyles();
+        if (null == stylesMerge) return styleIdsMap;
         try {
             Field listStyleField = XWPFStyles.class.getDeclaredField("listStyle");
             listStyleField.setAccessible(true);
-            List<XWPFStyle> lists = (List<XWPFStyle>) listStyleField.get(stylesMerge);
+            List<XWPFStyle> lists = (List<XWPFStyle>)listStyleField.get(stylesMerge);
             for (XWPFStyle xwpfStyle : lists) {
                 if (styles.styleExist(xwpfStyle.getStyleId())) {
                 	String id = xwpfStyle.getStyleId();
