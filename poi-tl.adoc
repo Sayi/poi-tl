@@ -1,6 +1,6 @@
 = poi-tl
 Sayi 卅一 <adasai90@gmail.com>
-v1.4.1
+v1.4.2
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板
 :doctype: book
@@ -24,13 +24,13 @@ TIP: 支持DOCX格式的Word模板。
 <dependency>
     <groupId>com.deepoove</groupId>
     <artifactId>poi-tl</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
 </dependency>
 ----
 
 == Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.4.1'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.4.2'
 
 == 快速开始
 === 2min入门
