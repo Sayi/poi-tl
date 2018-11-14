@@ -15,17 +15,20 @@
  */
 package com.deepoove.poi.policy;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.template.run.RunTemplate;
-import com.deepoove.poi.util.BytePictureUtils;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy {
+	
+	static final int EMU = 9525;
 
     @Override
     protected boolean validate(Object data) {
@@ -44,19 +47,17 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
     @Override
     public void doRender(RunTemplate runTemplate, Object model, XWPFTemplate template)
             throws Exception {
+    	XWPFRun run = runTemplate.getRun();
         // 如果出现异常，图片不存在，优先清空标签
-        clearPlaceholder(runTemplate.getRun());
+        clearPlaceholder(run);
 
         PictureRenderData picture = (PictureRenderData) model;
-        NiceXWPFDocument doc = template.getXWPFDocument();
         int suggestFileType = suggestFileType(picture.getPath());
 
-        byte[] data = null == picture.getData()
-                ? BytePictureUtils.toByteArray(new FileInputStream(picture.getPath()))
-                : picture.getData();
-        String blipId = doc.addPictureData(data, suggestFileType);
-        doc.addPicture(blipId, doc.getNextPicNameNumber(suggestFileType), picture.getWidth(),
-                picture.getHeight(), runTemplate.getRun());
+        InputStream ins = null == picture.getData() ? new FileInputStream(picture.getPath()) : new ByteArrayInputStream(picture.getData());
+        
+        run.addPicture(ins, suggestFileType, "Generated", picture.getWidth()*EMU,
+                picture.getHeight()*EMU);
     }
 
     public static int suggestFileType(String imgFile) {

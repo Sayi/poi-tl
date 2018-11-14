@@ -297,10 +297,13 @@ public class NiceXWPFDocument extends XWPFDocument {
 		}
 	}
 	
+	@Deprecated
 	public void createPicture(String blipId, int id, int width, int height) {
 		addPicture(blipId, id, width, height, createParagraph().createRun());
 	}
 
+	// poi-3.16版本已经修复图片问题，推荐使用XWPFRun.addPicture方法
+	@Deprecated
 	public void addPicture(String blipId, int id, int width, int height,
 			XWPFRun run) {
 		final int EMU = 9525;
