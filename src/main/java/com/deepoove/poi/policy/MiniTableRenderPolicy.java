@@ -153,10 +153,10 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
 
             TextRenderData cellData = cellList.get(i);
             String cellText = cellData.getText();
-            if (StringUtils.isBlank(cellText)) break;
+            if (StringUtils.isBlank(cellText)) continue;
 
             String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR);
-            if (null == fragment) break;
+            if (null == fragment) continue;
 
             // 处理单元格数据
             XWPFParagraph par;
