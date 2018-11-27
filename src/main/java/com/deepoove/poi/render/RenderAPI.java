@@ -24,6 +24,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.TextRenderData;
@@ -53,8 +54,9 @@ public class RenderAPI {
 
 		// 模板
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty())
+		if (null == elementTemplates || elementTemplates.isEmpty()) {
 			return;
+		}
 		// 策略
 		RenderPolicy policy = null;
 		// 数据模型
@@ -77,18 +79,29 @@ public class RenderAPI {
 			if (docxCount >= 1)
 				template.reload(template.getXWPFDocument().generate());
 
+			NiceXWPFDocument current = null;
 			for (int i = 0; i < docxCount; i++) {
+			    current = template.getXWPFDocument();
 				elementTemplates = template.getElementTemplates();
-				if (null == elementTemplates || elementTemplates.isEmpty())
+				if (null == elementTemplates || elementTemplates.isEmpty()) {
 					break;
+				}
 
 				for (ElementTemplate runTemplate : elementTemplates) {
 					policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-					if (null == policy || !(policy instanceof DocxRenderPolicy))
+					if (null == policy || !(policy instanceof DocxRenderPolicy)) {
 						continue;
+					}
 
 					doRender(runTemplate, elObject, policy, template);
-					break;
+					
+					// 没有最终合并，继续下一个合并
+					if (current == template.getXWPFDocument()) {
+					    i++;
+					    continue;
+					} else {
+					    break;
+					}
 				}
 			}
 		} catch (Exception e) {
