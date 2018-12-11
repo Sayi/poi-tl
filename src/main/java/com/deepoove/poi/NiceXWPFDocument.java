@@ -558,12 +558,21 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;
+        Map<BigInteger, CTAbstractNum> cache = new HashMap<BigInteger, CTAbstractNum>();
         for (XWPFNum xwpfNum : nums) {
             BigInteger mergeNumId = xwpfNum.getCTNum().getNumId();
-
-            xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
-            cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
-            cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
+            
+            cTAbstractNum = cache.get(xwpfNum.getCTNum().getAbstractNumId().getVal());
+            if (null == cTAbstractNum) {
+                xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
+                if (null == xwpfAbstractNum) {
+                    LOG.warn("cannot find cTAbstractNum by XWPFNum.");
+                    continue;
+                }
+                cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
+                cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
+                cache.put(xwpfNum.getCTNum().getAbstractNumId().getVal(), cTAbstractNum);
+            }
             
             BigInteger numID = numbering.addNum(numbering.addAbstractNum(new XWPFAbstractNum(cTAbstractNum)));
 
