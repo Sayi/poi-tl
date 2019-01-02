@@ -31,6 +31,7 @@ import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.resolver.TemplateVisitor;
+import com.deepoove.poi.resolver.Visitor;
 import com.deepoove.poi.template.ElementTemplate;
 
 /**
@@ -43,29 +44,11 @@ public class XWPFTemplate {
 	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
 	private NiceXWPFDocument doc;
 	private Configure config;
-	private TemplateVisitor resolver;
+	private Visitor visitor;
 
 	private List<ElementTemplate> eleTemplates;
 
 	private XWPFTemplate() {
-	}
-
-	/**
-	 * @param filePath
-	 * @return
-	 */
-	@Deprecated
-	public static XWPFTemplate create(String filePath) {
-		return compile(filePath);
-	}
-
-	/**
-	 * @param file
-	 * @return
-	 */
-	@Deprecated
-	public static XWPFTemplate create(File file) {
-		return compile(file);
 	}
 
 	/**
@@ -128,8 +111,8 @@ public class XWPFTemplate {
 			XWPFTemplate instance = new XWPFTemplate();
 			instance.config = config;
 			instance.doc = new NiceXWPFDocument(inputStream);
-			instance.resolver = new TemplateVisitor(instance.config);
-			instance.eleTemplates = instance.resolver.visitDocument(instance.doc);
+			instance.visitor = new TemplateVisitor(instance.config);
+			instance.eleTemplates = instance.visitor.visitDocument(instance.doc);
 			return instance;
 		} catch (IOException e) {
 			logger.error("Compile template failed", e);
@@ -149,48 +132,24 @@ public class XWPFTemplate {
 		    logger.error("Close failed", e);
 		}
 		this.doc = doc;
-		this.eleTemplates = this.resolver.visitDocument(doc);
+		this.eleTemplates = this.visitor.visitDocument(doc);
 	}
 
 	public XWPFTemplate render(Object model) {
 		RenderAPI.render(this, model);
 		return this;
 	}
-
+	
 	/**
-	 * @param templateClass
-	 * @param policy
-	 * @deprecated 1.0.0
-	 */
-	@Deprecated
-	public void registerPolicy(Class<?> templateClass, RenderPolicy policy) {
-		this.registerPolicy(templateClass.getName(), policy);
-	}
-
-	/**
-	 * 自定义模板对应的策略
-	 * 
-	 * @param templateName
-	 * @param policy
-	 */
-	@Deprecated
-	public void registerPolicy(String templateName, RenderPolicy policy) {
-		config.customPolicy(templateName, policy);
-	}
-
-	/**
-	 * @param clazz
-	 * @return
-	 */
-	@Deprecated
-	public RenderPolicy getPolicy(Class<? extends ElementTemplate> clazz) {
-		return config.getCustomPolicys().get(clazz.getName());
-	}
-
-	@Deprecated
-	public RenderPolicy getPolicy(String templateName) {
-		return config.getCustomPolicys().get(templateName);
-	}
+     * 自定义模板对应的策略
+     * 
+     * @param templateName
+     * @param policy
+     */
+    @Deprecated
+    public void registerPolicy(String templateName, RenderPolicy policy) {
+        config.customPolicy(templateName, policy);
+    }
 
 	public void write(OutputStream out) throws IOException {
 		this.doc.write(out);
