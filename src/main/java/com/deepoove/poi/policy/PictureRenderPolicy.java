@@ -16,9 +16,7 @@
 package com.deepoove.poi.policy;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
@@ -28,6 +26,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.BytePictureUtils;
 
 public class PictureRenderPolicy implements RenderPolicy {
 
@@ -37,35 +36,30 @@ public class PictureRenderPolicy implements RenderPolicy {
 	public void render(ElementTemplate eleTemplate, Object renderData, XWPFTemplate doc) {
 		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
-		if (renderData == null) { return; }
+		if (renderData == null) { run.setText("", 0);return; }
 		PictureRenderData pictureRenderData = null;
 		if (renderData instanceof PictureRenderData) {
 			pictureRenderData = (PictureRenderData) renderData;
 		} else {
+		    run.setText("", 0);
 			logger.warn("Error render data,should be pictureRenderData:" + renderData.getClass());
 			return;
 		}
-		String blipId;
 		try {
 			byte[] data = pictureRenderData.getData();
 			if (null == data) {
 				FileInputStream is = new FileInputStream(pictureRenderData.getPath());
-				blipId = doc.getXWPFDocument().addPictureData(is,
-						suggestFileType(pictureRenderData.getPath()));
-			} else {
-				blipId = doc.getXWPFDocument().addPictureData(data,
-						suggestFileType(pictureRenderData.getPath()));
-			}
+				data = BytePictureUtils.toByteArray(is);
+			} 
+			String blipId = doc.getXWPFDocument().addPictureData(data, suggestFileType(pictureRenderData.getPath()));
 			doc.getXWPFDocument().addPicture(blipId,
 					doc.getXWPFDocument()
 							.getNextPicNameNumber(suggestFileType(pictureRenderData.getPath())),
 					pictureRenderData.getWidth(), pictureRenderData.getHeight(), run);
 			run.setText("", 0);
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {
+			logger.error("render picture docx error", e);
+		} 
 	}
 
 	private int suggestFileType(String imgFile) {

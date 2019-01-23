@@ -15,11 +15,15 @@
  */
 package com.deepoove.poi.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
+
+import com.deepoove.poi.data.style.Style;
 
 /**
  * @author Sayi
@@ -27,77 +31,111 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enu
  */
 public class NumbericRenderData implements RenderData {
 
-	private List<TextRenderData> numbers;
+    /**
+     * 1. 2. 3.
+     */
+    public static final Pair<Enum, String> FMT_DECIMAL = Pair.of(STNumberFormat.DECIMAL, "%1.");
+    /**
+     * 1) 2) 3)
+     */
+    public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL,
+            "%1)");
+    /**
+     * ● ● ●
+     */
+    public static final Pair<Enum, String> FMT_BULLET = Pair.of(STNumberFormat.BULLET, "●");
+    /**
+     * a. b. c.
+     */
+    public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER,
+            "%1.");
+    /**
+     * i ⅱ ⅲ
+     */
+    public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN,
+            "%1.");
+    /**
+     * A. B. C.
+     */
+    public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER,
+            "%1.");
+    /**
+     * Ⅰ Ⅱ Ⅲ
+     */
+    public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN,
+            "%1.");
+    // /**
+    // * 一、 二、 三、
+    // */
+    // public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND =
+    // Pair
+    // .of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "%1、");
+    // /**
+    // * (一) (二) (三)
+    // */
+    // public static final Pair<Enum, String>
+    // FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
+    // .of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
 
-	private Pair<Enum, String> numFmt;
+    private List<TextRenderData> numbers;
 
-	/**
-	 * 1. 2. 3.
-	 */
-	public static final Pair<Enum, String> FMT_DECIMAL = Pair.of(STNumberFormat.DECIMAL, "%1.");
-	/**
-	 * 1) 2) 3)
-	 */
-	public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL,
-			"%1)");
-	/**
-	 * ● ● ●
-	 */
-	public static final Pair<Enum, String> FMT_BULLET = Pair.of(STNumberFormat.BULLET, "●");
-	/**
-	 * a. b. c.
-	 */
-	public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER,
-			"%1.");
-	/**
-	 * i ⅱ ⅲ
-	 */
-	public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN,
-			"%1.");
-	/**
-	 * A. B. C.
-	 */
-	public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER,
-			"%1.");
-	/**
-	 * Ⅰ Ⅱ Ⅲ
-	 */
-	public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN,
-			"%1.");
-//	/**
-//	 * 一、 二、 三、
-//	 */
-//	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND = Pair
-//			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "%1、");
-//	/**
-//	 * (一) (二) (三)
-//	 */
-//	public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
-//			.of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
+    private Pair<Enum, String> numFmt;
 
-	public NumbericRenderData(Pair<Enum, String> numFmt, List<TextRenderData> numbers) {
-		this.numFmt = numFmt;
-		this.numbers = numbers;
-	}
+    private Style fmtStyle;
 
-	public NumbericRenderData(List<TextRenderData> numbers) {
-		this(FMT_BULLET, numbers);
-	}
+    public NumbericRenderData(Pair<Enum, String> numFmt, List<TextRenderData> numbers) {
+        this(numFmt, null, numbers);
+    }
 
-	public List<TextRenderData> getNumbers() {
-		return numbers;
-	}
+    /**
+     * @param numFmt 编号字符
+     * @param fmtStyle 编号样式
+     * @param numbers 列表内容
+     */
+    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle, List<TextRenderData> numbers) {
+        this.numFmt = numFmt;
+        this.numbers = numbers;
+        this.fmtStyle = fmtStyle;
+    }
 
-	public void setNumbers(List<TextRenderData> numbers) {
-		this.numbers = numbers;
-	}
+    public NumbericRenderData(List<TextRenderData> numbers) {
+        this(FMT_BULLET, numbers);
+    }
+    
+    public static NumbericRenderData build(String... text) {
+        if (null == text) return null;
+        List<TextRenderData> numbers = new ArrayList<TextRenderData>();
+        for (String txt : text) {
+            numbers.add(new TextRenderData(txt));
+        }
+        return new NumbericRenderData(numbers);
+    }
+    public static NumbericRenderData build(TextRenderData... data) {
+        return new NumbericRenderData(null == data ? null : Arrays.asList(data));
+    }
 
-	public Pair<Enum, String> getNumFmt() {
-		return numFmt;
-	}
+    public List<TextRenderData> getNumbers() {
+        return numbers;
+    }
 
-	public void setNumFmt(Pair<Enum, String> numFmt) {
-		this.numFmt = numFmt;
-	}
+    public void setNumbers(List<TextRenderData> numbers) {
+        this.numbers = numbers;
+    }
+
+    public Pair<Enum, String> getNumFmt() {
+        return numFmt;
+    }
+
+    public void setNumFmt(Pair<Enum, String> numFmt) {
+        this.numFmt = numFmt;
+    }
+
+    public Style getFmtStyle() {
+        return fmtStyle;
+    }
+
+    public void setFmtStyle(Style fmtStyle) {
+        this.fmtStyle = fmtStyle;
+    }
 
 }

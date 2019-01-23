@@ -18,6 +18,7 @@ package com.deepoove.poi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -76,6 +77,16 @@ public class XWPFTemplate {
 	public static XWPFTemplate compile(File file) {
 		return compile(file, Configure.createDefault());
 	}
+	
+    /**
+     * template file as InputStream
+     * @param inputStream
+     * @return
+     * @version 1.2.0
+     */
+    public static XWPFTemplate compile(InputStream inputStream) {
+        return compile(inputStream, Configure.createDefault());
+    }
 
 	/**
 	 * @param filePath
@@ -86,6 +97,7 @@ public class XWPFTemplate {
 	public static XWPFTemplate compile(String filePath, Configure config) {
 		return compile(new File(filePath), config);
 	}
+	
 
 	/**
 	 * @param file
@@ -95,20 +107,48 @@ public class XWPFTemplate {
 	 */
 	public static XWPFTemplate compile(File file, Configure config) {
 		try {
+            return compile(new FileInputStream(file), config);
+        } catch (FileNotFoundException e) {
+            logger.error("Cannot find the file", e);
+            throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
+        }
+	}
+
+
+	/**
+	 * template file as InputStream
+	 * @param inputStream
+	 * @param config
+	 * @return
+	 * @version 1.2.0
+	 */
+	public static XWPFTemplate compile(InputStream inputStream, Configure config) {
+		try {
 			XWPFTemplate instance = new XWPFTemplate();
 			instance.config = config;
-			instance.doc = new NiceXWPFDocument(new FileInputStream(file));
+			instance.doc = new NiceXWPFDocument(inputStream);
 			instance.eleTemplates = new TemplateResolver(instance.config)
 					.parseElementTemplates(instance.doc);
 			return instance;
-		} catch (FileNotFoundException e) {
-			logger.error("Cannot find the file", e);
-			throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
 		} catch (IOException e) {
 			logger.error("Compile template failed", e);
 			throw new ResolverException("Compile template failed");
 		}
 	}
+	
+	/**
+	 * 重新解析doc
+	 * @param doc
+	 */
+	public void reload(NiceXWPFDocument doc) {
+	    try {
+            this.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.doc = doc;
+        this.eleTemplates = new TemplateResolver(this.config).parseElementTemplates(doc);
+    }
 
 	public XWPFTemplate render(Map<String, Object> datas) {
 		RenderAPI.render(this, datas);
@@ -136,6 +176,7 @@ public class XWPFTemplate {
 	 * @param templateName
 	 * @param policy
 	 */
+	@Deprecated
 	public void registerPolicy(String templateName, RenderPolicy policy) {
 		config.customPolicy(templateName, policy);
 	}
@@ -149,6 +190,7 @@ public class XWPFTemplate {
 		return config.getCustomPolicys().get(clazz.getName());
 	}
 
+	@Deprecated
 	public RenderPolicy getPolicy(String templateName) {
 		return config.getCustomPolicys().get(templateName);
 	}
@@ -172,5 +214,7 @@ public class XWPFTemplate {
 	public Configure getConfig() {
 		return config;
 	}
+
+    
 
 }

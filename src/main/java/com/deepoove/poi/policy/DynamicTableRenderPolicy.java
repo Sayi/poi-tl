@@ -40,7 +40,9 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 		NiceXWPFDocument doc = template.getXWPFDocument();
 		RunTemplate runTemplate = (RunTemplate) eleTemplate;
 		XWPFRun run = runTemplate.getRun();
+		run.setText("", 0);
 		try {
+		    //w:tbl-w:tr-w:tc-w:p-w:tr
 			XmlCursor newCursor = ((XWPFParagraph)run.getParent()).getCTP().newCursor();
 			newCursor.toParent();
 			//if (newCursor.getObject() instanceof CTTc) 
@@ -54,6 +56,10 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 		}
 	}
 
+	/**
+	 * @param table 表格
+	 * @param data 数据
+	 */
 	public abstract void render(XWPFTable table, Object data);
 
 }

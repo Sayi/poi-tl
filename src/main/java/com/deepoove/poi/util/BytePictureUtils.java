@@ -53,7 +53,12 @@ public final class BytePictureUtils {
 	 * @return
 	 */
 	public static byte[] getUrlByteArray(String urlPath) {
-		return toByteArray(getUrlPictureStream(urlPath));
+		try {
+            return toByteArray(getUrlPictureStream(urlPath));
+        } catch (IOException e) {
+            logger.error("getUrlPictureStream error,{},{}", urlPath, e);
+        }
+		return null;
 	}
 
 	/**
@@ -64,18 +69,12 @@ public final class BytePictureUtils {
 	 * @return
 	 */
 	public static byte[] getLocalByteArray(File res) {
-		FileInputStream is = null;
-		byte[] byteArray = null;
 		try {
-			is = new FileInputStream(res);
-			byteArray = toByteArray(is);
-			is.close();
+			return toByteArray(new FileInputStream(res));
 		} catch (FileNotFoundException e) {
 			logger.error("FileNotFound", e);
-		} catch (IOException e) {
-			logger.error("getLocalByteArray IO error", e);
-		}
-		return byteArray;
+		} 
+		return null;
 	}
 
 	/**
@@ -102,10 +101,17 @@ public final class BytePictureUtils {
 	 * @return
 	 */
 	public static byte[] toByteArray(InputStream is) {
+	    if (null == is) return null;
 		try {
 			return IOUtils.toByteArray(is);
 		} catch (IOException e) {
 			logger.error("toByteArray error", e);
+		} finally {
+		    try {
+                is.close();
+            } catch (IOException e) {
+                logger.error("close stream error", e);
+            }
 		}
 		return null;
 	}
@@ -152,17 +158,11 @@ public final class BytePictureUtils {
 	 * 
 	 * @param urlPath
 	 * @return
+	 * @throws IOException 
 	 */
-	public static InputStream getUrlPictureStream(String urlPath) {
-		URL url = null;
-		try {
-			url = new URL(urlPath);
-			return url.openConnection().getInputStream();
-		} catch (IOException e) {
-			logger.error("getUrlPictureStream error,{},{}", urlPath, e);
-		}
-		return null;
-
+	public static InputStream getUrlPictureStream(String urlPath) throws IOException {
+		URL url  = new URL(urlPath);
+		return url.openConnection().getInputStream();
 	}
 
 	/**

@@ -20,16 +20,20 @@ import java.util.List;
 /**
  * 简单的表格渲染数据
  * 
+ * @see {@link MiniTableRenderData}
  * @author Sayi
  * @version 0.0.3
  */
+@Deprecated
 public class TableRenderData implements RenderData {
 
 	private List<RenderData> headers;
 	private List<Object> datas;
 	private String noDatadesc;
 
-	// 9500
+	/**
+	 * dxa - Specifies that the value is in twentieths of a point (1/1440 of an inch).
+	 */
 	private int width;
 
 	public TableRenderData(List<RenderData> headers, List<Object> datas) {

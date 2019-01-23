@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.GramerSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.RegexUtils;
@@ -49,9 +48,6 @@ import com.deepoove.poi.util.StyleUtils;
 public class TemplateResolver {
 	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateResolver.class);
 	
-	public final String RULER_REGEX;
-	public final String EXTRA_REGEX;
-	
 	public final Pattern TAG_PATTERN;
 	public final Pattern VAR_PATTERN;
 
@@ -59,10 +55,10 @@ public class TemplateResolver {
 	
 	public TemplateResolver(Configure config) {
 		String signRegex = getGramarRegex(config);
-		String prefixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_PREFIX);
-		String suffixRegex = RegexUtils.escapeExprSpecialWord(GramerSymbol.GRAMER_SUFFIX);
-		RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
-		EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
+		String prefixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerPrefix());
+		String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
+		String RULER_REGEX = MessageFormat.format("{0}{1}\\w+{2}", prefixRegex, signRegex, suffixRegex);
+		String EXTRA_REGEX = MessageFormat.format("({0})|({1})", prefixRegex, suffixRegex);
 		TAG_PATTERN = Pattern.compile(RULER_REGEX);
 		VAR_PATTERN = Pattern.compile(EXTRA_REGEX);
 		this.config = config;
@@ -147,19 +143,27 @@ public class TemplateResolver {
 		if (null  == paragraph) return null;
 		List<XWPFRun> runs = paragraph.getRuns();
 		if (null == runs || runs.isEmpty()) return null;
-		String text = paragraph.getText();
-		LOGGER.debug("The Paragrah's text is:{}", text);
+		
+		List<Pair<RunEdge, RunEdge>> runEdgeListPairs = buildRunEdges(paragraph);
+		if (runEdgeListPairs.isEmpty()) return null;
+		
+		// split and merge
+		return mergeRuns(paragraph, runEdgeListPairs);
+	}
+
+    
+    private List<Pair<RunEdge, RunEdge>> buildRunEdges(XWPFParagraph paragraph) {
+        String text = paragraph.getText();
+        List<XWPFRun> runs = paragraph.getRuns();
 		
 		List<Pair<RunEdge, RunEdge>> runEdgeListPairs = new ArrayList<Pair<RunEdge, RunEdge>>();
-		List<String> tags = new ArrayList<String>();
 		
 		Matcher matcher = TAG_PATTERN.matcher(text);
 		while (matcher.find()) {
-			tags.add(matcher.group());
 			runEdgeListPairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
 					new RunEdge(matcher.end(), matcher.group())));
 		}
-		if (tags.isEmpty()) return null;
+		if (runEdgeListPairs.isEmpty()) return runEdgeListPairs;
 		
 		//search then calculate run edge
 		searchRunEdge(runs, runEdgeListPairs);
@@ -167,69 +171,8 @@ public class TemplateResolver {
 			LOGGER.debug(pair.getLeft().toString());
 			LOGGER.debug(pair.getRight().toString());
 		}
-		
-		// split and merge
-		List<RunTemplate> rts = new ArrayList<RunTemplate>();
-		
-		int size = runEdgeListPairs.size();
-		int tagIndex = size;
-		RunTemplate runTemplate;
-		Pair<RunEdge, RunEdge> runEdgePair;
-		for (int n = size - 1; n >= 0; n--) {
-			runEdgePair = runEdgeListPairs.get(n);
-			RunEdge startEdge = runEdgePair.getLeft();
-			RunEdge endEdge = runEdgePair.getRight();
-			int startRunPos = startEdge.getRunPos();
-			int endRunPos = endEdge.getRunPos();
-			int startOffset = startEdge.getRunEdge();
-			int endOffset = endEdge.getRunEdge();
-			
-			String startText = runs.get(startRunPos).getText(0);
-			String endText = runs.get(endRunPos).getText(0);
-			if (endOffset + 1 >= endText.length()) {
-				//end run 无需split，若不是start run，直接remove
-				if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
-			} else {
-				//split end run, set extra in a run
-				String extra = endText.substring(endOffset + 1, endText.length());
-				if (startRunPos == endRunPos) {
-					XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
-					StyleUtils.styleRun(extraRun, runs.get(endRunPos));
-					extraRun.setText(extra, 0);
-				} else {
-					XWPFRun extraRun = runs.get(endRunPos);
-					extraRun.setText(extra, 0);
-				}
-			}
-			
-			//remove extra run
-			for (int m = endRunPos - 1; m > startRunPos; m--) {
-				paragraph.removeRun(m);
-			}
-			
-			if (startOffset <= 0) {
-				//start run 无需split
-				XWPFRun templateRun = runs.get(startRunPos);
-				templateRun.setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(startRunPos));
-			} else {
-				//split start run, set extra in a run
-				String extra = startText.substring(0, startOffset);
-				XWPFRun extraRun = runs.get(startRunPos);
-				extraRun.setText(extra, 0);
-				
-				XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
-				StyleUtils.styleRun(templateRun, extraRun);
-				templateRun.setText(tags.get(--tagIndex), 0);
-				runTemplate = parseRun(runs.get(startRunPos + 1));
-			}
-
-			if (null != runTemplate) {
-				rts.add(runTemplate);
-			}
-		}
-		return rts;
-	}
+        return runEdgeListPairs;
+    }
 
 	private void searchRunEdge(List<XWPFRun> runs, List<Pair<RunEdge, RunEdge>> pairs) {
 		int size = runs.size();
@@ -283,6 +226,71 @@ public class TemplateResolver {
 			cursor += text.length();
 		}
 	}
+	
+	private List<RunTemplate> mergeRuns(XWPFParagraph paragraph,
+            List<Pair<RunEdge, RunEdge>> runEdgeListPairs) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        List<RunTemplate> rts = new ArrayList<RunTemplate>();
+        
+        int size = runEdgeListPairs.size();
+        RunTemplate runTemplate;
+        Pair<RunEdge, RunEdge> runEdgePair;
+        for (int n = size - 1; n >= 0; n--) {
+            runEdgePair = runEdgeListPairs.get(n);
+            RunEdge startEdge = runEdgePair.getLeft();
+            RunEdge endEdge = runEdgePair.getRight();
+            int startRunPos = startEdge.getRunPos();
+            int endRunPos = endEdge.getRunPos();
+            int startOffset = startEdge.getRunEdge();
+            int endOffset = endEdge.getRunEdge();
+            
+            String startText = runs.get(startRunPos).getText(0);
+            String endText = runs.get(endRunPos).getText(0);
+            if (endOffset + 1 >= endText.length()) {
+                //end run 无需split，若不是start run，直接remove
+                if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
+            } else {
+                //split end run, set extra in a run
+                String extra = endText.substring(endOffset + 1, endText.length());
+                if (startRunPos == endRunPos) {
+                    XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
+                    StyleUtils.styleRun(extraRun, runs.get(endRunPos));
+                    extraRun.setText(extra, 0);
+                } else {
+                    XWPFRun extraRun = runs.get(endRunPos);
+                    extraRun.setText(extra, 0);
+                }
+            }
+            
+            //remove extra run
+            for (int m = endRunPos - 1; m > startRunPos; m--) {
+                paragraph.removeRun(m);
+            }
+            
+            if (startOffset <= 0) {
+                //start run 无需split
+                XWPFRun templateRun = runs.get(startRunPos);
+                templateRun.setText(startEdge.getTag(), 0);
+                runTemplate = parseRun(runs.get(startRunPos));
+            } else {
+                //split start run, set extra in a run
+                String extra = startText.substring(0, startOffset);
+                XWPFRun extraRun = runs.get(startRunPos);
+                extraRun.setText(extra, 0);
+                
+                XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
+                StyleUtils.styleRun(templateRun, extraRun);
+                templateRun.setText(startEdge.getTag(), 0);
+                runTemplate = parseRun(runs.get(startRunPos + 1));
+            }
+
+            if (null != runTemplate) {
+                rts.add(runTemplate);
+            }
+        }
+        return rts;
+    }
+
 
 	public  RunTemplate parseRun(XWPFRun run) {
 		String text = null;
@@ -296,8 +304,7 @@ public class TemplateResolver {
 		if (TAG_PATTERN.matcher(text).matches()) {
 			String tag = VAR_PATTERN.matcher(text).replaceAll("").trim();
 			if (obj.getClass() == XWPFRun.class) {
-				return TemplateFactory.createRunTemplate(tag, config.getGramerChars(),
-						(XWPFRun) obj);
+				return TemplateFactory.createRunTemplate(tag, config, (XWPFRun) obj);
 			} else if (obj.getClass() == XWPFTableCell.class)
 				// return CellTemplate.create(symbol, tagName, (XWPFTableCell)
 				// obj);
@@ -307,8 +314,8 @@ public class TemplateResolver {
 	}
 
 	private String getGramarRegex(Configure config) {
-		List<Character> gramerChar = config.getGramerChars();
-		StringBuffer reg = new StringBuffer("(");
+		List<Character> gramerChar = new ArrayList<Character>(config.getGramerChars());
+		StringBuilder reg = new StringBuilder("(");
 		for (int i = 0; ; i++){
 			Character chara = gramerChar.get(i);
 			String escapeExprSpecialWord = RegexUtils.escapeExprSpecialWord(chara.toString());
