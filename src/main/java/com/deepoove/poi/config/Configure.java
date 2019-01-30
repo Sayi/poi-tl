@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.deepoove.poi.policy.DocxRenderPolicy;
+import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.SimpleTableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
 /**
@@ -45,7 +45,7 @@ public class Configure {
 	private Configure() {
 		plugin(GramerSymbol.TEXT, new TextRenderPolicy());
 		plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
-		plugin(GramerSymbol.TABLE, new SimpleTableRenderPolicy());
+		plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
 		plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
 		plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
 	}

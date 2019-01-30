@@ -9,10 +9,10 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
+import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.SimpleTableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
@@ -59,7 +59,7 @@ public final class CodeGenUtils {
 			if (policy instanceof TextRenderPolicy){
 				sb.append("private String ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("String", field));
-			}else if (policy instanceof SimpleTableRenderPolicy){
+			}else if (policy instanceof MiniTableRenderPolicy){
 				sb.append("private MiniTableRenderData ").append(field).append(";\n");
 				sbGetterSetter.append(genGetterSetter("TableRenderData", field));
 			}else if (policy instanceof PictureRenderPolicy){

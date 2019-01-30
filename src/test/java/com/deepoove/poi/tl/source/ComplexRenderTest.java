@@ -3,15 +3,19 @@ package com.deepoove.poi.tl.source;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RenderData;
-import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -101,25 +105,15 @@ public class ComplexRenderTest {
 
 				put("m_key", "5");
 
-				put("table", new TableRenderData(new ArrayList<RenderData>() {
-					{
-						add(new TextRenderData("d0d0d0", "过户主体"));
-						add(new TextRenderData("d0d0d0", "过户时间"));
-						add(new TextRenderData("d0d0d0", "过户方式"));
-					}
-				}, new ArrayList<Object>() {
-					{
-						add("1;add new # gramer;3");
-						add("1;add new # gramer;3");
-					}
-				}, "无记录", 9500));
+				RowRenderData headers = RowRenderData.build(new TextRenderData("d0d0d0", "过户主体"), new TextRenderData("d0d0d0", "过户时间"), new TextRenderData("d0d0d0", "过户方式"));
+                put("table", new MiniTableRenderData(headers , Arrays.asList(RowRenderData.build("1", "add new # gramer", "3"), RowRenderData.build("2", "add new # gramer", "3"))));
 
 			}
 		};
 
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
 		//动态持有XWPFTable对象
-		template.registerPolicy("table", new MyTableRenderPolicy());
+		template.registerPolicy("table", new MiniTableRenderPolicy());
 		template.render(datas);
 
 		FileOutputStream out = new FileOutputStream("out_complex.docx");
