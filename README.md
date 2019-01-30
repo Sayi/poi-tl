@@ -109,8 +109,8 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments));
 
 更多的示例以及所有示例的源码参见JUnit单元测试。
 
-![](dist/demo.png)
-![](dist/demo_result.png)
+![](http://deepoove.com/poi-tl/demo.png)
+![](http://deepoove.com/poi-tl/demo_result.png)
 
 ## 建议和完善
 欢迎在GitHub Issue中提问和交流。
