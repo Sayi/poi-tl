@@ -99,7 +99,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments));
 ```
 
 ## 架构Arch
-**Poi-tl**通过极简的架构实现了模板功能并且支持最大的扩展性，架包大小只有![几十KB](https://img.shields.io/badge/-92KB-green.svg)。
+**Poi-tl**通过极简的架构实现了模板功能并且支持最大的扩展性，架包大小只有几十KB。
 
 整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块通过**RenderPolicy**对每个标签进行渲染。
 
