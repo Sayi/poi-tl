@@ -98,6 +98,13 @@ segments.add(s2);
 put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments));
 ```
 
+## 架构Arch
+**Poi-tl**通过极简的架构实现了模板功能并且支持最大的扩展性，架包大小只有![几十KB](https://img.shields.io/badge/-92KB-green.svg)。
+
+整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块通过**RenderPolicy**对每个标签进行渲染。
+
+![](http://deepoove.com/poi-tl/arch.png)
+
 ## 详细文档与示例
 
 [中文文档](http://deepoove.com/poi-tl) or [English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
@@ -111,13 +118,6 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments));
 
 ![](http://deepoove.com/poi-tl/demo.png)
 ![](http://deepoove.com/poi-tl/demo_result.png)
-
-## 架构
-**Poi-tl**通过极简的架构实现了模板功能并且支持最大的扩展性，架包大小只有几十KB。
-
-整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块通过**RenderPolicy**对每个标签进行渲染。
-
-![](http://deepoove.com/poi-tl/arch.png)
 
 ## 建议和完善
 欢迎在GitHub Issue中提问和交流。
