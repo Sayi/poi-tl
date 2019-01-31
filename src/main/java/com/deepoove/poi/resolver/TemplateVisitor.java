@@ -66,11 +66,13 @@ public class TemplateVisitor implements Visitor {
 	public List<ElementTemplate> visitDocument(XWPFDocument doc) {
 		if (null == doc)
 			return null;
+		LOGGER.info("Visit the template file start...");
 		this.eleTemplates = new ArrayList<ElementTemplate>();
 		visitParagraphs(doc.getParagraphs());
 		visitTables(doc.getTables());
 		visitHeaders(doc.getHeaderList());
 		visitFooters(doc.getFooterList());
+		LOGGER.info("Visit the template file end.");
 		return eleTemplates;
 	}
 

@@ -42,12 +42,14 @@ import com.deepoove.poi.util.ObjectUtils;
  */
 public class RenderAPI {
 
-	private static final Logger logger = LoggerFactory.getLogger(RenderAPI.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RenderAPI.class);
 
 	public static void render(XWPFTemplate template, Object dataModel) {
 
 		ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
 		ObjectUtils.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
+		
+		LOGGER.info("Render the template file start...");
 
 		int docxCount = 0;
 		Configure config = template.getConfig();
@@ -105,13 +107,13 @@ public class RenderAPI {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("Render docx error", e);
+			LOGGER.error("Render docx error", e);
 		}
-
+		LOGGER.info("Render the template file end.");
 	}
 
 	private static void doRender(ElementTemplate ele, ELObject model, RenderPolicy policy, XWPFTemplate template) {
-		logger.debug("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(), ele.getSign(),
+		LOGGER.debug("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(), ele.getSign(),
 				policy.getClass().getSimpleName());
 		policy.render(ele, model.eval(ele.getTagName()), template);
 	}
@@ -128,7 +130,7 @@ public class RenderAPI {
 			return;
 		RenderPolicy policy = null;
 		for (ElementTemplate runTemplate : elementTemplates) {
-			logger.debug("Start self-render TemplateName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
+			LOGGER.debug("Start self-render TemplateName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
 			policy = template.getConfig().getDefaultPolicys().get(Character.valueOf('\0'));
 			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
 		}
@@ -144,14 +146,14 @@ public class RenderAPI {
 	@Deprecated
 	public static void debug(XWPFTemplate template, Map<String, Object> datas) {
 		List<ElementTemplate> all = template.getElementTemplates();
-		logger.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
+		LOGGER.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
 		if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty())) {
-			logger.debug("No template gramer find and no render data find");
+			LOGGER.debug("No template gramer find and no render data find");
 			return;
 		}
 		Set<String> tagtKeys = new HashSet<String>();
 		for (ElementTemplate ele : all) {
-			logger.debug("Parse the tag：{}", ele.getTagName());
+			LOGGER.debug("Parse the tag：{}", ele.getTagName());
 			tagtKeys.add(ele.getTagName());
 		}
 
@@ -162,13 +164,13 @@ public class RenderAPI {
 		Iterator<String> iterator = copySet.iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			logger.warn("Cannot find the gramer tag in template:" + key);
+			LOGGER.warn("Cannot find the gramer tag in template:" + key);
 		}
 		tagtKeys.removeAll(keySet);
 		iterator = tagtKeys.iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next();
-			logger.warn("Cannot find the feild in java Map or Object:" + key);
+			LOGGER.warn("Cannot find the feild in java Map or Object:" + key);
 		}
 
 	}
