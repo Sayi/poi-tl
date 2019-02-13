@@ -66,5 +66,5 @@ template.close();
 ![](http://deepoove.com/poi-tl/arch.png)
 
 ## 建议和完善
-文档中列举了一些[常见问题](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)，欢迎在GitHub Issue中提问和交流。
+参见[常见问题](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)，欢迎在GitHub Issue中提问和交流。
 
