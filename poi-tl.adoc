@@ -589,12 +589,14 @@ image::./pay.jpeg[width=256, height=280]
 [qanda]
 JDK版本有要求吗？::
   支持JDK1.6和更高版本。
-出现NoSuchMethodError 、ClassNotFoundException异常？::
+出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？::
   poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::
   不支持，表格布局可以设计出几乎所有优秀专业的文档，请使用表格。
 是否支持生成目录？::
   暂不支持，参考原生POI API自行扩展。
+是否支持Android客户端使用？::
+  未知，有些朋友尝试成功，但我尚未在Android环境中验证过。
 是否支持设置多种标题样式?::
   不能够直接设置，目前支持设置文字字体大小等，或者在已经应用了标题样式的模板中替换文本。
 有没有提供图表、数学公式模板？::

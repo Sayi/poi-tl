@@ -1528,7 +1528,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 <p>支持JDK1.6和更高版本。</p>
 </li>
 <li>
-<p><em>出现NoSuchMethodError 、ClassNotFoundException异常？</em></p>
+<p><em>出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？</em></p>
 <p>poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。</p>
 </li>
 <li>
@@ -1538,6 +1538,10 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 <li>
 <p><em>是否支持生成目录？</em></p>
 <p>暂不支持，参考原生POI API自行扩展。</p>
+</li>
+<li>
+<p><em>是否支持Android客户端？</em></p>
+<p>未知，有些朋友尝试成功，但我尚未在Android环境中验证过。</p>
 </li>
 <li>
 <p><em>是否支持设置多种标题样式?</em></p>
