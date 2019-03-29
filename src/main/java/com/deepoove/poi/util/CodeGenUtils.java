@@ -3,8 +3,6 @@ package com.deepoove.poi.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.POIXMLException;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
@@ -31,7 +29,7 @@ public final class CodeGenUtils {
 			+ "import com.deepoove.poi.data.NumbericRenderData;\n";
 
 	public static String generateJavaObject(XWPFTemplate template, String packageStr, String className){
-		if (null == template) throw new POIXMLException("template is null,should be setted first.");
+		if (null == template) throw new IllegalArgumentException("template is null,should be setted first.");
 		List<ElementTemplate> elementTemplates = template.getElementTemplates();
 		if (null == elementTemplates || elementTemplates.isEmpty()) return "";
 		Configure config = template.getConfig();
