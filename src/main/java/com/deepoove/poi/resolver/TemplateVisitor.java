@@ -43,7 +43,7 @@ import com.deepoove.poi.util.RegexUtils;
  * @version 1.4.0
  */
 public class TemplateVisitor implements Visitor {
-	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateVisitor.class);
+	private static Logger logger = LoggerFactory.getLogger(TemplateVisitor.class);
 
 	private Configure config;
 	private List<ElementTemplate> eleTemplates;
@@ -147,7 +147,7 @@ public class TemplateVisitor implements Visitor {
 	}
 
 	private <T> ElementTemplate parseTemplateFactory(String text, T obj) {
-		LOGGER.debug("Resolve text: {}, and create ElementTemplate", text);
+		logger.debug("Resolve text: {}, and create ElementTemplate", text);
 		// temp ,future need to word analyze
 		if (templatePattern.matcher(text).matches()) {
 			String tag = gramerPattern.matcher(text).replaceAll("").trim();

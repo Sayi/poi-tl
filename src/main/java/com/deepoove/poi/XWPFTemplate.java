@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
-import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.resolver.Visitor;
@@ -42,10 +41,10 @@ import com.deepoove.poi.template.ElementTemplate;
  */
 public class XWPFTemplate {
 	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
+	
 	private NiceXWPFDocument doc;
 	private Configure config;
 	private Visitor visitor;
-
 	private List<ElementTemplate> eleTemplates;
 
 	private XWPFTemplate() {
@@ -140,17 +139,6 @@ public class XWPFTemplate {
 		return this;
 	}
 	
-	/**
-     * 自定义模板对应的策略
-     * 
-     * @param templateName
-     * @param policy
-     */
-    @Deprecated
-    public void registerPolicy(String templateName, RenderPolicy policy) {
-        config.customPolicy(templateName, policy);
-    }
-
 	public void write(OutputStream out) throws IOException {
 		this.doc.write(out);
 	}

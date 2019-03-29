@@ -35,7 +35,7 @@ public class ListDataRenderTest {
         
         
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx");
-        template.registerPolicy("website", new ListDataRenderPolicy());
+//        template.registerPolicy("website", new ListDataRenderPolicy());
         
         template.render(datas);
 

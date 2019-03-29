@@ -113,7 +113,7 @@ public class ComplexRenderTest {
 
 		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
 		//动态持有XWPFTable对象
-		template.registerPolicy("table", new MiniTableRenderPolicy());
+//		template.registerPolicy("table", new MiniTableRenderPolicy());
 		template.render(datas);
 
 		FileOutputStream out = new FileOutputStream("out_complex.docx");
