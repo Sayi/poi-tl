@@ -2,15 +2,13 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![poi3.16](https://img.shields.io/badge/apache--poi-3.16-blue.svg) 
 
-:memo:  Word 模板引擎，基于Apache POI进行了一些增强封装，如合并多个Word文档、合并单元格、图片处理等，插件机制使得可以基于模板引擎特性扩展出更丰富的功能。
-
-> **模板和插件构建了整个Poi-tl的核心。**
+:memo:  Word 模板引擎，基于Apache Poi，目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
 
 下表对一些处理Word的解决方案作了一些比较：
 
 | 方案 | 跨平台 | 样式处理  | 易用性
 | --- | --- | --- | --- |
-| **Poi-tl** | 纯Java组件，跨平台 | :white_check_mark: 不需要编码，模板即样式 | :white_check_mark: 简单：模板引擎，对POI进行封装
+| **Poi-tl** | 纯Java组件，跨平台 | :white_check_mark: 不需要编码，模板即样式 | :white_check_mark: 简单：模板引擎，对POI进行封装，支持Word文档合并、表格处理等
 | Apache POI | 纯Java组件，跨平台 | 编码 | 简单，没有模板引擎功能
 | Freemarker | XML操作，跨平台 | 无 | 复杂，需要理解XML结构，基于XML构造模板
 | OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
@@ -58,8 +56,8 @@ template.close();
 ![](http://deepoove.com/poi-tl/demo.png)
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
-## 架构Arch
-**Poi-tl**通过极简的架构实现了模板功能并且支持最大的扩展性，架包体积仅有几十KB。
+## 架构设计
+**模板和插件构建了整个Poi-tl的核心。** Poi-tl通过极简的架构实现了模板功能并且支持最大的扩展性，架包体积仅有几十KB。
 
 整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块通过**RenderPolicy**对每个标签进行渲染。
 
