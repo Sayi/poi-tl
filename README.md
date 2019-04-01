@@ -1,6 +1,6 @@
 # Poi-tl(Poi-template-language)
 
-[![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![poi3.16](https://img.shields.io/badge/apache--poi-3.16-blue.svg) 
+[![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi4.0.0](https://img.shields.io/badge/apache--poi-4.0.0-blue.svg) 
 
 :memo:  Word 模板引擎，基于Apache Poi，目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
 
