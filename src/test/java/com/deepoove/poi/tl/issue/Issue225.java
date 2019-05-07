@@ -2,6 +2,7 @@ package com.deepoove.poi.tl.issue;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class Issue225 {
 			{
 
 				put("date", "2019-05-06");
-				put("first", new DocxRenderData(new File("src/test/resources/issue/225.docx")));
+				put("first", new DocxRenderData(new File("src/test/resources/issue/225.docx"), Arrays.asList(1, 2, 3)));
 
 			}
 		};
