@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.6.0-SNAPSHOT</version>
+	<version>1.5.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
@@ -72,17 +72,17 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>4.0.1</version>
+			<version>3.16</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>4.0.1</version>
+			<version>3.16</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>4.0.1</version>
+			<version>3.16</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
@@ -112,8 +112,8 @@
 					<plugin>
 						<artifactId>maven-compiler-plugin</artifactId>
 						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
+							<source>1.6</source>
+							<target>1.6</target>
 							<encoding>UTF-8</encoding>
 						</configuration>
 						<version>3.2</version>
@@ -189,8 +189,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<encoding>UTF-8</encoding>
 				</configuration>
 				<version>3.2</version>
