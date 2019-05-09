@@ -57,8 +57,8 @@ public class TextRenderPolicy extends AbstractRenderPolicy {
 
         StyleUtils.styleRun(run, textRenderData.getStyle());
 
-        String[] split = data.split(REGEX_LINE_CHARACTOR);
-        if (null != split) {
+        String[] split = data.split(REGEX_LINE_CHARACTOR, -1);
+        if (null != split && split.length > 0) {
             run.setText(split[0], 0);
             for (int i = 1; i < split.length; i++) {
                 run.addBreak();
