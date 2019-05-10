@@ -16,58 +16,79 @@
 package com.deepoove.poi.data;
 
 import java.io.File;
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.List;
 
+import com.deepoove.poi.util.ByteUtils;
+
 /**
- * 待合并文档和数据集合
+ * 待合并子文档和数据集合
+ * 
  * @author Sayi
  * @version 1.3.0
  */
 public class DocxRenderData implements RenderData {
 
     /**
-     * 待合并文档
+     * stream流无法重用，使用字节数组表示待合并文档
      */
-    private File docx;
+    private transient byte[] data;
 
     /**
      * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
      */
     private List<?> dataList;
 
+    /**
+     * @param docx
+     *            子文档
+     */
     public DocxRenderData(File docx) {
-        this.docx = docx;
+        this(docx, null);
     }
 
     /**
-     * 待合并文档可以先被数据集合渲染
+     * 构造子文档和渲染数据源
      * 
      * @param docx
-     * @param dataList 数据列表，列表的大小表示循环的次数
+     *            子文档
+     * @param dataList
+     *            渲染数据列表，列表的大小表示循环的次数
      */
     public DocxRenderData(File docx, List<?> dataList) {
-        this.docx = docx;
         this.dataList = dataList;
+        this.data = ByteUtils.getLocalByteArray(docx);
     }
-    
+
     /**
-     * 待合并文档可以先被数据渲染
-     * 
-     * @param docx
-     * @param data 数据，循环次数为1
+     * @param inputStream
+     *            子文档流
      */
-    public DocxRenderData(File docx, Object data) {
-        this.docx = docx;
-        this.dataList = Arrays.asList(data);
+    public DocxRenderData(InputStream inputStream) {
+        this(inputStream, null);
     }
 
-    public File getDocx() {
-        return docx;
+    /**
+     * @param inputStream
+     * @param dataList
+     */
+    public DocxRenderData(InputStream inputStream, List<?> dataList) {
+        this.dataList = dataList;
+        this.data = ByteUtils.toByteArray(inputStream);
     }
 
-    public void setDocx(File docx) {
-        this.docx = docx;
+    /**
+     * @param input
+     *            子文档字节数组
+     * @param dataList
+     */
+    public DocxRenderData(byte[] input, List<?> dataList) {
+        this.dataList = dataList;
+        this.data = input;
+    }
+
+    public byte[] getDocx() {
+        return data;
     }
 
     public List<?> getDataList() {

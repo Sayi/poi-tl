@@ -1,6 +1,7 @@
 package com.deepoove.poi.tl.policy;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class DocxRenderTest {
 				
 				put("docx_template3", new DocxRenderData(new File("src/test/resources/merge_table.docx")));
 				
-				put("docx_template4", new DocxRenderData(new File("src/test/resources/merge_all.docx")));
+				put("docx_template4", new DocxRenderData(new FileInputStream(new File("src/test/resources/merge_all.docx"))));
 
 				put("newline", "Why poi-tl?");
 
