@@ -15,7 +15,12 @@
  */
 package com.deepoove.poi.data;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+
 import com.deepoove.poi.util.BytePictureUtils;
+import com.deepoove.poi.util.ByteUtils;
 
 /**
  * 图片渲染数据
@@ -26,78 +31,123 @@ import com.deepoove.poi.util.BytePictureUtils;
  */
 public class PictureRenderData implements RenderData {
 
-	/**
-	 * 图片宽度
-	 */
-	private int width;
-	/**
-	 * 图片高度
-	 */
-	private int height;
-	/**
-	 * 图片路径
-	 */
-	private String path;
+    /**
+     * 图片宽度
+     */
+    private int width;
+    /**
+     * 图片高度
+     */
+    private int height;
+    /**
+     * 图片路径
+     */
+    private String path;
 
-	/**
-	 * 图片二进制数据
-	 */
-	private transient byte[] data;
+    /**
+     * 图片二进制数据
+     */
+    private transient byte[] data;
 
-	/**
-	 * @param width 宽度
-	 * @param height 高度
-	 * @param path  本地图片路径
-	 */
-	public PictureRenderData(int width, int height, String path) {
-		this.width = width;
-		this.height = height;
-		this.path = path;
-	}
+    /**
+     * 根据本地路径构建图片数据源
+     * 
+     * @param width
+     *            宽度
+     * @param height
+     *            高度
+     * @param path
+     *            本地图片路径
+     */
+    public PictureRenderData(int width, int height, String path) {
+        this.width = width;
+        this.height = height;
+        this.path = path;
+    }
 
-	/**
-	 * @param width 宽度
-	 * @param height 高度
-	 * @param path 标识图片后缀，如.png、.jpg等
-	 * @param data 图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
-	 */
-	public PictureRenderData(int width, int height, String path, byte[] data) {
-		this.width = width;
-		this.height = height;
-		this.path = path;
-		this.data = data;
-	}
+    /**
+     * 根据File文件构建图片数据源
+     * 
+     * @param width
+     * @param height
+     * @param picture
+     */
+    public PictureRenderData(int width, int height, File picture) {
+        this(width, height, picture.getPath(), ByteUtils.getLocalByteArray(picture));
+    }
+    
+    /**
+     * 根据流构建图片数据源
+     * 
+     * @param width
+     * @param height
+     * @param picture
+     */
+    public PictureRenderData(int width, int height, String format, InputStream input) {
+        this(width, height, format, ByteUtils.toByteArray(input));
+    }
 
-	public int getWidth() {
-		return width;
-	}
+    /**
+     * 根据BufferedImage构建图片数据源
+     * 
+     * @param width
+     * @param height
+     * @param format
+     * @param image
+     */
+    public PictureRenderData(int width, int height, String format, BufferedImage image) {
+        this(width, height, format, BytePictureUtils.getBufferByteArray(image));
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    /**
+     * 根据字节数组构建图片数据源
+     * 
+     * @param width
+     *            宽度
+     * @param height
+     *            高度
+     * @param format
+     *            标识图片后缀，如.png、.jpg等
+     * @param data
+     *            图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
+     */
+    public PictureRenderData(int width, int height, String format, byte[] data) {
+        this.width = width;
+        this.height = height;
+        this.path = format;
+        this.data = data;
+    }
 
-	public int getHeight() {
-		return height;
-	}
+    public int getWidth() {
+        return width;
+    }
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public int getHeight() {
+        return height;
+    }
 
-	public void setPath(String path) {
-		this.path = path;
-	}
+    public void setHeight(int height) {
+        this.height = height;
+    }
 
-	public byte[] getData() {
-		return data;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public void setData(byte[] data) {
-		this.data = data;
-	}
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public byte[] getData() {
+        return data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 
 }

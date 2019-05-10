@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,12 +42,12 @@ public class PictureRenderTest {
 			{
 				//本地图片
 				put("localPicture", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-				//本地图片byte数据
-				put("localBytePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getLocalByteArray(new File("src/test/resources/logo.png"))));
-				//网路图片 
+				//图片流文件
+				put("localBytePicture", new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/logo.png")));
+				//网络图片 
 				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
 				// java 图片
-				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));
+				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage));
 			}
 		};
 
