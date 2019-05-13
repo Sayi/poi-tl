@@ -46,7 +46,7 @@ public class XWPFTemplateTest {
 			{
 				put("header", "Deeply love what you love.");
 				put("name", "Poi-tl");
-				put("word", "模板引擎");
+				put("word.tt", "模板引擎");
 				put("time", "2018-06-20");
 				put("what",
 						"Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
