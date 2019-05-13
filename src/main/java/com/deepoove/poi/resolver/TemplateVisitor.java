@@ -48,13 +48,10 @@ public class TemplateVisitor implements Visitor {
 	private Configure config;
 	private List<ElementTemplate> eleTemplates;
 	
-	/**
-	 * 使用正则表达式解析
-	 */
 	private Pattern templatePattern;
     private Pattern gramerPattern;
 
-	static final String FORMAT_TEMPLATE = "{0}{1}[\\w+(\\.\\w+)|\u4e00-\u9fa5]*{2}";
+	static final String FORMAT_TEMPLATE = "{0}{1}{2}{3}";
     static final String FORMAT_GRAMER = "({0})|({1})";
 
 	public TemplateVisitor(Configure config) {
@@ -167,7 +164,7 @@ public class TemplateVisitor implements Visitor {
         String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
 
         templatePattern = Pattern
-                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefixRegex, signRegex, suffixRegex));
+                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefixRegex, signRegex, config.getReg(), suffixRegex));
         gramerPattern = Pattern.compile(MessageFormat.format(FORMAT_GRAMER , prefixRegex, suffixRegex));
     }
 

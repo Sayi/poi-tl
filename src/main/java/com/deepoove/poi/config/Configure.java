@@ -34,6 +34,11 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  */
 public class Configure {
 
+    /**
+     * 支持中文、字母、数字、下划线的正则
+     */
+    public static final String REG = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
+    
 	// Highest priority
 	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
 	// Low priority
@@ -135,7 +140,11 @@ public class Configure {
 		return defaultPolicys.get(sign);
 	}
 
-	public static class ConfigureBuilder {
+	public String getReg() {
+        return REG;
+    }
+
+    public static class ConfigureBuilder {
 		private Configure config = new Configure();
 
 		public ConfigureBuilder() {
