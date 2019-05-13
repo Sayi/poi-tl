@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.util.ObjectUtils;
 
@@ -40,7 +39,8 @@ public class Dot {
 	private Dot target;
 	private String key;
 
-	final static Pattern EL_PATTERN = Pattern.compile("^" + Configure.REG + "$");
+	// EL通用正则
+	final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\\\.]+)*$");
 
 	public Dot(String el) {
 		ObjectUtils.requireNonNull(el, "EL cannot be null.");

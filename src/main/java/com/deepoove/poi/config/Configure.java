@@ -34,142 +34,146 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  */
 public class Configure {
 
+    // Highest priority
+    private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
+    // Low priority
+    private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
+
+    private String gramerPrefix = "{{";
+    private String gramerSuffix = "}}";
+
     /**
      * 支持中文、字母、数字、下划线的正则
      */
-    public static final String REG = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
-    
-	// Highest priority
-	private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
-	// Low priority
-	private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
+    private String grammerReg = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
 
-	private String gramerPrefix = "{{";
-	private String gramerSuffix = "}}";
+    private Configure() {
+        plugin(GramerSymbol.TEXT, new TextRenderPolicy());
+        plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
+        plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
+        plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
+        plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
+    }
 
-	private Configure() {
-		plugin(GramerSymbol.TEXT, new TextRenderPolicy());
-		plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
-		plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
-		plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
-		plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
-	}
+    /**
+     * 获取默认配置
+     */
+    public static Configure createDefault() {
+        return newBuilder().build();
+    }
 
-	/**
-	 * 获取默认配置
-	 */
-	public static Configure createDefault() {
-		return newBuilder().build();
-	}
+    /**
+     * 获取构建器
+     */
+    public static ConfigureBuilder newBuilder() {
+        return new ConfigureBuilder();
+    }
 
-	/**
-	 * 获取构建器
-	 */
-	public static ConfigureBuilder newBuilder() {
-		return new ConfigureBuilder();
-	}
-
-	/**
-	 * 新增语法插件
-	 * 
-	 * @param c
-	 *            模板语法
-	 * @param policy
-	 *            策略
-	 */
-	public Configure plugin(char c, RenderPolicy policy) {
-		defaultPolicys.put(Character.valueOf(c), policy);
-		return this;
-	}
+    /**
+     * 新增语法插件
+     * 
+     * @param c
+     *            模板语法
+     * @param policy
+     *            策略
+     */
+    public Configure plugin(char c, RenderPolicy policy) {
+        defaultPolicys.put(Character.valueOf(c), policy);
+        return this;
+    }
 
     Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
         defaultPolicys.put(symbol.getSymbol(), policy);
         return this;
     }
 
-	/**
-	 * 自定义模板
-	 * 
-	 * @param tagName
-	 *            模板名称
-	 * @param policy
-	 *            策略
-	 */
-	public void customPolicy(String tagName, RenderPolicy policy) {
-		customPolicys.put(tagName, policy);
-	}
+    /**
+     * 自定义模板
+     * 
+     * @param tagName
+     *            模板名称
+     * @param policy
+     *            策略
+     */
+    public void customPolicy(String tagName, RenderPolicy policy) {
+        customPolicys.put(tagName, policy);
+    }
 
-	/**
-	 * 获取标签策略
-	 * 
-	 * @param tagName
-	 *            模板名称
-	 * @param sign
-	 *            语法
-	 */
-	public RenderPolicy getPolicy(String tagName, Character sign) {
-		RenderPolicy policy = getCustomPolicy(tagName);
-		return null == policy ? getDefaultPolicy(sign) : policy;
-	}
+    /**
+     * 获取标签策略
+     * 
+     * @param tagName
+     *            模板名称
+     * @param sign
+     *            语法
+     */
+    public RenderPolicy getPolicy(String tagName, Character sign) {
+        RenderPolicy policy = getCustomPolicy(tagName);
+        return null == policy ? getDefaultPolicy(sign) : policy;
+    }
 
-	public Map<Character, RenderPolicy> getDefaultPolicys() {
-		return defaultPolicys;
-	}
+    public Map<Character, RenderPolicy> getDefaultPolicys() {
+        return defaultPolicys;
+    }
 
-	public Map<String, RenderPolicy> getCustomPolicys() {
-		return customPolicys;
-	}
+    public Map<String, RenderPolicy> getCustomPolicys() {
+        return customPolicys;
+    }
 
-	public Set<Character> getGramerChars() {
-		return defaultPolicys.keySet();
-	}
+    public Set<Character> getGramerChars() {
+        return defaultPolicys.keySet();
+    }
 
-	public String getGramerPrefix() {
-		return gramerPrefix;
-	}
+    public String getGramerPrefix() {
+        return gramerPrefix;
+    }
 
-	public String getGramerSuffix() {
-		return gramerSuffix;
-	}
+    public String getGramerSuffix() {
+        return gramerSuffix;
+    }
 
-	private RenderPolicy getCustomPolicy(String tagName) {
-		return customPolicys.get(tagName);
-	}
+    private RenderPolicy getCustomPolicy(String tagName) {
+        return customPolicys.get(tagName);
+    }
 
-	private RenderPolicy getDefaultPolicy(Character sign) {
-		return defaultPolicys.get(sign);
-	}
+    private RenderPolicy getDefaultPolicy(Character sign) {
+        return defaultPolicys.get(sign);
+    }
 
-	public String getReg() {
-        return REG;
+    public String getReg() {
+        return grammerReg;
     }
 
     public static class ConfigureBuilder {
-		private Configure config = new Configure();
+        private Configure config = new Configure();
 
-		public ConfigureBuilder() {
-		}
+        public ConfigureBuilder() {}
 
-		public ConfigureBuilder buildGramer(String prefix, String suffix) {
-			config.gramerPrefix = prefix;
-			config.gramerSuffix = suffix;
-			return this;
-		}
+        public ConfigureBuilder buildGramer(String prefix, String suffix) {
+            config.gramerPrefix = prefix;
+            config.gramerSuffix = suffix;
+            return this;
+        }
 
-		public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
-			config.plugin(c, policy);
-			return this;
-		}
+        public ConfigureBuilder buildReg(String reg) {
+            config.grammerReg = reg;
+            return this;
+        }
 
-		public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
-			config.customPolicy(tagName, policy);
-			return this;
-		}
+        public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
+            config.plugin(c, policy);
+            return this;
+        }
 
-		public Configure build() {
-			return config;
-		}
+        public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
+            config.customPolicy(tagName, policy);
+            return this;
+        }
 
-	}
+        public Configure build() {
+            return config;
+        }
+
+    }
 
 }
