@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.deepoove.poi.config.Configure;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -108,5 +109,29 @@ public class XWPFTemplateTest {
 		out.close();
 	}
 
+
+	/**
+	 * 支持中文变量--测试
+	 */
+	@Test
+	public void poiTemplate() {
+		Configure.ConfigureBuilder builder = Configure.newBuilder();
+		builder.buildGramer("${", "}");
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/my_template.docx", builder.build()).render(new HashMap<String, Object>() {{
+			put("title", "模板引擎测试");
+			put("rent", "10000");
+			put("签约时间", "2019年5月13日");//支持中文变量，格式为：${签约时间}
+		}});
+
+		try {
+			FileOutputStream out = new FileOutputStream("my_template_out.docx");
+			template.write(out);
+			out.flush();
+			out.close();
+			template.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }

@@ -43,7 +43,7 @@ public class Dot {
 	final static Pattern EL_PATTERN;
 
 	static {
-		EL_REGEX = "^\\w+(\\.\\w+)*$";
+		EL_REGEX = "^[\\w+(\\.\\w+)|\u4e00-\u9fa5]*$";
 		EL_PATTERN = Pattern.compile(EL_REGEX);
 	}
 
