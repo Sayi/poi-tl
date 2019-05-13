@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.deepoove.poi.config.Configure;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class XWPFTemplateTest {
 			{
 				put("header", "Deeply love what you love.");
 				put("name", "Poi-tl");
-				put("word", "模板引擎");
+				put("word.tt", "模板引擎");
 				put("time", "2018-06-20");
 				put("what",
 						"Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
@@ -108,5 +109,29 @@ public class XWPFTemplateTest {
 		out.close();
 	}
 
+
+	/**
+	 * 支持中文变量--测试
+	 */
+	@Test
+	public void poiTemplate() {
+		Configure.ConfigureBuilder builder = Configure.newBuilder();
+		builder.buildGramer("${", "}");
+		XWPFTemplate template = XWPFTemplate.compile("src/test/resources/my_template.docx", builder.build()).render(new HashMap<String, Object>() {{
+			put("title", "模板引擎测试");
+			put("rent", "10000");
+			put("签约时间", "2019年5月13日");//支持中文变量，格式为：${签约时间}
+		}});
+
+		try {
+			FileOutputStream out = new FileOutputStream("my_template_out.docx");
+			template.write(out);
+			out.flush();
+			out.close();
+			template.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
 }

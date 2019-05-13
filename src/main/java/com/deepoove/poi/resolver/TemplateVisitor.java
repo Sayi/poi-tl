@@ -54,7 +54,7 @@ public class TemplateVisitor implements Visitor {
 	private Pattern templatePattern;
     private Pattern gramerPattern;
 
-    static final String FORMAT_TEMPLATE = "{0}{1}\\w+(\\.\\w+)*{2}";
+	static final String FORMAT_TEMPLATE = "{0}{1}[\\w+(\\.\\w+)|\u4e00-\u9fa5]*{2}";
     static final String FORMAT_GRAMER = "({0})|({1})";
 
 	public TemplateVisitor(Configure config) {
