@@ -16,6 +16,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
@@ -30,14 +31,12 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy {
         if (null == data) return false;
 
         if (!(data instanceof NumbericRenderData)) {
-            logger.error("Error datamodel: correct type is NumbericRenderData, but is "
+            throw new RenderException("Error datamodel: correct type is NumbericRenderData, but is "
                     + data.getClass());
-            return false;
         }
 
         if (CollectionUtils.isEmpty(((NumbericRenderData) data).getNumbers())) {
-            logger.error("Empty NumbericRenderData datamodel: {}", data);
-            return false;
+            throw new RenderException("Empty NumbericRenderData datamodel: " + data);
         }
 
         return true;

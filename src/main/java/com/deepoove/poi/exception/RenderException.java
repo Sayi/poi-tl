@@ -17,13 +17,16 @@ package com.deepoove.poi.exception;
 
 public class RenderException extends RuntimeException {
 
-	private static final long serialVersionUID = -5336295846040984205L;
+    private static final long serialVersionUID = -5336295846040984205L;
 
-	public RenderException() {
-	}
+    public RenderException() {}
 
-	public RenderException(String msg) {
-		super(msg);
-	}
+    public RenderException(String msg) {
+        super(msg);
+    }
+
+    public RenderException(String msg, Throwable e) {
+        super(msg, e);
+    }
 
 }

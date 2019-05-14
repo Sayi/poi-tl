@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy {
@@ -35,9 +36,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
         if (null == data) return false;
 
         if (!(data instanceof PictureRenderData)) {
-            logger.error("Error datamodel: correct type is PictureRenderData, but is "
+            throw new RenderException("Error datamodel: correct type is PictureRenderData, but is "
                     + data.getClass());
-            return false;
         }
 
         return (null != ((PictureRenderData) data).getData()
@@ -48,8 +48,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
     public void doRender(RunTemplate runTemplate, Object model, XWPFTemplate template)
             throws Exception {
     	XWPFRun run = runTemplate.getRun();
-        // 如果出现异常，图片不存在，优先清空标签
-        clearPlaceholder(run);
+        
 
         PictureRenderData picture = (PictureRenderData) model;
         int suggestFileType = suggestFileType(picture.getPath());
@@ -58,6 +57,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
         
         run.addPicture(ins, suggestFileType, "Generated", picture.getWidth()*EMU,
                 picture.getHeight()*EMU);
+        
+        clearPlaceholder(run);
     }
 
     public static int suggestFileType(String imgFile) {

@@ -26,6 +26,7 @@ import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
@@ -47,7 +48,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy {
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
-        // 优先清空标签
+        // 文档模板优先清空标签
         clearPlaceholder(run);
 
         List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data,
@@ -55,7 +56,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy {
         try {
             doc = doc.merge(docMerges, run);
         } catch (Exception e) {
-            logger.error("merge docx error", e);
+            throw new RenderException("merge docx error", e);
         }
 
         template.reload(doc);

@@ -107,9 +107,9 @@ public class RenderAPI {
 				}
 			}
 		} catch (Exception e) {
-			LOGGER.error("Render docx error", e);
+			throw new RenderException("Render docx error", e);
 		}
-		LOGGER.info("Render the template file end.");
+		LOGGER.info("Render the template file success.");
 	}
 
 	private static void doRender(ElementTemplate ele, ELObject model, RenderPolicy policy, XWPFTemplate template) {
