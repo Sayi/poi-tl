@@ -42,7 +42,7 @@ public abstract class AbstractRenderPolicy implements RenderPolicy {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;
         // validate
         if (!validate(data)) {
-            // clearPlaceholder(runTemplate.getRun());
+            clearPlaceholder(runTemplate.getRun());
             return;
         }
 
