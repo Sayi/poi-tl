@@ -54,11 +54,11 @@ public final class BytePictureUtils {
 	 */
 	public static byte[] getUrlByteArray(String urlPath) {
 		try {
-            return toByteArray(getUrlPictureStream(urlPath));
+		    InputStream urlPictureStream = getUrlPictureStream(urlPath);
+            return toByteArray(urlPictureStream);
         } catch (IOException e) {
-            logger.error("getUrlPictureStream error,{},{}", urlPath, e);
+            throw new RuntimeException("getUrlPictureStream error: " + urlPath, e);
         }
-		return null;
 	}
 
 	/**
@@ -72,9 +72,8 @@ public final class BytePictureUtils {
 		try {
 			return toByteArray(new FileInputStream(res));
 		} catch (FileNotFoundException e) {
-			logger.error("FileNotFound", e);
+			throw new RuntimeException("FileNotFound", e);
 		} 
-		return null;
 	}
 
 	/**
@@ -89,7 +88,7 @@ public final class BytePictureUtils {
 		try {
 			ImageIO.write(image, "png", os);
 		} catch (IOException e) {
-			logger.error("getBufferByteArray error", e);
+			throw new RuntimeException("getBufferByteArray error", e);
 		}
 		return os.toByteArray();
 	}
@@ -105,7 +104,7 @@ public final class BytePictureUtils {
 		try {
 			return IOUtils.toByteArray(is);
 		} catch (IOException e) {
-			logger.error("toByteArray error", e);
+			throw new RuntimeException("toByteArray error", e);
 		} finally {
 		    try {
                 is.close();
@@ -113,7 +112,6 @@ public final class BytePictureUtils {
                 logger.error("close stream error", e);
             }
 		}
-		return null;
 	}
 
 	/**
@@ -130,8 +128,8 @@ public final class BytePictureUtils {
 			return bufferImage;
 		} catch (Exception e) {
 			logger.error("getUrlBufferedImage error, {}, {}", urlPath, e);
+			throw new RuntimeException("getUrlBufferedImage error", e);
 		}
-		return null;
 
 	}
 
@@ -146,11 +144,10 @@ public final class BytePictureUtils {
 			BufferedImage read = ImageIO.read(res);
 			return read;
 		} catch (FileNotFoundException e) {
-			logger.error("FileNotFound", e);
+			throw new RuntimeException("FileNotFound", e);
 		} catch (IOException e) {
-			logger.error("getLocalBufferedImage IO error", e);
+			throw new RuntimeException("getLocalBufferedImage IO error", e);
 		}
-		return null;
 	}
 
 	/**
@@ -162,7 +159,7 @@ public final class BytePictureUtils {
 	 */
 	public static InputStream getUrlPictureStream(String urlPath) throws IOException {
 		URL url  = new URL(urlPath);
-		return url.openConnection().getInputStream();
+		return url.openStream();
 	}
 
 	/**

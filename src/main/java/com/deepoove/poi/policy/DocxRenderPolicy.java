@@ -53,12 +53,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy {
 
         List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data,
                 template.getConfig());
-        try {
-            doc = doc.merge(docMerges, run);
-        } catch (Exception e) {
-            throw new RenderException("merge docx error", e);
-        }
-
+        doc = doc.merge(docMerges, run);
         template.reload(doc);
     }
 
