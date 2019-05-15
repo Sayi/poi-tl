@@ -42,8 +42,8 @@ public final class ByteUtils {
             return toByteArray(getUrlStream(urlPath));
         } catch (IOException e) {
             logger.error("getUrlPictureStream error,{},{}", urlPath, e);
-            throw new RuntimeException("Cannot find the file [" + urlPath + "]", e);
         }
+        return null;
     }
 
     /**
@@ -58,8 +58,8 @@ public final class ByteUtils {
             return toByteArray(new FileInputStream(res));
         } catch (FileNotFoundException e) {
             logger.error("FileNotFound", e);
-            throw new RuntimeException("Cannot find the file [" + res + "]", e);
         }
+        return null;
     }
 
     /**
@@ -74,8 +74,6 @@ public final class ByteUtils {
             return IOUtils.toByteArray(is);
         } catch (IOException e) {
             logger.error("toByteArray error", e);
-            throw new RuntimeException("toByteArray error", e);
-            
         }
         finally {
             try {
@@ -84,6 +82,7 @@ public final class ByteUtils {
                 logger.error("close stream error", e);
             }
         }
+        return null;
     }
 
     /**
@@ -95,6 +94,6 @@ public final class ByteUtils {
      */
     public static InputStream getUrlStream(String urlPath) throws IOException {
         URL url = new URL(urlPath);
-        return url.openStream();
+        return url.openConnection().getInputStream();
     }
 }
