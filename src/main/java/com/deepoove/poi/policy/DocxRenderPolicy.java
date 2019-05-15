@@ -71,7 +71,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy {
                 // 待合并的文档不是模板
                 docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));
             } catch (Exception e) {
-                throw new RenderException("Cannot get the merged docx.", e);
+                logger.error("Cannot get the merged docx.", e);
             }
         } else {
             for (int i = 0; i < dataList.size(); i++) {

@@ -82,14 +82,16 @@ public class Dot {
 
 		Field field = FieldFinder.find(objClass, key);
 		if (null == field) {
-		    throw new ExpressionEvalException("Connot find the key:" + key + " from Prefix-Model EL:" + target);
+			logger.error("Connot find the key:" + key + " from Prefix-Model EL:" + target);
 		} else {
 			try {
 				return field.get(obj);
 			} catch (Exception e) {
-			    throw new ExpressionEvalException("Error read the property:" + key + " from " + objClass);
+				logger.error("Error read the property:" + key + " from " + objClass);
 			}
 		}
+		return null;
+
 	}
 
 	public String getEl() {
