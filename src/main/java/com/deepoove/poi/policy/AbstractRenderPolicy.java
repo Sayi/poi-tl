@@ -3,7 +3,6 @@ package com.deepoove.poi.policy;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -57,7 +56,7 @@ public abstract class AbstractRenderPolicy implements RenderPolicy {
     }
 
     protected void doRenderException(RunTemplate runTemplate, Object data, Exception e) {
-        throw new RenderException("Render template: " + runTemplate + " error.", e);
+        logger.error("Render template:{} error", runTemplate, e);
     }
 
     protected void clearPlaceholder(XWPFRun run) {

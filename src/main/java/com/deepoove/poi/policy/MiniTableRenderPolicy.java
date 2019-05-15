@@ -32,7 +32,6 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 import com.deepoove.poi.util.StyleUtils;
@@ -50,12 +49,14 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
     protected boolean validate(Object data) {
         if (null == data) return false;
         if (!(data instanceof MiniTableRenderData)) {
-            throw new RenderException("Error datamodel: correct type is MiniTableRenderData, but is "
+            logger.error("Error datamodel: correct type is MiniTableRenderData, but is "
                     + data.getClass());
+            return false;
         }
         if (!((MiniTableRenderData) data).isSetBody()
                 && !((MiniTableRenderData) data).isSetHeader()) {
-            throw new RenderException("Empty MiniTableRenderData datamodel: " + data);
+            logger.error("Empty MiniTableRenderData datamodel: {}", data);
+            return false;
         }
         return true;
     }
