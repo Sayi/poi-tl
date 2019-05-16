@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy {
@@ -35,9 +36,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy {
         if (null == data) return false;
 
         if (!(data instanceof PictureRenderData)) {
-            logger.error("Error datamodel: correct type is PictureRenderData, but is "
+            throw new RenderException("Error datamodel: correct type is PictureRenderData, but is "
                     + data.getClass());
-            return false;
         }
 
         return (null != ((PictureRenderData) data).getData()
