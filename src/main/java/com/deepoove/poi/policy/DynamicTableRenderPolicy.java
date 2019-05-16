@@ -24,6 +24,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -56,7 +57,7 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
             XWPFTable table = doc.getTableByCTTbl((CTTbl) object);
             render(table, data);
         } catch (Exception e) {
-            logger.error("dynamic table error:" + e.getMessage(), e);
+            throw new RenderException("dynamic table error:" + e.getMessage(), e);
         }
     }
 

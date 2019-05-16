@@ -42,137 +42,135 @@ import com.deepoove.poi.util.ObjectUtils;
  */
 public class RenderAPI {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RenderAPI.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RenderAPI.class);
 
-	public static void render(XWPFTemplate template, Object dataModel) {
+    public static void render(XWPFTemplate template, Object dataModel) {
 
-		ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
-		ObjectUtils.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
-		
-		LOGGER.info("Render the template file start...");
+        ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
+        ObjectUtils.requireNonNull(dataModel, "Data-Model is null, should be setted first.");
 
-		int docxCount = 0;
-		Configure config = template.getConfig();
+        LOGGER.info("Render the template file start...");
 
-		// 模板
-		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty()) {
-			return;
-		}
-		// 策略
-		RenderPolicy policy = null;
-		// 数据模型
-		ELObject elObject = ELObject.create(dataModel);
+        int docxCount = 0;
+        Configure config = template.getConfig();
 
-		for (ElementTemplate runTemplate : elementTemplates) {
-			policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-			if (null == policy) {
-				throw new RenderException("Cannot find render policy: [" + runTemplate.getTagName() + "]");
-			}
+        // 模板
+        List<ElementTemplate> elementTemplates = template.getElementTemplates();
+        if (null == elementTemplates || elementTemplates.isEmpty()) { return; }
+        // 策略
+        RenderPolicy policy = null;
+        // 数据模型
+        ELObject elObject = ELObject.create(dataModel);
 
-			if (policy instanceof DocxRenderPolicy) {
-				docxCount++;
-			} else {
-				doRender(runTemplate, elObject, policy, template);
-			}
-		}
+        try {
 
-		try {
-			if (docxCount >= 1)
-				template.reload(template.getXWPFDocument().generate());
+            for (ElementTemplate runTemplate : elementTemplates) {
+                policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
+                if (null == policy) { throw new RenderException(
+                        "Cannot find render policy: [" + runTemplate.getTagName() + "]"); }
 
-			NiceXWPFDocument current = null;
-			for (int i = 0; i < docxCount; i++) {
-			    current = template.getXWPFDocument();
-				elementTemplates = template.getElementTemplates();
-				if (null == elementTemplates || elementTemplates.isEmpty()) {
-					break;
-				}
+                if (policy instanceof DocxRenderPolicy) {
+                    docxCount++;
+                } else {
+                    doRender(runTemplate, elObject, policy, template);
+                }
+            }
 
-				for (ElementTemplate runTemplate : elementTemplates) {
-					policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-					if (null == policy || !(policy instanceof DocxRenderPolicy)) {
-						continue;
-					}
+            if (docxCount >= 1) template.reload(template.getXWPFDocument().generate());
 
-					doRender(runTemplate, elObject, policy, template);
-					
-					// 没有最终合并，继续下一个合并
-					if (current == template.getXWPFDocument()) {
-					    i++;
-					    continue;
-					} else {
-					    break;
-					}
-				}
-			}
-		} catch (Exception e) {
-			LOGGER.error("Render docx error", e);
-		}
-		LOGGER.info("Render the template file end.");
-	}
+            NiceXWPFDocument current = null;
+            for (int i = 0; i < docxCount; i++) {
+                current = template.getXWPFDocument();
+                elementTemplates = template.getElementTemplates();
+                if (null == elementTemplates || elementTemplates.isEmpty()) {
+                    break;
+                }
 
-	private static void doRender(ElementTemplate ele, ELObject model, RenderPolicy policy, XWPFTemplate template) {
-		LOGGER.debug("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(), ele.getSign(),
-				policy.getClass().getSimpleName());
-		policy.render(ele, model.eval(ele.getTagName()), template);
-	}
+                for (ElementTemplate runTemplate : elementTemplates) {
+                    policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
+                    if (null == policy || !(policy instanceof DocxRenderPolicy)) {
+                        continue;
+                    }
 
-	/**
-	 * 自我渲染
-	 * 
-	 * @param template
-	 */
-	public static void selfRender(XWPFTemplate template) {
-		ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
-		List<ElementTemplate> elementTemplates = template.getElementTemplates();
-		if (null == elementTemplates || elementTemplates.isEmpty())
-			return;
-		RenderPolicy policy = null;
-		for (ElementTemplate runTemplate : elementTemplates) {
-			LOGGER.debug("Start self-render TemplateName:{}, Sign:{}", runTemplate.getTagName(), runTemplate.getSign());
-			policy = template.getConfig().getDefaultPolicys().get(Character.valueOf('\0'));
-			policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
-		}
-	}
+                    doRender(runTemplate, elObject, policy, template);
 
-	/**
-	 * 协助调试：判断是否有缺失模板
-	 * 
-	 * @param template
-	 * @param datas
-	 */
-	// TODO 数据模型为对象而不仅仅是Map
-	@Deprecated
-	public static void debug(XWPFTemplate template, Map<String, Object> datas) {
-		List<ElementTemplate> all = template.getElementTemplates();
-		LOGGER.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
-		if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty())) {
-			LOGGER.debug("No template gramer find and no render data find");
-			return;
-		}
-		Set<String> tagtKeys = new HashSet<String>();
-		for (ElementTemplate ele : all) {
-			LOGGER.debug("Parse the tag：{}", ele.getTagName());
-			tagtKeys.add(ele.getTagName());
-		}
+                    // 没有最终合并，继续下一个合并
+                    if (current == template.getXWPFDocument()) {
+                        i++;
+                        continue;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RenderException("Render docx error", e);
+        }
+        LOGGER.info("Render the template file successed.");
+    }
 
-		Set<String> keySet = datas.keySet();
-		HashSet<String> copySet = new HashSet<String>(keySet);
+    private static void doRender(ElementTemplate ele, ELObject model, RenderPolicy policy,
+            XWPFTemplate template) {
+        LOGGER.debug("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(),
+                ele.getSign(), policy.getClass().getSimpleName());
+        policy.render(ele, model.eval(ele.getTagName()), template);
+    }
 
-		copySet.removeAll(tagtKeys);
-		Iterator<String> iterator = copySet.iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			LOGGER.warn("Cannot find the gramer tag in template:" + key);
-		}
-		tagtKeys.removeAll(keySet);
-		iterator = tagtKeys.iterator();
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-			LOGGER.warn("Cannot find the feild in java Map or Object:" + key);
-		}
+    /**
+     * 自我渲染
+     * 
+     * @param template
+     */
+    public static void selfRender(XWPFTemplate template) {
+        ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
+        List<ElementTemplate> elementTemplates = template.getElementTemplates();
+        if (null == elementTemplates || elementTemplates.isEmpty()) return;
+        RenderPolicy policy = null;
+        for (ElementTemplate runTemplate : elementTemplates) {
+            LOGGER.debug("Start self-render TemplateName:{}, Sign:{}", runTemplate.getTagName(),
+                    runTemplate.getSign());
+            policy = template.getConfig().getDefaultPolicys().get(Character.valueOf('\0'));
+            policy.render(runTemplate, new TextRenderData(runTemplate.getSource()), template);
+        }
+    }
 
-	}
+    /**
+     * 协助调试：判断是否有缺失模板
+     * 
+     * @param template
+     * @param datas
+     */
+    // TODO 数据模型为对象而不仅仅是Map
+    @Deprecated
+    public static void debug(XWPFTemplate template, Map<String, Object> datas) {
+        List<ElementTemplate> all = template.getElementTemplates();
+        LOGGER.debug("Template tag number is:{}", (null == all ? 0 : all.size()));
+        if ((all == null || all.isEmpty()) && (null == datas || datas.isEmpty())) {
+            LOGGER.debug("No template gramer find and no render data find");
+            return;
+        }
+        Set<String> tagtKeys = new HashSet<String>();
+        for (ElementTemplate ele : all) {
+            LOGGER.debug("Parse the tag：{}", ele.getTagName());
+            tagtKeys.add(ele.getTagName());
+        }
+
+        Set<String> keySet = datas.keySet();
+        HashSet<String> copySet = new HashSet<String>(keySet);
+
+        copySet.removeAll(tagtKeys);
+        Iterator<String> iterator = copySet.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            LOGGER.warn("Cannot find the gramer tag in template:" + key);
+        }
+        tagtKeys.removeAll(keySet);
+        iterator = tagtKeys.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            LOGGER.warn("Cannot find the feild in java Map or Object:" + key);
+        }
+
+    }
 
 }

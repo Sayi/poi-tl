@@ -36,7 +36,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy {
         }
 
         if (CollectionUtils.isEmpty(((NumbericRenderData) data).getNumbers())) {
-            logger.error("Empty NumbericRenderData datamodel: {}", data);
+            logger.debug("Empty NumbericRenderData datamodel: {}", data);
             return false;
         }
 

@@ -52,29 +52,22 @@ public class DocxRenderPolicy extends AbstractRenderPolicy {
 
         List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data,
                 template.getConfig());
-        try {
-            doc = doc.merge(docMerges, run);
-        } catch (Exception e) {
-            logger.error("merge docx error", e);
-        }
+        doc = doc.merge(docMerges, run);
 
         template.reload(doc);
     }
 
-    private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data, Configure configure) throws IOException {
+    private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data, Configure configure)
+            throws IOException {
         List<NiceXWPFDocument> docs = new ArrayList<NiceXWPFDocument>();
         byte[] docx = data.getDocx();
         List<?> dataList = data.getDataList();
         if (null == dataList || dataList.isEmpty()) {
-            try {
-                // 待合并的文档不是模板
-                docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));
-            } catch (Exception e) {
-                logger.error("Cannot get the merged docx.", e);
-            }
+            // 待合并的文档不是模板
+            docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));
         } else {
             for (int i = 0; i < dataList.size(); i++) {
-                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx) , configure);
+                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx), configure);
                 temp.render(dataList.get(i));
                 docs.add(temp.getXWPFDocument());
             }

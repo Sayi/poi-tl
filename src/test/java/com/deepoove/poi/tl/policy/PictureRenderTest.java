@@ -3,7 +3,6 @@ package com.deepoove.poi.tl.policy;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
@@ -45,7 +44,7 @@ public class PictureRenderTest {
 				//图片流文件
 				put("localBytePicture", new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/logo.png")));
 				//网络图片 
-				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
+				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
 				// java 图片
 				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage));
 			}

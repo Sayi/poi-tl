@@ -55,7 +55,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
         }
         if (!((MiniTableRenderData) data).isSetBody()
                 && !((MiniTableRenderData) data).isSetHeader()) {
-            logger.error("Empty MiniTableRenderData datamodel: {}", data);
+            logger.debug("Empty MiniTableRenderData datamodel: {}", data);
             return false;
         }
         return true;

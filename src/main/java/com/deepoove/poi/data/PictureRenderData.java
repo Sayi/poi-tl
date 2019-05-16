@@ -50,6 +50,11 @@ public class PictureRenderData implements RenderData {
     private transient byte[] data;
 
     /**
+     * 当图片不存在时，显示的文字
+     */
+    private String altMeta = "";
+
+    /**
      * 根据本地路径构建图片数据源
      * 
      * @param width
@@ -75,7 +80,7 @@ public class PictureRenderData implements RenderData {
     public PictureRenderData(int width, int height, File picture) {
         this(width, height, picture.getPath(), ByteUtils.getLocalByteArray(picture));
     }
-    
+
     /**
      * 根据流构建图片数据源
      * 
@@ -148,6 +153,14 @@ public class PictureRenderData implements RenderData {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getAltMeta() {
+        return altMeta;
+    }
+
+    public void setAltMeta(String altMeta) {
+        this.altMeta = altMeta;
     }
 
 }
