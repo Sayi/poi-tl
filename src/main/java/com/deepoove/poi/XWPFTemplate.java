@@ -18,6 +18,7 @@ package com.deepoove.poi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -142,6 +143,14 @@ public class XWPFTemplate {
 	public void write(OutputStream out) throws IOException {
 		this.doc.write(out);
 	}
+	
+	public void writeToFile(String path) throws IOException {
+	    FileOutputStream out = new FileOutputStream(path);
+        this.write(out);
+        this.close();
+        out.flush();
+        out.close();
+    }
 
 	public void close() throws IOException {
 		this.doc.close();
