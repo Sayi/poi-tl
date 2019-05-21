@@ -40,7 +40,7 @@ public class Dot {
 	private String key;
 
 	// EL通用正则
-	final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\\\.]+)*$");
+	final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\.]+)*$");
 
 	public Dot(String el) {
 		ObjectUtils.requireNonNull(el, "EL cannot be null.");

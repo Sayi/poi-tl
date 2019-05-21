@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 
 /**
+ * 渲染器，支持表达式计算接口RenderDataCompute的扩展
+ * 
  * @author Sayi
  * @version
  * @since 1.5.0
@@ -40,17 +42,23 @@ public class Render {
 
     private RenderDataCompute renderDataCompute;
 
+    /**
+     * 默认计算器为ELObjectRenderDataCompute
+     * 
+     * @param root
+     */
     public Render(Object root) {
-        ObjectUtils.requireNonNull(root, "Data-Model is null, should be setted first.");
+        ObjectUtils.requireNonNull(root, "Data root is null, should be setted first.");
         renderDataCompute = new ELObjectRenderDataCompute(root);
+    }
+
+    public Render(RenderDataCompute dataCompute) {
+        this.renderDataCompute = dataCompute;
     }
 
     public void render(XWPFTemplate template) {
         ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
         LOGGER.info("Render the template file start...");
-
-        int docxCount = 0;
-        Configure config = template.getConfig();
 
         // 模板
         List<ElementTemplate> elementTemplates = template.getElementTemplates();
@@ -59,9 +67,9 @@ public class Render {
         RenderPolicy policy = null;
 
         try {
-
+            int docxCount = 0;
             for (ElementTemplate runTemplate : elementTemplates) {
-                policy = findPolicy(config, runTemplate);
+                policy = findPolicy(template.getConfig(), runTemplate);
 
                 if (policy instanceof DocxRenderPolicy) {
                     docxCount++;
@@ -81,7 +89,7 @@ public class Render {
                 }
 
                 for (ElementTemplate runTemplate : elementTemplates) {
-                    policy = findPolicy(config, runTemplate);
+                    policy = findPolicy(template.getConfig(), runTemplate);
                     if (!(policy instanceof DocxRenderPolicy)) {
                         continue;
                     }
@@ -97,12 +105,13 @@ public class Render {
                 }
             }
         } catch (Exception e) {
+            LOGGER.info("Render the template file failed.");
             throw new RenderException("Render docx error", e);
         }
         LOGGER.info("Render the template file successed.");
     }
 
-    public RenderPolicy findPolicy(Configure config, ElementTemplate runTemplate) {
+    private RenderPolicy findPolicy(Configure config, ElementTemplate runTemplate) {
         RenderPolicy policy;
         policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
         if (null == policy) { throw new RenderException(

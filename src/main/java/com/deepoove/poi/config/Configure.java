@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.config;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,7 @@ import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.util.RegexUtils;
 
 /**
  * 插件化配置
@@ -34,18 +36,31 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  */
 public class Configure {
 
+    private static final String DEFAULT_GRAMER_REGEX = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
+
     // Highest priority
     private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
     // Low priority
     private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
 
+    /**
+     * 语法前缀
+     */
     private String gramerPrefix = "{{";
+    /**
+     * 语法后缀
+     */
     private String gramerSuffix = "}}";
 
     /**
-     * 支持中文、字母、数字、下划线的正则
+     * 默认支持中文、字母、数字、下划线的正则
      */
-    private String grammerReg = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
+    private String grammerReg = DEFAULT_GRAMER_REGEX;
+
+    /**
+     * 模板表达式模式，默认为POI_TL_MODE
+     */
+    private ELModeEnum elMode = ELModeEnum.POI_TL_MODE;
 
     private Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -140,11 +155,17 @@ public class Configure {
         return defaultPolicys.get(sign);
     }
 
-    public String getReg() {
+    public String getGrammerRegex() {
         return grammerReg;
     }
 
+    public ELModeEnum getElMode() {
+        return elMode;
+    }
+
     public static class ConfigureBuilder {
+        private static String regexForAllPattern = "((?!{0})(?!{1}).)*";
+        private boolean regexForAll;
         private Configure config = new Configure();
 
         public ConfigureBuilder() {}
@@ -155,8 +176,23 @@ public class Configure {
             return this;
         }
 
-        public ConfigureBuilder buildReg(String reg) {
+        /**
+         * 设置模板表达式模式
+         * 
+         * @return
+         */
+        public ConfigureBuilder setElMode(ELModeEnum mode) {
+            config.elMode = mode;
+            return this;
+        }
+
+        public ConfigureBuilder buildGrammerRegex(String reg) {
             config.grammerReg = reg;
+            return this;
+        }
+
+        public ConfigureBuilder supportGrammerRegexForAll() {
+            this.regexForAll = true;
             return this;
         }
 
@@ -171,6 +207,14 @@ public class Configure {
         }
 
         public Configure build() {
+            if (config.elMode == ELModeEnum.SPEL_MODE) {
+                supportGrammerRegexForAll();
+            }
+            if (regexForAll) {
+                buildGrammerRegex(MessageFormat.format(regexForAllPattern,
+                        RegexUtils.escapeExprSpecialWord(config.gramerPrefix),
+                        RegexUtils.escapeExprSpecialWord(config.gramerSuffix)));
+            }
             return config;
         }
 

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
-import com.deepoove.poi.render.RenderAPI;
+import com.deepoove.poi.render.RenderFactory;
 import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.resolver.Visitor;
 import com.deepoove.poi.template.ElementTemplate;
@@ -41,131 +41,130 @@ import com.deepoove.poi.template.ElementTemplate;
  * @version 0.0.1
  */
 public class XWPFTemplate {
-	private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-	
-	private NiceXWPFDocument doc;
-	private Configure config;
-	private Visitor visitor;
-	private List<ElementTemplate> eleTemplates;
+    private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
 
-	private XWPFTemplate() {
-	}
+    private NiceXWPFDocument doc;
+    private Configure config;
+    private Visitor visitor;
+    private List<ElementTemplate> eleTemplates;
 
-	/**
-	 * @version 0.0.4
-	 */
-	public static XWPFTemplate compile(String filePath) {
-		return compile(new File(filePath));
-	}
+    private XWPFTemplate() {}
 
-	public static XWPFTemplate compile(File file) {
-		return compile(file, Configure.createDefault());
-	}
+    /**
+     * @version 0.0.4
+     */
+    public static XWPFTemplate compile(String filePath) {
+        return compile(new File(filePath));
+    }
 
-	/**
-	 * template file as InputStream
-	 * 
-	 * @param inputStream
-	 * @return
-	 * @version 1.2.0
-	 */
-	public static XWPFTemplate compile(InputStream inputStream) {
-		return compile(inputStream, Configure.createDefault());
-	}
+    public static XWPFTemplate compile(File file) {
+        return compile(file, Configure.createDefault());
+    }
 
-	/**
-	 * @param filePath
-	 * @param config
-	 * @return
-	 * @version 1.0.0
-	 */
-	public static XWPFTemplate compile(String filePath, Configure config) {
-		return compile(new File(filePath), config);
-	}
+    /**
+     * template file as InputStream
+     * 
+     * @param inputStream
+     * @return
+     * @version 1.2.0
+     */
+    public static XWPFTemplate compile(InputStream inputStream) {
+        return compile(inputStream, Configure.createDefault());
+    }
 
-	/**
-	 * @param file
-	 * @param config
-	 * @return
-	 * @version 1.0.0
-	 */
-	public static XWPFTemplate compile(File file, Configure config) {
-		try {
-			return compile(new FileInputStream(file), config);
-		} catch (FileNotFoundException e) {
-			logger.error("Cannot find the file", e);
-			throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
-		}
-	}
+    /**
+     * @param filePath
+     * @param config
+     * @return
+     * @version 1.0.0
+     */
+    public static XWPFTemplate compile(String filePath, Configure config) {
+        return compile(new File(filePath), config);
+    }
 
-	/**
-	 * template file as InputStream
-	 * 
-	 * @param inputStream
-	 * @param config
-	 * @return
-	 * @version 1.2.0
-	 */
-	public static XWPFTemplate compile(InputStream inputStream, Configure config) {
-		try {
-			XWPFTemplate instance = new XWPFTemplate();
-			instance.config = config;
-			instance.doc = new NiceXWPFDocument(inputStream);
-			instance.visitor = new TemplateVisitor(instance.config);
-			instance.eleTemplates = instance.visitor.visitDocument(instance.doc);
-			return instance;
-		} catch (IOException e) {
-			logger.error("Compile template failed", e);
-			throw new ResolverException("Compile template failed");
-		}
-	}
+    /**
+     * @param file
+     * @param config
+     * @return
+     * @version 1.0.0
+     */
+    public static XWPFTemplate compile(File file, Configure config) {
+        try {
+            return compile(new FileInputStream(file), config);
+        } catch (FileNotFoundException e) {
+            logger.error("Cannot find the file", e);
+            throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
+        }
+    }
 
-	/**
-	 * 重新解析doc
-	 * 
-	 * @param doc
-	 */
-	public void reload(NiceXWPFDocument doc) {
-		try {
-			this.close();
-		} catch (IOException e) {
-		    logger.error("Close failed", e);
-		}
-		this.doc = doc;
-		this.eleTemplates = this.visitor.visitDocument(doc);
-	}
+    /**
+     * template file as InputStream
+     * 
+     * @param inputStream
+     * @param config
+     * @return
+     * @version 1.2.0
+     */
+    public static XWPFTemplate compile(InputStream inputStream, Configure config) {
+        try {
+            XWPFTemplate instance = new XWPFTemplate();
+            instance.config = config;
+            instance.doc = new NiceXWPFDocument(inputStream);
+            instance.visitor = new TemplateVisitor(instance.config);
+            instance.eleTemplates = instance.visitor.visitDocument(instance.doc);
+            return instance;
+        } catch (IOException e) {
+            logger.error("Compile template failed", e);
+            throw new ResolverException("Compile template failed");
+        }
+    }
 
-	public XWPFTemplate render(Object model) {
-		RenderAPI.render(this, model);
-		return this;
-	}
-	
-	public void write(OutputStream out) throws IOException {
-		this.doc.write(out);
-	}
-	
-	public void writeToFile(String path) throws IOException {
-	    FileOutputStream out = new FileOutputStream(path);
+    /**
+     * 重新解析doc
+     * 
+     * @param doc
+     */
+    public void reload(NiceXWPFDocument doc) {
+        try {
+            this.close();
+        } catch (IOException e) {
+            logger.error("Close failed", e);
+        }
+        this.doc = doc;
+        this.eleTemplates = this.visitor.visitDocument(doc);
+    }
+
+    public XWPFTemplate render(Object model) {
+        RenderFactory.getRender(model, config.getElMode()).render(this);
+        return this;
+    }
+
+    public void write(OutputStream out) throws IOException {
+        this.doc.write(out);
+    }
+
+    public void writeToFile(String path) throws IOException {
+        FileOutputStream out = new FileOutputStream(path);
         this.write(out);
         this.close();
         out.flush();
         out.close();
     }
 
-	public void close() throws IOException {
-		this.doc.close();
-	}
+    public void close() throws IOException {
+        this.doc.close();
+    }
 
-	public List<ElementTemplate> getElementTemplates() {
-		return eleTemplates;
-	}
+    public List<ElementTemplate> getElementTemplates() {
+        return eleTemplates;
+    }
 
-	public NiceXWPFDocument getXWPFDocument() {
-		return this.doc;
-	}
+    public NiceXWPFDocument getXWPFDocument() {
+        return this.doc;
+    }
 
-	public Configure getConfig() {
-		return config;
-	}
+    public Configure getConfig() {
+        return config;
+    }
 
 }

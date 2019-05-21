@@ -39,7 +39,9 @@ import com.deepoove.poi.util.ObjectUtils;
  * @author Sayi
  * @version
  * @since 0.0.3
+ * @see com.deepoove.poi.render.Render
  */
+@Deprecated
 public class RenderAPI {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RenderAPI.class);

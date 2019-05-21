@@ -164,7 +164,7 @@ public class TemplateVisitor implements Visitor {
         String suffixRegex = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
 
         templatePattern = Pattern
-                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefixRegex, signRegex, config.getReg(), suffixRegex));
+                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefixRegex, signRegex, config.getGrammerRegex(), suffixRegex));
         gramerPattern = Pattern.compile(MessageFormat.format(FORMAT_GRAMER , prefixRegex, suffixRegex));
     }
 
