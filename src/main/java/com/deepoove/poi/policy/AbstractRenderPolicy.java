@@ -16,16 +16,6 @@ import com.deepoove.poi.template.run.RunTemplate;
 public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     /**
-     * 校验data model
-     * 
-     * @param data
-     * @return
-     */
-    protected boolean validate(T data) {
-        return true;
-    };
-
-    /**
      * 执行模板渲染
      * 
      * @param runTemplate
@@ -62,7 +52,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
         // validate
         if (null == model || !validate(model)) {
-            clearPlaceholder(runTemplate.getRun());
+            doValidError(template, runTemplate);
             return;
         }
 
@@ -75,10 +65,41 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     }
 
+    /**
+     * 校验data model
+     * 
+     * @param data
+     * @return
+     */
+    protected boolean validate(T data) {
+        return true;
+    };
+
+    /**
+     * 校验失败
+     * @param template
+     * @param runTemplate
+     */
+    protected void doValidError(XWPFTemplate template, RunTemplate runTemplate) {
+        if (template.getConfig().isNullToBlank()) {
+            clearPlaceholder(runTemplate.getRun());
+        }
+    }
+
+    /**
+     * 发生异常
+     * @param runTemplate
+     * @param data
+     * @param e
+     */
     protected void doRenderException(RunTemplate runTemplate, T data, Exception e) {
         throw new RenderException("Render template:" + runTemplate + " error", e);
     }
 
+    /**
+     * 清空标签
+     * @param run
+     */
     protected void clearPlaceholder(XWPFRun run) {
         run.setText("", 0);
     }

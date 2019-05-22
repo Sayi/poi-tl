@@ -61,6 +61,11 @@ public class Configure {
      * 模板表达式模式，默认为POI_TL_MODE
      */
     private ELModeEnum elMode = ELModeEnum.POI_TL_MODE;
+    
+    /**
+     * 渲染数据为null时，是保留还是清空模板标签
+     */
+    private boolean nullToBlank = true;
 
     private Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -162,6 +167,13 @@ public class Configure {
     public ELModeEnum getElMode() {
         return elMode;
     }
+    
+
+    public boolean isNullToBlank() {
+        return nullToBlank;
+    }
+
+
 
     public static class ConfigureBuilder {
         private static String regexForAllPattern = "((?!{0})(?!{1}).)*";
@@ -193,6 +205,11 @@ public class Configure {
 
         public ConfigureBuilder supportGrammerRegexForAll() {
             this.regexForAll = true;
+            return this;
+        }
+        
+        public ConfigureBuilder supportNullToBlank(boolean nullToBlank) {
+            config.nullToBlank = nullToBlank;
             return this;
         }
 
