@@ -16,9 +16,11 @@
 package com.deepoove.poi.render;
 
 import com.deepoove.poi.el.ELObject;
+import com.deepoove.poi.exception.ExpressionEvalException;
 
 /**
  * 基于ELObject的计算
+ * 
  * @author Sayi
  * @version 1.5.0
  */
@@ -32,7 +34,12 @@ public class ELObjectRenderDataCompute implements RenderDataCompute {
 
     @Override
     public Object compute(String el) {
-        return elObject.eval(el);
+        try {
+            return elObject.eval(el);
+        } catch (ExpressionEvalException e) {
+            // mark：无法计算或者读取表达式，默认返回null
+            return null;
+        }
     }
 
 }

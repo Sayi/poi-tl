@@ -38,6 +38,7 @@ public class SpELRenderDataCompute implements RenderDataCompute {
 
     @Override
     public Object compute(String el) {
+        // mark: 无法计算或者读取表达式，会直接抛异常
         return parser.parseExpression(el).getValue(context);
     }
 
