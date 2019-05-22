@@ -1,5 +1,6 @@
 package com.deepoove.poi.tl;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Assert;
@@ -9,8 +10,8 @@ import com.deepoove.poi.config.Configure;
 
 public class RegTest {
 
-    final String TAG_REGEX = Configure.newBuilder().build().getReg();
-    final String EL_REGEX = "^[^\\.]+(\\.[^\\\\.]+)*$";
+    final String TAG_REGEX = Configure.newBuilder().build().getGrammerRegex();
+    final String EL_REGEX = "^[^\\.]+(\\.[^\\.]+)*$";
 
     @Test
     public void testELReg() {
@@ -48,6 +49,46 @@ public class RegTest {
         Assert.assertFalse(pattern.matcher("abc23.").matches());
         Assert.assertFalse(pattern.matcher("好123.").matches());
         Assert.assertFalse(pattern.matcher(".好123").matches());
+    }
+    
+    
+    @Test
+    public void testSpELMatcher() {
+        Pattern pattern = Pattern.compile("\\{\\{((?!\\}\\})(?!\\{\\{).)*\\}\\}");
+        Matcher matcher = pattern.matcher("lowCase:{{name}}Upcase:{{name.toUpperCase()}}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group()  + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
+        matcher = pattern.matcher("lowCase:{{nameUpcase:{{name.toUpperCase()}}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group()  + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
+        matcher = pattern.matcher("lowCase:{{name}}Upcase:name.toUpperCase()}}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group() + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
+    }
+    @Test
+    public void testSpELMatcher2() {
+        Pattern pattern = Pattern.compile("\\$\\{((?!\\$\\{)(?!\\}).)*\\}");
+        Matcher matcher = pattern.matcher("lowCase:${name}Upcase:${name.toUpperCase()}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group()  + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
+        matcher = pattern.matcher("lowCase:${nameUpcase:${name.toUpperCase()}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group()  + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
+        matcher = pattern.matcher("lowCase:${name}Upcase:name.toUpperCase()}");
+        while (matcher.find()) {
+            System.out.print(matcher.start() + ":" + matcher.group()  + "--");
+            System.out.println(matcher.end() + ":" + matcher.group());
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.deepoove.poi.tl.render;
 
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +19,11 @@ import com.deepoove.poi.tl.el.DataModel;
 import com.deepoove.poi.tl.el.Desc;
 import com.deepoove.poi.tl.el.Detail;
 
-public class SpELTemplateTest {
+/**
+ * 点缀法标签
+ * @author Sayi
+ */
+public class ELTemplateTest {
 
     RowRenderData header;
     List<RowRenderData> tableDatas;
@@ -41,7 +44,7 @@ public class SpELTemplateTest {
     }
 
     @Test
-    public void testSpELRender() throws Exception {
+    public void testDotRender() throws Exception {
         DataModel model = new DataModel();
         Author author = new Author();
         author.setName("Sayi");
@@ -58,15 +61,14 @@ public class SpELTemplateTest {
         detail.setDesc(desc);
         model.setDetail(detail);
 
+        //poi_tl_mode
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/dot.docx").render(model);
+        template.writeToFile("out_dot.docx");
+        
+        // spel_mode 部分兼容以前的模式
         Configure config = Configure.newBuilder().setElMode(ELModeEnum.SPEL_MODE).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/dot.docx", config).render(model);
-
-
-        FileOutputStream out = new FileOutputStream("out_spel_dot.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        template = XWPFTemplate.compile("src/test/resources/dot.docx", config).render(model);
+        template.writeToFile("out_spel_dot.docx");
     }
 
 }

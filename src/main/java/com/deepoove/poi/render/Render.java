@@ -106,7 +106,7 @@ public class Render {
             }
         } catch (Exception e) {
             LOGGER.info("Render the template file failed.");
-            throw new RenderException("Render docx error", e);
+            throw new RenderException("Render docx failed.", e);
         }
         LOGGER.info("Render the template file successed.");
     }
