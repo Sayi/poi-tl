@@ -16,7 +16,6 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
@@ -24,31 +23,22 @@ import com.deepoove.poi.util.StyleUtils;
  * @author Sayi
  * @version 0.0.5
  */
-public class NumbericRenderPolicy extends AbstractRenderPolicy {
+public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderData> {
 
     @Override
-    protected boolean validate(Object data) {
-        if (null == data) return false;
-
-        if (!(data instanceof NumbericRenderData)) {
-            throw new RenderException("Error datamodel: correct type is NumbericRenderData, but is "
-                    + data.getClass());
-        }
-
-        if (CollectionUtils.isEmpty(((NumbericRenderData) data).getNumbers())) {
+    protected boolean validate(NumbericRenderData data) {
+        if (CollectionUtils.isEmpty(data.getNumbers())) {
             logger.debug("Empty NumbericRenderData datamodel: {}", data);
             return false;
         }
-
         return true;
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+    public void doRender(RunTemplate runTemplate, NumbericRenderData numbericData, XWPFTemplate template)
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
-        NumbericRenderData numbericData = (NumbericRenderData) data;
         List<TextRenderData> datas = numbericData.getNumbers();
         Style fmtStyle = numbericData.getFmtStyle();
 

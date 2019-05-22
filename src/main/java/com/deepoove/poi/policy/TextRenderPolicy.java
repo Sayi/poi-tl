@@ -30,14 +30,9 @@ import com.deepoove.poi.util.StyleUtils;
  * @author Sayi
  * @version
  */
-public class TextRenderPolicy extends AbstractRenderPolicy {
+public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
     static final String REGEX_LINE_CHARACTOR = "\\n";
-
-    @Override
-    protected boolean validate(Object data) {
-        return null != data;
-    }
 
     @Override
     public void doRender(RunTemplate runTemplate, Object renderData, XWPFTemplate template)
@@ -51,7 +46,8 @@ public class TextRenderPolicy extends AbstractRenderPolicy {
 
         // text
         TextRenderData textRenderData = renderData instanceof TextRenderData
-                ? (TextRenderData) renderData : new TextRenderData(renderData.toString());
+                ? (TextRenderData) renderData
+                : new TextRenderData(renderData.toString());
 
         String data = null == textRenderData.getText() ? "" : textRenderData.getText();
 

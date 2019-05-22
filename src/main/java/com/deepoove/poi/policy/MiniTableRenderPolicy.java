@@ -32,7 +32,6 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 import com.deepoove.poi.util.StyleUtils;
@@ -44,17 +43,11 @@ import com.deepoove.poi.util.TableTools;
  * @author Sayi 卅一
  * @since v1.3.0
  */
-public class MiniTableRenderPolicy extends AbstractRenderPolicy {
+public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderData> {
 
     @Override
-    protected boolean validate(Object data) {
-        if (null == data) return false;
-        if (!(data instanceof MiniTableRenderData)) {
-            throw new RenderException("Error datamodel: correct type is MiniTableRenderData, but is "
-                    + data.getClass());
-        }
-        if (!((MiniTableRenderData) data).isSetBody()
-                && !((MiniTableRenderData) data).isSetHeader()) {
+    protected boolean validate(MiniTableRenderData data) {
+        if (!(data).isSetBody() && !(data).isSetHeader()) {
             logger.debug("Empty MiniTableRenderData datamodel: {}", data);
             return false;
         }
@@ -62,15 +55,15 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy {
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+    public void doRender(RunTemplate runTemplate, MiniTableRenderData data, XWPFTemplate template)
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
 
-        if (!((MiniTableRenderData) data).isSetBody()) {
-            renderNoDataTable(doc, run, (MiniTableRenderData) data);
+        if (!data.isSetBody()) {
+            renderNoDataTable(doc, run, data);
         } else {
-            renderTable(doc, run, (MiniTableRenderData) data);
+            renderTable(doc, run, data);
         }
 
         // 成功后，才会清除标签，发生异常则保留标签，可以重写doRenderException方法在发生异常后也会清除标签

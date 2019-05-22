@@ -9,10 +9,11 @@ import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * 抽象策略
+ * 
  * @author Sayi
- * @version 
+ * @version
  */
-public abstract class AbstractRenderPolicy implements RenderPolicy {
+public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     /**
      * 校验data model
@@ -20,43 +21,61 @@ public abstract class AbstractRenderPolicy implements RenderPolicy {
      * @param data
      * @return
      */
-    protected abstract boolean validate(Object data);
+    protected boolean validate(T data) {
+        return true;
+    };
 
     /**
      * 执行模板渲染
      * 
-     * @param runTemplate 文档模板
-     * @param data 数据模型
-     * @param template 文档对象
+     * @param runTemplate
+     *            文档模板
+     * @param data
+     *            数据模型
+     * @param template
+     *            文档对象
      * @throws Exception
      */
-    public abstract void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+    public abstract void doRender(RunTemplate runTemplate, T data, XWPFTemplate template)
             throws Exception;
 
-    /* 
-     * 骨架
-     * (non-Javadoc)
-     * @see com.deepoove.poi.policy.RenderPolicy#render(com.deepoove.poi.template.ElementTemplate, java.lang.Object, com.deepoove.poi.XWPFTemplate)
+    /*
+     * 骨架 (non-Javadoc)
+     * 
+     * @see
+     * com.deepoove.poi.policy.RenderPolicy#render(com.deepoove.poi.template.
+     * ElementTemplate, java.lang.Object, com.deepoove.poi.XWPFTemplate)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;
+
+        // type safe
+        T model = null;
+        try {
+            model = (T) data;
+        } catch (ClassCastException e) {
+            throw new RenderException(
+                    "Error Render Data format for template: " + eleTemplate.getSource(), e);
+        }
+
         // validate
-        if (!validate(data)) {
+        if (null == model || !validate(model)) {
             clearPlaceholder(runTemplate.getRun());
             return;
         }
 
         // do render
         try {
-            doRender(runTemplate, data, template);
+            doRender(runTemplate, model, template);
         } catch (Exception e) {
-            doRenderException(runTemplate, data, e);
+            doRenderException(runTemplate, model, e);
         }
 
     }
 
-    protected void doRenderException(RunTemplate runTemplate, Object data, Exception e) {
+    protected void doRenderException(RunTemplate runTemplate, T data, Exception e) {
         throw new RenderException("Render template:" + runTemplate + " error", e);
     }
 

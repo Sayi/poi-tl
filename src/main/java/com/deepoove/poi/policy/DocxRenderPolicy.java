@@ -36,22 +36,17 @@ import com.deepoove.poi.template.run.RunTemplate;
  * @author Sayi
  * @version 1.3.0
  */
-public class DocxRenderPolicy extends AbstractRenderPolicy {
-    @Override
-    protected boolean validate(Object data) {
-        return null != data;
-    }
+public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
-    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+    public void doRender(RunTemplate runTemplate, DocxRenderData data, XWPFTemplate template)
             throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
         // 优先清空标签
         clearPlaceholder(run);
 
-        List<NiceXWPFDocument> docMerges = getMergedDocxs((DocxRenderData) data,
-                template.getConfig());
+        List<NiceXWPFDocument> docMerges = getMergedDocxs(data, template.getConfig());
         doc = doc.merge(docMerges, run);
 
         template.reload(doc);
