@@ -17,11 +17,23 @@ package com.deepoove.poi.config;
 
 /**
  * 模板表达式的模式
+ * 
  * @author Sayi
- * @version 
+ * @version
  */
 public enum ELModeEnum {
 
-    POI_TL_MODE, SPEL_MODE;
+    /**
+     * 标准模式
+     */
+    POI_TL_STANDARD_MODE,
+    /**
+     * 严格模式
+     */
+    POI_TL_STICT_MODE,
+    /**
+     * Spring EL模式
+     */
+    SPEL_MODE;
 
 }

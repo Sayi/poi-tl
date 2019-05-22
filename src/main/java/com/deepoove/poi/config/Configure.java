@@ -60,7 +60,7 @@ public class Configure {
     /**
      * 模板表达式模式，默认为POI_TL_MODE
      */
-    private ELModeEnum elMode = ELModeEnum.POI_TL_MODE;
+    private ELModeEnum elMode = ELModeEnum.POI_TL_STANDARD_MODE;
     
     /**
      * 渲染数据为null时，是保留还是清空模板标签

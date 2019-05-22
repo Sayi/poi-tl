@@ -24,8 +24,19 @@ import com.deepoove.poi.config.ELModeEnum;
 public class RenderFactory {
 
     public static Render getRender(Object model, ELModeEnum mode) {
-        return (mode == ELModeEnum.SPEL_MODE) ? new Render(new SpELRenderDataCompute(model))
-                : new Render(model);
+        Render render = null;
+        switch (mode) {
+        case SPEL_MODE:
+            render = new Render(new SpELRenderDataCompute(model));
+            break;
+        case POI_TL_STICT_MODE:
+            render = new Render(new ELObjectRenderDataCompute(model, true));
+            break;
+        default:
+            render = new Render(model);
+            break;
+        }
+        return render;
     }
 
 }

@@ -49,7 +49,7 @@ public class Render {
      */
     public Render(Object root) {
         ObjectUtils.requireNonNull(root, "Data root is null, should be setted first.");
-        renderDataCompute = new ELObjectRenderDataCompute(root);
+        renderDataCompute = new ELObjectRenderDataCompute(root, false);
     }
 
     public Render(RenderDataCompute dataCompute) {
