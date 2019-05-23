@@ -28,6 +28,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.CellRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -128,8 +129,8 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         XWPFTableRow tableRow = table.getRow(row);
         ObjectUtils.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
 
-        TableStyle style = rowData.getStyle();
-        List<TextRenderData> cellList = rowData.getRowData();
+        TableStyle rowStyle = rowData.getRowStyle();
+        List<CellRenderData> cellList = rowData.getCellDatas();
         XWPFTableCell cell = null;
 
         for (int i = 0; i < cellList.size(); i++) {
@@ -138,14 +139,17 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 logger.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
                 break;
             }
+            
+            CellRenderData cellData = cellList.get(i);
+            TableStyle cellStyle = (null == cellData.getCellStyle() ? rowStyle : cellData.getCellStyle());
 
             // 处理单元格样式
-            if (null != style && null != style.getBackgroundColor()) {
-                cell.setColor(style.getBackgroundColor());
+            if (null != cellStyle && null != cellStyle.getBackgroundColor()) {
+                cell.setColor(cellStyle.getBackgroundColor());
             }
 
-            TextRenderData cellData = cellList.get(i);
-            String cellText = cellData.getText();
+            TextRenderData renderData = cellData.getRenderData();
+            String cellText = renderData.getText();
             if (StringUtils.isBlank(cellText)) continue;
 
             String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
@@ -162,9 +166,9 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 } else {
                     par = cell.addParagraph();
                 }
-                StyleUtils.styleTableParagraph(par, style);
+                StyleUtils.styleTableParagraph(par, cellStyle);
                 run = par.createRun();
-                StyleUtils.styleRun(run, cellData.getStyle());
+                StyleUtils.styleRun(run, renderData.getStyle());
                 run.setText(fragment[j]);
             }
         }

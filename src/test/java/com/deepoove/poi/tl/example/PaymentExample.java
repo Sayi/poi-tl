@@ -60,20 +60,20 @@ public class PaymentExample {
                 new TextRenderData("订单编号", headTextStyle), new TextRenderData("销售代表", headTextStyle),
                 new TextRenderData("离岸价", headTextStyle), new TextRenderData("发货方式", headTextStyle),
                 new TextRenderData("条款", headTextStyle), new TextRenderData("税号", headTextStyle));
-        header.setStyle(headStyle);
+        header.setRowStyle(headStyle);
         
         RowRenderData row = RowRenderData.build("2018-06-12", "SN18090", "李四", "5000元", "快递", "附录A", "T11090");
-        row.setStyle(rowStyle);
+        row.setRowStyle(rowStyle);
         MiniTableRenderData  miniTableRenderData = new MiniTableRenderData(header, Arrays.asList(row), MiniTableRenderData.WIDTH_A4_MEDIUM_FULL);
         miniTableRenderData.setStyle(headStyle);
         datas.setOrder(miniTableRenderData);
         
         DetailData detailTable = new DetailData();
         RowRenderData good = RowRenderData.build("4", "墙纸", "书房+卧室", "1500", "/", "400", "1600");
-        good.setStyle(rowStyle);
+        good.setRowStyle(rowStyle);
         List<RowRenderData> goods = Arrays.asList(good, good, good);
         RowRenderData  labor = RowRenderData.build("油漆工", "2", "200", "400");
-        labor.setStyle(rowStyle);
+        labor.setRowStyle(rowStyle);
         List<RowRenderData> labors = Arrays.asList(labor, labor, labor, labor);
         detailTable.setGoods(goods);
         detailTable.setLabors(labors);

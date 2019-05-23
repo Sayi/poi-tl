@@ -29,60 +29,64 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class RowRenderData implements RenderData {
 
-    private List<TextRenderData> rowData;
+    // private List<TextRenderData> rowData;
+    private List<CellRenderData> cellDatas;
 
     /**
-     * 行样式：背景色、行文字对齐方式
+     * 行级样式，应用到该行所有单元格：背景色、行文字对齐方式
      */
-    private TableStyle style;
-    
-    public RowRenderData() {
+    private TableStyle rowStyle;
+
+    public RowRenderData() {}
+
+    public RowRenderData(List<CellRenderData> cellDatas) {
+        this.cellDatas = cellDatas;
     }
 
-    public RowRenderData(List<TextRenderData> rowData) {
-        this.rowData = rowData;
+    public static RowRenderData build(String... cellStr) {
+        List<TextRenderData> cellDatas = new ArrayList<TextRenderData>();
+        if (null != cellStr) {
+            for (String col : cellStr) {
+                cellDatas.add(new TextRenderData(col));
+            }
+        }
+        return new RowRenderData(cellDatas, null);
     }
-    
-    public static RowRenderData build(String...cellStr) {
-    	RowRenderData instance = new RowRenderData();
-    	instance.rowData = new ArrayList<TextRenderData>();
-    	for (String col : cellStr) {
-    		instance.rowData.add(new TextRenderData(col));
-    	}
-    	return instance;
+
+    public static RowRenderData build(TextRenderData... cellData) {
+        return new RowRenderData(null == cellData ? null : Arrays.asList(cellData), null);
     }
-    
-    public static RowRenderData build(TextRenderData...rowData) {
-    	RowRenderData instance = new RowRenderData();
-    	instance.rowData = null == rowData ? null : Arrays.asList(rowData);
-    	return instance;
-    }
-    
+
     public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
-        this.rowData = rowData;
+        this.cellDatas = new ArrayList<CellRenderData>();
+        if (null != rowData) {
+            for (TextRenderData data : rowData) {
+                this.cellDatas.add(new CellRenderData(data));
+            }
+        }
         TableStyle style = new TableStyle();
         style.setBackgroundColor(backgroundColor);
-        this.style = style;
+        this.rowStyle = style;
     }
 
     public int size() {
-        return null == rowData ? 0 : rowData.size();
+        return null == cellDatas ? 0 : cellDatas.size();
     }
 
-    public List<TextRenderData> getRowData() {
-        return rowData;
+    public List<CellRenderData> getCellDatas() {
+        return cellDatas;
     }
 
-    public void setRowData(List<TextRenderData> rowData) {
-        this.rowData = rowData;
+    public void setCellDatas(List<CellRenderData> cellDatas) {
+        this.cellDatas = cellDatas;
     }
 
-	public TableStyle getStyle() {
-		return style;
-	}
+    public TableStyle getRowStyle() {
+        return rowStyle;
+    }
 
-	public void setStyle(TableStyle style) {
-		this.style = style;
-	}
+    public void setRowStyle(TableStyle style) {
+        this.rowStyle = style;
+    }
 
 }
