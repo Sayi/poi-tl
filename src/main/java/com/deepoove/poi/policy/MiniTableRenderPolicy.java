@@ -33,6 +33,7 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 import com.deepoove.poi.util.StyleUtils;
@@ -54,6 +55,11 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         }
         return true;
     }
+    
+    @Override
+    protected void beforeRender(RenderContext context) {
+        clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
+    }
 
     @Override
     public void doRender(RunTemplate runTemplate, MiniTableRenderData data, XWPFTemplate template)
@@ -66,9 +72,6 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         } else {
             renderTable(doc, run, data);
         }
-
-        // 成功后，才会清除标签，发生异常则保留标签，可以重写doRenderException方法在发生异常后也会清除标签
-        clearPlaceholder(run);
     }
 
     private void renderTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {

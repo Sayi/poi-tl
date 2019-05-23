@@ -25,6 +25,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.exception.RenderException;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
@@ -37,19 +38,19 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, PictureRenderData picture, XWPFTemplate template)
-            throws Exception {
+    public void doRender(RunTemplate runTemplate, PictureRenderData picture, XWPFTemplate template) throws Exception {
         XWPFRun run = runTemplate.getRun();
-
         int suggestFileType = suggestFileType(picture.getPath());
 
         InputStream ins = null == picture.getData() ? new FileInputStream(picture.getPath())
                 : new ByteArrayInputStream(picture.getData());
 
-        run.addPicture(ins, suggestFileType, "Generated", picture.getWidth() * EMU,
-                picture.getHeight() * EMU);
+        run.addPicture(ins, suggestFileType, "Generated", picture.getWidth() * EMU, picture.getHeight() * EMU);
+    }
 
-        clearPlaceholder(run);
+    @Override
+    protected void afterRender(RenderContext context) {
+        clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
     }
 
     @Override
@@ -60,21 +61,31 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     public static int suggestFileType(String imgFile) {
         int format = 0;
 
-        if (imgFile.endsWith(".emf")) format = XWPFDocument.PICTURE_TYPE_EMF;
-        else if (imgFile.endsWith(".wmf")) format = XWPFDocument.PICTURE_TYPE_WMF;
-        else if (imgFile.endsWith(".pict")) format = XWPFDocument.PICTURE_TYPE_PICT;
+        if (imgFile.endsWith(".emf"))
+            format = XWPFDocument.PICTURE_TYPE_EMF;
+        else if (imgFile.endsWith(".wmf"))
+            format = XWPFDocument.PICTURE_TYPE_WMF;
+        else if (imgFile.endsWith(".pict"))
+            format = XWPFDocument.PICTURE_TYPE_PICT;
         else if (imgFile.endsWith(".jpeg") || imgFile.endsWith(".jpg"))
             format = XWPFDocument.PICTURE_TYPE_JPEG;
-        else if (imgFile.endsWith(".png")) format = XWPFDocument.PICTURE_TYPE_PNG;
-        else if (imgFile.endsWith(".dib")) format = XWPFDocument.PICTURE_TYPE_DIB;
-        else if (imgFile.endsWith(".gif")) format = XWPFDocument.PICTURE_TYPE_GIF;
-        else if (imgFile.endsWith(".tiff")) format = XWPFDocument.PICTURE_TYPE_TIFF;
-        else if (imgFile.endsWith(".eps")) format = XWPFDocument.PICTURE_TYPE_EPS;
-        else if (imgFile.endsWith(".bmp")) format = XWPFDocument.PICTURE_TYPE_BMP;
-        else if (imgFile.endsWith(".wpg")) format = XWPFDocument.PICTURE_TYPE_WPG;
+        else if (imgFile.endsWith(".png"))
+            format = XWPFDocument.PICTURE_TYPE_PNG;
+        else if (imgFile.endsWith(".dib"))
+            format = XWPFDocument.PICTURE_TYPE_DIB;
+        else if (imgFile.endsWith(".gif"))
+            format = XWPFDocument.PICTURE_TYPE_GIF;
+        else if (imgFile.endsWith(".tiff"))
+            format = XWPFDocument.PICTURE_TYPE_TIFF;
+        else if (imgFile.endsWith(".eps"))
+            format = XWPFDocument.PICTURE_TYPE_EPS;
+        else if (imgFile.endsWith(".bmp"))
+            format = XWPFDocument.PICTURE_TYPE_BMP;
+        else if (imgFile.endsWith(".wpg"))
+            format = XWPFDocument.PICTURE_TYPE_WPG;
         else {
-            throw new RenderException("Unsupported picture: " + imgFile
-                    + ". Expected emf|wmf|pict|jpeg|png|dib|gif|tiff|eps|bmp|wpg");
+            throw new RenderException(
+                    "Unsupported picture: " + imgFile + ". Expected emf|wmf|pict|jpeg|png|dib|gif|tiff|eps|bmp|wpg");
         }
         return format;
     }

@@ -16,6 +16,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
@@ -43,7 +44,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
         Style fmtStyle = numbericData.getFmtStyle();
 
         BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
-        
+
         XWPFParagraph paragraph;
         XWPFRun newRun;
         for (TextRenderData line : datas) {
@@ -58,11 +59,15 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
             newRun.setText(line.getText());
         }
 
-        // 成功后清除标签
+    }
+
+    @Override
+    protected void afterRender(RenderContext context) {
+        XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
         clearPlaceholder(run);
         IRunBody parent = run.getParent();
         if (parent instanceof XWPFParagraph) {
-            ((XWPFParagraph) parent).removeRun(runTemplate.getRunPos());
+            ((XWPFParagraph) parent).removeRun(((RunTemplate) context.getEleTemplate()).getRunPos());
             // To do: 更好的列表样式
             // ((XWPFParagraph) parent).setSpacingBetween(0,
             // LineSpacingRule.AUTO);

@@ -64,10 +64,12 @@ public class TemplateVisitor implements Visitor {
 		if (null == doc)
 			return null;
 		this.eleTemplates = new ArrayList<ElementTemplate>();
+		logger.info("Visit the document start...");
 		visitParagraphs(doc.getParagraphs());
 		visitTables(doc.getTables());
 		visitHeaders(doc.getHeaderList());
 		visitFooters(doc.getFooterList());
+		logger.info("Visit the document end, resolve and create {} ElementTemplates.", this.eleTemplates.size());
 		return eleTemplates;
 	}
 

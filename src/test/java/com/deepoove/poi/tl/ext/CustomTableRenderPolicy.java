@@ -19,12 +19,13 @@ import com.deepoove.poi.util.TableTools;
  * @author Sayi
  * @version
  */
-public class CustomTableRenderPolicy extends AbstractRenderPolicy {
+public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
     protected boolean validate(Object data) {
         return null != data;
     }
+    
 
     @Override
     public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
