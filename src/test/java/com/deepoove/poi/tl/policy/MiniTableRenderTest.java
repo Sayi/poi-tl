@@ -39,7 +39,7 @@ public class MiniTableRenderTest {
 		style.setBackgroundColor("009688");
 		style.setAlign(STJc.CENTER);
 		header.setStyle(style);
-		
+
 		Map<String, Object> datas = new HashMap<String, Object>() {
 			{
 				// 有表格头 有数据，宽度自适应
