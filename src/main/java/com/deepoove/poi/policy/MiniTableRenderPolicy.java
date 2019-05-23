@@ -87,9 +87,9 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
         // 3.渲染数据
         int startRow = 0;
-        if (tableData.isSetHeader()) renderRow(table, startRow++, tableData.getHeaders());
+        if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeaders());
         for (RowRenderData data : tableData.getDatas()) {
-            renderRow(table, startRow++, data);
+            Helper.renderRow(table, startRow++, data);
         }
 
     }
@@ -101,7 +101,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         XWPFTable table = doc.insertNewTable(run, row, col);
         initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 
-        renderRow(table, 0, tableData.getHeaders());
+        Helper.renderRow(table, 0, tableData.getHeaders());
 
         TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeaders().size() - 1);
         XWPFTableCell cell = table.getRow(1).getCell(0);
@@ -115,33 +115,49 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         StyleUtils.styleTable(table, style);
     }
 
-    /**
-     * 填充表格一行的数据
-     * 
-     * @param table
-     * @param row
-     *            第几行
-     * @param rowData
-     *            行数据：确保行数据的大小不超过表格该行的单元格数量
-     */
-    public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
-        if (null == rowData || rowData.size() <= 0) return;
-        XWPFTableRow tableRow = table.getRow(row);
-        ObjectUtils.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
+    private int getMaxColumFromData(List<RowRenderData> datas) {
+        int maxColom = 0;
+        for (RowRenderData obj : datas) {
+            if (null == obj) continue;
+            if (obj.size() > maxColom) maxColom = obj.size();
+        }
+        return maxColom;
+    }
 
-        TableStyle rowStyle = rowData.getRowStyle();
-        List<CellRenderData> cellList = rowData.getCellDatas();
-        XWPFTableCell cell = null;
+    public static class Helper {
 
-        for (int i = 0; i < cellList.size(); i++) {
-            cell = tableRow.getCell(i);
-            if (null == cell) {
-                logger.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
-                break;
+        /**
+         * 填充表格一行的数据
+         * 
+         * @param table
+         * @param row
+         *            第几行
+         * @param rowData
+         *            行数据：确保行数据的大小不超过表格该行的单元格数量
+         */
+        public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
+            if (null == rowData || rowData.size() <= 0) return;
+            XWPFTableRow tableRow = table.getRow(row);
+            ObjectUtils.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
+
+            TableStyle rowStyle = rowData.getRowStyle();
+            List<CellRenderData> cellList = rowData.getCellDatas();
+            XWPFTableCell cell = null;
+
+            for (int i = 0; i < cellList.size(); i++) {
+                cell = tableRow.getCell(i);
+                if (null == cell) {
+                    logger.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
+                    break;
+                }
+                renderCell(cell, cellList.get(i), rowStyle);
             }
-            
-            CellRenderData cellData = cellList.get(i);
-            TableStyle cellStyle = (null == cellData.getCellStyle() ? rowStyle : cellData.getCellStyle());
+        }
+
+        public static void renderCell(XWPFTableCell cell, CellRenderData cellData,
+                TableStyle rowStyle) {
+            TableStyle cellStyle = (null == cellData.getCellStyle() ? rowStyle
+                    : cellData.getCellStyle());
 
             // 处理单元格样式
             if (null != cellStyle && null != cellStyle.getBackgroundColor()) {
@@ -150,37 +166,33 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
             TextRenderData renderData = cellData.getRenderData();
             String cellText = renderData.getText();
-            if (StringUtils.isBlank(cellText)) continue;
-
-            String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
-            if (null == fragment || fragment.length <= 0) continue;
+            if (StringUtils.isBlank(cellText)) return;
 
             // 处理单元格数据
-            XWPFParagraph par;
-            XWPFRun run;
-            for (int j = 0; j < fragment.length; j++) {
-                if (0 == j) {
-                    CTTc ctTc = cell.getCTTc();
-                    CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
-                    par = new XWPFParagraph(ctP, cell);
-                } else {
-                    par = cell.addParagraph();
+            CTTc ctTc = cell.getCTTc();
+            CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
+            XWPFParagraph par = new XWPFParagraph(ctP, cell);
+            StyleUtils.styleTableParagraph(par, cellStyle);
+            
+            String text = renderData.getText();
+            String[] fragment = text.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
+
+            if (fragment.length <= 1) {
+                TextRenderPolicy.Helper.renderTextRun(par.createRun(), renderData);
+            } else {
+                // 单元格内换行的用不同段落来特殊处理
+                XWPFRun run;
+                for (int j = 0; j < fragment.length; j++) {
+                    if (0 != j) {
+                        par = cell.addParagraph();
+                        StyleUtils.styleTableParagraph(par, cellStyle);
+                    }
+                    run = par.createRun();
+                    StyleUtils.styleRun(run, renderData.getStyle());
+                    run.setText(fragment[j]);
                 }
-                StyleUtils.styleTableParagraph(par, cellStyle);
-                run = par.createRun();
-                StyleUtils.styleRun(run, renderData.getStyle());
-                run.setText(fragment[j]);
             }
         }
-    }
-
-    private int getMaxColumFromData(List<RowRenderData> datas) {
-        int maxColom = 0;
-        for (RowRenderData obj : datas) {
-            if (null == obj) continue;
-            if (obj.size() > maxColom) maxColom = obj.size();
-        }
-        return maxColom;
     }
 
 }

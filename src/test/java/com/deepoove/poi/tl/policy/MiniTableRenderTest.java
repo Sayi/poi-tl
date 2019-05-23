@@ -14,6 +14,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.CellRenderData;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -26,9 +27,9 @@ import com.deepoove.poi.tl.ext.CustomTableRenderPolicy;
  */
 public class MiniTableRenderTest {
 
-	RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓名"), new TextRenderData("FFFFFF", "学历"));
+	RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓\n名"), new TextRenderData("FFFFFF", "学历"));
 
-	RowRenderData row0 = RowRenderData.build(new TextRenderData("张三"), new TextRenderData("1E915D", "研究生"));
+	RowRenderData row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"), new TextRenderData("1E915D", "研究生"));
 	
 	RowRenderData row1 = RowRenderData.build("李四", "博士");
 	
@@ -42,7 +43,7 @@ public class MiniTableRenderTest {
 	    TableStyle cellStyle = new TableStyle();
 	    cellStyle.setBackgroundColor("0000ff");
         cellStyle.setAlign(STJc.LEFT);
-	    cellDatas.add(new CellRenderData(new TextRenderData("FFFFFF", "白字蓝底居左"), cellStyle));
+	    cellDatas.add(new CellRenderData(new TextRenderData("FFFFFF", "白字\n蓝底\n居左"), cellStyle));
 	    cellStyle = new TableStyle();
         cellStyle.setBackgroundColor("666666");
         cellStyle.setAlign(STJc.RIGHT);

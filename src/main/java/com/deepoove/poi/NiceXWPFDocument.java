@@ -57,6 +57,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enu
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
 
 /**
@@ -261,6 +262,21 @@ public class NiceXWPFDocument extends XWPFDocument {
         finally {
             verify.dispose();
         }
+    }
+    
+    public static XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
+        XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
+        int pos = -1;
+        List<XWPFRun> runs = ((XWPFParagraph) run.getParent()).getRuns();
+        for (int i = 0; i < runs.size(); i++) {
+            if (run == runs.get(i)) {
+                pos = i;
+                break;
+            }
+        }
+        XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(pos, link);
+        StyleUtils.styleRun(hyperLinkRun, run);
+        return hyperLinkRun;
     }
 
     public BigInteger addNewNumbericId(Pair<Enum, String> numFmt) {

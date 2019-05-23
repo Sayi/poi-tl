@@ -39,7 +39,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
                 // 合并单元格
                 TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
-                MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
+                MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
             }
         }
 
@@ -49,7 +49,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             for (int i = 0; i < goods.size(); i++) {
                 XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
                 for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
-                MiniTableRenderPolicy.renderRow(table, goodsStartRow, goods.get(i));
+                MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
             }
         }
     }
