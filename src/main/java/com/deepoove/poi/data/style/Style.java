@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data.style;
 
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
+
 /**
  * 样式
  * 
@@ -52,6 +54,11 @@ public class Style {
      * 下划线
      */
     private Boolean isUnderLine;
+
+    /**
+     * 文本背景突出显示颜色
+     */
+    private STHighlightColor.Enum highlightColor;
 
     public Style() {}
 
@@ -119,4 +126,13 @@ public class Style {
     public void setUnderLine(Boolean isUnderLine) {
         this.isUnderLine = isUnderLine;
     }
+
+    public STHighlightColor.Enum getHighlightColor() {
+        return highlightColor;
+    }
+
+    public void setHighlightColor(STHighlightColor.Enum highlightColor) {
+        this.highlightColor = highlightColor;
+    }
+
 }

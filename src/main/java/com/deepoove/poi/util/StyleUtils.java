@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
@@ -35,6 +36,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 
@@ -64,6 +67,7 @@ public final class StyleUtils {
         Boolean italic = style.isItalic();
         Boolean strike = style.isStrike();
         Boolean underLine = style.isUnderLine();
+        Enum highlightColor = style.getHighlightColor();
         if (StringUtils.isNotBlank(color)) run.setColor(color);
         if (0 != fontSize) run.setFontSize(fontSize);
         if (StringUtils.isNotBlank(fontFamily)) {
@@ -74,6 +78,19 @@ public final class StyleUtils {
             fonts.setHAnsi(fontFamily);
             fonts.setCs(fontFamily);
             fonts.setEastAsia(fontFamily);
+        }
+        if (null != highlightColor) {
+            CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+            CTHighlight highlight = pr.isSetHighlight() ? pr.getHighlight() : pr.addNewHighlight();
+            STHighlightColor hColor = highlight.xgetVal();
+            if (hColor == null) {
+                hColor = STHighlightColor.Factory.newInstance();            
+            }
+            STHighlightColor.Enum val = STHighlightColor.Enum.forString(highlightColor.toString());
+            if (val != null) {
+                hColor.setStringValue(val.toString());
+                highlight.xsetVal(hColor);
+            }
         }
         if (null != bold) run.setBold(bold);
         if (null != italic) run.setItalic(italic);
