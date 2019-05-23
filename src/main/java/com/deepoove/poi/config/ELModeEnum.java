@@ -24,11 +24,11 @@ package com.deepoove.poi.config;
 public enum ELModeEnum {
 
     /**
-     * 标准模式
+     * 标准模式：无法计算表达式时，RenderData默认为null值
      */
     POI_TL_STANDARD_MODE,
     /**
-     * 严格模式
+     * 严格模式：无法计算表达式直接抛出异常
      */
     POI_TL_STICT_MODE,
     /**
