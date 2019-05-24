@@ -41,7 +41,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
     protected void beforeRender(RenderContext context) {
-        clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
+        clearPlaceholder(context);
     }
 
     @Override

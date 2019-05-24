@@ -58,7 +58,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
     
     @Override
     protected void beforeRender(RenderContext context) {
-        clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
+        clearPlaceholder(context);
     }
 
     @Override

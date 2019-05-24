@@ -50,7 +50,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     @Override
     protected void afterRender(RenderContext context) {
-        clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
+        clearPlaceholder(context);
     }
 
     @Override

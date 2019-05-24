@@ -7,6 +7,7 @@ import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.TableTools;
 
@@ -26,6 +27,11 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         return null != data;
     }
     
+    @Override
+    protected void beforeRender(RenderContext context) {
+        // 清空模板标签
+        clearPlaceholder(context);
+    }
 
     @Override
     public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
@@ -49,8 +55,7 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         TableTools.mergeCellsHorizonal(table, 0, 0, 7);
         TableTools.mergeCellsVertically(table, 0, 1, 9);
         
-        // 清空原先模板
-        clearPlaceholder(run);
+        
     }
 
 }

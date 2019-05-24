@@ -64,7 +64,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
     @Override
     protected void afterRender(RenderContext context) {
         XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
-        clearPlaceholder(run);
+        clearPlaceholder(context);
         IRunBody parent = run.getParent();
         if (parent instanceof XWPFParagraph) {
             ((XWPFParagraph) parent).removeRun(((RunTemplate) context.getEleTemplate()).getRunPos());

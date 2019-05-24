@@ -1,7 +1,5 @@
 package com.deepoove.poi.policy;
 
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
@@ -37,7 +35,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
                 context.getEleTemplate().getSource(), context.getData());
         if (context.getTemplate().getConfig().isNullToBlank()) {
             logger.debug("[config.isNullToBlank == true] clear the element {} from the word file.", context.getEleTemplate().getSource());
-            clearPlaceholder(((RunTemplate) context.getEleTemplate()).getRun());
+            clearPlaceholder(context);
         } else {
             logger.debug("The element {} Unable to be rendered, nothing to do.", context.getEleTemplate().getSource());
         }
@@ -107,8 +105,12 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         throw new RenderException("Render template:" + runTemplate + " error", e);
     }
 
-    protected void clearPlaceholder(XWPFRun run) {
-        run.setText("", 0);
+    /**
+     * 继承这个方法，实现自定义清空标签的方案
+     * @param context
+     */
+    protected void clearPlaceholder(RenderContext context) {
+        ((RunTemplate) context.getEleTemplate()).getRun().setText("", 0);
     }
 
 }
