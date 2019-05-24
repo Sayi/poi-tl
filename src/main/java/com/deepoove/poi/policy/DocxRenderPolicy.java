@@ -41,7 +41,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
     protected void beforeRender(RenderContext context) {
-        clearPlaceholder(context);
+        clearPlaceholder(context, false);
     }
 
     @Override

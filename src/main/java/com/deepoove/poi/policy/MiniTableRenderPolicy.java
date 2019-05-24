@@ -55,11 +55,6 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         }
         return true;
     }
-    
-    @Override
-    protected void beforeRender(RenderContext context) {
-        clearPlaceholder(context);
-    }
 
     @Override
     public void doRender(RunTemplate runTemplate, MiniTableRenderData data, XWPFTemplate template)
@@ -72,6 +67,11 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         } else {
             renderTable(doc, run, data);
         }
+    }
+    
+    @Override
+    protected void afterRender(RenderContext context) {
+        clearPlaceholder(context, true);
     }
 
     private void renderTable(NiceXWPFDocument doc, XWPFRun run, MiniTableRenderData tableData) {

@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
@@ -63,14 +62,13 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
 
     @Override
     protected void afterRender(RenderContext context) {
-        XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
-        clearPlaceholder(context);
-        IRunBody parent = run.getParent();
-        if (parent instanceof XWPFParagraph) {
-            ((XWPFParagraph) parent).removeRun(((RunTemplate) context.getEleTemplate()).getRunPos());
-            // To do: 更好的列表样式
-            // ((XWPFParagraph) parent).setSpacingBetween(0,
-            // LineSpacingRule.AUTO);
-        }
+        clearPlaceholder(context, true);
+//        IRunBody parent = run.getParent();
+//        if (parent instanceof XWPFParagraph) {
+//            ((XWPFParagraph) parent).removeRun(((RunTemplate) context.getEleTemplate()).getRunPos());
+//            // To do: 更好的列表样式
+//            // ((XWPFParagraph) parent).setSpacingBetween(0,
+//            // LineSpacingRule.AUTO);
+//        }
     }
 }

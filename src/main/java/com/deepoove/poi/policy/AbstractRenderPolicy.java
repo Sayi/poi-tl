@@ -1,5 +1,10 @@
 package com.deepoove.poi.policy;
 
+import org.apache.poi.xwpf.usermodel.IRunBody;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
@@ -35,7 +40,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
                 context.getEleTemplate().getSource(), context.getData());
         if (context.getTemplate().getConfig().isNullToBlank()) {
             logger.debug("[config.isNullToBlank == true] clear the element {} from the word file.", context.getEleTemplate().getSource());
-            clearPlaceholder(context);
+            clearPlaceholder(context, false);
         } else {
             logger.debug("The element {} Unable to be rendered, nothing to do.", context.getEleTemplate().getSource());
         }
@@ -109,8 +114,15 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
      * 继承这个方法，实现自定义清空标签的方案
      * @param context
      */
-    protected void clearPlaceholder(RenderContext context) {
-        ((RunTemplate) context.getEleTemplate()).getRun().setText("", 0);
+    protected void clearPlaceholder(RenderContext context, boolean clearParagraph) {
+        XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
+        run.setText("", 0);
+        IRunBody parent = run.getParent();
+        if (clearParagraph && (parent instanceof XWPFParagraph)) {
+            NiceXWPFDocument doc = context.getTemplate().getXWPFDocument();
+            int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph)parent);
+            doc.removeBodyElement(posOfParagraph);
+        }
     }
 
 }

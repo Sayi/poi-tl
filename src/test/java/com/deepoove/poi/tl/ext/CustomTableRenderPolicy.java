@@ -28,9 +28,9 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
     }
     
     @Override
-    protected void beforeRender(RenderContext context) {
+    protected void afterRender(RenderContext context) {
         // 清空模板标签
-        clearPlaceholder(context);
+        clearPlaceholder(context, true);
     }
 
     @Override

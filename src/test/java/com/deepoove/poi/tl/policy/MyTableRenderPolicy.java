@@ -12,7 +12,7 @@ import com.deepoove.poi.template.run.RunTemplate;
 public class MyTableRenderPolicy extends MiniTableRenderPolicy{
     
     @Override
-    protected void clearPlaceholder(RenderContext context) {
+    protected void clearPlaceholder(RenderContext context, boolean clearParent) {
         XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
 //        int posOfParagraph = doc.getPosOfParagraph(run.getParagraph());
 //        doc.removeBodyElement(posOfParagraph);
