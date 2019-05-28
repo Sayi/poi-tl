@@ -421,6 +421,9 @@ public class NiceXWPFDocument extends XWPFDocument {
         for (String relaId : placeHolderblipIdsMap.keySet()) {
             addPart = addPart.replaceAll("r:embed=\"" + relaId + "\"",
                     "r:embed=\"" + placeHolderblipIdsMap.get(relaId) + "\"");
+            // w:pict v:shape v:imagedata
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
+                    "r:id=\"" + placeHolderblipIdsMap.get(relaId) + "\"");
         }
         addPart = addPart.replaceAll("@PoiTL@", "");
 
