@@ -55,6 +55,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     @Override
     protected void doRenderException(RunTemplate runTemplate, PictureRenderData data, Exception e) {
+        logger.info("Render picture " + runTemplate + " error: {}", e.getMessage());
         runTemplate.getRun().setText(data.getAltMeta(), 0);
     }
 

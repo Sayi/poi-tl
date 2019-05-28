@@ -47,6 +47,10 @@ public class PictureRenderTest {
 				put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
 				// java 图片
 				put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage));
+				
+				PictureRenderData pictureRenderData = new PictureRenderData(120, 120, "src/test/resources/sayi11.png");
+                pictureRenderData.setAltMeta("图片不存在");
+				put("image", pictureRenderData);
 			}
 		};
 
