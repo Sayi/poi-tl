@@ -49,7 +49,7 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         TableTools.borderTable(table, 4);
 
         // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
-        // TODO 调用MiniTableRenderPolicy.renderRow方法快速方便的渲染一行数据
+        // TODO 调用MiniTableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
         // TODO 调用TableTools类方法操作表格，比如合并单元格
         // ......
         TableTools.mergeCellsHorizonal(table, 0, 0, 7);
