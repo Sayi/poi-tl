@@ -35,40 +35,39 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, NumbericRenderData numbericData, XWPFTemplate template)
-            throws Exception {
-        NiceXWPFDocument doc = template.getXWPFDocument();
+    public void doRender(RunTemplate runTemplate, NumbericRenderData numbericData,
+            XWPFTemplate template) throws Exception {
         XWPFRun run = runTemplate.getRun();
-        List<TextRenderData> datas = numbericData.getNumbers();
-        Style fmtStyle = numbericData.getFmtStyle();
-
-        BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
-
-        XWPFParagraph paragraph;
-        XWPFRun newRun;
-        for (TextRenderData line : datas) {
-            paragraph = doc.insertNewParagraph(run);
-            paragraph.setNumID(numID);
-            CTP ctp = paragraph.getCTP();
-            CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
-            CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
-            StyleUtils.styleRpr(pr, fmtStyle);
-            newRun = paragraph.createRun();
-            StyleUtils.styleRun(newRun, line.getStyle());
-            newRun.setText(line.getText());
-        }
+        Helper.renderNumberic(run, numbericData);
 
     }
 
     @Override
     protected void afterRender(RenderContext context) {
         clearPlaceholder(context, true);
-//        IRunBody parent = run.getParent();
-//        if (parent instanceof XWPFParagraph) {
-//            ((XWPFParagraph) parent).removeRun(((RunTemplate) context.getEleTemplate()).getRunPos());
-//            // To do: 更好的列表样式
-//            // ((XWPFParagraph) parent).setSpacingBetween(0,
-//            // LineSpacingRule.AUTO);
-//        }
+    }
+
+    public static class Helper {
+        public static void renderNumberic(XWPFRun run, NumbericRenderData numbericData) {
+            NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
+            List<TextRenderData> datas = numbericData.getNumbers();
+            Style fmtStyle = numbericData.getFmtStyle();
+
+            BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
+
+            XWPFParagraph paragraph;
+            XWPFRun newRun;
+            for (TextRenderData line : datas) {
+                paragraph = doc.insertNewParagraph(run);
+                paragraph.setNumID(numID);
+                CTP ctp = paragraph.getCTP();
+                CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+                CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
+                StyleUtils.styleRpr(pr, fmtStyle);
+                newRun = paragraph.createRun();
+                StyleUtils.styleRun(newRun, line.getStyle());
+                newRun.setText(line.getText());
+            }
+        }
     }
 }

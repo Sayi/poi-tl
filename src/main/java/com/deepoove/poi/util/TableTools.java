@@ -94,7 +94,7 @@ public final class TableTools {
      */
     @SuppressWarnings("unused")
     // TODO 
-    private static void widthTable(XWPFTable table, float[] colWidths) {
+    public static void widthTable(XWPFTable table, float[] colWidths) {
         float widthCM = 0;
         for (float w : colWidths) {
             widthCM += w;
