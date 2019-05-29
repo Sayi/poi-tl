@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,12 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
@@ -80,6 +83,37 @@ public class NiceXWPFDocument extends XWPFDocument {
     public NiceXWPFDocument(InputStream in) throws IOException {
         super(in);
         buildAllTables();
+    }
+    
+    @Override
+    protected void onDocumentCreate() {
+        // add all document attribute for new document
+        super.onDocumentCreate();
+        try {
+            CTDocument1 ctDocument = getDocument();
+            CTDocument1 parse = null;
+            String doc = "<xml-fragment xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \n" + 
+                    "    xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" \n" + 
+                    "    xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \n" + 
+                    "    xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" \n" + 
+                    "    xmlns:o=\"urn:schemas-microsoft-com:office:office\" \n" + 
+                    "    xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" \n" + 
+                    "    xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" \n" + 
+                    "    xmlns:v=\"urn:schemas-microsoft-com:vml\" \n" + 
+                    "    xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" \n" + 
+                    "    xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" \n" + 
+                    "    xmlns:w10=\"urn:schemas-microsoft-com:office:word\" \n" + 
+                    "    xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" \n" + 
+                    "    xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" \n" + 
+                    "    xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" \n" + 
+                    "    xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" \n" + 
+                    "    xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \n" + 
+                    "    xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 wp14\"><w:body></w:body></xml-fragment>";
+            parse = CTDocument1.Factory.parse(doc);
+            ctDocument.set(parse);
+        } catch (XmlException e) {
+            logger.warn("Create new document error and merge docx may produce bug: {}", e.getMessage());
+        }
     }
 
     private void buildAllTables() {
@@ -344,6 +378,11 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         CTBody body = this.getDocument().getBody();
         String srcString = body.xmlText();
+        //hack for create document or single element document
+        if (!srcString.startsWith("<xml-fragment")) {
+            body.addNewSectPr();
+            srcString = body.xmlText();
+        }
         String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
         String sufix = srcString.substring(srcString.lastIndexOf("<"));
         List<String> addParts = new ArrayList<String>();
@@ -378,19 +417,7 @@ public class NiceXWPFDocument extends XWPFDocument {
      * @since 1.3.0
      */
     public NiceXWPFDocument merge(NiceXWPFDocument docMerge) throws Exception {
-        if (null == docMerge) return this;
-        CTBody body = this.getDocument().getBody();
-        String srcString = body.xmlText();
-        String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
-        String mainPart = srcString.substring(srcString.indexOf(">") + 1,
-                srcString.lastIndexOf("<"));
-        String sufix = srcString.substring(srcString.lastIndexOf("<"));
-
-        String addPart = extractMergePart(docMerge);
-
-        CTBody makeBody = CTBody.Factory.parse(prefix + mainPart + addPart + sufix);
-        body.set(makeBody);
-        return generate();
+        return merge(Arrays.asList(docMerge), createParagraph().createRun());
     }
 
     private String extractMergePart(NiceXWPFDocument docMerge) throws InvalidFormatException {
@@ -440,16 +467,16 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private String ridSectPr(String appendString) {
         int lastIndexOf = appendString.lastIndexOf("<w:sectPr");
-        String addPart = null;
+        String addPart = "";
+        int begin = appendString.indexOf(">") + 1;
+        int end = appendString.lastIndexOf("<");
         if (-1 != lastIndexOf) {
-            String prefix = appendString.substring(appendString.indexOf(">") + 1,
-                    appendString.lastIndexOf("<w:sectPr"));
+            String prefix = appendString.substring(begin, appendString.lastIndexOf("<w:sectPr"));
             String sufix = appendString.substring(appendString.lastIndexOf("</w:sectPr>") + 11,
-                    appendString.lastIndexOf("<"));
+                    end);
             return prefix + sufix;
-        } else {
-            addPart = appendString.substring(appendString.indexOf(">") + 1,
-                    appendString.lastIndexOf("<"));
+        } else if (begin < end) {
+            addPart = appendString.substring(begin, end);
         }
         return addPart;
     }
