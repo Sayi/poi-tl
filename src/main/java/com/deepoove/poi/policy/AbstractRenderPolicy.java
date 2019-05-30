@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi.policy;
 
 import org.apache.poi.xwpf.usermodel.IRunBody;
@@ -39,33 +54,38 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         logger.debug("Validate the data of the element {} error, the data may be null or empty: {}",
                 context.getEleTemplate().getSource(), context.getData());
         if (context.getTemplate().getConfig().isNullToBlank()) {
-            logger.debug("[config.isNullToBlank == true] clear the element {} from the word file.", context.getEleTemplate().getSource());
+            logger.debug("[config.isNullToBlank == true] clear the element {} from the word file.",
+                    context.getEleTemplate().getSource());
             clearPlaceholder(context, false);
         } else {
-            logger.debug("The element {} Unable to be rendered, nothing to do.", context.getEleTemplate().getSource());
+            logger.debug("The element {} Unable to be rendered, nothing to do.",
+                    context.getEleTemplate().getSource());
         }
     }
 
-    protected void beforeRender(RenderContext context) {
-    }
+    protected void beforeRender(RenderContext context) {}
 
-    protected void afterRender(RenderContext context) {
-    }
+    protected void afterRender(RenderContext context) {}
 
     /**
      * 执行模板渲染
      * 
-     * @param runTemplate 文档模板
-     * @param data        数据模型
-     * @param template    文档对象
+     * @param runTemplate
+     *            文档模板
+     * @param data
+     *            数据模型
+     * @param template
+     *            文档对象
      * @throws Exception
      */
-    public abstract void doRender(RunTemplate runTemplate, T data, XWPFTemplate template) throws Exception;
+    public abstract void doRender(RunTemplate runTemplate, T data, XWPFTemplate template)
+            throws Exception;
 
     /*
      * 骨架 (non-Javadoc)
      * 
-     * @see com.deepoove.poi.policy.RenderPolicy#render(com.deepoove.poi.template.
+     * @see
+     * com.deepoove.poi.policy.RenderPolicy#render(com.deepoove.poi.template.
      * ElementTemplate, java.lang.Object, com.deepoove.poi.XWPFTemplate)
      */
     @SuppressWarnings("unchecked")
@@ -78,7 +98,8 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         try {
             model = (T) data;
         } catch (ClassCastException e) {
-            throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
+            throw new RenderException(
+                    "Error Render Data format for template: " + eleTemplate.getSource(), e);
         }
 
         // validate
@@ -112,7 +133,10 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     /**
      * 继承这个方法，实现自定义清空标签的方案
+     * 
      * @param context
+     * @param clearParagraph
+     *            是否清空占位的段落
      */
     protected void clearPlaceholder(RenderContext context, boolean clearParagraph) {
         XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
@@ -120,7 +144,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         IRunBody parent = run.getParent();
         if (clearParagraph && (parent instanceof XWPFParagraph)) {
             NiceXWPFDocument doc = context.getTemplate().getXWPFDocument();
-            int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph)parent);
+            int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph) parent);
             doc.removeBodyElement(posOfParagraph);
         }
     }

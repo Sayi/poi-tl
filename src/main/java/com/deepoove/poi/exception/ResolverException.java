@@ -17,13 +17,12 @@ package com.deepoove.poi.exception;
 
 public class ResolverException extends RuntimeException {
 
-	private static final long serialVersionUID = -7058954483364965161L;
+    private static final long serialVersionUID = -7058954483364965161L;
 
-	public ResolverException() {
-	}
+    public ResolverException() {}
 
-	public ResolverException(String msg) {
-		super(msg);
-	}
+    public ResolverException(String msg) {
+        super(msg);
+    }
 
 }

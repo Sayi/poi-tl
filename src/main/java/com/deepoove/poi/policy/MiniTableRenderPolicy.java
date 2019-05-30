@@ -68,7 +68,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             renderTable(doc, run, data);
         }
     }
-    
+
     @Override
     protected void afterRender(RenderContext context) {
         clearPlaceholder(context, true);
@@ -176,7 +176,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
             XWPFParagraph par = new XWPFParagraph(ctP, cell);
             StyleUtils.styleTableParagraph(par, cellStyle);
-            
+
             String text = renderData.getText();
             String[] fragment = text.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
 

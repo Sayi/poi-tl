@@ -38,6 +38,7 @@ public class Issue183 {
         tableDatas = Arrays.asList(row0, row1, row2, row3, row4);
     }
 
+    @SuppressWarnings("serial")
     @Test
     public void testNullMerge() throws Exception {
 

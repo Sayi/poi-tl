@@ -48,10 +48,8 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     public void doRender(RunTemplate runTemplate, DocxRenderData data, XWPFTemplate template) throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
         XWPFRun run = runTemplate.getRun();
-
         List<NiceXWPFDocument> docMerges = getMergedDocxs(data, template.getConfig());
         doc = doc.merge(docMerges, run);
-
         template.reload(doc);
     }
 

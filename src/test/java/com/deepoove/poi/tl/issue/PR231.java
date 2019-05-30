@@ -18,7 +18,8 @@ public class PR231 {
     public void testChinese() {
         Configure.ConfigureBuilder builder = Configure.newBuilder();
         builder.buildGramer("${", "}");
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/231.docx", builder.build())
+        XWPFTemplate template = XWPFTemplate
+                .compile("src/test/resources/issue/231.docx", builder.build())
                 .render(new HashMap<String, Object>() {
                     {
                         put("title", "模板引擎测试");
