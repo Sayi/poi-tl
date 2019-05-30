@@ -19,9 +19,9 @@ package com.deepoove.poi.config;
  * 模板表达式的模式
  * 
  * @author Sayi
- * @version
+ * @version 1.5.0
  */
-public enum ELModeEnum {
+public enum ELMode {
 
     /**
      * 标准模式：无法计算表达式时，RenderData默认为null值

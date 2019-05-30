@@ -15,7 +15,7 @@
  */
 package com.deepoove.poi.render;
 
-import com.deepoove.poi.config.ELModeEnum;
+import com.deepoove.poi.config.ELMode;
 
 /**
  * @author Sayi
@@ -23,7 +23,7 @@ import com.deepoove.poi.config.ELModeEnum;
  */
 public class RenderFactory {
 
-    public static Render getRender(Object model, ELModeEnum mode) {
+    public static Render getRender(Object model, ELMode mode) {
         Render render = null;
         switch (mode) {
         case SPEL_MODE:

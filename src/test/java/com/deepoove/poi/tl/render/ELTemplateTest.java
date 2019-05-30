@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ELModeEnum;
+import com.deepoove.poi.config.ELMode;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.PictureRenderData;
@@ -69,7 +69,7 @@ public class ELTemplateTest {
         template.writeToFile("out_dot.docx");
 
         // spel_mode 部分兼容以前的模式
-        Configure config = Configure.newBuilder().setElMode(ELModeEnum.SPEL_MODE).build();
+        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
         template = XWPFTemplate.compile("src/test/resources/dot.docx", config).render(model);
         template.writeToFile("out_spel_dot.docx");
     }

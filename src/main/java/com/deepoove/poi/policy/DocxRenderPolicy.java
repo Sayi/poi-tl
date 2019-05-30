@@ -58,7 +58,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data, Configure configure) throws IOException {
         List<NiceXWPFDocument> docs = new ArrayList<NiceXWPFDocument>();
         byte[] docx = data.getDocx();
-        List<?> dataList = data.getDataList();
+        List<?> dataList = data.getRenderDatas();
         if (null == dataList || dataList.isEmpty()) {
             // 待合并的文档不是模板
             docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));

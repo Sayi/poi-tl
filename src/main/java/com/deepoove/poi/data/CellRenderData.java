@@ -21,7 +21,7 @@ import com.deepoove.poi.data.style.TableStyle;
  * 单元格数据
  * 
  * @author Sayi
- * @version
+ * @version 1.5.0
  */
 public class CellRenderData {
 

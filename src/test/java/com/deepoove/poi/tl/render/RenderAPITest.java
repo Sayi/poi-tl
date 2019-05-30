@@ -11,7 +11,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ELModeEnum;
+import com.deepoove.poi.config.ELMode;
 import com.deepoove.poi.render.Render;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.render.RenderDataCompute;
@@ -129,7 +129,7 @@ public class RenderAPITest {
 
     @Test
     public void testRenderMerge2() throws Exception {
-        Configure config = Configure.newBuilder().setElMode(ELModeEnum.SPEL_MODE)
+        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE)
                 .buildGramer("{{", "}}").build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/run_merge.docx", config);
         new Render(renderDataCompute).render(template);
@@ -142,7 +142,7 @@ public class RenderAPITest {
         // Configure config =
         // Configure.newBuilder().buildReg("((?!\\$\\{)(?!\\}).)*").buildGramer("${",
         // "}").build();
-        Configure config = Configure.newBuilder().setElMode(ELModeEnum.SPEL_MODE)
+        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE)
                 .buildGramer("${", "}").supportNullToBlank(false).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/run_merge3.docx", config);
         new Render(renderDataCompute).render(template);

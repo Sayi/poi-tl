@@ -36,10 +36,11 @@ import com.deepoove.poi.util.RegexUtils;
  */
 public class Configure {
 
+    // defalut expression
     private static final String DEFAULT_GRAMER_REGEX = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
 
     // Highest priority
-    private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>(8);
+    private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>();
     // Low priority
     private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
 
@@ -55,13 +56,13 @@ public class Configure {
     /**
      * 默认支持中文、字母、数字、下划线的正则
      */
-    private String grammerReg = DEFAULT_GRAMER_REGEX;
+    private String grammerRegex = DEFAULT_GRAMER_REGEX;
 
     /**
      * 模板表达式模式，默认为POI_TL_MODE
      */
-    private ELModeEnum elMode = ELModeEnum.POI_TL_STANDARD_MODE;
-    
+    private ELMode elMode = ELMode.POI_TL_STANDARD_MODE;
+
     /**
      * 渲染数据为null时，是保留还是清空模板标签
      */
@@ -161,19 +162,16 @@ public class Configure {
     }
 
     public String getGrammerRegex() {
-        return grammerReg;
+        return grammerRegex;
     }
 
-    public ELModeEnum getElMode() {
+    public ELMode getElMode() {
         return elMode;
     }
-    
 
     public boolean isNullToBlank() {
         return nullToBlank;
     }
-
-
 
     public static class ConfigureBuilder {
         private static String regexForAllPattern = "((?!{0})(?!{1}).)*";
@@ -193,13 +191,13 @@ public class Configure {
          * 
          * @return
          */
-        public ConfigureBuilder setElMode(ELModeEnum mode) {
+        public ConfigureBuilder setElMode(ELMode mode) {
             config.elMode = mode;
             return this;
         }
 
         public ConfigureBuilder buildGrammerRegex(String reg) {
-            config.grammerReg = reg;
+            config.grammerRegex = reg;
             return this;
         }
 
@@ -207,7 +205,7 @@ public class Configure {
             this.regexForAll = true;
             return this;
         }
-        
+
         public ConfigureBuilder supportNullToBlank(boolean nullToBlank) {
             config.nullToBlank = nullToBlank;
             return this;
@@ -224,7 +222,7 @@ public class Configure {
         }
 
         public Configure build() {
-            if (config.elMode == ELModeEnum.SPEL_MODE) {
+            if (config.elMode == ELMode.SPEL_MODE) {
                 supportGrammerRegexForAll();
             }
             if (regexForAll) {

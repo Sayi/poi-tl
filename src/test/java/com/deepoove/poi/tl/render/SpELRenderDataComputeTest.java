@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ELModeEnum;
+import com.deepoove.poi.config.ELMode;
 import com.deepoove.poi.render.SpELRenderDataCompute;
 
 public class SpELRenderDataComputeTest {
@@ -200,7 +200,7 @@ public class SpELRenderDataComputeTest {
 
     @Test
     public void testSpELTemplate() throws IOException {
-        Configure config = Configure.newBuilder().setElMode(ELModeEnum.SPEL_MODE).build();
+        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/spel.docx", config)
                 .render(data);
         template.writeToFile("out_spel.docx");

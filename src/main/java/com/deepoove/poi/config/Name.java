@@ -22,12 +22,13 @@ import java.lang.annotation.Target;
 
 /**
  * Class field 对应的模板标签的名称
+ * 
  * @author Sayi
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Name {
-	
-	public String value();
+
+    public String value();
 
 }

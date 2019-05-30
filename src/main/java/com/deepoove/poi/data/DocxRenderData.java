@@ -32,12 +32,12 @@ public class DocxRenderData implements RenderData {
     /**
      * stream流无法重用，使用字节数组表示待合并文档
      */
-    private transient byte[] data;
+    private transient byte[] mergeBytes;
 
     /**
      * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
      */
-    private List<?> dataList;
+    private List<?> renderDatas;
 
     /**
      * @param docx
@@ -52,12 +52,11 @@ public class DocxRenderData implements RenderData {
      * 
      * @param docx
      *            子文档
-     * @param dataList
+     * @param renderDatas
      *            渲染数据列表，列表的大小表示循环的次数
      */
-    public DocxRenderData(File docx, List<?> dataList) {
-        this.dataList = dataList;
-        this.data = ByteUtils.getLocalByteArray(docx);
+    public DocxRenderData(File docx, List<?> renderDatas) {
+        this(ByteUtils.getLocalByteArray(docx), renderDatas);
     }
 
     /**
@@ -70,33 +69,32 @@ public class DocxRenderData implements RenderData {
 
     /**
      * @param inputStream
-     * @param dataList
+     * @param renderDatas
      */
-    public DocxRenderData(InputStream inputStream, List<?> dataList) {
-        this.dataList = dataList;
-        this.data = ByteUtils.toByteArray(inputStream);
+    public DocxRenderData(InputStream inputStream, List<?> renderDatas) {
+        this(ByteUtils.toByteArray(inputStream), renderDatas);
     }
 
     /**
      * @param input
      *            子文档字节数组
-     * @param dataList
+     * @param renderDatas
      */
-    public DocxRenderData(byte[] input, List<?> dataList) {
-        this.dataList = dataList;
-        this.data = input;
+    public DocxRenderData(byte[] input, List<?> renderDatas) {
+        this.renderDatas = renderDatas;
+        this.mergeBytes = input;
     }
 
     public byte[] getDocx() {
-        return data;
+        return mergeBytes;
     }
 
-    public List<?> getDataList() {
-        return dataList;
+    public List<?> getRenderDatas() {
+        return renderDatas;
     }
 
-    public void setDataList(List<?> dataList) {
-        this.dataList = dataList;
+    public void setRenderDatas(List<?> renderDatas) {
+        this.renderDatas = renderDatas;
     }
 
 }
