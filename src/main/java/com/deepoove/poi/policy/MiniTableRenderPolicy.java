@@ -81,7 +81,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             col = getMaxColumFromData(tableData.getDatas());
         } else {
             row++;
-            col = tableData.getHeaders().size();
+            col = tableData.getHeader().size();
         }
 
         // 2.创建表格
@@ -90,7 +90,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
         // 3.渲染数据
         int startRow = 0;
-        if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeaders());
+        if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeader());
         for (RowRenderData data : tableData.getDatas()) {
             Helper.renderRow(table, startRow++, data);
         }
@@ -99,14 +99,14 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
     private void renderNoDataTable(NiceXWPFDocument doc, XWPFRun run,
             MiniTableRenderData tableData) {
-        int row = 2, col = tableData.getHeaders().size();
+        int row = 2, col = tableData.getHeader().size();
 
         XWPFTable table = doc.insertNewTable(run, row, col);
         initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 
-        Helper.renderRow(table, 0, tableData.getHeaders());
+        Helper.renderRow(table, 0, tableData.getHeader());
 
-        TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeaders().size() - 1);
+        TableTools.mergeCellsHorizonal(table, 1, 0, tableData.getHeader().size() - 1);
         XWPFTableCell cell = table.getRow(1).getCell(0);
         cell.setText(tableData.getNoDatadesc());
 
