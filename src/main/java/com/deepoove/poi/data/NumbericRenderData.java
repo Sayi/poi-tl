@@ -88,11 +88,15 @@ public class NumbericRenderData implements RenderData {
     }
 
     /**
-     * @param numFmt 编号字符
-     * @param fmtStyle 编号样式
-     * @param numbers 列表内容
+     * @param numFmt
+     *            编号字符
+     * @param fmtStyle
+     *            编号样式
+     * @param numbers
+     *            列表内容
      */
-    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle, List<TextRenderData> numbers) {
+    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle,
+            List<TextRenderData> numbers) {
         this.numFmt = numFmt;
         this.numbers = numbers;
         this.fmtStyle = fmtStyle;
@@ -101,7 +105,7 @@ public class NumbericRenderData implements RenderData {
     public NumbericRenderData(List<TextRenderData> numbers) {
         this(FMT_BULLET, numbers);
     }
-    
+
     public static NumbericRenderData build(String... text) {
         if (null == text) return null;
         List<TextRenderData> numbers = new ArrayList<TextRenderData>();
@@ -110,6 +114,7 @@ public class NumbericRenderData implements RenderData {
         }
         return new NumbericRenderData(numbers);
     }
+
     public static NumbericRenderData build(TextRenderData... data) {
         return new NumbericRenderData(null == data ? null : Arrays.asList(data));
     }

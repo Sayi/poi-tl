@@ -29,7 +29,6 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class RowRenderData implements RenderData {
 
-    // private List<TextRenderData> rowData;
     private List<CellRenderData> cellDatas;
 
     /**

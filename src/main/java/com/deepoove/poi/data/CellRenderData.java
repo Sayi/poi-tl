@@ -25,12 +25,12 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class CellRenderData {
 
-    private TextRenderData renderData;
+    protected TextRenderData renderData;
 
     /**
      * 单元格级别的样式：背景色、单元格文字对齐方式
      */
-    private TableStyle cellStyle;
+    protected TableStyle cellStyle;
 
     public CellRenderData() {}
 

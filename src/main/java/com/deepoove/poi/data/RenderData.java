@@ -15,5 +15,4 @@
  */
 package com.deepoove.poi.data;
 
-public interface RenderData {
-}
+public interface RenderData {}
