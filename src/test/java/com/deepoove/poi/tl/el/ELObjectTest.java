@@ -121,7 +121,7 @@ public class ELObjectTest {
                 put("header", "Deeply love what you love.");
                 put("name", "Poi-tl");
                 put("word", "模板引擎");
-                put("time", "2018-06-20");
+                put("time", "2019-05-31");
                 put("what",
                         "Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
                 put("author", new Object());
@@ -131,7 +131,7 @@ public class ELObjectTest {
         Assert.assertEquals(elObject.eval("header"), "Deeply love what you love.");
         Assert.assertEquals(elObject.eval("name"), "Poi-tl");
         Assert.assertEquals(elObject.eval("word"), "模板引擎");
-        Assert.assertEquals(elObject.eval("time"), "2018-06-20");
+        Assert.assertEquals(elObject.eval("time"), "2019-05-31");
     }
 
     private void testEL(final User user, List<String> asList, ELObject elObject) {

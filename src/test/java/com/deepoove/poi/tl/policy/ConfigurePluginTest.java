@@ -40,5 +40,23 @@ public class ConfigurePluginTest {
         template.close();
 
     }
+    
+    @Test
+    public void testSupportNullToBlank() throws Exception {
+
+        Map<String, Object> datas = new HashMap<String, Object>();
+
+        Configure configure = Configure.newBuilder().buildGramer("[[", "]]").supportNullToBlank(false)
+                .build();
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config.docx", configure)
+                .render(datas);
+
+        FileOutputStream out = new FileOutputStream("out_config_noblank.docx");
+        template.write(out);
+        out.flush();
+        out.close();
+        template.close();
+
+    }
 
 }

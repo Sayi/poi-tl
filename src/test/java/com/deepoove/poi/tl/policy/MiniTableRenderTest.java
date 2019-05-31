@@ -27,7 +27,7 @@ import com.deepoove.poi.tl.ext.CustomTableRenderPolicy;
  */
 public class MiniTableRenderTest {
 
-    RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓\n名"),
+    RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓名"),
             new TextRenderData("FFFFFF", "学历"));
 
     RowRenderData row0 = RowRenderData.build(
@@ -46,7 +46,7 @@ public class MiniTableRenderTest {
         TableStyle cellStyle = new TableStyle();
         cellStyle.setBackgroundColor("0000ff");
         cellStyle.setAlign(STJc.LEFT);
-        cellDatas.add(new CellRenderData(new TextRenderData("FFFFFF", "白字\n蓝底\n居左"), cellStyle));
+        cellDatas.add(new CellRenderData(new TextRenderData("FFFFFF", "白字\n蓝底居左"), cellStyle));
         cellStyle = new TableStyle();
         cellStyle.setBackgroundColor("666666");
         cellStyle.setAlign(STJc.RIGHT);

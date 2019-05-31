@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
@@ -49,11 +50,11 @@ public class XWPFTemplateTest {
                 put("header", "Deeply love what you love.");
                 put("name", "Poi-tl");
                 put("word", "模板引擎");
-                put("time", "2018-06-20");
+                put("time", "2019-05-31");
                 put("what",
                         "Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
                 put("author", new TextRenderData("000000", "Sayi卅一"));
-                put("introduce", "http://www.deepoove.com");
+                put("introduce", new HyperLinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
 
                 put("solution_compare", new MiniTableRenderData(header, tableDatas,
@@ -88,7 +89,7 @@ public class XWPFTemplateTest {
         obj.setHeader("Deeply love what you love.");
         obj.setName("Poi-tl");
         obj.setWord("模板引擎");
-        obj.setTime("2018-06-20");
+        obj.setTime("2019-05-31");
         obj.setWhat(
                 "Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
         obj.setAuthor("Sayi卅一");
