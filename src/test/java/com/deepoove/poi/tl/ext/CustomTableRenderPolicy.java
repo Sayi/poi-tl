@@ -23,11 +23,6 @@ import com.deepoove.poi.util.TableTools;
 public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
-    protected boolean validate(Object data) {
-        return null != data;
-    }
-    
-    @Override
     protected void afterRender(RenderContext context) {
         // 清空模板标签
         clearPlaceholder(context, true);

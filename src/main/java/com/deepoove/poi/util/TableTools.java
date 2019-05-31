@@ -107,8 +107,6 @@ public final class TableTools {
      * @param widths
      *            每列的宽度，单位CM
      */
-    @SuppressWarnings("unused")
-    // TODO 
     public static void widthTable(XWPFTable table, float[] colWidths) {
         float widthCM = 0;
         for (float w : colWidths) {

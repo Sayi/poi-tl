@@ -55,7 +55,12 @@ public class RunningRunParagraph {
         this.paragraph = paragraph;
         this.runs = paragraph.getRuns();
         if (null == runs || runs.isEmpty()) return;
-        refactorParagraph();
+
+        Matcher matcher = pattern.matcher(paragraph.getText());
+        if (matcher.find()) {
+            refactorParagraph();
+        }
+
         buildRunEdge(pattern);
     }
 
@@ -149,7 +154,9 @@ public class RunningRunParagraph {
                             }
                         } else if (obj instanceof CTBr) {
                             XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
-                            insertNewRun.addBreak();
+                            CTBr addNewBr = insertNewRun.getCTR().addNewBr();
+                            addNewBr.setType(((CTBr) obj).getType());
+                            addNewBr.setClear(((CTBr) obj).getClear());
                         } else if (obj instanceof CTText) {
                             XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
                             StyleUtils.styleRun(insertNewRun, xwpfRun);
