@@ -1,6 +1,6 @@
 = poi-tl
 Sayi 卅一 <adasai90@gmail.com>
-v1.4.2
+v1.5.0
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板
 :doctype: book
@@ -14,9 +14,9 @@ v1.4.2
 :sectlinks:
 :sectanchors:
 
-poi-tl（poi template language）是基于Apache POI的Word模板引擎。纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。
+poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。
 
-TIP: 支持DOCX格式的Word模板。
+CAUTION: 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 
 == Maven
 [source, xml]
@@ -24,13 +24,46 @@ TIP: 支持DOCX格式的Word模板。
 <dependency>
     <groupId>com.deepoove</groupId>
     <artifactId>poi-tl</artifactId>
-    <version>1.4.2</version>
+    <version>1.5.0</version>
+</dependency>
+----
+
+poi-tl默认会引入apache poi-3.16，可以通过下面的方式手动引入高版本的poi：
+[source, xml]
+----
+<dependency>
+  <groupId>com.deepoove</groupId>
+  <artifactId>poi-tl</artifactId>
+  <version>1.5.0</version>
+  <!-- 排除poi-3.16包 -->
+  <exclusions>
+    <exclusion>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>*</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<!-- 引入poi包 -->
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>4.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>4.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml-schemas</artifactId>
+    <version>4.1.0</version>
 </dependency>
 ----
 
 == Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.4.2'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.5.0'
 
 == 快速开始
 === 2min入门
@@ -60,9 +93,9 @@ template.close();
 --
 
 === Template：Word模板和样式
-所有的模板标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
+Word文档支持DOCX格式，所有的模板标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
 
-WARNING: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
+IMPORTANT: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局, 不支持文本框。
 
 poi-tl的一个核心特点是 *数据模型与样式的分离*，同样的数据模型可以用来渲染各种不同样式的模板。
 
@@ -71,9 +104,7 @@ poi-tl的一个核心特点是 *数据模型与样式的分离*，同样的数�
 image::./style.png[align='center'] 
 
 === Data-Model：数据源
-TIP: 数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。
-
-数据源可以是一个Map，其中Key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。
+数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。数据源可以是一个Map，其中key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。
 
 [source, java]
 ----
@@ -84,7 +115,7 @@ private String dNumber;
 private String m_vin;
 ----
 
-poi-tl支持类似EL表达式的对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。
+TIP: poi-tl默认的表达式支持对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。表达式也支持中文，比如{{客户手机号}}。
 
 数据模型实现了接口 `public interface RenderData {}` , 有以下几种数据模型：
 
@@ -96,6 +127,15 @@ poi-tl支持类似EL表达式的对象点缀式访问，比如名称为{{author.
 
 === output：流
 可以将最终结果渲染到任意输出流中，比如输出到文件流FileOutputStream生成新文档，输出到网络流ServletOutputStream供浏览器下载。
+
+[source, java]
+----
+// 输出到任何流
+template.write(OutputStream stream)
+
+// 便捷的输出到文件
+template.writeToFile(String path)
+----
 
 == 语法
 poi-tl內建了五种模板。
@@ -131,7 +171,8 @@ put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
     "color": "00FF00", <4>
     "underLine": false, <5>
     "fontFamily": "微软雅黑", <6>
-    "fontSize": 12 <7>
+    "fontSize": 12, <7>
+    "highlightColor": "green" <8>
   }
 }
 ----
@@ -142,6 +183,7 @@ put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
 <5> 下划线
 <6> 字体
 <7> 字号
+<8> 背景高亮色
 
 注：HyperLinkTextRenderData继承于TextRenderData，实现了超链接文本的功能。
 --
@@ -163,15 +205,14 @@ TIP: 文本换行使用 `\n` 字符。
 // 本地图片
 put("localPicture", new PictureRenderData(120, 120, "./sayi.png"));
 
-// 本地图片byte数据
-byte[] localByteArray = BytePictureUtils.getLocalByteArray(new File("./logo.png"));
-put("localBytePicture", new PictureRenderData(100, 120, ".png", localByteArray));
+// 图片流文件
+put("localBytePicture", new PictureRenderData(100, 120, ".png", new FileInputStream("./logo.png")));
 
 // 网络图片 
-put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
+put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
 
 // java 图片
-put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));
+put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage)));
 ----
 --
 可以指定图片的宽度和高度，也支持 `BufferedImage`，这样我们可以利用Java生成任意图表插入到word文档中。
@@ -184,14 +225,16 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 {
   "path": "", <1>
   "data": [], <2>
-  "width": 100, <3>
-  "height": 100 <4>
+  "altMeta": "图片不存在", <3>
+  "width": 100, <4>
+  "height": 100 <5>
 }
 ----
 <1> 图片路径
 <2> 图片也可以是byte[]字节数组
-<3> 宽度
-<4> 高度
+<3> 当无法获取图片时展示的文字
+<4> 宽度
+<5> 高度
 --
 
 === 表格模板{{#var}}
@@ -210,35 +253,53 @@ image::./table0.png[align='center']
 [source, json]
 ----
 {
-  "datas": [ <1>
+  "rowDatas": [ <1>
     {
-      "rowData": [TextRenderData],
-      "style": { 
+      "cellDatas": [ <2>
+        {
+          "renderData": [TextRenderData],
+          "cellStyle": { <3>
+            "align": "center", 
+            "backgroundColor": "ff9800"
+          }
+        }
+      ],
+      "rowStyle": { <4>
         "align": "center", 
         "backgroundColor": "ff9800"
-    }
+      }
     }
   ],
-  "headers": { <2>
-    "rowData": [TextRenderData],
-    "style": { <3>
+  "header": { <5>
+    "cellDatas": [
+      {
+        "renderData": [TextRenderData],
+        "cellStyle": { 
+          "align": "center", 
+          "backgroundColor": "ff9800"
+        }
+      }
+    ],
+    "rowStyle": { <4>
       "align": "center", 
       "backgroundColor": "ff9800"
     }
   },
-  "noDatadesc": "No Data Desc", <4>
-  "style": { <5>
+  "noDatadesc": "No Data Desc", <6>
+  "style": { <7>
       "align": "center"
     }
-  "width": 14.65 <6>
+  "width": 14.65 <8>
 }
 ----
-<1> 定义表格数据，单元格数据由 `TextRenderData` 指定。
-<2> 定义表格头
-<3> 行样式：行数据的对齐方式，行背景色
-<4> 没有数据的展示文案
-<5> 表格样式：表格居左、居中、居右对齐
-<6> 表格宽度，单位cm
+<1> 定义表格数据
+<2> 定义单元格数据，数据由 `TextRenderData` 指定
+<3> 单元格样式：对齐方式，背景色
+<4> 行样式：行数据的对齐方式，行背景色
+<5> 定义表格头
+<6> 没有数据的展示文案
+<7> 表格样式：表格居左、居中、居右对齐
+<8> 表格宽度，单位cm
 --
 
 [sidebar]
@@ -323,9 +384,9 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> 
 参见link:#example-article[示例-一篇文章]
 
 == 插件机制(Plugin mechanism)
-*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的，我们可以轻松的增加新的语法插件，也可以便捷的自定义任意模板标签的渲染策略。
+*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的。插件的核心逻辑是在模板的基础上通过poi-tl和poi提供的API操作word文档，实现插件就是实现自己的渲染策略。
 
-插件的核心逻辑是在模板的基础上通过poi和poi-tl提供的API操作word文档，实现插件就是实现自己的渲染策略。
+CAUTION: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，可以参见Apache官方API，这里也有一个快速入门的教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word(docx) 入门示例教程]。如果你写了一个不错的插件，欢迎提交Pull Request。
 
 [[cus-policy-section]]
 === 新增RenderPolicy策略
@@ -337,18 +398,18 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> 
 * MiniTableRenderPolicy
 * DocxRenderPolicy
 
-我们可以通过实现RenderPolicy接口新增自己的渲染策略：
+我们可以通过实现 `RenderPolicy` 接口扩展自己的渲染策略：
 [source, java]
 ----
 public interface RenderPolicy {
-  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
-} <1> <2> <3>
+  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <1> <2> <3>
+}
 ----
 <1> ElementTemplate是当前模板标签所在位置
 <2> data是数据模型
 <3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等
 
-TIP: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，*原则上Apache POI支持的操作，都可以在当前模板位置进行渲染*。
+NOTE: 原则上Apache POI支持的操作，都可以在当前模板位置进行渲染。
 
 [example]
 --
@@ -357,11 +418,12 @@ TIP: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知
 AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。
 [source, java]
 ----
-public class CustomTableRenderPolicy extends AbstractRenderPolicy {
+public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
 
   @Override
-  protected boolean validate(Object data) {
-    return null != data;
+  protected void afterRender(RenderContext context) {
+    // 清空模板标签所在段落
+    clearPlaceholder(context, true);
   }
 
   @Override
@@ -379,15 +441,13 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy {
     TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
     TableTools.borderTable(table, 4);
 
-    // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
-    // TODO 调用MiniTableRenderPolicy.renderRow方法快速方便的渲染一行数据
-    // TODO 调用TableTools类方法操作表格，比如合并单元格
+    // 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
+    // 调用MiniTableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
+    // 调用TableTools类方法操作表格，比如合并单元格
     // ......
     TableTools.mergeCellsHorizonal(table, 0, 0, 7);
     TableTools.mergeCellsVertically(table, 0, 1, 9);
     
-    // 清空原先模板
-    clearPlaceholder(run);
   }
 }
 ----
@@ -415,10 +475,65 @@ builder.addPlugin('#', new PictureRenderPolicy());
 
 这样{{@var}}就变成了表格模板，{{#var}}变成了图片模板，虽然不建议改变內建模板，但是从中可以看到poi-tl插件的设计思想，深藏功与名。
 
+=== Helper辅助类
+在內建策略中，通常会提供一个静态Helper辅助类，在我们实现自己的RenderPolicy时，也可以通过这些辅助类操作文档。
+[source, java]
+----
+// 某个位置渲染文本
+TextRenderPolicy.Helper.renderTextRun(XWPFRun, Object);
+// 某个位置渲染图片
+PictureRenderPolicy.Helper.renderPicture(XWPFRun, PictureRenderData);
+// 某个位置渲染列表
+NumbericRenderPolicy.Helper.renderNumberic(XWPFRun, NumbericRenderData);
+// 渲染表格的一行数据
+MiniTableRenderPolicy.Helper.renderRow(XWPFTable, int, RowRenderData);
+// 渲染单元格
+MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyle)
+----
+
+
+== 扩展功能
+=== EL表达式：SpingEL
+Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。poi-tl的表达式模板支持切换到SpEL模式。
+[source, java]
+----
+builder.setElMode(ELMode.SPEL_MODE);
+----
+关于SpEL的写法可以参见官网，下面给出一些典型的示例。
+[example]
+--
+[source]
+----
+{{name}}
+{{name.toUpperCase()}} <1>
+{{empty?:'这个字段为空'}}
+{{sex ? '男' : '女'}} <2>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <3>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)}}
+{{price/10000 + '万元'}} <4>
+{{dogs[0].name}} <5>
+{{dogs[0].age}}
+----
+<1> 方法调用
+<2> 三目运算符
+<3> 方法调用
+<4> 运算符
+<5> 数组列表
+--
+
+TIP: poi-tl提供了表达式计算接口 `RenderDataCompute`，它是一个很重要的扩展点，支持扩展任何的表达式引擎。SpEL模式是通过 `SpELRenderDataCompute` 实现。
+
+
 === 自定义语法
 高度扩展性表现在其本身的语法也可以自定义，如果你不喜欢 `{{}}` 的方式，更偏爱freemarker `${}` 的方式：
 [source, java]
 builder.buildGramer("${", "}");
+
+=== 模板生成模板
+模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们想构造这样的新模板：把原先的一个模板标签分成两个模板标签：
+
+[source, java]
+put("title", "{{title}}\n{{subtitle}}");
 
 == 示例
 接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。
@@ -501,7 +616,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         // 合并单元格
         TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
         // 渲染单行人工费数据
-        MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
+        MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
       }
     }
 
@@ -513,7 +628,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
         for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
         // 渲染单行货品明细数据
-        MiniTableRenderPolicy.renderRow(table, goodsStartRow, goods.get(i));
+        MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
       }
     }
   }
