@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Sayi 卅一</span><br>
 <span id="email" class="email"><a href="mailto:adasai90@gmail.com">adasai90@gmail.com</a></span><br>
-<span id="revnumber">version 1.4.2</span>
+<span id="revnumber">version 1.5.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -469,21 +469,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#cus-policy-section">5.1. 新增RenderPolicy策略</a></li>
 <li><a href="#_自定义模板策略">5.2. 自定义模板策略</a></li>
 <li><a href="#_新增语法插件">5.3. 新增语法插件</a></li>
-<li><a href="#_自定义语法">5.4. 自定义语法</a></li>
+<li><a href="#_helper辅助类">5.4. Helper辅助类</a></li>
 </ul>
 </li>
-<li><a href="#_示例">6. 示例</a>
+<li><a href="#_扩展功能">6. 扩展功能</a>
 <ul class="sectlevel2">
-<li><a href="#_软件说明文档">6.1. 软件说明文档</a></li>
-<li><a href="#example-table">6.2. 付款通知书</a></li>
-<li><a href="#example-article">6.3. 一篇文章</a></li>
-<li><a href="#_个人简历">6.4. 个人简历</a></li>
+<li><a href="#_el表达式spingel">6.1. EL表达式：SpingEL</a></li>
+<li><a href="#_自定义语法">6.2. 自定义语法</a></li>
+<li><a href="#_模板生成模板">6.3. 模板生成模板</a></li>
 </ul>
 </li>
-<li><a href="#_license">7. License</a></li>
-<li><a href="#_源码">8. 源码</a></li>
-<li><a href="#_打赏个小费">9. 打赏个小费</a></li>
-<li><a href="#_常见问题">10. 常见问题</a></li>
+<li><a href="#_示例">7. 示例</a>
+<ul class="sectlevel2">
+<li><a href="#_软件说明文档">7.1. 软件说明文档</a></li>
+<li><a href="#example-table">7.2. 付款通知书</a></li>
+<li><a href="#example-article">7.3. 一篇文章</a></li>
+<li><a href="#_个人简历">7.4. 个人简历</a></li>
+</ul>
+</li>
+<li><a href="#_license">8. License</a></li>
+<li><a href="#_源码">9. 源码</a></li>
+<li><a href="#_打赏个小费">10. 打赏个小费</a></li>
+<li><a href="#_常见问题">11. 常见问题</a></li>
 </ul>
 </div>
 </div>
@@ -491,16 +498,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>poi-tl（poi template language）是基于Apache POI的Word模板引擎。纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。</p>
+<p>poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。</p>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock caution">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-支持DOCX格式的Word模板。
+在文档的任何地方做任何事情（<em>Do Anything Anywhere</em>）是poi-tl的星辰大海。
 </td>
 </tr>
 </table>
@@ -515,7 +522,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
     &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
     &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-    &lt;version&gt;1.4.2&lt;/version&gt;
+    &lt;version&gt;1.5.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>poi-tl默认会引入apache poi-3.16，可以通过下面的方式手动引入高版本的poi：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
+  &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
+  &lt;version&gt;1.5.0&lt;/version&gt;
+  &lt;!-- 排除poi-3.16包 --&gt;
+  &lt;exclusions&gt;
+    &lt;exclusion&gt;
+      &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+      &lt;artifactId&gt;*&lt;/artifactId&gt;
+    &lt;/exclusion&gt;
+  &lt;/exclusions&gt;
+&lt;/dependency&gt;
+&lt;!-- 引入poi包 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+    &lt;artifactId&gt;poi&lt;/artifactId&gt;
+    &lt;version&gt;4.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+    &lt;artifactId&gt;poi-ooxml&lt;/artifactId&gt;
+    &lt;version&gt;4.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+    &lt;artifactId&gt;poi-ooxml-schemas&lt;/artifactId&gt;
+    &lt;version&gt;4.1.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -526,7 +568,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.4.2'</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.5.0'</code></pre>
 </div>
 </div>
 </div>
@@ -584,13 +626,13 @@ template.close();</code></pre>
 <div class="sect2">
 <h3 id="_templateword模板和样式"><a class="anchor" href="#_templateword模板和样式"></a><a class="link" href="#_templateword模板和样式">3.2. Template：Word模板和样式</a></h3>
 <div class="paragraph">
-<p>所有的模板标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。</p>
+<p>Word文档支持DOCX格式，所有的模板标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。</p>
 </div>
-<div class="admonitionblock warning">
+<div class="admonitionblock important">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
+<i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
@@ -612,20 +654,8 @@ template.close();</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_data_model数据源"><a class="anchor" href="#_data_model数据源"></a><a class="link" href="#_data_model数据源">3.3. Data-Model：数据源</a></h3>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
-<p>数据源可以是一个Map，其中Key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。</p>
+<p>数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。数据源可以是一个Map，其中key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -636,8 +666,17 @@ private String dNumber;
 private String m_vin;</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>poi-tl支持类似EL表达式的对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。</p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+poi-tl默认的表达式支持对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。表达式也支持中文，比如{{客户手机号}}。
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>数据模型实现了接口 <code>public interface RenderData {}</code> , 有以下几种数据模型：</p>
@@ -666,6 +705,15 @@ private String m_vin;</code></pre>
 <h3 id="_output流"><a class="anchor" href="#_output流"></a><a class="link" href="#_output流">3.4. output：流</a></h3>
 <div class="paragraph">
 <p>可以将最终结果渲染到任意输出流中，比如输出到文件流FileOutputStream生成新文档，输出到网络流ServletOutputStream供浏览器下载。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 输出到任何流
+template.write(OutputStream stream)
+
+// 便捷的输出到文件
+template.writeToFile(String path)</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -715,7 +763,8 @@ put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
     "color": "00FF00", <i class="conum" data-value="4"></i><b>(4)</b>
     "underLine": false, <i class="conum" data-value="5"></i><b>(5)</b>
     "fontFamily": "微软雅黑", <i class="conum" data-value="6"></i><b>(6)</b>
-    "fontSize": 12 <i class="conum" data-value="7"></i><b>(7)</b>
+    "fontSize": 12, <i class="conum" data-value="7"></i><b>(7)</b>
+    "highlightColor": "green" <i class="conum" data-value="8"></i><b>(8)</b>
   }
 }</code></pre>
 </div>
@@ -749,6 +798,10 @@ put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
 <td>字号</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>背景高亮色</td>
 </tr>
 </table>
 </div>
@@ -800,15 +853,14 @@ put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 本地图片
 put("localPicture", new PictureRenderData(120, 120, "./sayi.png"));
 
-// 本地图片byte数据
-byte[] localByteArray = BytePictureUtils.getLocalByteArray(new File("./logo.png"));
-put("localBytePicture", new PictureRenderData(100, 120, ".png", localByteArray));
+// 图片流文件
+put("localBytePicture", new PictureRenderData(100, 120, ".png", new FileInputStream("./logo.png")));
 
 // 网络图片
-put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlByteArray("https://avatars3.githubusercontent.com/u/1394854")));
+put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
 
 // java 图片
-put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUtils.getBufferByteArray(bufferImage)));</code></pre>
+put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage)));</code></pre>
 </div>
 </div>
 </div>
@@ -824,8 +876,9 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 <pre class="prettyprint highlight"><code class="language-json" data-lang="json">{
   "path": "", <i class="conum" data-value="1"></i><b>(1)</b>
   "data": [], <i class="conum" data-value="2"></i><b>(2)</b>
-  "width": 100, <i class="conum" data-value="3"></i><b>(3)</b>
-  "height": 100 <i class="conum" data-value="4"></i><b>(4)</b>
+  "altMeta": "图片不存在", <i class="conum" data-value="3"></i><b>(3)</b>
+  "width": 100, <i class="conum" data-value="4"></i><b>(4)</b>
+  "height": 100 <i class="conum" data-value="5"></i><b>(5)</b>
 }</code></pre>
 </div>
 </div>
@@ -841,10 +894,14 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>宽度</td>
+<td>当无法获取图片时展示的文字</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>宽度</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
 <td>高度</td>
 </tr>
 </table>
@@ -873,27 +930,43 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-json" data-lang="json">{
-  "datas": [ <i class="conum" data-value="1"></i><b>(1)</b>
+  "rowDatas": [ <i class="conum" data-value="1"></i><b>(1)</b>
     {
-      "rowData": [TextRenderData],
-      "style": {
+      "cellDatas": [ <i class="conum" data-value="2"></i><b>(2)</b>
+        {
+          "renderData": [TextRenderData],
+          "cellStyle": { <i class="conum" data-value="3"></i><b>(3)</b>
+            "align": "center",
+            "backgroundColor": "ff9800"
+          }
+        }
+      ],
+      "rowStyle": { <i class="conum" data-value="4"></i><b>(4)</b>
         "align": "center",
         "backgroundColor": "ff9800"
-    }
+      }
     }
   ],
-  "headers": { <i class="conum" data-value="2"></i><b>(2)</b>
-    "rowData": [TextRenderData],
-    "style": { <i class="conum" data-value="3"></i><b>(3)</b>
+  "header": { <i class="conum" data-value="5"></i><b>(5)</b>
+    "cellDatas": [
+      {
+        "renderData": [TextRenderData],
+        "cellStyle": {
+          "align": "center",
+          "backgroundColor": "ff9800"
+        }
+      }
+    ],
+    "rowStyle": { <i class="conum" data-value="4"></i><b>(4)</b>
       "align": "center",
       "backgroundColor": "ff9800"
     }
   },
-  "noDatadesc": "No Data Desc", <i class="conum" data-value="4"></i><b>(4)</b>
-  "style": { <i class="conum" data-value="5"></i><b>(5)</b>
+  "noDatadesc": "No Data Desc", <i class="conum" data-value="6"></i><b>(6)</b>
+  "style": { <i class="conum" data-value="7"></i><b>(7)</b>
       "align": "center"
     }
-  "width": 14.65 <i class="conum" data-value="6"></i><b>(6)</b>
+  "width": 14.65 <i class="conum" data-value="8"></i><b>(8)</b>
 }</code></pre>
 </div>
 </div>
@@ -901,26 +974,34 @@ put("bufferImagePicture", new PictureRenderData(100, 120, ".png", BytePictureUti
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>定义表格数据，单元格数据由 <code>TextRenderData</code> 指定。</td>
+<td>定义表格数据</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>定义表格头</td>
+<td>定义单元格数据，数据由 <code>TextRenderData</code> 指定</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>行样式：行数据的对齐方式，行背景色</td>
+<td>单元格样式：对齐方式，背景色</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>没有数据的展示文案</td>
+<td>行样式：行数据的对齐方式，行背景色</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>表格样式：表格居左、居中、居右对齐</td>
+<td>定义表格头</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>没有数据的展示文案</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>表格样式：表格居左、居中、居右对齐</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
 <td>表格宽度，单位cm</td>
 </tr>
 </table>
@@ -1059,10 +1140,19 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 <h2 id="_插件机制plugin_mechanism"><a class="anchor" href="#_插件机制plugin_mechanism"></a><a class="link" href="#_插件机制plugin_mechanism">5. 插件机制(Plugin mechanism)</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><strong>插件机制是poi-tl的核心</strong>，默认的五大內建模板语法是通过插件方式加载的，我们可以轻松的增加新的语法插件，也可以便捷的自定义任意模板标签的渲染策略。</p>
+<p><strong>插件机制是poi-tl的核心</strong>，默认的五大內建模板语法是通过插件方式加载的。插件的核心逻辑是在模板的基础上通过poi-tl和poi提供的API操作word文档，实现插件就是实现自己的渲染策略。</p>
 </div>
-<div class="paragraph">
-<p>插件的核心逻辑是在模板的基础上通过poi和poi-tl提供的API操作word文档，实现插件就是实现自己的渲染策略。</p>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，可以参见Apache官方API，这里也有一个快速入门的教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html">Apache POI Word(docx) 入门示例教程</a>。如果你写了一个不错的插件，欢迎提交Pull Request。
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="cus-policy-section"><a class="anchor" href="#cus-policy-section"></a><a class="link" href="#cus-policy-section">5.1. 新增RenderPolicy策略</a></h3>
@@ -1089,13 +1179,13 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 </ul>
 </div>
 <div class="paragraph">
-<p>我们可以通过实现RenderPolicy接口新增自己的渲染策略：</p>
+<p>我们可以通过实现 <code>RenderPolicy</code> 接口扩展自己的渲染策略：</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">public interface RenderPolicy {
-  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
-} <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
+  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b>
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1114,14 +1204,14 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 </tr>
 </table>
 </div>
-<div class="admonitionblock tip">
+<div class="admonitionblock note">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
+<i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，<strong>原则上Apache POI支持的操作，都可以在当前模板位置进行渲染</strong>。
+原则上Apache POI支持的操作，都可以在当前模板位置进行渲染。
 </td>
 </tr>
 </table>
@@ -1136,11 +1226,12 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class CustomTableRenderPolicy extends AbstractRenderPolicy {
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class CustomTableRenderPolicy extends AbstractRenderPolicy&lt;Object&gt; {
 
   @Override
-  protected boolean validate(Object data) {
-    return null != data;
+  protected void afterRender(RenderContext context) {
+    // 清空模板标签所在段落
+    clearPlaceholder(context, true);
   }
 
   @Override
@@ -1158,15 +1249,13 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
     TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
     TableTools.borderTable(table, 4);
 
-    // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
-    // TODO 调用MiniTableRenderPolicy.renderRow方法快速方便的渲染一行数据
-    // TODO 调用TableTools类方法操作表格，比如合并单元格
+    // 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
+    // 调用MiniTableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
+    // 调用TableTools类方法操作表格，比如合并单元格
     // ......
     TableTools.mergeCellsHorizonal(table, 0, 0, 7);
     TableTools.mergeCellsVertically(table, 0, 1, 9);
 
-    // 清空原先模板
-    clearPlaceholder(run);
   }
 }</code></pre>
 </div>
@@ -1182,7 +1271,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <i c
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">ConfigureBuilder builder = Configure.newBuilder();
-XWPFTemplate.compile("~/template.docx", builder.build());</code></pre>
+XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1218,7 +1307,99 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_自定义语法"><a class="anchor" href="#_自定义语法"></a><a class="link" href="#_自定义语法">5.4. 自定义语法</a></h3>
+<h3 id="_helper辅助类"><a class="anchor" href="#_helper辅助类"></a><a class="link" href="#_helper辅助类">5.4. Helper辅助类</a></h3>
+<div class="paragraph">
+<p>在內建策略中，通常会提供一个静态Helper辅助类，在我们实现自己的RenderPolicy时，也可以通过这些辅助类操作文档。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 某个位置渲染文本
+TextRenderPolicy.Helper.renderTextRun(XWPFRun, Object);
+// 某个位置渲染图片
+PictureRenderPolicy.Helper.renderPicture(XWPFRun, PictureRenderData);
+// 某个位置渲染列表
+NumbericRenderPolicy.Helper.renderNumberic(XWPFRun, NumbericRenderData);
+// 渲染表格的一行数据
+MiniTableRenderPolicy.Helper.renderRow(XWPFTable, int, RowRenderData);
+// 渲染单元格
+MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyle)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_扩展功能"><a class="anchor" href="#_扩展功能"></a><a class="link" href="#_扩展功能">6. 扩展功能</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_el表达式spingel"><a class="anchor" href="#_el表达式spingel"></a><a class="link" href="#_el表达式spingel">6.1. EL表达式：SpingEL</a></h3>
+<div class="paragraph">
+<p>Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。poi-tl的表达式模板支持切换到SpEL模式。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setElMode(ELMode.SPEL_MODE);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>关于SpEL的写法可以参见官网，下面给出一些典型的示例。</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>{{name}}
+{{name.toUpperCase()}} <i class="conum" data-value="1"></i><b>(1)</b>
+{{empty?:'这个字段为空'}}
+{{sex ? '男' : '女'}} <i class="conum" data-value="2"></i><b>(2)</b>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <i class="conum" data-value="3"></i><b>(3)</b>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)}}
+{{price/10000 + '万元'}} <i class="conum" data-value="4"></i><b>(4)</b>
+{{dogs[0].name}} <i class="conum" data-value="5"></i><b>(5)</b>
+{{dogs[0].age}}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>方法调用</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>三目运算符</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>方法调用</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>运算符</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>数组列表</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+poi-tl提供了表达式计算接口 <code>RenderDataCompute</code>，它是一个很重要的扩展点，支持扩展任何的表达式引擎。SpEL模式是通过 <code>SpELRenderDataCompute</code> 实现。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_自定义语法"><a class="anchor" href="#_自定义语法"></a><a class="link" href="#_自定义语法">6.2. 自定义语法</a></h3>
 <div class="paragraph">
 <p>高度扩展性表现在其本身的语法也可以自定义，如果你不喜欢 <code>{{}}</code> 的方式，更偏爱freemarker <code>${}</code> 的方式：</p>
 </div>
@@ -1228,16 +1409,27 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_模板生成模板"><a class="anchor" href="#_模板生成模板"></a><a class="link" href="#_模板生成模板">6.3. 模板生成模板</a></h3>
+<div class="paragraph">
+<p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们想构造这样的新模板：把原先的一个模板标签分成两个模板标签：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">put("title", "{{title}}\n{{subtitle}}");</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">6. 示例</a></h2>
+<h2 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">7. 示例</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。</p>
 </div>
 <div class="sect2">
-<h3 id="_软件说明文档"><a class="anchor" href="#_软件说明文档"></a><a class="link" href="#_软件说明文档">6.1. 软件说明文档</a></h3>
+<h3 id="_软件说明文档"><a class="anchor" href="#_软件说明文档"></a><a class="link" href="#_软件说明文档">7.1. 软件说明文档</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -1281,7 +1473,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-table"><a class="anchor" href="#example-table"></a><a class="link" href="#example-table">6.2. 付款通知书</a></h3>
+<h3 id="example-table"><a class="anchor" href="#example-table"></a><a class="link" href="#example-table">7.2. 付款通知书</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -1353,7 +1545,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
         // 合并单元格
         TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
         // 渲染单行人工费数据
-        MiniTableRenderPolicy.renderRow(table, laborsStartRow, labors.get(i));
+        MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
       }
     }
 
@@ -1365,7 +1557,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
         XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
         for (int j = 0; j &lt; 7; j++) insertNewTableRow.createCell();
         // 渲染单行货品明细数据
-        MiniTableRenderPolicy.renderRow(table, goodsStartRow, goods.get(i));
+        MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
       }
     }
   }
@@ -1394,7 +1586,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-article"><a class="anchor" href="#example-article"></a><a class="link" href="#example-article">6.3. 一篇文章</a></h3>
+<h3 id="example-article"><a class="anchor" href="#example-article"></a><a class="link" href="#example-article">7.3. 一篇文章</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -1441,7 +1633,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_个人简历"><a class="anchor" href="#_个人简历"></a><a class="link" href="#_个人简历">6.4. 个人简历</a></h3>
+<h3 id="_个人简历"><a class="anchor" href="#_个人简历"></a><a class="link" href="#_个人简历">7.4. 个人简历</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -1490,7 +1682,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_license"><a class="anchor" href="#_license"></a><a class="link" href="#_license">7. License</a></h2>
+<h2 id="_license"><a class="anchor" href="#_license"></a><a class="link" href="#_license">8. License</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Apache License 2.0</p>
@@ -1498,7 +1690,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_源码"><a class="anchor" href="#_源码"></a><a class="link" href="#_源码">8. 源码</a></h2>
+<h2 id="_源码"><a class="anchor" href="#_源码"></a><a class="link" href="#_源码">9. 源码</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://github.com/Sayi/poi-tl">GitHub</a></p>
@@ -1506,7 +1698,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_打赏个小费"><a class="anchor" href="#_打赏个小费"></a><a class="link" href="#_打赏个小费">9. 打赏个小费</a></h2>
+<h2 id="_打赏个小费"><a class="anchor" href="#_打赏个小费"></a><a class="link" href="#_打赏个小费">10. 打赏个小费</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，如果你觉得它节省了你的时间，给你带来了方便和灵感，或者认同这个开源项目，可以为我的付出打赏点小费哦。</p>
@@ -1519,7 +1711,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">10. 常见问题</a></h2>
+<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">11. 常见问题</a></h2>
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
@@ -1540,7 +1732,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 <p>暂不支持，参考原生POI API自行扩展。</p>
 </li>
 <li>
-<p><em>是否支持Android客户端？</em></p>
+<p><em>是否支持Android客户端使用？</em></p>
 <p>未知，有些朋友尝试成功，但我尚未在Android环境中验证过。</p>
 </li>
 <li>
