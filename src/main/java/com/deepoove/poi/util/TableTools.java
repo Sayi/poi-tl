@@ -30,6 +30,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
+import com.deepoove.poi.data.style.TableStyle;
+
 /**
  * XWPFTable 增强工具类 <br/>
  * 
@@ -177,6 +179,10 @@ public final class TableTools {
         tblBorders.getRight().setSz(borderSize);
         tblBorders.getInsideH().setSz(borderSize);
         tblBorders.getInsideV().setSz(borderSize);
+    }
+    
+    public static void styleTable(XWPFTable table, TableStyle style) {
+        StyleUtils.styleTable(table, style);
     }
 
     private static CTTblPr getTblPr(XWPFTable table) {
