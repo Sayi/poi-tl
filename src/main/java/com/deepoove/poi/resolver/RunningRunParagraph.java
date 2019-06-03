@@ -155,8 +155,8 @@ public class RunningRunParagraph {
                         } else if (obj instanceof CTBr) {
                             XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
                             CTBr addNewBr = insertNewRun.getCTR().addNewBr();
-                            addNewBr.setType(((CTBr) obj).getType());
-                            addNewBr.setClear(((CTBr) obj).getClear());
+                            if (null != ((CTBr) obj).getType()) addNewBr.setType(((CTBr) obj).getType());
+                            if (null != ((CTBr) obj).getClear()) addNewBr.setClear(((CTBr) obj).getClear());
                         } else if (obj instanceof CTText) {
                             XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
                             StyleUtils.styleRun(insertNewRun, xwpfRun);
