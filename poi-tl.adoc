@@ -19,7 +19,7 @@ poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Jav
 CAUTION: 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 
 == Maven
-poi-tl分为两个版本，其中v1.5.x支持Apache poi3.16+版本和JDK1.6。
+poi-tl分为两个版本，其中v1.5.x支持Apache poi3.16+版本和JDK1.6+。
 [source, xml]
 ----
 <dependency>
