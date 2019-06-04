@@ -19,6 +19,7 @@ poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Jav
 CAUTION: 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 
 == Maven
+poi-tl分为两个版本，其中v1.5.x支持Apache poi3.16+版本和JDK1.6。
 [source, xml]
 ----
 <dependency>
@@ -28,36 +29,13 @@ CAUTION: 在文档的任何地方做任何事情（_Do Anything Anywhere_）是p
 </dependency>
 ----
 
-poi-tl默认会引入apache poi-3.16，可以通过下面的方式手动引入高版本的poi：
+Apache poi4.0.0+要求JDK1.8以上，需要引入最新的poi-tl版本：
 [source, xml]
 ----
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.5.0</version>
-  <!-- 排除poi-3.16包 -->
-  <exclusions>
-    <exclusion>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>*</artifactId>
-    </exclusion>
-  </exclusions>
-</dependency>
-<!-- 引入poi包 -->
-<dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi</artifactId>
-    <version>4.1.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi-ooxml</artifactId>
-    <version>4.1.0</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi-ooxml-schemas</artifactId>
-    <version>4.1.0</version>
+  <version>1.6.0-beta1</version>
 </dependency>
 ----
 
@@ -702,8 +680,6 @@ image::./pay.jpeg[width=256, height=280]
 
 == 常见问题
 [qanda]
-JDK版本有要求吗？::
-  支持JDK1.6和更高版本。
 出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？::
   poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::

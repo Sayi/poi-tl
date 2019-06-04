@@ -517,6 +517,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_maven"><a class="anchor" href="#_maven"></a><a class="link" href="#_maven">1. Maven</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>poi-tl分为两个版本，其中v1.5.x支持Apache poi3.16+版本和JDK1.6。</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
@@ -527,37 +530,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="paragraph">
-<p>poi-tl默认会引入apache poi-3.16，可以通过下面的方式手动引入高版本的poi：</p>
+<p>Apache poi4.0.0+要求JDK1.8以上，需要引入最新的poi-tl版本：</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
   &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-  &lt;version&gt;1.5.0&lt;/version&gt;
-  &lt;!-- 排除poi-3.16包 --&gt;
-  &lt;exclusions&gt;
-    &lt;exclusion&gt;
-      &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
-      &lt;artifactId&gt;*&lt;/artifactId&gt;
-    &lt;/exclusion&gt;
-  &lt;/exclusions&gt;
-&lt;/dependency&gt;
-&lt;!-- 引入poi包 --&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
-    &lt;artifactId&gt;poi&lt;/artifactId&gt;
-    &lt;version&gt;4.1.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
-    &lt;artifactId&gt;poi-ooxml&lt;/artifactId&gt;
-    &lt;version&gt;4.1.0&lt;/version&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
-    &lt;artifactId&gt;poi-ooxml-schemas&lt;/artifactId&gt;
-    &lt;version&gt;4.1.0&lt;/version&gt;
+  &lt;version&gt;1.6.0-beta1&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -1715,10 +1695,6 @@ poi-tl提供了表达式计算接口 <code>RenderDataCompute</code>，它是一�
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
-<li>
-<p><em>JDK版本有要求吗？</em></p>
-<p>支持JDK1.6和更高版本。</p>
-</li>
 <li>
 <p><em>出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？</em></p>
 <p>poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。</p>
