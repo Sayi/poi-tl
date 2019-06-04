@@ -24,6 +24,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -31,6 +32,9 @@ import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.PackageRelationship;
+import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
+import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
 import org.apache.poi.xwpf.usermodel.NumberingWrapper;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -38,6 +42,7 @@ import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
@@ -425,6 +430,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
         Map<String, String> blipIdsMap = mergePicture(docMerge);
+        Map<String, String> hyperlinkMap = mergeHyperlink(docMerge);
 
         XmlOptions optionsOuter = new XmlOptions();
         optionsOuter.setSaveOuter();
@@ -452,6 +458,16 @@ public class NiceXWPFDocument extends XWPFDocument {
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
                     "r:id=\"" + placeHolderblipIdsMap.get(relaId) + "\"");
         }
+        // 超链接
+        for (String relaId : hyperlinkMap.keySet()) {
+            hyperlinkMap.put(relaId, hyperlinkMap.get(relaId) + "@PoiTL@");
+        }
+        for (String relaId : hyperlinkMap.keySet()) {
+            // w:hyperlink r:id
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
+                    "r:id=\"" + hyperlinkMap.get(relaId) + "\"");
+        }
+        
         addPart = addPart.replaceAll("@PoiTL@", "");
 
         for (BigInteger numId : numIdsMap.keySet()) {
@@ -557,6 +573,19 @@ public class NiceXWPFDocument extends XWPFDocument {
             logger.error("merge style error", e);
         }
         return styleIdsMap;
+    }
+
+    private Map<String, String> mergeHyperlink(NiceXWPFDocument docMerge) throws InvalidFormatException {
+        Map<String, String> map = new HashMap<String, String>();
+        PackageRelationshipCollection hyperlinks = docMerge.getPackagePart().getRelationshipsByType(PackageRelationshipTypes.HYPERLINK_PART);
+        Iterator<PackageRelationship> iterator = hyperlinks.iterator();
+        while (iterator.hasNext()) {
+            PackageRelationship relationship = iterator.next();
+            PackageRelationship relationshipNew = getPackagePart()
+                    .addExternalRelationship(relationship.getTargetURI().toString(), XWPFRelation.HYPERLINK.getRelation());
+            map.put(relationship.getId(), relationshipNew.getId());
+        }
+        return map;
     }
 
 }
