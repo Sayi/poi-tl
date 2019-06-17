@@ -1314,11 +1314,24 @@ MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyl
 <div class="sect2">
 <h3 id="_el表达式spingel"><a class="anchor" href="#_el表达式spingel"></a><a class="link" href="#_el表达式spingel">6.1. EL表达式：SpingEL</a></h3>
 <div class="paragraph">
-<p>Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。poi-tl的表达式模板支持切换到SpEL模式。</p>
+<p>Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用SpEL前需要引入相应的依赖：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setElMode(ELMode.SPEL_MODE);</code></pre>
+<pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
+  &lt;version&gt;4.3.6.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>poi-tl的表达式模板支持切换到SpEL模式：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">ConfigureBuilder builder = Configure.newBuilder();
+builder.setElMode(ELMode.SPEL_MODE);</code></pre>
 </div>
 </div>
 <div class="paragraph">

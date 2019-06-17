@@ -472,9 +472,20 @@ MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyl
 
 == 扩展功能
 === EL表达式：SpingEL
-Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。poi-tl的表达式模板支持切换到SpEL模式。
+Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用SpEL前需要引入相应的依赖：
+[source, xml]
+----
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-expression</artifactId>
+  <version>4.3.6.RELEASE</version>
+</dependency>
+----
+
+poi-tl的表达式模板支持切换到SpEL模式：
 [source, java]
 ----
+ConfigureBuilder builder = Configure.newBuilder();
 builder.setElMode(ELMode.SPEL_MODE);
 ----
 关于SpEL的写法可以参见官网，下面给出一些典型的示例。
