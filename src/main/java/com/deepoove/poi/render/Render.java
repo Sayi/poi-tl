@@ -25,6 +25,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
+import com.deepoove.poi.policy.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.util.ObjectUtils;
@@ -59,17 +60,29 @@ public class Render {
     public void render(XWPFTemplate template) {
         ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
         LOGGER.info("Render the template file start...");
+        Configure config = template.getConfig();
 
+        // 1. 引用渲染策略
+        List<ReferenceRenderPolicy<?>> referencePolicies = config.getReferencePolicies();
+        for (ReferenceRenderPolicy<?> policy : referencePolicies) {
+            doRender(policy, template);
+        }
+        // TODO 是否需要reload
+
+        // 2. 模板渲染策略
         // 模板
         List<ElementTemplate> elementTemplates = template.getElementTemplates();
-        if (null == elementTemplates || elementTemplates.isEmpty()) { return; }
+        if (null == elementTemplates || elementTemplates.isEmpty()) {
+            LOGGER.info("Render the template file end: element template is empty.");
+            return;
+        }
         // 策略
         RenderPolicy policy = null;
 
         try {
             int docxCount = 0;
             for (ElementTemplate runTemplate : elementTemplates) {
-                policy = findPolicy(template.getConfig(), runTemplate);
+                policy = findPolicy(config, runTemplate);
 
                 if (policy instanceof DocxRenderPolicy) {
                     docxCount++;
@@ -89,7 +102,7 @@ public class Render {
                 }
 
                 for (ElementTemplate runTemplate : elementTemplates) {
-                    policy = findPolicy(template.getConfig(), runTemplate);
+                    policy = findPolicy(config, runTemplate);
                     if (!(policy instanceof DocxRenderPolicy)) {
                         continue;
                     }
@@ -125,4 +138,8 @@ public class Render {
         policy.render(ele, renderDataCompute.compute(ele.getTagName()), template);
     }
 
+    private void doRender(ReferenceRenderPolicy<?> policy, XWPFTemplate template) {
+        LOGGER.debug("Start render Reference Render Policy:{}", policy.getClass());
+        policy.render(template);
+    }
 }

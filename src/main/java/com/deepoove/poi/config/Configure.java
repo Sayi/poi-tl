@@ -16,7 +16,9 @@
 package com.deepoove.poi.config;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +26,7 @@ import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
+import com.deepoove.poi.policy.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.util.RegexUtils;
@@ -43,6 +46,11 @@ public class Configure {
     private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>();
     // Low priority
     private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
+
+    /**
+     * 引用渲染策略
+     */
+    private List<ReferenceRenderPolicy<?>> referencePolicies = new ArrayList<>();
 
     /**
      * 语法前缀
@@ -121,6 +129,15 @@ public class Configure {
     }
 
     /**
+     * 新增引用渲染策略
+     * 
+     * @param policy
+     */
+    public void referencePolicy(ReferenceRenderPolicy<?> policy) {
+        referencePolicies.add(policy);
+    }
+
+    /**
      * 获取标签策略
      * 
      * @param tagName
@@ -131,6 +148,10 @@ public class Configure {
     public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
+    }
+
+    public List<ReferenceRenderPolicy<?>> getReferencePolicies() {
+        return referencePolicies;
     }
 
     public Map<Character, RenderPolicy> getDefaultPolicys() {
@@ -218,6 +239,11 @@ public class Configure {
 
         public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
             config.customPolicy(tagName, policy);
+            return this;
+        }
+
+        public ConfigureBuilder referencePolicy(ReferenceRenderPolicy<?> policy) {
+            config.referencePolicy(policy);
             return this;
         }
 
