@@ -405,7 +405,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
                 .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
                 .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
-                .replaceAll("<w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "");
+                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "");
 
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
