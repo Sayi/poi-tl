@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,6 +114,9 @@ public class XWPFTemplate {
             instance.visitor = new TemplateVisitor(instance.config);
             instance.eleTemplates = instance.visitor.visitDocument(instance.doc);
             return instance;
+        } catch (OLE2NotOfficeXmlFileException e) {
+            logger.error("Poi-tl currently only supports .docx format");
+            throw new ResolverException("Compile template failed", e);
         } catch (IOException e) {
             logger.error("Compile template failed", e);
             throw new ResolverException("Compile template failed");
