@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import org.apache.poi.Version;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import com.deepoove.poi.render.RenderFactory;
 import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.resolver.Visitor;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.util.Preconditions;
 
 /**
  * 模板
@@ -43,11 +45,16 @@ import com.deepoove.poi.template.ElementTemplate;
  */
 public class XWPFTemplate {
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
+    private static final String SUPPORT_MINIMUM_VERSION = "4.0.0";
 
     private NiceXWPFDocument doc;
     private Configure config;
     private Visitor visitor;
     private List<ElementTemplate> eleTemplates;
+
+    static {
+        Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION);
+    }
 
     private XWPFTemplate() {}
 
