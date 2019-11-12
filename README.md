@@ -32,10 +32,9 @@
 
 ```java
 //核心API采用了极简设计，只需要一行代码
-XWPFTemplate template = XWPFTemplate.compile("~/template.docx").render(new HashMap<String, Object>(){{
+XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
         put("title", "Poi-tl 模板引擎");
-}});
-template.writeToFile("out_template.docx");
+}}).writeToFile("out_template.docx");
 ```
 
 ## 详细文档与示例
