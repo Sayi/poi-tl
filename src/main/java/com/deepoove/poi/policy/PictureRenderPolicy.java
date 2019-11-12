@@ -59,11 +59,12 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
             int suggestFileType = suggestFileType(picture.getPath());
 
-            InputStream ins = null == picture.getData() ? new FileInputStream(picture.getPath())
-                    : new ByteArrayInputStream(picture.getData());
-
-            run.addPicture(ins, suggestFileType, "Generated", picture.getWidth() * EMU,
-                    picture.getHeight() * EMU);
+            try (InputStream ins = null == picture.getData()
+                    ? new FileInputStream(picture.getPath())
+                    : new ByteArrayInputStream(picture.getData())) {
+                run.addPicture(ins, suggestFileType, "Generated", picture.getWidth() * EMU,
+                        picture.getHeight() * EMU);
+            }
         }
 
         public static int suggestFileType(String imgFile) {
