@@ -53,7 +53,9 @@ public class XWPFTemplate {
     private List<ElementTemplate> eleTemplates;
 
     static {
-        Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION);
+        Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION,
+                (cur, min) -> "Require Apach POI version at least " + min + ", but now is " + cur
+                        + ", please check the dependency of project.");
     }
 
     private XWPFTemplate() {}

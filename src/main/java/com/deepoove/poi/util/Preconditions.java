@@ -15,11 +15,14 @@
  */
 package com.deepoove.poi.util;
 
+import java.util.function.BiFunction;
+
 public final class Preconditions {
 
     private Preconditions() {}
 
-    public static void checkMinimumVersion(String currentVer, String minimumVer) {
+    public static void checkMinimumVersion(String currentVer, String minimumVer,
+            BiFunction<String, String, String> message) {
         int ret = 0;
         try {
             ComparableVersion currentVersion = new ComparableVersion(currentVer);
@@ -29,9 +32,7 @@ public final class Preconditions {
             // not strict compare
             return;
         }
-        if (ret < 0) { throw new IllegalStateException(
-                "Require Apach POI version at least " + minimumVer + ", but now is " + currentVer
-                        + ", please check the dependency of project."); }
+        if (ret < 0) { throw new IllegalStateException(message.apply(currentVer, minimumVer)); }
     }
 
     static class ComparableVersion implements Comparable<ComparableVersion> {
