@@ -45,7 +45,7 @@ import com.deepoove.poi.util.Preconditions;
  */
 public class XWPFTemplate {
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-    private static final String SUPPORT_MINIMUM_VERSION = "4.0.0";
+    private static final String SUPPORT_MINIMUM_VERSION = "3.16";
 
     private NiceXWPFDocument doc;
     private Configure config;
