@@ -24,5 +24,9 @@ public class ResolverException extends RuntimeException {
     public ResolverException(String msg) {
         super(msg);
     }
+    
+    public ResolverException(String msg, Throwable t) {
+        super(msg, t);
+    }
 
 }

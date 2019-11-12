@@ -404,7 +404,8 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
                 .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
-                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "");
+                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
+                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "");
 
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
@@ -431,6 +432,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
         Map<String, String> blipIdsMap = mergePicture(docMerge);
         Map<String, String> hyperlinkMap = mergeHyperlink(docMerge);
+        Map<String, String> chartIdsMap = mergeChart(docMerge);
 
         XmlOptions optionsOuter = new XmlOptions();
         optionsOuter.setSaveOuter();
@@ -466,6 +468,16 @@ public class NiceXWPFDocument extends XWPFDocument {
             // w:hyperlink r:id
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
                     "r:id=\"" + hyperlinkMap.get(relaId) + "\"");
+        }
+        
+        // 图表
+        for (String relaId : chartIdsMap.keySet()) {
+            chartIdsMap.put(relaId, chartIdsMap.get(relaId) + "@PoiTL@");
+        }
+        for (String relaId : chartIdsMap.keySet()) {
+            // w:hyperlink r:id
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
+                    "r:id=\"" + chartIdsMap.get(relaId) + "\"");
         }
         
         addPart = addPart.replaceAll("@PoiTL@", "");
@@ -587,5 +599,11 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
         return map;
     }
-
+    
+    private Map<String, String> mergeChart(NiceXWPFDocument docMerge) throws InvalidFormatException {
+        Map<String, String> map = new HashMap<String, String>();
+        // TODO
+        return map;
+    }
+    
 }
