@@ -136,17 +136,39 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
      * 
      * @param context
      * @param clearParagraph
-     *            是否清空占位的段落
+     *            是否清空占位的段落，false不清除，true则判断段落内容
      */
     protected void clearPlaceholder(RenderContext context, boolean clearParagraph) {
         XWPFRun run = ((RunTemplate) context.getEleTemplate()).getRun();
-        run.setText("", 0);
         IRunBody parent = run.getParent();
+        String text = run.text();
         if (clearParagraph && (parent instanceof XWPFParagraph)) {
-            NiceXWPFDocument doc = context.getTemplate().getXWPFDocument();
-            int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph) parent);
-            doc.removeBodyElement(posOfParagraph);
+            // 段落就是当前标签则删除段落
+            String paragraphText = trimLine(((XWPFParagraph) parent).getText());
+            if (text.equals(paragraphText)) {
+                NiceXWPFDocument doc = context.getTemplate().getXWPFDocument();
+                int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph) parent);
+                doc.removeBodyElement(posOfParagraph);
+            } else {
+                run.setText("", 0);
+            }
+        } else {
+            run.setText("", 0);
         }
+    }
+    
+    private String trimLine(String value) {
+        int len = value.length();
+        int st = 0;
+        char[] val = value.toCharArray();
+
+        while ((st < len) && (val[st] == '\n')) {
+            st++;
+        }
+        while ((st < len) && (val[len - 1] == '\n')) {
+            len--;
+        }
+        return (st > 0 || len < value.length()) ? value.substring(st, len) : value;
     }
 
 }
