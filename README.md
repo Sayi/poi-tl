@@ -35,11 +35,7 @@
 XWPFTemplate template = XWPFTemplate.compile("~/template.docx").render(new HashMap<String, Object>(){{
         put("title", "Poi-tl 模板引擎");
 }});
-FileOutputStream out = new FileOutputStream("out_template.docx");
-template.write(out);
-out.flush();
-out.close();
-template.close();
+template.writeToFile("out_template.docx");
 ```
 
 ## 详细文档与示例
