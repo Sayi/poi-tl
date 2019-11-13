@@ -77,13 +77,16 @@ public class NumbericRenderData implements RenderData {
     // FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
     // .of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
 
-    private List<TextRenderData> numbers;
+    /**
+     * 文本、超链接、图片，暂不支持表格等
+     */
+    private List<? extends RenderData> numbers;
 
     private Pair<Enum, String> numFmt;
 
     private Style fmtStyle;
 
-    public NumbericRenderData(Pair<Enum, String> numFmt, List<TextRenderData> numbers) {
+    public NumbericRenderData(Pair<Enum, String> numFmt, List<? extends RenderData> numbers) {
         this(numFmt, null, numbers);
     }
 
@@ -96,13 +99,13 @@ public class NumbericRenderData implements RenderData {
      *            列表内容
      */
     public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle,
-            List<TextRenderData> numbers) {
+            List<? extends RenderData> numbers) {
         this.numFmt = numFmt;
         this.numbers = numbers;
         this.fmtStyle = fmtStyle;
     }
 
-    public NumbericRenderData(List<TextRenderData> numbers) {
+    public NumbericRenderData(List<? extends RenderData> numbers) {
         this(FMT_BULLET, numbers);
     }
 
@@ -115,15 +118,15 @@ public class NumbericRenderData implements RenderData {
         return new NumbericRenderData(numbers);
     }
 
-    public static NumbericRenderData build(TextRenderData... data) {
+    public static NumbericRenderData build(RenderData... data) {
         return new NumbericRenderData(null == data ? null : Arrays.asList(data));
     }
 
-    public List<TextRenderData> getNumbers() {
+    public List<? extends RenderData> getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(List<TextRenderData> numbers) {
+    public void setNumbers(List<? extends RenderData> numbers) {
         this.numbers = numbers;
     }
 

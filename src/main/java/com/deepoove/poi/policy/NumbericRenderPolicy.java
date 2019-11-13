@@ -28,8 +28,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
@@ -63,16 +66,18 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
     }
 
     public static class Helper {
-        public static void renderNumberic(XWPFRun run, NumbericRenderData numbericData) {
+
+        public static void renderNumberic(XWPFRun run, NumbericRenderData numbericData)
+                throws Exception {
             NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
-            List<TextRenderData> datas = numbericData.getNumbers();
+            List<? extends RenderData> datas = numbericData.getNumbers();
             Style fmtStyle = numbericData.getFmtStyle();
 
             BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
 
             XWPFParagraph paragraph;
             XWPFRun newRun;
-            for (TextRenderData line : datas) {
+            for (RenderData line : datas) {
                 paragraph = doc.insertNewParagraph(run);
                 paragraph.setNumID(numID);
                 CTP ctp = paragraph.getCTP();
@@ -80,8 +85,15 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
                 CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
                 StyleUtils.styleRpr(pr, fmtStyle);
                 newRun = paragraph.createRun();
-                StyleUtils.styleRun(newRun, line.getStyle());
-                newRun.setText(line.getText());
+
+                if (line instanceof PictureRenderData) {
+                    PictureRenderPolicy.Helper.renderPicture(newRun, (PictureRenderData) line);
+                } else if (line instanceof TextRenderData) {
+                    TextRenderPolicy.Helper.renderTextRun(newRun, line);
+                } else {
+                    throw new RenderException(
+                            "NumbericRender only support PictureRenderData and TextRenderData");
+                }
             }
         }
     }

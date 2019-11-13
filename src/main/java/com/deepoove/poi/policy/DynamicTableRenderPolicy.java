@@ -27,6 +27,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.TableTools;
 
 /**
  * 支持表格内的文本模板动态持有XWPFTable对象 <br/>
@@ -47,6 +48,9 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
         XWPFRun run = runTemplate.getRun();
         run.setText("", 0);
         try {
+            if (!TableTools.isInsideTable(run)) {
+                throw new IllegalStateException("The template tag " + runTemplate.getSource() + " must be inside a table");
+            }
             // w:tbl-w:tr-w:tc-w:p-w:tr
             XmlCursor newCursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
             newCursor.toParent();
