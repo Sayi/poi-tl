@@ -17,6 +17,9 @@ package com.deepoove.poi.util;
 
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.usermodel.BodyType;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -193,6 +196,10 @@ public final class TableTools {
         widthTable(table, width, col);
         borderTable(table, defaultBorderSize);
         styleTable(table, style);
+    }
+    
+    public static boolean isInsideTable(XWPFRun run) {
+        return ((XWPFParagraph)run.getParent()).getPartType() == BodyType.TABLECELL;
     }
 
     public static void styleTable(XWPFTable table, TableStyle style) {
