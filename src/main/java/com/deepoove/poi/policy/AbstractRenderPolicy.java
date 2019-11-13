@@ -25,6 +25,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.ParagraphUtils;
 
 /**
  * 抽象策略
@@ -144,7 +145,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         String text = run.text();
         if (clearParagraph && (parent instanceof XWPFParagraph)) {
             // 段落就是当前标签则删除段落
-            String paragraphText = trimLine(((XWPFParagraph) parent).getText());
+            String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             if (text.equals(paragraphText)) {
                 NiceXWPFDocument doc = context.getTemplate().getXWPFDocument();
                 int posOfParagraph = doc.getPosOfParagraph((XWPFParagraph) parent);
@@ -155,20 +156,6 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         } else {
             run.setText("", 0);
         }
-    }
-    
-    private String trimLine(String value) {
-        int len = value.length();
-        int st = 0;
-        char[] val = value.toCharArray();
-
-        while ((st < len) && (val[st] == '\n')) {
-            st++;
-        }
-        while ((st < len) && (val[len - 1] == '\n')) {
-            len--;
-        }
-        return (st > 0 || len < value.length()) ? value.substring(st, len) : value;
     }
 
 }
