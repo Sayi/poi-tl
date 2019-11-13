@@ -19,7 +19,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 
@@ -72,6 +75,8 @@ public class NumbericRenderTest {
                                         "Deeply in love with the things you love, just deepoove."));
                             }
                         }));
+                // 图片、超链接、文本
+                put("picture_hyper_text", getPictureData(FMT_DECIMAL_PARENTHESES));
             }
         };
 
@@ -94,6 +99,26 @@ public class NumbericRenderTest {
                 add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
                 add(new TextRenderData("5285c5",
                         "Deeply in love with the things you love, just deepoove."));
+            }
+        });
+    }
+
+    @SuppressWarnings("serial")
+    private NumbericRenderData getPictureData(Pair<Enum, String> pair) {
+        final HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData(
+                "Deepoove website.", "http://www.deepoove.com");
+        hyperLinkTextRenderData.getStyle().setBold(true);
+        return new NumbericRenderData(pair, new ArrayList<RenderData>() {
+            {
+                add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+                add(hyperLinkTextRenderData);
+                add(hyperLinkTextRenderData);
+                add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+                add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+                add(new TextRenderData("df2d4f",
+                        "Deeply in love with the things you love,\n just deepoove."));
+                add(hyperLinkTextRenderData);
+                // add(getData(FMT_UPPER_LETTER));
             }
         });
     }
