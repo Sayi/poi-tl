@@ -180,7 +180,21 @@ public final class TableTools {
         tblBorders.getInsideH().setSz(borderSize);
         tblBorders.getInsideV().setSz(borderSize);
     }
-    
+
+    /**
+     * 构建基础表格
+     * @param table
+     * @param col
+     * @param width
+     * @param style
+     */
+    public static void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
+        int defaultBorderSize = 4;
+        widthTable(table, width, col);
+        borderTable(table, defaultBorderSize);
+        styleTable(table, style);
+    }
+
     public static void styleTable(XWPFTable table, TableStyle style) {
         StyleUtils.styleTable(table, style);
     }
