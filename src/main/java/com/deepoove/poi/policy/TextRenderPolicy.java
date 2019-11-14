@@ -18,10 +18,9 @@ package com.deepoove.poi.policy;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 
 /**
@@ -33,10 +32,8 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
     public static final String REGEX_LINE_CHARACTOR = "\\n";
 
     @Override
-    public void doRender(RunTemplate runTemplate, Object renderData, XWPFTemplate template)
-            throws Exception {
-        XWPFRun run = runTemplate.getRun();
-        Helper.renderTextRun(run, renderData);
+    public void doRender(RenderContext<Object> context) throws Exception {
+        Helper.renderTextRun(context.getRun(), context.getData());
     }
 
     public static class Helper {

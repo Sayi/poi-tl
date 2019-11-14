@@ -15,16 +15,26 @@
  */
 package com.deepoove.poi.render;
 
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.template.run.RunTemplate;
 
-public class RenderContext {
+/**
+ * 模板标签上下文
+ * 
+ * @author Sayi
+ */
+public class RenderContext<T> {
 
-    private ElementTemplate eleTemplate;
-    private Object data;
-    private XWPFTemplate template;
+    private final ElementTemplate eleTemplate;
+    private final T data;
+    private final XWPFTemplate template;
 
-    public RenderContext(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
+    public RenderContext(ElementTemplate eleTemplate, T data, XWPFTemplate template) {
         this.eleTemplate = eleTemplate;
         this.data = data;
         this.template = template;
@@ -34,24 +44,28 @@ public class RenderContext {
         return eleTemplate;
     }
 
-    public void setEleTemplate(ElementTemplate eleTemplate) {
-        this.eleTemplate = eleTemplate;
-    }
-
-    public Object getData() {
+    public T getData() {
         return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
     }
 
     public XWPFTemplate getTemplate() {
         return template;
     }
 
-    public void setTemplate(XWPFTemplate template) {
-        this.template = template;
+    public NiceXWPFDocument getXWPFDocument() {
+        return this.template.getXWPFDocument();
+    }
+
+    public XWPFRun getRun() {
+        return ((RunTemplate) eleTemplate).getRun();
+    }
+
+    public Configure getConfig() {
+        return getTemplate().getConfig();
+    }
+
+    public Object getTagSource() {
+        return getEleTemplate().getSource();
     }
 
 }

@@ -26,7 +26,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
@@ -34,7 +33,6 @@ import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
 /**
@@ -53,15 +51,13 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, NumbericRenderData numbericData,
-            XWPFTemplate template) throws Exception {
-        XWPFRun run = runTemplate.getRun();
-        Helper.renderNumberic(run, numbericData);
+    public void doRender(RenderContext<NumbericRenderData> context) throws Exception {
+        Helper.renderNumberic(context.getRun(), context.getData());
 
     }
 
     @Override
-    protected void afterRender(RenderContext context) {
+    protected void afterRender(RenderContext<NumbericRenderData> context) {
         clearPlaceholder(context, true);
     }
 

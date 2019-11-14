@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.AbstractRenderPolicy.ClearHandler;
+import com.deepoove.poi.policy.AbstractRenderPolicy.ValidErrorHandler;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
@@ -72,9 +74,14 @@ public class Configure {
     private ELMode elMode = ELMode.POI_TL_STANDARD_MODE;
 
     /**
-     * 渲染数据为null时，是保留还是清空模板标签
+     * 渲染数据校验不通过时的处理策略
+     * <ul>
+     * <li>DiscardHandler: 什么都不做</li>
+     * <li>ClearHandler: 清空标签</li>
+     * <li>AbortHandler: 抛出异常</li>
+     * </ul>
      */
-    private boolean nullToBlank = true;
+    private ValidErrorHandler handler = new ClearHandler();
 
     private Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -190,8 +197,8 @@ public class Configure {
         return elMode;
     }
 
-    public boolean isNullToBlank() {
-        return nullToBlank;
+    public ValidErrorHandler getValidErrorHandler() {
+        return handler;
     }
 
     public static class ConfigureBuilder {
@@ -227,8 +234,8 @@ public class Configure {
             return this;
         }
 
-        public ConfigureBuilder supportNullToBlank(boolean nullToBlank) {
-            config.nullToBlank = nullToBlank;
+        public ConfigureBuilder buildValidErrorHandler(ValidErrorHandler handler) {
+            config.handler = handler;
             return this;
         }
 
