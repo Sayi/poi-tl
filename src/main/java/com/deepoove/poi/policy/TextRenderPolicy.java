@@ -48,15 +48,15 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             }
 
             // text
-            TextRenderData textRenderData = renderData instanceof TextRenderData
+            TextRenderData data = renderData instanceof TextRenderData
                     ? (TextRenderData) renderData
                     : new TextRenderData(renderData.toString());
 
-            String data = null == textRenderData.getText() ? "" : textRenderData.getText();
+            String text = null == data.getText() ? "" : data.getText();
 
-            StyleUtils.styleRun(run, textRenderData.getStyle());
+            StyleUtils.styleRun(run, data.getStyle());
 
-            String[] split = data.split(REGEX_LINE_CHARACTOR, -1);
+            String[] split = text.split(REGEX_LINE_CHARACTOR, -1);
             if (null != split && split.length > 0) {
                 run.setText(split[0], 0);
                 for (int i = 1; i < split.length; i++) {
