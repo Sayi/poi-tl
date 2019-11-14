@@ -24,7 +24,6 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ParagraphUtils;
 
 /**
@@ -38,8 +37,6 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     @SuppressWarnings("unchecked")
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        RunTemplate runTemplate = (RunTemplate) eleTemplate;
-
         // type safe
         T model = null;
         try {
@@ -62,7 +59,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
             doRender(context);
             afterRender(context);
         } catch (Exception e) {
-            reThrowException(runTemplate, model, e);
+            reThrowException(context, e);
         }
 
     }
@@ -77,8 +74,8 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     protected void afterRender(RenderContext<T> context) {}
 
-    protected void reThrowException(RunTemplate runTemplate, T data, Exception e) {
-        throw new RenderException("Render template:" + runTemplate + " error", e);
+    protected void reThrowException(RenderContext<T> context, Exception e) {
+        throw new RenderException("Render template:" + context.getEleTemplate() + " error", e);
     }
 
     protected void postValidError(RenderContext<T> context) {
@@ -93,7 +90,6 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
         @Override
         public void handler(RenderContext<?> context) {
-            logger.debug("Validate error and nothing is rendered: {}.", context.getTagSource());
         }
 
     }
@@ -102,8 +98,6 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
         @Override
         public void handler(RenderContext<?> context) {
-            logger.debug("[config.isNullToBlank == true] clear placeholder {} from the document.",
-                    context.getTagSource());
             clearPlaceholder(context, false);
         }
 

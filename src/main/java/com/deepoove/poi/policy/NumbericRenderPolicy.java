@@ -21,9 +21,6 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.NumbericRenderData;
@@ -53,7 +50,6 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
     @Override
     public void doRender(RenderContext<NumbericRenderData> context) throws Exception {
         Helper.renderNumberic(context.getRun(), context.getData());
-
     }
 
     @Override
@@ -67,21 +63,13 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
                 throws Exception {
             NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
             List<? extends RenderData> datas = numbericData.getNumbers();
-            Style fmtStyle = numbericData.getFmtStyle();
+            Style style = numbericData.getFmtStyle();
 
             BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
 
-            XWPFParagraph paragraph;
             XWPFRun newRun;
             for (RenderData line : datas) {
-                paragraph = doc.insertNewParagraph(run);
-                paragraph.setNumID(numID);
-                CTP ctp = paragraph.getCTP();
-                CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
-                CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
-                StyleUtils.styleRpr(pr, fmtStyle);
-                newRun = paragraph.createRun();
-
+                newRun = createRunLine(run, doc, style, numID);
                 if (line instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(newRun, (PictureRenderData) line);
                 } else if (line instanceof TextRenderData) {
@@ -91,6 +79,14 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
                             "NumbericRender only support PictureRenderData and TextRenderData");
                 }
             }
+        }
+
+        private static XWPFRun createRunLine(XWPFRun run, NiceXWPFDocument doc, Style style,
+                BigInteger numID) {
+            XWPFParagraph paragraph = doc.insertNewParagraph(run);
+            StyleUtils.styleParagraph(paragraph, style);
+            paragraph.setNumID(numID);
+            return paragraph.createRun();
         }
     }
 }

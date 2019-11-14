@@ -65,7 +65,5 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
                 }
             }
         }
-
     }
-
 }

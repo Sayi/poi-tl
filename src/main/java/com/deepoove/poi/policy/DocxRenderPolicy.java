@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -46,10 +44,9 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     @Override
     public void doRender(RenderContext<DocxRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
-        XWPFRun run = context.getRun();
         XWPFTemplate template = context.getTemplate();
-        List<NiceXWPFDocument> docMerges = getMergedDocxs(context.getData(), template .getConfig());
-        doc = doc.merge(docMerges, run);
+        List<NiceXWPFDocument> docMerges = getMergedDocxs(context.getData(), context.getConfig());
+        doc = doc.merge(docMerges, context.getRun());
         template.reload(doc);
     }
 
@@ -62,6 +59,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
             docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));
         } else {
             for (int i = 0; i < dataList.size(); i++) {
+                // TODO performance
                 XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx), configure);
                 temp.render(dataList.get(i));
                 docs.add(temp.getXWPFDocument());

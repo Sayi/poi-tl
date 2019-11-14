@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.render;
 
+import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.NiceXWPFDocument;
@@ -58,6 +60,11 @@ public class RenderContext<T> {
 
     public XWPFRun getRun() {
         return ((RunTemplate) eleTemplate).getRun();
+    }
+
+    public IBody getContainer() {
+        // XWPFTableCell、XWPFDocument、XWPFHeaderFooter、XWPFAbstractFootnoteEndnote
+        return ((XWPFParagraph) getRun().getParent()).getBody();
     }
 
     public Configure getConfig() {
