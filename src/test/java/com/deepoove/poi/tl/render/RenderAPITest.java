@@ -12,6 +12,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ELMode;
+import com.deepoove.poi.policy.AbstractRenderPolicy.DiscardHandler;
 import com.deepoove.poi.render.Render;
 import com.deepoove.poi.render.RenderAPI;
 import com.deepoove.poi.render.RenderDataCompute;
@@ -143,7 +144,7 @@ public class RenderAPITest {
         // Configure.newBuilder().buildReg("((?!\\$\\{)(?!\\}).)*").buildGramer("${",
         // "}").build();
         Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE)
-                .buildGramer("${", "}").supportNullToBlank(false).build();
+                .buildGramer("${", "}").buildValidErrorHandler(new DiscardHandler()).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/run_merge3.docx", config);
         new Render(renderDataCompute).render(template);
 

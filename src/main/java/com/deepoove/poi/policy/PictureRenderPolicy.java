@@ -22,7 +22,6 @@ import java.io.InputStream;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
@@ -36,19 +35,18 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, PictureRenderData picture, XWPFTemplate template)
+    public void doRender(RenderContext<PictureRenderData> context)
             throws Exception {
-        XWPFRun run = runTemplate.getRun();
-        Helper.renderPicture(run, picture);
+        Helper.renderPicture(context.getRun(), context.getData());
     }
 
     @Override
-    protected void afterRender(RenderContext context) {
+    protected void afterRender(RenderContext<PictureRenderData> context) {
         clearPlaceholder(context, false);
     }
 
     @Override
-    protected void doRenderException(RunTemplate runTemplate, PictureRenderData data, Exception e) {
+    protected void reThrowException(RunTemplate runTemplate, PictureRenderData data, Exception e) {
         logger.info("Render picture " + runTemplate + " error: {}", e.getMessage());
         runTemplate.getRun().setText(data.getAltMeta(), 0);
     }

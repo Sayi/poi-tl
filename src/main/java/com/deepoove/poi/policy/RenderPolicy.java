@@ -21,17 +21,22 @@ import org.slf4j.LoggerFactory;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.ElementTemplate;
 
+/**
+ * Do Anything Anywhere
+ * @author Sayi
+ * @version 0.0.1
+ */
 public interface RenderPolicy {
 
     Logger logger = LoggerFactory.getLogger(RenderPolicy.class);
 
     /**
      * @param eleTemplate
-     *            模板元素
+     *            标签位置
      * @param data
      *            数据
      * @param template
-     *            持有模板对象
+     *            模板文档
      */
     void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
 

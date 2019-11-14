@@ -4,11 +4,9 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.TableTools;
 
 /**
@@ -23,17 +21,17 @@ import com.deepoove.poi.util.TableTools;
 public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
-    protected void afterRender(RenderContext context) {
+    protected void afterRender(RenderContext<Object> context) {
         // 清空模板标签
         clearPlaceholder(context, true);
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
+    public void doRender(RenderContext<Object> context)
             throws Exception {
 
-        NiceXWPFDocument doc = template.getXWPFDocument();
-        XWPFRun run = runTemplate.getRun();
+        NiceXWPFDocument doc = context.getXWPFDocument();
+        XWPFRun run = context.getRun();
         // 定义行列
         int row = 10, col = 8;
         // 插入表格

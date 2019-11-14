@@ -27,7 +27,6 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.template.run.RunTemplate;
 
 /**
  * <p>
@@ -40,15 +39,16 @@ import com.deepoove.poi.template.run.RunTemplate;
 public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
-    protected void beforeRender(RenderContext context) {
+    protected void beforeRender(RenderContext<DocxRenderData> context) {
         clearPlaceholder(context, false);
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, DocxRenderData data, XWPFTemplate template) throws Exception {
-        NiceXWPFDocument doc = template.getXWPFDocument();
-        XWPFRun run = runTemplate.getRun();
-        List<NiceXWPFDocument> docMerges = getMergedDocxs(data, template.getConfig());
+    public void doRender(RenderContext<DocxRenderData> context) throws Exception {
+        NiceXWPFDocument doc = context.getXWPFDocument();
+        XWPFRun run = context.getRun();
+        XWPFTemplate template = context.getTemplate();
+        List<NiceXWPFDocument> docMerges = getMergedDocxs(context.getData(), template .getConfig());
         doc = doc.merge(docMerges, run);
         template.reload(doc);
     }

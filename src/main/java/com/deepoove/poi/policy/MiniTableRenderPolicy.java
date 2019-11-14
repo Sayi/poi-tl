@@ -27,14 +27,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.CellRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
@@ -57,14 +55,12 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
     }
 
     @Override
-    public void doRender(RunTemplate runTemplate, MiniTableRenderData data, XWPFTemplate template)
-            throws Exception {
-        XWPFRun run = runTemplate.getRun();
-        Helper.renderMiniTable(run, data);
+    public void doRender(RenderContext<MiniTableRenderData> context) throws Exception {
+        Helper.renderMiniTable(context.getRun(), context.getData());
     }
 
     @Override
-    protected void afterRender(RenderContext context) {
+    protected void afterRender(RenderContext<MiniTableRenderData> context) {
         clearPlaceholder(context, true);
     }
 

@@ -11,6 +11,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.policy.AbstractRenderPolicy.DiscardHandler;
 
 public class ConfigurePluginTest {
 
@@ -46,7 +47,7 @@ public class ConfigurePluginTest {
 
         Map<String, Object> datas = new HashMap<String, Object>();
 
-        Configure configure = Configure.newBuilder().buildGramer("[[", "]]").supportNullToBlank(false)
+        Configure configure = Configure.newBuilder().buildGramer("[[", "]]").buildValidErrorHandler(new DiscardHandler())
                 .build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config.docx", configure)
                 .render(datas);

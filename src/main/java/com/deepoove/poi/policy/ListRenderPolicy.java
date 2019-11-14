@@ -6,22 +6,21 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 
 public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
     @Override
-    public void doRender(RunTemplate runTemplate, List<Object> datas, XWPFTemplate template)
+    public void doRender(RenderContext<List<Object>> context)
             throws Exception {
-        NiceXWPFDocument document = template.getXWPFDocument();
-        XWPFRun run = runTemplate.getRun();
+        NiceXWPFDocument document = context.getXWPFDocument();
+        XWPFRun run = context.getRun();
+        List<Object> datas = context.getData();
         for (Object data : datas) {
             if (data instanceof TextRenderData) {
                 XWPFParagraph newParagraph = document.insertNewParagraph(run);
@@ -42,7 +41,7 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
     }
 
     @Override
-    protected void afterRender(RenderContext context) {
+    protected void afterRender(RenderContext<List<Object>> context) {
         clearPlaceholder(context, true);
     }
 
