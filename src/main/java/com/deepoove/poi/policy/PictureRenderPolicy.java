@@ -31,7 +31,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     @Override
     protected boolean validate(PictureRenderData data) {
-        return (null != data.getData() || null != data.getPath());
+        return (null != data && (null != data.getData() || null != data.getPath()));
     }
 
     @Override

@@ -48,7 +48,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
         // validate
         RenderContext<T> context = new RenderContext<T>(eleTemplate, model, template);
-        if (null == model || !validate(model)) {
+        if (!validate(model)) {
             postValidError(context);
             return;
         }
@@ -75,10 +75,11 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     protected void afterRender(RenderContext<T> context) {}
 
     protected void reThrowException(RenderContext<T> context, Exception e) {
-        throw new RenderException("Render template:" + context.getEleTemplate() + " error", e);
+        throw new RenderException("Render template " + context.getEleTemplate() + " error", e);
     }
 
     protected void postValidError(RenderContext<T> context) {
+        logger.debug("The data {} for template {} is illegal", context.getData(), context.getTagSource());
         context.getConfig().getValidErrorHandler().handler(context);
     }
 
@@ -89,8 +90,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     public static class DiscardHandler implements ValidErrorHandler {
 
         @Override
-        public void handler(RenderContext<?> context) {
-        }
+        public void handler(RenderContext<?> context) {}
 
     }
 
