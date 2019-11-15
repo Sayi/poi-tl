@@ -228,6 +228,11 @@ public class Configure {
             return this;
         }
 
+        public ConfigureBuilder bind(String tagName, RenderPolicy policy) {
+            config.customPolicy(tagName, policy);
+            return this;
+        }
+
         public Configure build() {
             if (config.elMode == ELMode.SPEL_MODE) {
                 supportGrammerRegexForAll();
