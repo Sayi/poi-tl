@@ -234,8 +234,8 @@ public class RunningRunParagraph {
         }
 
         for (Pair<RunEdge, RunEdge> runEdges : pairs) {
-            LOGGER.debug("[LEFT]:" + runEdges.getLeft().toString());
-            LOGGER.debug("[RIGHT]:" + runEdges.getRight().toString());
+            LOGGER.debug("[Start]:" + runEdges.getLeft().toString());
+            LOGGER.debug("[End]:" + runEdges.getRight().toString());
         }
     }
 

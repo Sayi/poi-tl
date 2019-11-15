@@ -25,14 +25,14 @@ import com.deepoove.poi.util.TableTools;
  * 在文档的任何地方做任何事情（Do Anything Anywhere）是poi-tl的星辰大海。
  * 
  * @author Sayi
- * @version
+ * @version 1.5.1
  */
 public class SimpleXWPFTemplateTest {
 
-    @SuppressWarnings("serial")
     @Test
     public void testPoitlSea() throws IOException {
 
+        // where绑定policy
         Configure config = Configure.newBuilder().bind("sea", new AbstractRenderPolicy<String>() {
             @Override
             public void doRender(RenderContext<String> context) throws Exception {
@@ -83,9 +83,9 @@ public class SimpleXWPFTemplateTest {
                 List<String> thing = context.getThing();
 
                 // do
-                XWPFTable table = context.getXWPFDocument().insertNewTable(where, thing.size() + 1,
-                        2);
-                TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, 2);
+                int row = thing.size() + 1, col = 2;
+                XWPFTable table = context.getXWPFDocument().insertNewTable(where, row, col);
+                TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
                 TableTools.borderTable(table, 4);
 
                 table.getRow(0).getCell(0).setText("编号");
@@ -101,15 +101,15 @@ public class SimpleXWPFTemplateTest {
             }
         }).build();
 
-        XWPFTemplate.compile("src/test/resources/sea.docx", config)
-                .render(new HashMap<String, Object>() {
-                    {
-                        put("sea", "Hello, world!");
-                        put("sea_img", "src/test/resources/sea.jpg");
-                        put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
-                        put("sea_location", Arrays.asList("东方日出：最东边的日出", "花海：你想要的都在这里"));
-                    }
-                }).writeToFile("out_sea.docx");
+        // 初始化where的数据
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put("sea", "Hello, world!");
+        args.put("sea_img", "src/test/resources/sea.jpg");
+        args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
+        args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
+
+        XWPFTemplate.compile("src/test/resources/sea.docx", config).render(args)
+                .writeToFile("out_sea.docx");
     }
 
 }
