@@ -39,33 +39,32 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
     public static class Helper {
 
         public static void renderTextRun(XWPFRun run, Object renderData) {
+            XWPFRun textRun = run;
             // create hyper link run
             if (renderData instanceof HyperLinkTextRenderData) {
                 XWPFRun hyperLinkRun = NiceXWPFDocument.insertNewHyperLinkRun(run,
                         ((HyperLinkTextRenderData) renderData).getUrl());
                 run.setText("", 0);
-                run = hyperLinkRun;
+                textRun = hyperLinkRun;
             }
 
             // text
-            TextRenderData textRenderData = renderData instanceof TextRenderData
+            TextRenderData data = renderData instanceof TextRenderData
                     ? (TextRenderData) renderData
                     : new TextRenderData(renderData.toString());
 
-            String data = null == textRenderData.getText() ? "" : textRenderData.getText();
+            String text = null == data.getText() ? "" : data.getText();
 
-            StyleUtils.styleRun(run, textRenderData.getStyle());
+            StyleUtils.styleRun(textRun, data.getStyle());
 
-            String[] split = data.split(REGEX_LINE_CHARACTOR, -1);
+            String[] split = text.split(REGEX_LINE_CHARACTOR, -1);
             if (null != split && split.length > 0) {
-                run.setText(split[0], 0);
+                textRun.setText(split[0], 0);
                 for (int i = 1; i < split.length; i++) {
-                    run.addCarriageReturn();
-                    run.setText(split[i]);
+                    textRun.addCarriageReturn();
+                    textRun.setText(split[i]);
                 }
             }
         }
-
     }
-
 }

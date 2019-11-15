@@ -211,4 +211,12 @@ public final class StyleUtils {
 
     }
 
+    public static void styleParagraph(XWPFParagraph paragraph, Style style) {
+        if (null == paragraph || null == style) return;
+        CTP ctp = paragraph.getCTP();
+        CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+        CTParaRPr pr = pPr.isSetRPr() ? pPr.getRPr() : pPr.addNewRPr();
+        StyleUtils.styleRpr(pr, style);
+    }
+
 }

@@ -102,8 +102,7 @@ public class XWPFTemplate {
         try {
             return compile(new FileInputStream(file), config);
         } catch (FileNotFoundException e) {
-            logger.error("Cannot find the file", e);
-            throw new ResolverException("Cannot find the file [" + file.getPath() + "]");
+            throw new ResolverException("Cannot find the file [" + file.getPath() + "]", e);
         }
     }
 
@@ -127,8 +126,7 @@ public class XWPFTemplate {
             logger.error("Poi-tl currently only supports .docx format");
             throw new ResolverException("Compile template failed", e);
         } catch (IOException e) {
-            logger.error("Compile template failed", e);
-            throw new ResolverException("Compile template failed");
+            throw new ResolverException("Compile template failed", e);
         }
     }
 

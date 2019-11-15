@@ -17,6 +17,7 @@ package com.deepoove.poi.render;
 
 import java.util.List;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ import com.deepoove.poi.util.ObjectUtils;
  */
 public class Render {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(Render.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Render.class);
 
     private RenderDataCompute renderDataCompute;
 
@@ -133,8 +134,8 @@ public class Render {
     }
 
     private void doRender(ElementTemplate ele, RenderPolicy policy, XWPFTemplate template) {
-        LOGGER.debug("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(),
-                ele.getSign(), policy.getClass().getSimpleName());
+        LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(),
+                ele.getSign(), ClassUtils.getShortClassName(policy.getClass()));
         policy.render(ele, renderDataCompute.compute(ele.getTagName()), template);
     }
 
