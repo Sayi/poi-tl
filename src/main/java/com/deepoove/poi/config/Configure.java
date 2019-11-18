@@ -15,7 +15,6 @@
  */
 package com.deepoove.poi.config;
 
-import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -84,24 +83,28 @@ public class Configure {
     }
 
     /**
-     * 获取默认配置
+     * 创建默认配置
+     * 
+     * @return
      */
     public static Configure createDefault() {
         return newBuilder().build();
     }
 
     /**
-     * 获取构建器
+     * 构建器
+     * 
+     * @return
      */
     public static ConfigureBuilder newBuilder() {
         return new ConfigureBuilder();
     }
 
     /**
-     * 新增语法插件
+     * 新增或变更语法插件
      * 
      * @param c
-     *            模板语法
+     *            语法
      * @param policy
      *            策略
      */
@@ -110,13 +113,22 @@ public class Configure {
         return this;
     }
 
+    /**
+     * 新增或变更语法插件
+     * 
+     * @param symbol
+     *            语法
+     * @param policy
+     *            策略
+     * @return
+     */
     Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
         defaultPolicys.put(symbol.getSymbol(), policy);
         return this;
     }
 
     /**
-     * 自定义模板
+     * 自定义模板和策略
      * 
      * @param tagName
      *            模板名称
@@ -127,17 +139,19 @@ public class Configure {
         customPolicys.put(tagName, policy);
     }
 
-    /**
-     * 获取标签策略
-     * 
-     * @param tagName
-     *            模板名称
-     * @param sign
-     *            语法
-     */
+    // Query Operations
+
     public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
+    }
+
+    private RenderPolicy getCustomPolicy(String tagName) {
+        return customPolicys.get(tagName);
+    }
+
+    private RenderPolicy getDefaultPolicy(Character sign) {
+        return defaultPolicys.get(sign);
     }
 
     public Map<Character, RenderPolicy> getDefaultPolicys() {
@@ -160,14 +174,6 @@ public class Configure {
         return gramerSuffix;
     }
 
-    private RenderPolicy getCustomPolicy(String tagName) {
-        return customPolicys.get(tagName);
-    }
-
-    private RenderPolicy getDefaultPolicy(Character sign) {
-        return defaultPolicys.get(sign);
-    }
-
     public String getGrammerRegex() {
         return grammerRegex;
     }
@@ -181,25 +187,16 @@ public class Configure {
     }
 
     public static class ConfigureBuilder {
-        private static String regexForAllPattern = "((?!{0})(?!{1}).)*";
         private boolean regexForAll;
-        private Configure config = new Configure();
+        private Configure config;
 
-        public ConfigureBuilder() {}
+        public ConfigureBuilder() {
+            config = new Configure();
+        }
 
         public ConfigureBuilder buildGramer(String prefix, String suffix) {
             config.gramerPrefix = prefix;
             config.gramerSuffix = suffix;
-            return this;
-        }
-
-        /**
-         * 设置模板表达式模式
-         * 
-         * @return
-         */
-        public ConfigureBuilder setElMode(ELMode mode) {
-            config.elMode = mode;
             return this;
         }
 
@@ -213,7 +210,12 @@ public class Configure {
             return this;
         }
 
-        public ConfigureBuilder buildValidErrorHandler(ValidErrorHandler handler) {
+        public ConfigureBuilder setElMode(ELMode mode) {
+            config.elMode = mode;
+            return this;
+        }
+
+        public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {
             config.handler = handler;
             return this;
         }
@@ -235,16 +237,13 @@ public class Configure {
 
         public Configure build() {
             if (config.elMode == ELMode.SPEL_MODE) {
-                supportGrammerRegexForAll();
+                regexForAll = true;
             }
             if (regexForAll) {
-                buildGrammerRegex(MessageFormat.format(regexForAllPattern,
-                        RegexUtils.escapeExprSpecialWord(config.gramerPrefix),
-                        RegexUtils.escapeExprSpecialWord(config.gramerSuffix)));
+                config.grammerRegex = RegexUtils.createGeneral(config.gramerPrefix,
+                        config.gramerSuffix);
             }
             return config;
         }
-
     }
-
 }

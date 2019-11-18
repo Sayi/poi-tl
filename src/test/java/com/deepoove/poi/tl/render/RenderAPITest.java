@@ -144,7 +144,7 @@ public class RenderAPITest {
         // Configure.newBuilder().buildReg("((?!\\$\\{)(?!\\}).)*").buildGramer("${",
         // "}").build();
         Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE)
-                .buildGramer("${", "}").buildValidErrorHandler(new DiscardHandler()).build();
+                .buildGramer("${", "}").setValidErrorHandler(new DiscardHandler()).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/run_merge3.docx", config);
         new Render(renderDataCompute).render(template);
 

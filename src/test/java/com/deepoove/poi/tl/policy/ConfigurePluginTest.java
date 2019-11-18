@@ -47,7 +47,7 @@ public class ConfigurePluginTest {
 
         Map<String, Object> datas = new HashMap<String, Object>();
 
-        Configure configure = Configure.newBuilder().buildGramer("[[", "]]").buildValidErrorHandler(new DiscardHandler())
+        Configure configure = Configure.newBuilder().buildGramer("[[", "]]").setValidErrorHandler(new DiscardHandler())
                 .build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config.docx", configure)
                 .render(datas);
