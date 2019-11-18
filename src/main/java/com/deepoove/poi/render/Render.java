@@ -16,8 +16,10 @@
 package com.deepoove.poi.render;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,61 +62,68 @@ public class Render {
     public void render(XWPFTemplate template) {
         ObjectUtils.requireNonNull(template, "Template must not be null.");
         LOGGER.info("Render the template file start...");
-
-        // 模板
-        List<ElementTemplate> elementTemplates = template.getElementTemplates();
-        if (null == elementTemplates || elementTemplates.isEmpty()) { return; }
-        // 策略
-        RenderPolicy policy = null;
-
+        StopWatch watch = new StopWatch();
         try {
-            int docxCount = 0;
+            watch.start();
+            int docxCount = applyNormalPolicy(template);
+            if (docxCount >= 1) {
+                template.reload(template.getXWPFDocument().generate());
+                applyDocxPolicy(template, docxCount);
+            }
+        } catch (Exception e) {
+            throw new RenderException("Render docx failed", e);
+        }
+        finally {
+            watch.stop();
+        }
+        LOGGER.info("Successfully Render the template file in {} millis" , TimeUnit.NANOSECONDS.toMillis(watch.getNanoTime()));
+    }
+
+    private int applyNormalPolicy(XWPFTemplate template) {
+        RenderPolicy policy = null;
+        int docxItems = 0;
+        List<ElementTemplate> elementTemplates = template.getElementTemplates();
+        for (ElementTemplate runTemplate : elementTemplates) {
+            policy = findPolicy(template.getConfig(), runTemplate);
+            if (policy instanceof DocxRenderPolicy) {
+                docxItems++;
+            } else {
+                doRender(runTemplate, policy, template);
+            }
+        }
+        return docxItems;
+    }
+
+    private void applyDocxPolicy(XWPFTemplate template, int docxItems) {
+        List<ElementTemplate> elementTemplates = null;
+        RenderPolicy policy = null;
+        NiceXWPFDocument current = template.getXWPFDocument();
+        for (int i = 0; i < docxItems; i++) {
+            elementTemplates = template.getElementTemplates();
+            if (elementTemplates.isEmpty()) {
+                break;
+            }
+
             for (ElementTemplate runTemplate : elementTemplates) {
                 policy = findPolicy(template.getConfig(), runTemplate);
-
-                if (policy instanceof DocxRenderPolicy) {
-                    docxCount++;
+                if (!(policy instanceof DocxRenderPolicy)) {
                     continue;
                 }
                 doRender(runTemplate, policy, template);
-            }
 
-            if (docxCount >= 1) template.reload(template.getXWPFDocument().generate());
-
-            NiceXWPFDocument current = null;
-            for (int i = 0; i < docxCount; i++) {
-                current = template.getXWPFDocument();
-                elementTemplates = template.getElementTemplates();
-                if (null == elementTemplates || elementTemplates.isEmpty()) {
+                // 没有最终合并，继续下一个合并
+                if (current == template.getXWPFDocument()) {
+                    i++;
+                } else {
+                    current = template.getXWPFDocument();
                     break;
                 }
-
-                for (ElementTemplate runTemplate : elementTemplates) {
-                    policy = findPolicy(template.getConfig(), runTemplate);
-                    if (!(policy instanceof DocxRenderPolicy)) {
-                        continue;
-                    }
-                    doRender(runTemplate, policy, template);
-
-                    // 没有最终合并，继续下一个合并
-                    if (current == template.getXWPFDocument()) {
-                        i++;
-                        continue;
-                    } else {
-                        break;
-                    }
-                }
             }
-        } catch (Exception e) {
-            LOGGER.info("Render the template file failed.");
-            throw new RenderException("Render docx failed.", e);
         }
-        LOGGER.info("Render the template file successed.");
     }
 
     private RenderPolicy findPolicy(Configure config, ElementTemplate runTemplate) {
-        RenderPolicy policy;
-        policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
+        RenderPolicy policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
         if (null == policy) { throw new RenderException(
                 "Cannot find render policy: [" + runTemplate.getTagName() + "]"); }
         return policy;
