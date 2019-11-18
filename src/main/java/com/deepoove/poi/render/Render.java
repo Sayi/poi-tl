@@ -50,7 +50,7 @@ public class Render {
      * @param root
      */
     public Render(Object root) {
-        ObjectUtils.requireNonNull(root, "Data root is null, should be setted first.");
+        ObjectUtils.requireNonNull(root, "Data root must not be null");
         renderDataCompute = new ELObjectRenderDataCompute(root, false);
     }
 
@@ -59,7 +59,7 @@ public class Render {
     }
 
     public void render(XWPFTemplate template) {
-        ObjectUtils.requireNonNull(template, "Template is null, should be setted first.");
+        ObjectUtils.requireNonNull(template, "Template must not be null.");
         LOGGER.info("Render the template file start...");
         Configure config = template.getConfig();
 

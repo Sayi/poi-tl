@@ -31,7 +31,7 @@ public class Issues215 {
             }
         };
 
-        Configure config = Configure.newBuilder().buildValidErrorHandler(new DiscardHandler()).build();
+        Configure config = Configure.newBuilder().setValidErrorHandler(new DiscardHandler()).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx", config)
                 .render(datas);
 
