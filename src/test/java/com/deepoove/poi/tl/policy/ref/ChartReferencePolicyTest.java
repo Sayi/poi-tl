@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.policy.ref;
 
 import java.util.HashMap;
 
@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 
-public class ReferencePolicyTest {
+public class ChartReferencePolicyTest {
 
     @Test
     public void testBarChart() throws Exception {

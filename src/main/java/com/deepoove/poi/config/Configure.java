@@ -23,11 +23,11 @@ import java.util.Set;
 
 import com.deepoove.poi.policy.AbstractRenderPolicy.ClearHandler;
 import com.deepoove.poi.policy.AbstractRenderPolicy.ValidErrorHandler;
+import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
-import com.deepoove.poi.policy.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.util.RegexUtils;

@@ -28,8 +28,8 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
-import com.deepoove.poi.policy.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.util.ObjectUtils;
 
@@ -149,7 +149,7 @@ public class Render {
     }
 
     private void doRender(ReferenceRenderPolicy<?> policy, XWPFTemplate template) {
-        LOGGER.info("Start render Reference Render Policy:{}", policy.getClass());
+        LOGGER.info("Start apply Reference Render Policy:{}", ClassUtils.getShortClassName(policy.getClass()));
         policy.render(template);
     }
 }

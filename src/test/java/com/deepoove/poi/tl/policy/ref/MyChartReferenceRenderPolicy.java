@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.policy.ref;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.policy.ReferenceRenderPolicy;
+import com.deepoove.poi.policy.ref.IndexRefRenderPolicy;
 
-public class MyChartReferenceRenderPolicy extends ReferenceRenderPolicy<XWPFChart> {
+public class MyChartReferenceRenderPolicy extends IndexRefRenderPolicy<XWPFChart> {
     
     public int index() {
         return 0;

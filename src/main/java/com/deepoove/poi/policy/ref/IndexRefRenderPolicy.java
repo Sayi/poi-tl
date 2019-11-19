@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,71 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy;
+package com.deepoove.poi.policy.ref;
 
 import java.lang.reflect.ParameterizedType;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
+import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 
 /**
- * 引用渲染策略：引用Word文档中某个对象进行渲染，对象是通过文档中的位置index()来引用。
+ * 下标引用渲染策略
  * 
  * @author Sayi
  * @version 1.6.0
- * @param <T>
- *            对象类型
  */
-public abstract class ReferenceRenderPolicy<T> {
+public abstract class IndexRefRenderPolicy<T> extends ReferenceRenderPolicy<T>
+        implements DocumentIndex {
 
-    private Class<T> genericType;
+    protected Class<T> genericType;
 
     @SuppressWarnings("unchecked")
-    public ReferenceRenderPolicy() {
+    public IndexRefRenderPolicy() {
         genericType = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
-    /**
-     * 对象的位置
-     * 
-     * @return
-     */
-    public abstract int index();
-
-    /**
-     * 引用对象渲染
-     * 
-     * @param t
-     * @param template
-     */
-    public abstract void doRender(T t, XWPFTemplate template);
-
-    // 可以覆盖这个方法改写获取引用的方式
     @SuppressWarnings("unchecked")
-    protected T get(XWPFTemplate template) {
+    protected T locate(XWPFTemplate template) {
         int positon = index();
+        logger.info("Try locate the {} object at position of {}...",
+                ClassUtils.getSimpleName(genericType), positon);
         Object t = null;
         NiceXWPFDocument doc = template.getXWPFDocument();
         if (XWPFChart.class.equals(genericType)) {
             t = doc.getCharts().get(positon);
         } else if (XWPFTable.class.equals(genericType)) {
             t = doc.getTables().get(positon);
-        } else if (XWPFPicture.class.equals(genericType)) {
+        } else if (XWPFPictureData.class.equals(genericType)) {
             t = doc.getAllPictures().get(positon);
+        } else if (XWPFPicture.class.equals(genericType)) {
+            t = doc.getAllEmbeddedPictures().get(positon);
         } else if (XWPFParagraph.class.equals(genericType)) {
             t = doc.getParagraphs().get(positon);
         }
         return (T) t;
     }
-
-    public void render(XWPFTemplate template) {
-        doRender(get(template), template);
-    }
-
 }

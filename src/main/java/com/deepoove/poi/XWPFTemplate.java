@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
+import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.render.RenderFactory;
 import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.resolver.Visitor;
@@ -130,23 +132,18 @@ public class XWPFTemplate {
         }
     }
 
-    /**
-     * 重新解析doc
-     * 
-     * @param doc
-     */
-    public void reload(NiceXWPFDocument doc) {
-        try {
-            this.close();
-        } catch (IOException e) {
-            logger.error("Close failed", e);
-        }
-        this.doc = doc;
-        this.eleTemplates = this.visitor.visitDocument(doc);
-    }
-
     public XWPFTemplate render(Object model) {
         RenderFactory.getRender(model, config.getElMode()).render(this);
+        return this;
+    }
+
+    public XWPFTemplate bindRefPolicy(ReferenceRenderPolicy<?> refPolicy) {
+        this.config.referencePolicy(refPolicy);
+        return this;
+    }
+
+    public XWPFTemplate bind(String tagName, RenderPolicy policy) {
+        this.config.customPolicy(tagName, policy);
         return this;
     }
 
@@ -164,6 +161,21 @@ public class XWPFTemplate {
 
     public void close() throws IOException {
         this.doc.close();
+    }
+
+    /**
+     * 重新解析doc
+     * 
+     * @param doc
+     */
+    public void reload(NiceXWPFDocument doc) {
+        try {
+            this.close();
+        } catch (IOException e) {
+            logger.error("Close failed", e);
+        }
+        this.doc = doc;
+        this.eleTemplates = this.visitor.visitDocument(doc);
     }
 
     public List<ElementTemplate> getElementTemplates() {

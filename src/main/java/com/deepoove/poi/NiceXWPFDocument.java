@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -80,6 +82,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     private static Logger logger = LoggerFactory.getLogger(NiceXWPFDocument.class);
 
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
+    protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
 
     public NiceXWPFDocument() {
         super();
@@ -87,7 +90,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     public NiceXWPFDocument(InputStream in) throws IOException {
         super(in);
-        buildAllTables();
+        myDocumentRead();
     }
     
     @Override
@@ -121,24 +124,39 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
     }
 
-    private void buildAllTables() {
-        List<XWPFTable> tables = this.getTables();
-        if (null == tables) return;
-        else allTables.addAll(tables);
+    private void myDocumentRead() {
+        readParagraphs(this.getParagraphs());
+        readTables(this.getTables());
+    }
 
+    private void readTables(List<XWPFTable> tables) {
+        allTables.addAll(tables);
+        
         List<XWPFTableRow> rows = null;
         List<XWPFTableCell> cells = null;
         List<XWPFTable> cellTables = null;
         for (XWPFTable table : tables) {
             rows = table.getRows();
-            if (null == rows) continue;
+            if (null == rows) return;
             for (XWPFTableRow row : rows) {
                 cells = row.getTableCells();
                 if (null == cells) continue;
                 for (XWPFTableCell cell : cells) {
                     cellTables = cell.getTables();
-                    if (null != cellTables) allTables.addAll(cellTables);
+                    if (!cellTables.isEmpty()) {
+                        readTables(cellTables);
+                    }
+                    readParagraphs(cell.getParagraphs());
                 }
+            }
+        }
+    }
+
+    private void readParagraphs(List<XWPFParagraph> paragraphs) {
+        for (XWPFParagraph paragraph : paragraphs) {
+            List<XWPFRun> runs = paragraph.getRuns();
+            for (XWPFRun run : runs) {
+                allPictures.addAll(run.getEmbeddedPictures());
             }
         }
     }
@@ -148,6 +166,14 @@ public class NiceXWPFDocument extends XWPFDocument {
             if (allTables.get(i).getCTTbl() == ctTbl) { return allTables.get(i); }
         }
         return null;
+    }
+    
+    public List<XWPFPicture> getAllEmbeddedPictures() {
+        return Collections.unmodifiableList(allPictures);
+    }
+    
+    public List<XWPFTable> getAllTables() {
+        return Collections.unmodifiableList(allTables);
     }
 
     /**
