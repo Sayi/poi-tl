@@ -36,7 +36,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
-import org.apache.poi.xwpf.usermodel.NumberingWrapper;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
@@ -431,7 +430,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
                 .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
                 .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
-                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "");
+                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
 
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
@@ -506,12 +505,17 @@ public class NiceXWPFDocument extends XWPFDocument {
                     "r:id=\"" + chartIdsMap.get(relaId) + "\"");
         }
         
-        addPart = addPart.replaceAll("@PoiTL@", "");
-
-        for (BigInteger numId : numIdsMap.keySet()) {
-            addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
-                    "<w:numId w:val=\"" + numIdsMap.get(numId) + "\"");
+        // 列表numId
+        Map<BigInteger, String> numIdsStrMap = new HashMap<BigInteger, String>();
+        for (BigInteger relaId : numIdsMap.keySet()) {
+            numIdsStrMap.put(relaId, numIdsMap.get(relaId) + "@PoiTL@");
         }
+        for (BigInteger numId : numIdsStrMap.keySet()) {
+            addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
+                    "<w:numId w:val=\"" + numIdsStrMap.get(numId) + "\"");
+        }
+        
+        addPart = addPart.replaceAll("@PoiTL@", "");
         // 关闭合并流
         try {
             docMerge.close();
