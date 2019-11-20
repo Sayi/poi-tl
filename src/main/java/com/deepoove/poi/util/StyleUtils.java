@@ -68,11 +68,17 @@ public final class StyleUtils {
         Boolean strike = style.isStrike();
         Boolean underLine = style.isUnderLine();
         Enum highlightColor = style.getHighlightColor();
-        if (StringUtils.isNotBlank(color)) run.setColor(color);
+        CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        if (StringUtils.isNotBlank(color)) {
+            // run.setColor(color);
+            // issue 326
+            CTColor ctColor = pr.isSetColor() ? pr.getColor() : pr.addNewColor();
+            ctColor.setVal(color);
+            if (ctColor.isSetThemeColor()) ctColor.unsetThemeColor();
+        }
         if (0 != fontSize) run.setFontSize(fontSize);
         if (StringUtils.isNotBlank(fontFamily)) {
             run.setFontFamily(fontFamily);
-            CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
             CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
             fonts.setAscii(fontFamily);
             fonts.setHAnsi(fontFamily);
@@ -80,7 +86,6 @@ public final class StyleUtils {
             fonts.setEastAsia(fontFamily);
         }
         if (null != highlightColor) {
-            CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
             CTHighlight highlight = pr.isSetHighlight() ? pr.getHighlight() : pr.addNewHighlight();
             STHighlightColor hColor = highlight.xgetVal();
             if (hColor == null) {
