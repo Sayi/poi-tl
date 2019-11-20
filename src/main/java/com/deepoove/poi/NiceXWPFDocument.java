@@ -480,12 +480,17 @@ public class NiceXWPFDocument extends XWPFDocument {
                     "r:id=\"" + chartIdsMap.get(relaId) + "\"");
         }
         
-        addPart = addPart.replaceAll("@PoiTL@", "");
-
-        for (BigInteger numId : numIdsMap.keySet()) {
-            addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
-                    "<w:numId w:val=\"" + numIdsMap.get(numId) + "\"");
+        // 列表numId
+        Map<BigInteger, String> numIdsStrMap = new HashMap<BigInteger, String>();
+        for (BigInteger relaId : numIdsMap.keySet()) {
+            numIdsStrMap.put(relaId, numIdsMap.get(relaId) + "@PoiTL@");
         }
+        for (BigInteger numId : numIdsStrMap.keySet()) {
+            addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
+                    "<w:numId w:val=\"" + numIdsStrMap.get(numId) + "\"");
+        }
+        
+        addPart = addPart.replaceAll("@PoiTL@", "");
         // 关闭合并流
         try {
             docMerge.close();
