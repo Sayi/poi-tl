@@ -15,6 +15,7 @@ public class Issue257 {
     @Test
     public void testDocxMerge() throws Exception {
 
+        // 编号继续前一个编号可以修改为重新开始编号
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("docx", new DocxRenderData(new File("src/test/resources/issue/257_MERGE.docx")));

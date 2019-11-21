@@ -133,18 +133,16 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         XWPFRun run = context.getRun();
         IRunBody parent = run.getParent();
         String text = run.text();
+        run.setText("", 0);
         if (clearParagraph && (parent instanceof XWPFParagraph)) {
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             // 段落就是当前标签则删除段落
             if (text.equals(paragraphText)) {
                 XWPFDocument doc = context.getXWPFDocument();
                 int pos = doc.getPosOfParagraph((XWPFParagraph) parent);
+                // TODO p inside table for-each cell's p and remove
                 doc.removeBodyElement(pos);
-            } else {
-                run.setText("", 0);
-            }
-        } else {
-            run.setText("", 0);
+            } 
         }
     }
 

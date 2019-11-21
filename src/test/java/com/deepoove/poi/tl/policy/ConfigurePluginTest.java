@@ -43,7 +43,7 @@ public class ConfigurePluginTest {
     }
     
     @Test
-    public void testSupportNullToBlank() throws Exception {
+    public void testNullToDoNothing() throws Exception {
 
         Map<String, Object> datas = new HashMap<String, Object>();
 
