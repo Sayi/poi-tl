@@ -15,9 +15,6 @@
  */
 package com.deepoove.poi.policy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.ElementTemplate;
 
@@ -27,8 +24,6 @@ import com.deepoove.poi.template.ElementTemplate;
  * @version 0.0.1
  */
 public interface RenderPolicy {
-
-    Logger logger = LoggerFactory.getLogger(RenderPolicy.class);
 
     /**
      * @param eleTemplate

@@ -25,6 +25,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.CellRenderData;
@@ -62,6 +64,8 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
     public static class Helper {
 
+        private static Logger LOG = LoggerFactory.getLogger(Helper.class);
+
         public static void renderMiniTable(XWPFRun run, MiniTableRenderData data) {
             NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
             if (!data.isSetBody()) {
@@ -92,7 +96,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             for (int i = 0; i < cellList.size(); i++) {
                 cell = tableRow.getCell(i);
                 if (null == cell) {
-                    logger.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
+                    LOG.warn("Extra cell data at row {}, but no extra cell: col {}", row, cell);
                     break;
                 }
                 renderCell(cell, cellList.get(i), rowStyle);
