@@ -37,6 +37,11 @@ import com.deepoove.poi.render.RenderContext;
 public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
+    protected boolean validate(DocxRenderData data) {
+        return null != data;
+    }
+
+    @Override
     protected void beforeRender(RenderContext<DocxRenderData> context) {
         clearPlaceholder(context, false);
     }
