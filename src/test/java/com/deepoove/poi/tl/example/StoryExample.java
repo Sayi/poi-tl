@@ -63,6 +63,9 @@ public class StoryExample {
         s6.setContent("良言一句暖三冬，恶语伤人六月寒，不要以为你的毒舌是幽默，不分场合和对象的毒舌，不仅伤害了他人，也暴露了自己的无知。你有你的犀利，别人也有不容侵犯的骄傲，毒舌的人碰到谁，谁都想给他一巴掌。");
         segments.add(s6);
         
+        // for (int i =0; i < 600; i++) {
+        // segments.add(s6);
+        // }
         
         DocxRenderData segment = new DocxRenderData(new File("src/test/resources/story/segment.docx"), segments );
         data.setSegment(segment);

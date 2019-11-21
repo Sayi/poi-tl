@@ -21,13 +21,13 @@ public class Issue313 {
         map.put("item1", "{{#excel_first}}\n{{#excel_second}}");
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/313.docx")
                 .render(map);
-        FileOutputStream out = new FileOutputStream("out_template_313.docx");
+        FileOutputStream out = new FileOutputStream("out_issue_template_313.docx");
         template.write(out);
         out.flush();
         out.close();
         template.close();
 
-        excelRender("out_template_313.docx", "out_issue_313.docx");
+        excelRender("out_issue_template_313.docx", "out_issue_313.docx");
     }
 
     public void excelRender(String temppath, String outpath) throws Exception {

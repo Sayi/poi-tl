@@ -40,7 +40,7 @@ public class SimpleXWPFTemplateTest {
                 XWPFRun where = context.getWhere();
                 // anything
                 String thing = context.getThing();
-                // do
+                // do 文本
                 where.setText(thing, 0);
             }
         }).bind("sea_img", new AbstractRenderPolicy<String>() {
@@ -50,7 +50,7 @@ public class SimpleXWPFTemplateTest {
                 WhereDelegate where = context.getWhereDelegate();
                 // any thing
                 String thing = context.getThing();
-                // do
+                // do 图片
                 FileInputStream stream = null;
                 try {
                     stream = new FileInputStream(thing);
@@ -69,7 +69,7 @@ public class SimpleXWPFTemplateTest {
                 WhereDelegate where = context.getWhereDelegate();
                 // anything
                 List<String> thing = context.getThing();
-                // do
+                // do 列表
                 where.renderNumberic(NumbericRenderData.build(thing.toArray(new String[] {})));
                 // clear
                 clearPlaceholder(context, true);
@@ -82,7 +82,7 @@ public class SimpleXWPFTemplateTest {
                 // anything
                 List<String> thing = context.getThing();
 
-                // do
+                // do 表格
                 int row = thing.size() + 1, col = 2;
                 XWPFTable table = context.getXWPFDocument().insertNewTable(where, row, col);
                 TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);

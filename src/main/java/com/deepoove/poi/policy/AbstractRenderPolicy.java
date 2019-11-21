@@ -15,10 +15,13 @@
  */
 package com.deepoove.poi.policy;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
@@ -33,6 +36,8 @@ import com.deepoove.poi.util.ParagraphUtils;
  * @version
  */
 public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
+    
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("unchecked")
     @Override
@@ -79,8 +84,11 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     }
 
     protected void postValidError(RenderContext<T> context) {
-        logger.debug("The data {} for template {} is illegal", context.getData(), context.getTagSource());
-        context.getConfig().getValidErrorHandler().handler(context);
+        ValidErrorHandler errorHandler = context.getConfig().getValidErrorHandler();
+        logger.debug("The data [{}] of the template {} is illegal, will apply error handler [{}]",
+                context.getData(), context.getTagSource(),
+                ClassUtils.getSimpleName(errorHandler.getClass()));
+        errorHandler.handler(context);
     }
 
     public interface ValidErrorHandler {
@@ -125,18 +133,16 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         XWPFRun run = context.getRun();
         IRunBody parent = run.getParent();
         String text = run.text();
+        run.setText("", 0);
         if (clearParagraph && (parent instanceof XWPFParagraph)) {
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             // 段落就是当前标签则删除段落
             if (text.equals(paragraphText)) {
                 XWPFDocument doc = context.getXWPFDocument();
                 int pos = doc.getPosOfParagraph((XWPFParagraph) parent);
+                // TODO p inside table for-each cell's p and remove
                 doc.removeBodyElement(pos);
-            } else {
-                run.setText("", 0);
-            }
-        } else {
-            run.setText("", 0);
+            } 
         }
     }
 

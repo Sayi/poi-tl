@@ -416,8 +416,10 @@ public class NiceXWPFDocument extends XWPFDocument {
         String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
         String sufix = srcString.substring(srcString.lastIndexOf("<"));
         List<String> addParts = new ArrayList<String>();
+        // cache the merge doc style if docs have same style, or should merge style first
+        Map<String, String> styleMapCache = mergeStyles(docMerges.get(0));
         for (NiceXWPFDocument docMerge : docMerges) {
-            addParts.add(extractMergePart(docMerge));
+            addParts.add(extractMergePart(docMerge, styleMapCache));
         }
 
         CTP makeBody = CTP.Factory.parse(prefix + StringUtils.join(addParts, "") + sufix);
@@ -451,9 +453,9 @@ public class NiceXWPFDocument extends XWPFDocument {
         return merge(Arrays.asList(docMerge), createParagraph().createRun());
     }
 
-    private String extractMergePart(NiceXWPFDocument docMerge) throws InvalidFormatException {
+    private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException {
         CTBody bodyMerge = docMerge.getDocument().getBody();
-        Map<String, String> styleIdsMap = mergeStyles(docMerge);
+        // Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
         Map<String, String> blipIdsMap = mergePicture(docMerge);
         Map<String, String> hyperlinkMap = mergeHyperlink(docMerge);

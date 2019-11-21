@@ -32,6 +32,11 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
     public static final String REGEX_LINE_CHARACTOR = "\\n";
 
     @Override
+    protected boolean validate(Object data) {
+        return null != data;
+    }
+
+    @Override
     public void doRender(RenderContext<Object> context) throws Exception {
         Helper.renderTextRun(context.getRun(), context.getData());
     }

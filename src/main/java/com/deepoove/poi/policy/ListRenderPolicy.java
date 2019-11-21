@@ -15,6 +15,11 @@ import com.deepoove.poi.util.StyleUtils;
 public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
     @Override
+    protected boolean validate(List<Object> data) {
+        return (null != data && !data.isEmpty());
+    }
+
+    @Override
     public void doRender(RenderContext<List<Object>> context) throws Exception {
         NiceXWPFDocument document = context.getXWPFDocument();
         XWPFRun run = context.getRun();
