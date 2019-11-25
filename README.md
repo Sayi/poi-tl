@@ -15,7 +15,7 @@
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
 
 ## Maven
-poi-tl v1.6.0为最新版本，要求JDK1.8+、Apache poi4.0.0+：
+v1.6.0为最新版本，要求JDK1.8+、Apache poi4.0.0+：
 
 ```xml
 <dependency>
@@ -25,7 +25,7 @@ poi-tl v1.6.0为最新版本，要求JDK1.8+、Apache poi4.0.0+：
 </dependency>
 ```
 
-v1.5.1是构建在Apache poi低版本3.16+和JDK1.6+的版本：
+v1.5.1是构建在JDK1.6+、Apache poi3.16+上的版本：
 
 ```xml
 <dependency>
@@ -63,7 +63,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
 ## 架构设计
-**模板和插件丰富了Poi-tl的想象力。**整体设计采用`Template + data-model = output`模式，**Configure**提供了配置功能，**Visitor**提供了解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**标签表达式计算扩展点，通过插件对每个标签进行渲染。
+**模板和插件丰富了Poi-tl的想象力。** 整体设计采用`Template + data-model = output`模式，**Configure**提供了配置功能，**Visitor**提供了解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**标签表达式计算扩展点，通过插件对每个标签进行渲染。
 
 ![](http://deepoove.com/poi-tl/arch.png)
 
