@@ -35,7 +35,7 @@ public class Issues215 {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx", config)
                 .render(datas);
 
-        template.writeToFile("out_template_supportnulltoblank.docx");
+        template.writeToFile("out_template_reserve.docx");
     }
 
 }

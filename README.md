@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi4.0.0](https://img.shields.io/badge/apache--poi-4.0.0-blue.svg) [![Gitter](https://badges.gitter.im/Sayi/poi-tl.svg)](https://gitter.im/Sayi/poi-tl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-:memo:  Word 模板引擎，基于Apache Poi，目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
+:memo:  Word 模板引擎，基于Apache poi，目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
 
 下表对一些处理Word的解决方案作了一些比较：
 
@@ -15,12 +15,23 @@
 | Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
 
 ## Maven
+poi-tl v1.6.0为最新版本，要求JDK1.8+、Apache poi4.0.0+：
 
 ```xml
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
+</dependency>
+```
+
+v1.5.1是构建在Apache poi低版本3.16+和JDK1.6+的版本：
+
+```xml
+<dependency>
+  <groupId>com.deepoove</groupId>
+  <artifactId>poi-tl</artifactId>
+  <version>1.5.1</version>
 </dependency>
 ```
 
@@ -39,7 +50,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 
 ## 详细文档与示例
 
-[poi-tl中文文档](http://deepoove.com/poi-tl) or [English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
+[中文文档](http://deepoove.com/poi-tl) or [English-tutorial](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
@@ -52,9 +63,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
 ## 架构设计
-**模板和插件构建了整个Poi-tl的核心。** Poi-tl通过极简的架构实现了模板功能并且支持最大的扩展性，架包体积仅有几十KB。
-
-整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**表达式计算扩展点，通过**RenderPolicy**对每个标签进行渲染。
+**模板和插件丰富了Poi-tl的想象力。**整体设计采用`Template + data-model = output`模式，**Configure**提供了配置功能，**Visitor**提供了解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**标签表达式计算扩展点，通过插件对每个标签进行渲染。
 
 ![](http://deepoove.com/poi-tl/arch.png)
 
