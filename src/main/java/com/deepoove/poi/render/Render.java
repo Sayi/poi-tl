@@ -16,6 +16,7 @@
 package com.deepoove.poi.render;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.ClassUtils;
@@ -31,7 +32,6 @@ import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.util.ObjectUtils;
 
 /**
  * 渲染器，支持表达式计算接口RenderDataCompute的扩展
@@ -52,7 +52,7 @@ public class Render {
      * @param root
      */
     public Render(Object root) {
-        ObjectUtils.requireNonNull(root, "Data root must not be null");
+        Objects.requireNonNull(root, "Data root must not be null");
         renderDataCompute = new ELObjectRenderDataCompute(root, false);
     }
 
@@ -61,7 +61,7 @@ public class Render {
     }
 
     public void render(XWPFTemplate template) {
-        ObjectUtils.requireNonNull(template, "Template must not be null.");
+        Objects.requireNonNull(template, "Template must not be null.");
         LOGGER.info("Render the template file start...");
 
         StopWatch watch = new StopWatch();
@@ -75,7 +75,7 @@ public class Render {
                 applyDocxPolicy(template, docxCount);
             }
         } catch (Exception e) {
-            throw new RenderException("Render docx failed", e);
+            throw new RenderException("Cannot render docx template, please check the Exception", e);
         }
         finally {
             watch.stop();

@@ -163,11 +163,6 @@ public class XWPFTemplate {
         this.doc.close();
     }
 
-    /**
-     * 重新解析doc
-     * 
-     * @param doc
-     */
     public void reload(NiceXWPFDocument doc) {
         try {
             this.close();

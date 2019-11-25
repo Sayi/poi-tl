@@ -18,10 +18,10 @@ package com.deepoove.poi.el;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import com.deepoove.poi.exception.ExpressionEvalException;
-import com.deepoove.poi.util.ObjectUtils;
 
 /**
  * 点缀对象
@@ -39,7 +39,7 @@ public class Dot {
     final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\.]+)*$");
 
     public Dot(String el) {
-        ObjectUtils.requireNonNull(el, "EL cannot be null.");
+        Objects.requireNonNull(el, "EL cannot be null.");
         if (!EL_PATTERN.matcher(el)
                 .matches()) { throw new ExpressionEvalException("Error EL fomart: " + el); }
 
@@ -62,7 +62,7 @@ public class Dot {
     }
 
     private Object evalKey(Object obj) {
-        ObjectUtils.requireNonNull(obj,
+        Objects.requireNonNull(obj,
                 "Cannot read value from null Prefix-Model, Prefix-Model EL: " + target);
         final Class<?> objClass = obj.getClass();
         if (obj instanceof String || obj instanceof Number || obj instanceof java.util.Date

@@ -23,6 +23,7 @@ import com.deepoove.poi.template.ElementTemplate;
  * @author Sayi
  * @version 0.0.1
  */
+@FunctionalInterface
 public interface RenderPolicy {
 
     /**

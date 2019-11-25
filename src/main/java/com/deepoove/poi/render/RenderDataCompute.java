@@ -22,6 +22,7 @@ package com.deepoove.poi.render;
  * @author Sayi
  * @since 1.5.0
  */
+@FunctionalInterface
 public interface RenderDataCompute {
 
     Object compute(String el);

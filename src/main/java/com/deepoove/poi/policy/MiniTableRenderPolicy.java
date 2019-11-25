@@ -16,6 +16,7 @@
 package com.deepoove.poi.policy;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -35,7 +36,6 @@ import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.util.ObjectUtils;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
 
@@ -87,7 +87,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
             if (null == rowData || rowData.size() <= 0) return;
             XWPFTableRow tableRow = table.getRow(row);
-            ObjectUtils.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
+            Objects.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
 
             TableStyle rowStyle = rowData.getRowStyle();
             List<CellRenderData> cellList = rowData.getCellDatas();
