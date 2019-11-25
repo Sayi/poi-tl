@@ -34,13 +34,12 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
             } else if (data instanceof NumbericRenderData) {
                 NumbericRenderPolicy.Helper.renderNumberic(run, (NumbericRenderData) data);
             } else if (data instanceof PictureRenderData) {
-                PictureRenderPolicy.Helper.renderPicture(document.insertNewParagraph(run).createRun(), (PictureRenderData) data);
+                PictureRenderPolicy.Helper.renderPicture(
+                        document.insertNewParagraph(run).createRun(), (PictureRenderData) data);
             }
 
         }
     }
-    
-    
 
     @Override
     protected void afterRender(RenderContext<List<Object>> context) {

@@ -37,6 +37,7 @@ import com.deepoove.poi.render.RenderFactory;
 import com.deepoove.poi.resolver.TemplateVisitor;
 import com.deepoove.poi.resolver.Visitor;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.util.Preconditions;
 
 /**
@@ -132,45 +133,87 @@ public class XWPFTemplate {
         }
     }
 
+    /**
+     * render the template by date model
+     * 
+     * @param model
+     * @return
+     */
     public XWPFTemplate render(Object model) {
         RenderFactory.getRender(model, config.getElMode()).render(this);
         return this;
     }
 
+    /**
+     * bind reference render policy
+     * 
+     * @param refPolicy
+     * @return
+     */
     public XWPFTemplate bindRefPolicy(ReferenceRenderPolicy<?> refPolicy) {
         this.config.referencePolicy(refPolicy);
         return this;
     }
 
+    /**
+     * bind render policy
+     * 
+     * @param tagName
+     * @param policy
+     * @return
+     */
     public XWPFTemplate bind(String tagName, RenderPolicy policy) {
         this.config.customPolicy(tagName, policy);
         return this;
     }
 
+    /**
+     * write to output stream
+     * 
+     * @param out
+     *            eg.ServletOutputStream
+     * @throws IOException
+     */
     public void write(OutputStream out) throws IOException {
         this.doc.write(out);
     }
 
+    /**
+     * write to file
+     * 
+     * @param path
+     * @throws IOException
+     */
     public void writeToFile(String path) throws IOException {
-        FileOutputStream out = new FileOutputStream(path);
-        this.write(out);
-        this.close();
-        out.flush();
-        out.close();
-    }
-
-    public void close() throws IOException {
-        this.doc.close();
-    }
-
-    public void reload(NiceXWPFDocument doc) {
+        FileOutputStream out = null;
         try {
-            this.close();
-        } catch (IOException e) {
-            logger.error("Close failed", e);
+            out = new FileOutputStream(path);
+            this.write(out);
+            out.flush();
         }
+        finally {
+            PoitlIOUtils.closeQuietlyMulti(this.doc, out);
+        }
+    }
+
+    /**
+     * reload the template
+     * 
+     * @param doc
+     */
+    public void reload(NiceXWPFDocument doc) {
+        PoitlIOUtils.closeLoggerQuietly(this.doc);
         this.doc = doc;
         this.eleTemplates = this.visitor.visitDocument(doc);
+    }
+
+    /**
+     * close the document
+     * 
+     * @throws IOException
+     */
+    public void close() throws IOException {
+        this.doc.close();
     }
 
     public List<ElementTemplate> getElementTemplates() {

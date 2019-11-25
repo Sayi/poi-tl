@@ -37,6 +37,11 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.util.StyleUtils;
 
+/**
+ * Running Run algorithm
+ * @author Sayi
+ * @version 
+ */
 public class RunningRunParagraph {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RunningRunParagraph.class);
@@ -49,7 +54,7 @@ public class RunningRunParagraph {
     private XWPFParagraph paragraph;
     private List<XWPFRun> runs;
 
-    List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<Pair<RunEdge, RunEdge>>();
+    List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<>();
 
     public RunningRunParagraph(XWPFParagraph paragraph, Pattern pattern) {
         this.paragraph = paragraph;
@@ -233,6 +238,10 @@ public class RunningRunParagraph {
             cursor += text.length();
         }
 
+        loggerInfo();
+    }
+
+    public void loggerInfo() {
         for (Pair<RunEdge, RunEdge> runEdges : pairs) {
             LOGGER.debug("[Start]:" + runEdges.getLeft().toString());
             LOGGER.debug("[End]:" + runEdges.getRight().toString());

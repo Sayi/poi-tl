@@ -26,6 +26,7 @@ import com.deepoove.poi.exception.RenderException;
  * 引用渲染策略，即通过引用的word对象操作文档
  * 
  * @author Sayi
+ * @version 1.6.0
  */
 public abstract class ReferenceRenderPolicy<T> {
 
