@@ -20,7 +20,7 @@
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.5.0</version>
+  <version>1.5.1</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 
 ## 详细文档与示例
 
-[poi-tl中文文档](http://deepoove.com/poi-tl) or [English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
+[poi-tl中文文档](http://deepoove.com/poi-tl/1.5.x/) or [English-tutorial Wiki](https://github.com/Sayi/poi-tl/wiki/2.English-tutorial)
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
@@ -52,9 +52,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
 ## 架构设计
-**模板和插件构建了整个Poi-tl的核心。** Poi-tl通过极简的架构实现了模板功能并且支持最大的扩展性，架包体积仅有几十KB。
-
-整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**表达式计算扩展点，通过**RenderPolicy**对每个标签进行渲染。
+**模板和插件构建了整个Poi-tl的核心。** 整体设计采用了`Template + data-model = output`模式，**Configure**提供了模板配置功能，比如语法配置和插件配置，**Visitor**提供了模板解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**表达式计算扩展点，通过**RenderPolicy**对每个标签进行渲染。
 
 ![](http://deepoove.com/poi-tl/arch.png)
 
