@@ -15,10 +15,12 @@ import com.deepoove.poi.policy.ref.IndexRefRenderPolicy;
 
 public class MyChartReferenceRenderPolicy extends IndexRefRenderPolicy<XWPFChart> {
     
+    @Override
     public int index() {
         return 0;
     }
     
+    @Override
     public void doRender(XWPFChart chart, XWPFTemplate template) {
         String[] categories = new String[] {"中文","English","日本語","português"};
         Double[] values1 = new Double[] {15.0,6.0,18.0,31.0};

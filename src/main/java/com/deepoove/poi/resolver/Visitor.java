@@ -21,6 +21,10 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import com.deepoove.poi.template.ElementTemplate;
 
+/**
+ * @author Sayi
+ * @version 
+ */
 public interface Visitor {
 
     List<ElementTemplate> visitDocument(XWPFDocument doc);

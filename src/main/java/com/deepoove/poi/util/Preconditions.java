@@ -17,6 +17,10 @@ package com.deepoove.poi.util;
 
 import java.util.function.BiFunction;
 
+/**
+ * @author Sayi
+ * @version 
+ */
 public final class Preconditions {
 
     private Preconditions() {}

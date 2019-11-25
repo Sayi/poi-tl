@@ -44,6 +44,7 @@ public abstract class IndexRefRenderPolicy<T> extends ReferenceRenderPolicy<T>
                 .getActualTypeArguments()[0];
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     protected T locate(XWPFTemplate template) {
         int positon = index();

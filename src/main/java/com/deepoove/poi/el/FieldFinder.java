@@ -37,6 +37,7 @@ class FieldFinder {
 
         private static final long serialVersionUID = -4306886008010847817L;
 
+        @Override
         protected boolean removeEldestEntry(
                 java.util.Map.Entry<java.lang.Class<?>, Field[]> eldest) {
             // TO DO 最大数可以被调整，如果是一个导出大量实体的业务，这个值应该增加来优化性能
@@ -77,7 +78,9 @@ class FieldFinder {
         }
         for (Field f : fields) {
             Name annotation = f.getAnnotation(Name.class);
-            if (null != annotation && key.equals(annotation.value())) return f;
+            if (null != annotation && key.equals(annotation.value())) {
+                return f;
+            }
         }
         throw new NoSuchFieldException(key);
     }

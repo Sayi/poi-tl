@@ -15,6 +15,10 @@
  */
 package com.deepoove.poi.template;
 
+/**
+ * @author Sayi
+ * @version 
+ */
 public class ElementTemplate {
     protected Character sign;
     protected String tagName;
