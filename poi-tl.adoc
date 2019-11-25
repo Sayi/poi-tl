@@ -1,6 +1,6 @@
 = poi-tl
 Sayi 卅一 <adasai90@gmail.com>
-v1.5.0
+v1.6.0
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板
 :doctype: book
@@ -18,30 +18,25 @@ poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Jav
 
 CAUTION: 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 
-== Maven
-poi-tl分为两个版本，其中v1.5.x支持Apache poi3.16+版本和JDK1.6+。
-[source, xml]
-----
-<dependency>
-    <groupId>com.deepoove</groupId>
-    <artifactId>poi-tl</artifactId>
-    <version>1.5.0</version>
-</dependency>
-----
+== Requirements
+* Apache poi4.0.0+
+* JDK1.8+
 
-Apache poi4.0.0+要求JDK1.8以上，需要引入最新的poi-tl版本：
+Apache poi已经进入4.0.0+时代，如果你仍希望使用低版本的Apache poi(3.16+)，请查阅poi-tl link:http://deepoove.com/poi-tl/1.5.x/[v1.5.x 文档, window=_blank]。
+
+== Maven
 [source, xml]
 ----
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.6.0-beta1</version>
+  <version>1.6.0</version>
 </dependency>
 ----
 
 == Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.5.0'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.6.0'
 
 == 快速开始
 === 2min入门
@@ -70,32 +65,51 @@ template.close();
 *TDO模式：Template + data-model = output*
 --
 
-=== Template：Word模板和样式
-Word文档支持DOCX格式，所有的模板标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
+=== Template：模板
+Word模板支持DOCX格式，所有的标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。
 
 IMPORTANT: 表格布局可以设计出很多优秀专业的文档，模板文档请使用表格布局，不支持文本框。
 
-poi-tl的一个核心特点是 *数据模型与样式的分离*，同样的数据模型可以用来渲染各种不同样式的模板。
-
-文档的样式继承模板标签的样式，即如果模板{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
+poi-tl深知**“所见即所得”**的道理，文本的样式继承模板标签的样式，即如果模板标签{{title}}是蓝色微软雅黑加粗四号字体，则替换后的文本也是蓝色微软雅黑加粗四号字体。
 
 image::./style.png[align='center'] 
 
-=== Data-Model：数据源
-数据源的结构体是一个标签名称和数据模型映射的集合，即[{标签名称, 数据模型}]。数据源可以是一个Map，其中key是标签名称；可以是一个JavaBean，field名称是标签名称，也可以通过注解@Name设置标签名称。
+**“所见即所得”**也体现在图片上，如果模板中是一个长200宽300布局样式为衬于文字下方的占位图片，那么替换后的图片样式也保持不变。
 
+=== Data-Model：数据模型
+如果模板标签定义了"anywhere"，那么数据模型定义的就是"anything"。
+
+我们需要指定每个模板标签对应的数据模型，它可以是一个Map，其中key是标签名称：
 [source, java]
 ----
-// 模板标签d_number
-@Name("d_number")
-private String dNumber;
-// 模板标签m_vin
-private String m_vin;
+Map<String, Object> args = new HashMap<>();
+args.put("name", "Sayi");
+args.put("start_time", "2019-08-04");
 ----
 
-TIP: poi-tl默认的表达式支持对象点缀式访问，比如名称为{{author.name}}的标签对应的数据是author对象的name属性值。表达式也支持中文，比如{{客户手机号}}。
+可以是一个对象，属性名称是标签名称(可以通过注解@Name设置标签名称):
+[source, java]
+----
+public class MyDataModel {
 
-数据模型实现了接口 `public interface RenderData {}` , 有以下几种数据模型：
+  // 对应模板标签{{name}}
+  private String name;
+
+  // 对应模板标签{{start_time}}
+  @Name("start_time")
+  private String startTime;
+
+  // 对应模板标签{{author.XXX}},XXX是Author的属性名
+  private Author author;
+
+}
+----
+
+如上所示，poi-tl模板标签支持对象点缀式表达式，比如{{author.name}}的模板标签对应的数据是author对象的name属性值。
+
+TIP: 如果可以强大，就没有必要选择平庸，poi-tl的模板标签完美的支持Spring Expression Language，甚至可以执行标签中的Java代码，请参见poi-tl的EL表达式配置。
+
+poi-tl内置了若干数据模型，使用这些类型的数据，可以在模板标签位置提供更丰富的操作，这些数据模型都实现了接口 `public interface RenderData {}`：
 
 * TextRenderData、HyperLinkTextRenderData
 * PictureRenderData
@@ -133,7 +147,7 @@ put("introduce", "http://www.deepoove.com");
 put("link", new HyperLinkTextRenderData("website.", "http://www.deepoove.com"));
 --
 
-除了继承模板标签样式，也提供了通过代码设定文本样式的方式。
+除了所见即所得的继承模板标签样式，也提供了通过代码设定文本样式的方式。
 
 [sidebar]
 .`TextRenderData` 的结构体
@@ -301,9 +315,9 @@ NOTE: 表格的宽度(单位CM)怎么定义的: 页面宽度 - 页边距宽度 *
 
 需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
 
-*场景一*： 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件机制-新增RenderPolicy策略]。
+*场景一*： 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件-开发一个插件]。
 
-*场景二*： 在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy，参见link:#example-table[示例-付款通知书]。
+*场景二*： 在一个已有的表格中，动态处理某些单元格数据：提供了抽象表格策略DynamicTableRenderPolicy或者引用渲染策略插件OptionalTextTableRefRenderPolicy，参见link:#example-table[示例-付款通知书]。
 
 === 列表模板{{*var}}
 [example]
@@ -337,7 +351,7 @@ FMT_UPPER_LETTER //A. B. C.
 [example]
 {{+var}}
 
-`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个模板的多个渲染结果的合并。
+`DocxRenderData` 数据模型，可以是另一个docx文档的合并，或者是数据集合针对同一个docx模板文档的循环渲染结果的合并。
 [sidebar]
 .代码示例
 --
@@ -361,117 +375,64 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), segments)); <1> 
 --
 参见link:#example-article[示例-一篇文章]
 
-== 插件机制(Plugin mechanism)
-*插件机制是poi-tl的核心*，默认的五大內建模板语法是通过插件方式加载的。插件的核心逻辑是在模板的基础上通过poi-tl和poi提供的API操作word文档，实现插件就是实现自己的渲染策略。
-
-CAUTION: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，可以参见Apache官方API，这里也有一个快速入门的教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word(docx) 入门示例教程]。如果你写了一个不错的插件，欢迎提交Pull Request。
-
-[[cus-policy-section]]
-=== 新增RenderPolicy策略
-內建策略是poi-tl自带的一些渲染策略，用来处理文本、图片、列表、表格、文档合并等：
-
-* TextRenderPolicy
-* PictureRenderPolicy
-* NumbericRenderPolicy
-* MiniTableRenderPolicy
-* DocxRenderPolicy
-
-我们可以通过实现 `RenderPolicy` 接口扩展自己的渲染策略：
-[source, java]
-----
-public interface RenderPolicy {
-  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <1> <2> <3>
-}
-----
-<1> ElementTemplate是当前模板标签所在位置
-<2> data是数据模型
-<3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等
-
-NOTE: 原则上Apache POI支持的操作，都可以在当前模板位置进行渲染。
-
-[example]
---
-示例：我们创建一个自己的表格渲染策略CustomTableRenderPolicy，使用表格API来操作表格，`doc.insertNewTable()` 是在当前模板位置插入表格，正如可以实现任何渲染逻辑一样，我们可以随心所欲的操作表格了。
-
-AbstractRenderPolicy是一个抽象模板类，定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，新的策略继承AbstractRenderPolicy类不是必须的。
-[source, java]
-----
-public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
-
-  @Override
-  protected void afterRender(RenderContext context) {
-    // 清空模板标签所在段落
-    clearPlaceholder(context, true);
-  }
-
-  @Override
-  public void doRender(RunTemplate runTemplate, Object data, XWPFTemplate template)
-      throws Exception {
-
-    NiceXWPFDocument doc = template.getXWPFDocument();
-    XWPFRun run = runTemplate.getRun();
-    // 定义行列
-    int row = 10, col = 8;
-    // 插入表格
-    XWPFTable table = doc.insertNewTable(run, row, col);
-
-    // 定义表格宽度、边框和样式
-    TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
-    TableTools.borderTable(table, 4);
-
-    // 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
-    // 调用MiniTableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
-    // 调用TableTools类方法操作表格，比如合并单元格
-    // ......
-    TableTools.mergeCellsHorizonal(table, 0, 0, 7);
-    TableTools.mergeCellsVertically(table, 0, 1, 9);
-    
-  }
-}
-----
---
-
-=== 自定义模板策略
-所有的插件都是通过如下构建器来配置：
+== 配置
+poi-tl提供了配置类 `Configure` 和它的构建器类 `ConfigureBuilder`，
+配置的使用方式如下：
 [source, java]
 ConfigureBuilder builder = Configure.newBuilder();
 XWPFTemplate.compile("~/template.docx", builder.buid());
 
-当我们有个模板标签为{{report}}，它本身是一个文本模板，如果希望在这个位置做些不一样或者更复杂的事情，我们可以通过构建器设定模板的渲染策略：
+=== 语法前后缀
+如果你不喜欢 `{{}}` 的方式，更偏爱freemarker `${}` 的方式：
 [source, java]
-builder.customPolicy("report", new MyRenderPolicy());
+----
+builder.buildGramer("${", "}");
+----
 
-=== 新增语法插件
-比如增加%语法：{{%var}}，对应自定义的渲染策略 `PercentRenderPolicy`，加载插件代码如下：
+=== 自定义语法
+默认的图片模板语法是{{@var}}，如果我们希望使用新语法{{%var}}作为图片模板：
 [source, java]
-builder.addPlugin('%', new PercentRenderPolicy());
+builder.addPlugin('%', new PictureRenderPolicy());
 
-由于內建模板也是通过插件方式加载的，我们甚至可以改变它们的语法：
+高度扩展性体现在连自己的默认语法都可以任意更改：
 [source, java]
 builder.addPlugin('@', new MiniTableRenderPolicy());
 builder.addPlugin('#', new PictureRenderPolicy());
 
-这样{{@var}}就变成了表格模板，{{#var}}变成了图片模板，虽然不建议改变內建模板，但是从中可以看到poi-tl插件的设计思想，深藏功与名。
+这样{{@var}}就变成了表格模板，{{#var}}变成了图片模板，虽然不建议改变內建模板语法，但是从中可以看到poi-tl插件的设计思想，深藏功与名。
 
-=== Helper辅助类
-在內建策略中，通常会提供一个静态Helper辅助类，在我们实现自己的RenderPolicy时，也可以通过这些辅助类操作文档。
+
+=== 标签规则
+模板标签支持中文、字母、数字、下划线的组合，比如{{客户手机号}}，我们可以通过正则表达式来配置标签的规则，比如不允许中文：
+[source, java]
+builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
+
+=== 静默行为
+poi-tl在模板标签表达式无法计算结果时默认会认为标签对应的数据为null，当标签对应的数据为null或者不合法时，模板标签默认会被清空而不是保留，这种行为被称为静默模式，我们可以通过配置来改变这种行为。
+
+一个模板标签表达式的结果无法被计算的时候，可以通过ElMode来配置行为：
 [source, java]
 ----
-// 某个位置渲染文本
-TextRenderPolicy.Helper.renderTextRun(XWPFRun, Object);
-// 某个位置渲染图片
-PictureRenderPolicy.Helper.renderPicture(XWPFRun, PictureRenderData);
-// 某个位置渲染列表
-NumbericRenderPolicy.Helper.renderNumberic(XWPFRun, NumbericRenderData);
-// 渲染表格的一行数据
-MiniTableRenderPolicy.Helper.renderRow(XWPFTable, int, RowRenderData);
-// 渲染单元格
-MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyle)
+// 默认行为，EL静默模式，表达式计算错误的情况下结果置为null
+builder.setElMode(ELMode.POI_TL_STANDARD_MODE);
+// 严格EL模式，表达式计算错误的情况下抛出异常，这种情况下要求表达式必须可被计算
+builder.setElMode(ELMode.POI_TL_STICT_MODE);
 ----
 
+模板标签表达式找不到对应数据、计算结果为null或者数据不合法的时候，可以配置模板标签的行为：
+[source, java]
+----
+// 默认行为，静默删除文档中该标签
+builder.setValidErrorHandler(new ClearHandler());
+// 什么都不做，文档中保留该标签
+builder.setValidErrorHandler(new DiscardHandler());
+// 中断执行，抛出异常
+builder.setValidErrorHandler(new AbortHandler());
+----
 
-== 扩展功能
-=== EL表达式：SpingEL
+NOTE: 所有行为都是基于接口设计，可完美扩展。
+
+=== SpingEL表达式
 Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用SpEL前需要引入相应的依赖：
 [source, xml]
 ----
@@ -485,7 +446,6 @@ Spring Expression Language (SpEL)是一个强大的表达式语言，支持在�
 poi-tl的表达式模板支持切换到SpEL模式：
 [source, java]
 ----
-ConfigureBuilder builder = Configure.newBuilder();
 builder.setElMode(ELMode.SPEL_MODE);
 ----
 关于SpEL的写法可以参见官网，下面给出一些典型的示例。
@@ -510,19 +470,354 @@ builder.setElMode(ELMode.SPEL_MODE);
 <5> 数组列表
 --
 
-TIP: poi-tl提供了表达式计算接口 `RenderDataCompute`，它是一个很重要的扩展点，支持扩展任何的表达式引擎。SpEL模式是通过 `SpELRenderDataCompute` 实现。
-
-
-=== 自定义语法
-高度扩展性表现在其本身的语法也可以自定义，如果你不喜欢 `{{}}` 的方式，更偏爱freemarker `${}` 的方式：
-[source, java]
-builder.buildGramer("${", "}");
+TIP: poi-tl提供了表达式计算接口 `RenderDataCompute`，支持扩展任何的表达式引擎，SpEL模式是通过 `SpELRenderDataCompute` 实现。
 
 === 模板生成模板
 模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们想构造这样的新模板：把原先的一个模板标签分成两个模板标签：
 
 [source, java]
 put("title", "{{title}}\n{{subtitle}}");
+
+=== 日志
+poi-tl使用slf4j作为日志门面，你可以自由选择日志实现，比如logback、log4j等。我们以logback为例：
+
+首先在项目中添加logback依赖：
+[source, xml]
+----
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-core</artifactId>
+  <version>1.2.3</version>
+</dependency>
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+----
+
+然后配置logback.xml文件，可以配置日志级别和格式：
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.deepoove.poi" level="debug" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+----
+
+debug级别的日志会打印解析渲染过程中的信息，有利于程序调试，另外在模板引擎执行结束后会打印耗时信息：
+[example]
+--
+Successfully Render the template file in 13 millis
+--
+
+== 插件
+
+*插件是poi-tl的核心*，插件的核心逻辑是在模板的基础上通过poi-tl和poi提供的API操作word文档，从而抵达 _Do Anything Anywhere_ 的星辰大海。
+
+CAUTION: 由于需要操作Word文档，我们需要掌握一些Apache POI API的知识，可以参见Apache官方API，这里也有一个快速入门的教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word(docx) 入门示例教程]。
+
+=== 原生插件
+poi-tl默认提供了五个策略插件，用来处理文本、图片、列表、表格、文档合并等：
+
+* TextRenderPolicy
+* PictureRenderPolicy
+* NumbericRenderPolicy
+* MiniTableRenderPolicy
+* DocxRenderPolicy
+
+由于这五个插件如此通用，因此将这些插件注册为语法，从而搭建了poi-tl的五大內建模板语法，也构筑了poi-tl高度自由的语法插件体系。
+
+[[cus-policy-section]]
+=== 开发一个插件
+一个插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现 `RenderPolicy` 接口开发自己的渲染策略：
+[source, java]
+----
+public interface RenderPolicy {
+  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <1> <2> <3>
+}
+----
+<1> ElementTemplate是当前模板标签所在位置
+<2> data是数据模型
+<3> 通过XWPFTemplate获得Apache POI增强类NiceXWPFDocument，继而可以在当前模板标签位置插入段落，图片，表格等
+
+按照行业习俗，我们先写一个Hello, world插件：
+[example]
+--
+[source, java]
+----
+public class HelloWorldRenderPolicy implements RenderPolicy {
+
+  @Override
+  public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
+    XWPFRun run = ((RunTemplate) eleTemplate).getRun(); <1>
+    // String thing = String.valueOf(data);
+    String thing = "Hello, world";
+    run.setText(thing, 0); <2>
+  }
+
+}
+----
+<1> 当前位置XWPFRun
+<2> 渲染文本hello, world
+--
+
+poi-tl提供了抽象模板类 `AbstractRenderPolicy` ，它定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，使用泛型约束数据类型，让插件开发起来更简单，我们再来看看Hello, world插件的写法：
+[example]
+--
+[source, java]
+----
+public class HelloWorldRenderPolicy extends AbstractRenderPolicy<String> {
+
+  @Override
+  public void doRender(RenderContext<String> context) throws Exception {
+    // anywhere delegate <1>
+    WhereDelegate where = context.getWhereDelegate();
+    // any thing
+    //String thing = context.getThing();
+    String thing = "Hello, world";
+    // do
+    where.renderText(thing);
+  }
+
+}
+----
+<1> WhereDelegate对当前位置的委托，封装了操作当前位置的一些便捷方法
+--
+
+接下来我们再写一个更复杂的插件，在模板标签位置完完全全使用代码创建一个表格，这样我们就可以随心所欲的操作表格：
+[example]
+--
+[source, java]
+----
+public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
+
+  @Override
+  protected void afterRender(RenderContext<Object> context) {
+    // 清空模板标签
+    clearPlaceholder(context, true);
+  }
+
+  @Override
+  public void doRender(RenderContext<Object> context)
+      throws Exception {
+
+    NiceXWPFDocument doc = context.getXWPFDocument();
+    XWPFRun run = context.getRun();
+    // 定义行列
+    int row = 10, col = 8;
+    // 插入表格
+    XWPFTable table = doc.insertNewTable(run, row, col);
+
+    // 定义表格宽度、边框和样式
+    TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
+    TableTools.borderTable(table, 4);
+
+    // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等
+    // TODO 调用MiniTableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
+    // TODO 调用TableTools类方法操作表格，比如合并单元格
+    // ......
+    TableTools.mergeCellsHorizonal(table, 0, 0, 7);
+    TableTools.mergeCellsVertically(table, 0, 1, 9);
+    
+  }
+}
+----
+CustomTableRenderPolicy通过 `doc.insertNewTable()` 在当前模板位置插入表格，使用XWPFTable API来操作表格。
+--
+NOTE: 原则上Apache POI支持的操作，都可以在当前模板位置进行渲染。
+
+=== 将插件应用到模板
+当我们有个模板标签为{{report}}，如果希望在这个位置做些不一样或者更复杂的事情，我们可以将插件应用到这个模板标签：
+[source, java]
+ConfigureBuilder builder = Configure.newBuilder();
+builder.bind("report", new CustomTableRenderPolicy());
+
+ConfigureBuilder采用了链式调用的方式，可以一次性设置多个模板的插件：
+[source, java]
+builder.bind("report", new CustomTableRenderPolicy())
+    bind("name", new MyRenderPolicy());
+
+=== 将插件注册为语法
+当我们的插件具有一定的通用能力就可以将其注册为语法。比如增加%语法：{{%var}}，对应自定义的渲染策略 `HelloWorldRenderPolicy`：
+[source, java]
+builder.addPlugin('%', new HelloWorldRenderPolicy());
+
+=== 辅助类Helper
+在內建策略插件中，通常会提供一个静态Helper辅助类，在我们实现自己的RenderPolicy时，也可以通过这些辅助类操作文档。
+[source, java]
+----
+// 某个位置渲染文本
+TextRenderPolicy.Helper.renderTextRun(XWPFRun, Object);
+// 某个位置渲染图片
+PictureRenderPolicy.Helper.renderPicture(XWPFRun, PictureRenderData);
+// 某个位置渲染列表
+NumbericRenderPolicy.Helper.renderNumberic(XWPFRun, NumbericRenderData);
+// 渲染表格的一行数据
+MiniTableRenderPolicy.Helper.renderRow(XWPFTable, int, RowRenderData);
+// 渲染单元格
+MiniTableRenderPolicy.Helper.renderCell(XWPFTableCell, CellRenderData, TableStyle)
+----
+
+=== Plugin Code Example
+我想用一个完整的代码示例向你展示 _Do Anything Anywhere_ 的想法，它不使用任何poi-tl的默认插件，完全使用匿名类创建新插件完成。
+
+插件可以看成是一个函数，它的入参是anywhere和anything，函数体就是do something。
+
+[example]
+--
+[source, java]
+----
+// where绑定policy
+Configure config = Configure.newBuilder().bind("sea", new AbstractRenderPolicy<String>() { <1>
+  @Override
+  public void doRender(RenderContext<String> context) throws Exception {
+    // anywhere
+    XWPFRun where = context.getWhere();
+    // anything
+    String thing = context.getThing();
+    // do 文本
+    where.setText(thing, 0);
+  }
+}).bind("sea_img", new AbstractRenderPolicy<String>() { <2>
+  @Override
+  public void doRender(RenderContext<String> context) throws Exception {
+    // anywhere delegate
+    WhereDelegate where = context.getWhereDelegate();
+    // any thing
+    String thing = context.getThing();
+    // do 图片
+    FileInputStream stream = null;
+    try {
+      stream = new FileInputStream(thing);
+      where.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, 500, 300);
+    }
+    finally {
+      IOUtils.closeQuietly(stream);
+    }
+    // clear
+    clearPlaceholder(context, false);
+  }
+}).bind("sea_feature", new AbstractRenderPolicy<List<String>>() { <3>
+  @Override
+  public void doRender(RenderContext<List<String>> context) throws Exception {
+    // anywhere delegate
+    WhereDelegate where = context.getWhereDelegate();
+    // anything
+    List<String> thing = context.getThing();
+    // do 列表
+    where.renderNumberic(NumbericRenderData.build(thing.toArray(new String[] {})));
+    // clear
+    clearPlaceholder(context, true);
+  }
+}).build();
+
+// 初始化where的数据
+HashMap<String, Object> args = new HashMap<String, Object>();
+args.put("sea", "Hello, world!");
+args.put("sea_img", "src/test/resources/sea.jpg");
+args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
+args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
+
+// 一行代码
+XWPFTemplate.compile("src/test/resources/sea.docx", config).render(args)
+    .writeToFile("out_sea.docx");
+
+----
+<1> 自定义文本插件
+<2> 自定义图片插件
+<3> 自定义列表插件
+--
+
+=== 引用渲染策略插件
+对于文档中的元素(元素包括不限于表格、图片)，很多时候我们只想改变它的一点点属性，比如对于一个模板中布局好的图片我们只想替换图片内容，普通的渲染策略如果做到这一点可能需要重新创建整个图片，然后再设置期望的布局...
+
+引用渲染策略ReferenceRenderPolicy就这样诞生了，它提供了直接引用文档中的元素句柄的能力，**这个重要的特性在我们只想改变文档中某个元素极小一部分样式和属性的时候特别有用，因为其余样式和属性都可以在模板中预置好，真正的所见即所得**。
+[source,java]
+----
+public abstract class ReferenceRenderPolicy<T> {
+
+  /**
+   * 定位引用对象
+   * 
+   * @param template
+   * @return
+   */
+  protected abstract T locate(XWPFTemplate template);
+
+  /**
+   * 操作引用对象
+   * 
+   * @param t
+   *      引用对象
+   * @param template
+   *      模板
+   */
+  public abstract void doRender(T t, XWPFTemplate template) throws Exception;
+}
+----
+locate抽象方法是用来定位具体的文档元素的，这个方法的实现充满了想象空间。poi-tl默认提供了两种方式：一种是通过元素在文档的位置，一种是匹配元素的可选文字，推荐使用可选文字引用元素。
+
+我们以poi-tl内置的引用渲染策略插件 `ReplaceOptionalTextPictureRefRenderPolicy` 为例，演示下如何使用可选文字引用渲染策略替换一个占位图片。
+
+[example]
+--
+首先在模板中，任意设置图片布局和格式(比如衬于文字下方)，可选文字在标题或说明中填写"let's img"(文字内容没有任何要求，可以输入任何字符)
+
+image::ref.png[align='center']
+
+接下来就可以绑定引用渲染策略替换图片了：
+[source, java]
+----
+Configure configure = Configure.newBuilder()
+    .referencePolicy(new ReplaceOptionalTextPictureRefRenderPolicy("let's img", <1> <2>
+        new FileInputStream("sayi.png"),
+        XWPFDocument.PICTURE_TYPE_PNG))
+    .build();
+XWPFTemplate template = XWPFTemplate.compile("template.docx", configure)
+    .render(new HashMap<>());
+
+template.writeToFile("out.docx");
+----
+<1> 通过配置类的referencePolicy方法绑定引用渲染策略
+<2> "let's img"为匹配文字，优先匹配标题，再匹配说明文字
+
+最终运行的结果是图片布局格式皆不变，只把图片替换成了另一个图片。
+--
+
+=== 可选插件列表
+
+除了五个通用的策略插件外，还内置了一些额外用途的插件。
+
+* `DynamicTableRenderPolicy`
+动态表格插件，允许直接操作表格对象，功能和 `OptionalTextTableRefRenderPolicy` 相似
+* `ListRenderPolicy`
+集合插件，允许同时渲染多个文本、图片、表格、列表等。
+* `SelfRenderPolicy`
+自渲染插件，使用模板标签本身渲染模板
+* `IndexRefRenderPolicy`
+引用渲染策略插件，定位方式是元素在文档中的位置
+* `OptionalTextPictureRefRenderPolicy`
+引用渲染策略插件，定位图片方式是图片的可选文字
+* `OptionalTextTableRefRenderPolicy`
+引用渲染策略插件，定位表格方式是表格的可选文字
+* `ReplaceIndexPictureRefRenderPolicy`
+引用渲染策略插件，通过图片位置引用图片元素后替换图片
+* `ReplaceOptionalTextPictureRefRenderPolicy`
+引用渲染策略插件，通过可选文字引用图片元素后替换图片
+
+NOTE: 如果你写了一个不错的插件，欢迎提交Pull Request。
 
 == 示例
 接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。
@@ -544,9 +839,9 @@ image::example/example_poitl_output.png[align='center']
 image::example/example_poitl_template.png[align='center']
 --
 
-这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型。同时也向我们展示了无需编码设置样式：模板，不仅仅是标签模板，还是样式模板。
+这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型。同时也向我们展示了无需编码设置样式：模板，不仅仅是标签模板还是样式模板，所见即所得。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[Junit XWPFTemplateTest]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[Junit XWPFTemplateTest]
 
 [[example-table]]
 === 付款通知书
@@ -626,9 +921,11 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
 将模板标签{{detail_table}}设置成此策略。
 [source, java]
-Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
+Configure config = Configure.newBuilder().bind("detail_table", new DetailTablePolicy()).build();
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[Junit PaymentExample]
+`OptionalTextTableRefRenderPolicy` 引用渲染策略也可以实现 `DynamicTableRenderPolicy` 同样的功能，它通过匹配可选文字引用XWPFTable对象进而操作整个表格。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[Junit PaymentExample]
 
 
 [[example-article]]
@@ -653,7 +950,7 @@ image::example/example_story_template.png[align='center']
 
 基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/StoryExample.java[Junit StoryExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/StoryExample.java[Junit StoryExample]
 
 === 个人简历
 [example]
@@ -676,7 +973,7 @@ image::example/example_resume_template.png[align='center']
 
 因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
 
 == License
 Apache License 2.0
@@ -692,14 +989,12 @@ image::./pay.jpeg[width=256, height=280]
 == 常见问题
 [qanda]
 出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？::
-  poi-tl依赖的apache-poi版本是3.16+，如果你的项目引用了低版本，请升级或删除。
+  poi-tl依赖的apache-poi版本是4.0.0+，如果你的项目引用了低版本，请升级或删除。
 是否支持文本框？::
   不支持，表格布局可以设计出几乎所有优秀专业的文档，请使用表格。
 是否支持生成目录？::
   暂不支持，参考原生POI API自行扩展。
 是否支持Android客户端使用？::
   未知，有些朋友尝试成功，但我尚未在Android环境中验证过。
-是否支持设置多种标题样式?::
-  不能够直接设置，目前支持设置文字字体大小等，或者在已经应用了标题样式的模板中替换文本。
 有没有提供图表、数学公式模板？::
   暂不支持，如果是简单的图表，可以考虑通过Java提供的 `BufferedImage` 类创建图片后插入。
