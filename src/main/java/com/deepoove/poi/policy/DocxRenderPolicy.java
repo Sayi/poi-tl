@@ -17,13 +17,16 @@ package com.deepoove.poi.policy;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 
 /**
@@ -50,27 +53,51 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     public void doRender(RenderContext<DocxRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
         XWPFTemplate template = context.getTemplate();
-        List<NiceXWPFDocument> docMerges = getMergedDocxs(context.getData(), context.getConfig());
-        doc = doc.merge(docMerges, context.getRun());
+        doc = doc.merge(new XWPFDocumentIterator(context.getData(), context.getConfig()),
+                context.getRun());
         template.reload(doc);
     }
 
-    private List<NiceXWPFDocument> getMergedDocxs(DocxRenderData data, Configure configure) throws IOException {
-        List<NiceXWPFDocument> docs = new ArrayList<NiceXWPFDocument>();
-        byte[] docx = data.getDocx();
-        List<?> dataList = data.getRenderDatas();
-        if (null == dataList || dataList.isEmpty()) {
-            // 待合并的文档不是模板
-            docs.add(new NiceXWPFDocument(new ByteArrayInputStream(docx)));
-        } else {
-            for (int i = 0; i < dataList.size(); i++) {
-                // TODO performance
-                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx), configure);
-                temp.render(dataList.get(i));
-                docs.add(temp.getXWPFDocument());
-            }
-        }
-        return docs;
-    }
+    // use iterator to retrieve XWPFTemplate objects, for gc
+    class XWPFDocumentIterator implements Iterator<NiceXWPFDocument> {
 
+        private Configure config;
+        private byte[] docx;
+        private List<?> datas;
+
+        int cursor = 0;
+
+        XWPFDocumentIterator(DocxRenderData data, Configure config) {
+            this.docx = data.getDocx();
+            this.datas = data.getRenderDatas();
+            this.config = config;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (CollectionUtils.isEmpty(datas)) { return cursor != Integer.MAX_VALUE; }
+            return cursor < datas.size();
+        }
+
+        @Override
+        public NiceXWPFDocument next() {
+            if (CollectionUtils.isEmpty(datas)) {
+                if (cursor != Integer.MAX_VALUE) {
+                    try {
+                        cursor = Integer.MAX_VALUE;
+                        // 待合并的文档不是模板
+                        return new NiceXWPFDocument(new ByteArrayInputStream(docx));
+                    } catch (IOException e) {
+                        throw new RenderException("Next NiceXWPFDocument", e);
+                    }
+                }
+            } else {
+                // TODO performance, should compile template only once?
+                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx), config);
+                temp.render(datas.get(cursor++));
+                return temp.getXWPFDocument();
+            }
+            return null;
+        }
+    }
 }

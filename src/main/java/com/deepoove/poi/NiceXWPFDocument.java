@@ -389,23 +389,12 @@ public class NiceXWPFDocument extends XWPFDocument {
         return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
 
-    /**
-     * 指定位置合并Word文档
-     * 
-     * @param docMerges
-     *            待合并的文档
-     * @param run
-     *            合并的位置
-     * @return 合并后的文档
-     * @throws Exception
-     * @since 1.3.0
-     */
-    public NiceXWPFDocument merge(List<NiceXWPFDocument> docMerges, XWPFRun run) throws Exception {
-        if (null == docMerges || docMerges.isEmpty() || null == run) return this;
+    public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
+        if (null == iterator || !iterator.hasNext() || null == run) return this;
         // XWPFParagraph paragraph = insertNewParagraph(run);
         XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
         CTP ctp = paragraph.getCTP();
-
+        
         CTBody body = this.getDocument().getBody();
         String srcString = body.xmlText();
         //hack for create document or single element document
@@ -415,28 +404,25 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
         String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
         String sufix = srcString.substring(srcString.lastIndexOf("<"));
-        List<String> addParts = new ArrayList<String>();
-        // cache the merge doc style if docs have same style, or should merge style first
-        Map<String, String> styleMapCache = mergeStyles(docMerges.get(0));
-        for (NiceXWPFDocument docMerge : docMerges) {
-            addParts.add(extractMergePart(docMerge, styleMapCache));
-        }
+
+        List<String> addParts = convertStr(iterator);
+        iterator = null;
 
         CTP makeBody = CTP.Factory.parse(prefix + StringUtils.join(addParts, "") + sufix);
         ctp.set(makeBody);
-
+        
         String xmlText = body.xmlText();
         xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>").replaceAll("<w:p><w:p\\s", "<w:p ")
                 .replaceAll("<w:p><w:tbl>", "<w:tbl>").replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
-
+        
         xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
                 .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
                 .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
                 .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
-
+        
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
-
+        
         return generate();
     }
 
@@ -451,6 +437,37 @@ public class NiceXWPFDocument extends XWPFDocument {
      */
     public NiceXWPFDocument merge(NiceXWPFDocument docMerge) throws Exception {
         return merge(Arrays.asList(docMerge), createParagraph().createRun());
+    }
+
+    /**
+     * 指定位置合并Word文档
+     * 
+     * @param docMerges
+     *            待合并的文档
+     * @param run
+     *            合并的位置
+     * @return 合并后的文档
+     * @throws Exception
+     * @since 1.3.0
+     */
+    public NiceXWPFDocument merge(List<NiceXWPFDocument> docMerges, XWPFRun run) throws Exception {
+        if (null == docMerges || docMerges.isEmpty() || null == run) return this;
+        return merge(docMerges.iterator(), run);
+    }
+
+    private List<String> convertStr(Iterator<NiceXWPFDocument> iterator)
+            throws InvalidFormatException {
+        List<String> strList = new ArrayList<String>();
+
+        // cache the merge doc style if docs have same style, or should merge style first
+        NiceXWPFDocument next = iterator.next();
+        Map<String, String> styleMapCache = mergeStyles(next);
+        do {
+            strList.add(extractMergePart(next, styleMapCache));
+            if (iterator.hasNext()) next = iterator.next();
+            else break;
+        } while(true);
+        return strList;
     }
 
     private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException {
