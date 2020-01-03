@@ -68,6 +68,7 @@ public final class StyleUtils {
         Boolean strike = style.isStrike();
         Boolean underLine = style.isUnderLine();
         Enum highlightColor = style.getHighlightColor();
+        int twips = style.getCharacterSpacing();
         CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
         if (StringUtils.isNotBlank(color)) {
             // run.setColor(color);
@@ -103,6 +104,8 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(underLine)) {
             run.setUnderline(UnderlinePatterns.SINGLE);
         }
+        // in twentieths of a point
+        if (0 != twips) run.setCharacterSpacing(20*twips);
     }
 
     /**

@@ -45,6 +45,7 @@ public class TextRenderTest {
                 style.setStrike(true);
                 style.setUnderLine(true);
                 style.setFontFamily("微软雅黑");
+                style.setCharacterSpacing(20);
                 style.setHighlightColor(STHighlightColor.DARK_GREEN);
                 put("word", textRenderData);
 

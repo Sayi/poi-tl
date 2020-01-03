@@ -59,6 +59,11 @@ public class Style {
      * 文本背景突出显示颜色
      */
     private STHighlightColor.Enum highlightColor;
+    
+    /**
+     * 间距，单位pt
+     */
+    private int characterSpacing;
 
     public Style() {}
 
@@ -135,4 +140,12 @@ public class Style {
         this.highlightColor = highlightColor;
     }
 
+    public int getCharacterSpacing() {
+        return characterSpacing;
+    }
+
+    public void setCharacterSpacing(int characterSpacing) {
+        this.characterSpacing = characterSpacing;
+    }
+    
 }
