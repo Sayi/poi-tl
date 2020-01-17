@@ -56,10 +56,14 @@ public class RowRenderData implements RenderData {
         return new RowRenderData(null == cellData ? null : Arrays.asList(cellData), null);
     }
 
-    public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
+	public static RowRenderData build(RenderData... cellData) {
+		return new RowRenderData(null == cellData ? null : Arrays.asList(cellData),null);
+	}
+
+    public RowRenderData(List<? extends RenderData> rowData, String backgroundColor) {
         this.cellDatas = new ArrayList<CellRenderData>();
         if (null != rowData) {
-            for (TextRenderData data : rowData) {
+            for (RenderData data : rowData) {
                 this.cellDatas.add(new CellRenderData(data));
             }
         }

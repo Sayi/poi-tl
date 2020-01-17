@@ -1,9 +1,12 @@
 package com.deepoove.poi.tl.example;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import com.deepoove.poi.data.PictureRenderData;
 import org.junit.Before;
 import org.junit.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
@@ -30,7 +33,7 @@ public class PaymentExample {
     TableStyle rowStyle = new TableStyle();
     
     @Before
-    public void init(){
+    public void init() throws FileNotFoundException {
         headTextStyle.setFontFamily("Hei");
         headTextStyle.setFontSize(9);
         headTextStyle.setColor("7F7F7F");
@@ -72,7 +75,9 @@ public class PaymentExample {
         RowRenderData good = RowRenderData.build("4", "墙纸", "书房+卧室", "1500", "/", "400", "1600");
         good.setRowStyle(rowStyle);
         List<RowRenderData> goods = Arrays.asList(good, good, good);
-        RowRenderData  labor = RowRenderData.build("油漆工", "2", "200", "400");
+        // 图片测试
+        RowRenderData  labor = RowRenderData.build(new TextRenderData("油漆工"), new TextRenderData("2"), new TextRenderData("200"), new PictureRenderData(100, 120, ".png",
+			new FileInputStream("src/test/resources/logo.png")));
         labor.setRowStyle(rowStyle);
         List<RowRenderData> labors = Arrays.asList(labor, labor, labor, labor);
         detailTable.setGoods(goods);
