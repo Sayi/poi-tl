@@ -59,7 +59,7 @@ public class WhereDelegate {
         PictureRenderPolicy.Helper.renderPicture(run, data);
     }
 
-    public void renderMiniTable(MiniTableRenderData data) {
+    public void renderMiniTable(MiniTableRenderData data) throws Exception {
         MiniTableRenderPolicy.Helper.renderMiniTable(run, data);
     }
 

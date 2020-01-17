@@ -18,6 +18,7 @@ package com.deepoove.poi.policy;
 import java.util.List;
 import java.util.Objects;
 
+import com.deepoove.poi.data.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -30,10 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.NiceXWPFDocument;
-import com.deepoove.poi.data.CellRenderData;
-import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
@@ -66,7 +63,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
         private static Logger LOG = LoggerFactory.getLogger(Helper.class);
 
-        public static void renderMiniTable(XWPFRun run, MiniTableRenderData data) {
+        public static void renderMiniTable(XWPFRun run, MiniTableRenderData data) throws Exception {
             NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
             if (!data.isSetBody()) {
                 renderNoDataTable(doc, run, data);
@@ -84,7 +81,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
          * @param rowData
          *            行数据：确保行数据的大小不超过表格该行的单元格数量
          */
-        public static void renderRow(XWPFTable table, int row, RowRenderData rowData) {
+        public static void renderRow(XWPFTable table, int row, RowRenderData rowData) throws Exception {
             if (null == rowData || rowData.size() <= 0) return;
             XWPFTableRow tableRow = table.getRow(row);
             Objects.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
@@ -104,7 +101,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         }
 
         public static void renderCell(XWPFTableCell cell, CellRenderData cellData,
-                TableStyle rowStyle) {
+                TableStyle rowStyle) throws Exception {
             TableStyle cellStyle = (null == cellData.getCellStyle() ? rowStyle
                     : cellData.getCellStyle());
 
@@ -113,38 +110,41 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 cell.setColor(cellStyle.getBackgroundColor());
             }
 
-            TextRenderData renderData = cellData.getRenderData();
-            String cellText = renderData.getText();
-            if (StringUtils.isBlank(cellText)) return;
+			// 处理单元格数据
+			CTTc ctTc = cell.getCTTc();
+			CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
+			XWPFParagraph par = new XWPFParagraph(ctP, cell);
+			StyleUtils.styleTableParagraph(par, cellStyle);
+			// 任意的渲染数据当前支持两种图片和文本
+            RenderData renderData = cellData.getRenderData();
+            if (renderData instanceof TextRenderData) { // 文本
+				TextRenderData textRenderData = (TextRenderData) renderData;
+				String cellText = textRenderData.getText();
+				if (StringUtils.isBlank(cellText)) return;
+				String[] fragment = cellText.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
 
-            // 处理单元格数据
-            CTTc ctTc = cell.getCTTc();
-            CTP ctP = (ctTc.sizeOfPArray() == 0) ? ctTc.addNewP() : ctTc.getPArray(0);
-            XWPFParagraph par = new XWPFParagraph(ctP, cell);
-            StyleUtils.styleTableParagraph(par, cellStyle);
-
-            String text = renderData.getText();
-            String[] fragment = text.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
-
-            if (fragment.length <= 1) {
-                TextRenderPolicy.Helper.renderTextRun(par.createRun(), renderData);
-            } else {
-                // 单元格内换行的用不同段落来特殊处理
-                XWPFRun run;
-                for (int j = 0; j < fragment.length; j++) {
-                    if (0 != j) {
-                        par = cell.addParagraph();
-                        StyleUtils.styleTableParagraph(par, cellStyle);
-                    }
-                    run = par.createRun();
-                    StyleUtils.styleRun(run, renderData.getStyle());
-                    run.setText(fragment[j]);
-                }
-            }
+				if (fragment.length <= 1) {
+					TextRenderPolicy.Helper.renderTextRun(par.createRun(), renderData);
+				} else {
+					// 单元格内换行的用不同段落来特殊处理
+					XWPFRun run;
+					for (int j = 0; j < fragment.length; j++) {
+						if (0 != j) {
+							par = cell.addParagraph();
+							StyleUtils.styleTableParagraph(par, cellStyle);
+						}
+						run = par.createRun();
+						StyleUtils.styleRun(run, textRenderData.getStyle());
+						run.setText(fragment[j]);
+					}
+				}
+			}else if (renderData instanceof PictureRenderData ) { // 图片
+				PictureRenderPolicy.Helper.renderPicture(par.createRun(), (PictureRenderData) renderData);
+			}
         }
 
         private static void renderTable(NiceXWPFDocument doc, XWPFRun run,
-                MiniTableRenderData tableData) {
+                MiniTableRenderData tableData) throws Exception {
             // 1.计算行和列
             int row = tableData.getDatas().size(), col = 0;
             if (!tableData.isSetHeader()) {
@@ -168,7 +168,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         }
 
         private static void renderNoDataTable(NiceXWPFDocument doc, XWPFRun run,
-                MiniTableRenderData tableData) {
+                MiniTableRenderData tableData) throws Exception {
             int row = 2, col = tableData.getHeader().size();
 
             XWPFTable table = doc.insertNewTable(run, row, col);

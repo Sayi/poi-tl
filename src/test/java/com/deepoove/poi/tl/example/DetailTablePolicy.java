@@ -39,8 +39,13 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
                 // 合并单元格
                 TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
-                MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
-            }
+				try {
+					// 渲染图片造成的io异常
+					MiniTableRenderPolicy.Helper.renderRow(table, laborsStartRow, labors.get(i));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
         }
 
         List<RowRenderData> goods = detailData.getGoods();
@@ -49,8 +54,12 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             for (int i = 0; i < goods.size(); i++) {
                 XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
                 for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
-                MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
-            }
+				try {
+					MiniTableRenderPolicy.Helper.renderRow(table, goodsStartRow, goods.get(i));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
         }
     }
 
