@@ -23,9 +23,9 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTBlip;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTBlipFillProperties;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.util.ByteUtils;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 根据图片的位置替换内容

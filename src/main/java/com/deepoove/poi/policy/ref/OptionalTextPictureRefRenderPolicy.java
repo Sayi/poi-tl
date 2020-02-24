@@ -31,9 +31,9 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 可选文字匹配XWPFPicture

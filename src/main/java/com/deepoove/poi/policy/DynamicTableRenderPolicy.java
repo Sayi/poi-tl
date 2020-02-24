@@ -18,11 +18,8 @@ package com.deepoove.poi.policy;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ElementTemplate;
@@ -43,21 +40,16 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
 
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        NiceXWPFDocument doc = template.getXWPFDocument();
         RunTemplate runTemplate = (RunTemplate) eleTemplate;
         XWPFRun run = runTemplate.getRun();
         run.setText("", 0);
         try {
             if (!TableTools.isInsideTable(run)) {
-                throw new IllegalStateException("The template tag " + runTemplate.getSource() + " must be inside a table");
+                throw new IllegalStateException(
+                        "The template tag " + runTemplate.getSource() + " must be inside a table");
             }
-            // w:tbl-w:tr-w:tc-w:p-w:tr
-            XmlCursor newCursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
-            newCursor.toParent();
-            newCursor.toParent();
-            newCursor.toParent();
-            XmlObject object = newCursor.getObject();
-            XWPFTable table = doc.getTableByCTTbl((CTTbl) object);
+            XWPFTableCell cell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
+            XWPFTable table = cell.getTableRow().getTable();
             render(table, data);
         } catch (Exception e) {
             throw new RenderException("dynamic table error:" + e.getMessage(), e);
@@ -65,10 +57,8 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
     }
 
     /**
-     * @param table
-     *            表格
-     * @param data
-     *            数据
+     * @param table 表格
+     * @param data  数据
      */
     public abstract void render(XWPFTable table, Object data);
 

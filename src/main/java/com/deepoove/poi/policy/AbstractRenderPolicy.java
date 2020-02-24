@@ -16,9 +16,6 @@
 package com.deepoove.poi.policy;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.poi.xwpf.usermodel.IRunBody;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +24,8 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.util.ParagraphUtils;
+import com.deepoove.poi.xwpf.Container;
+import com.deepoove.poi.xwpf.ContainerFactory;
 
 /**
  * 提供了数据校验、渲染、清空模板标签、异常处理的通用逻辑
@@ -131,18 +129,11 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
      */
     public static void clearPlaceholder(RenderContext<?> context, boolean clearParagraph) {
         XWPFRun run = context.getRun();
-        IRunBody parent = run.getParent();
-        String text = run.text();
-        run.setText("", 0);
-        if (clearParagraph && (parent instanceof XWPFParagraph)) {
-            String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
-            // 段落就是当前标签则删除段落
-            if (text.equals(paragraphText)) {
-                XWPFDocument doc = context.getXWPFDocument();
-                int pos = doc.getPosOfParagraph((XWPFParagraph) parent);
-                // TODO p inside table for-each cell's p and remove
-                doc.removeBodyElement(pos);
-            } 
+        if (clearParagraph) {
+            Container container = ContainerFactory.getContainer(run);
+            container.clearPlaceholder(run);
+        } else {
+            run.setText("", 0);
         }
     }
 

@@ -17,11 +17,11 @@ package com.deepoove.poi.policy;
 
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * @author Sayi

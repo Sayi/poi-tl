@@ -29,7 +29,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.CellRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
@@ -38,6 +37,9 @@ import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
+import com.deepoove.poi.xwpf.Container;
+import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 表格处理
@@ -153,9 +155,11 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 row++;
                 col = tableData.getHeader().size();
             }
+            
 
             // 2.创建表格
-            XWPFTable table = doc.insertNewTable(run, row, col);
+            Container container = ContainerFactory.getContainer(run);
+             XWPFTable table = container.insertNewTable(run, row, col);
             TableTools.initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 
             // 3.渲染数据
@@ -171,7 +175,9 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 MiniTableRenderData tableData) {
             int row = 2, col = tableData.getHeader().size();
 
-            XWPFTable table = doc.insertNewTable(run, row, col);
+            Container container = ContainerFactory.getContainer(run);
+            XWPFTable table = container.insertNewTable(run, row, col);
+            
             TableTools.initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 
             Helper.renderRow(table, 0, tableData.getHeader());

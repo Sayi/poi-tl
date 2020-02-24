@@ -22,12 +22,12 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * <p>

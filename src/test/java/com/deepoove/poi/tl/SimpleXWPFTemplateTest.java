@@ -20,6 +20,8 @@ import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.WhereDelegate;
 import com.deepoove.poi.util.TableTools;
+import com.deepoove.poi.xwpf.Container;
+import com.deepoove.poi.xwpf.ContainerFactory;
 
 /**
  * 在文档的任何地方做任何事情（Do Anything Anywhere）是poi-tl的星辰大海。
@@ -79,12 +81,14 @@ public class SimpleXWPFTemplateTest {
             public void doRender(RenderContext<List<String>> context) throws Exception {
                 // anywhere
                 XWPFRun where = context.getWhere();
+                
                 // anything
                 List<String> thing = context.getThing();
 
                 // do 表格
                 int row = thing.size() + 1, col = 2;
-                XWPFTable table = context.getXWPFDocument().insertNewTable(where, row, col);
+                Container container = ContainerFactory.getContainer(where);
+                XWPFTable table = container.insertNewTable(where, row, col);
                 TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
                 TableTools.borderTable(table, 4);
 

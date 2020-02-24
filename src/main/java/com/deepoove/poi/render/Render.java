@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,141 +15,16 @@
  */
 package com.deepoove.poi.render;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.time.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.exception.RenderException;
-import com.deepoove.poi.policy.DocxRenderPolicy;
-import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
-import com.deepoove.poi.template.ElementTemplate;
 
 /**
- * 渲染器，支持表达式计算接口RenderDataCompute的扩展
+ * The interface of render
  * 
  * @author Sayi
- * @version
- * @since 1.5.0
+ *
  */
-public class Render {
+public interface Render {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Render.class);
+    void render(XWPFTemplate template, Object root);
 
-    private RenderDataCompute renderDataCompute;
-
-    /**
-     * 默认计算器为ELObjectRenderDataCompute
-     * 
-     * @param root
-     */
-    public Render(Object root) {
-        Objects.requireNonNull(root, "Data root must not be null");
-        renderDataCompute = new ELObjectRenderDataCompute(root, false);
-    }
-
-    public Render(RenderDataCompute dataCompute) {
-        this.renderDataCompute = dataCompute;
-    }
-
-    public void render(XWPFTemplate template) {
-        Objects.requireNonNull(template, "Template must not be null.");
-        LOGGER.info("Render the template file start...");
-
-        StopWatch watch = new StopWatch();
-        try {
-            watch.start();
-            applyReferencePolicy(template);
-
-            int docxCount = applyNormalPolicy(template);
-            if (docxCount >= 1) {
-                template.reload(template.getXWPFDocument().generate());
-                applyDocxPolicy(template, docxCount);
-            }
-        } catch (Exception e) {
-            throw new RenderException("Cannot render docx template, please check the Exception", e);
-        }
-        finally {
-            watch.stop();
-        }
-        LOGGER.info("Successfully Render the template file in {} millis",
-                TimeUnit.NANOSECONDS.toMillis(watch.getNanoTime()));
-    }
-
-    public void applyReferencePolicy(XWPFTemplate template) {
-        Configure config = template.getConfig();
-        List<ReferenceRenderPolicy<?>> referencePolicies = config.getReferencePolicies();
-        for (ReferenceRenderPolicy<?> policy : referencePolicies) {
-            doRender(policy, template);
-        }
-    }
-
-    private int applyNormalPolicy(XWPFTemplate template) {
-        RenderPolicy policy = null;
-        int docxItems = 0;
-        List<ElementTemplate> elementTemplates = template.getElementTemplates();
-        for (ElementTemplate runTemplate : elementTemplates) {
-            policy = findPolicy(template.getConfig(), runTemplate);
-            if (policy instanceof DocxRenderPolicy) {
-                docxItems++;
-            } else {
-                doRender(runTemplate, policy, template);
-            }
-        }
-        return docxItems;
-    }
-
-    private void applyDocxPolicy(XWPFTemplate template, int docxItems) {
-        List<ElementTemplate> elementTemplates = null;
-        RenderPolicy policy = null;
-        NiceXWPFDocument current = template.getXWPFDocument();
-        for (int i = 0; i < docxItems; i++) {
-            elementTemplates = template.getElementTemplates();
-            if (elementTemplates.isEmpty()) {
-                break;
-            }
-
-            for (ElementTemplate runTemplate : elementTemplates) {
-                policy = findPolicy(template.getConfig(), runTemplate);
-                if (!(policy instanceof DocxRenderPolicy)) {
-                    continue;
-                }
-                doRender(runTemplate, policy, template);
-
-                // 没有最终合并，继续下一个合并
-                if (current == template.getXWPFDocument()) {
-                    i++;
-                } else {
-                    current = template.getXWPFDocument();
-                    break;
-                }
-            }
-        }
-    }
-
-    private RenderPolicy findPolicy(Configure config, ElementTemplate runTemplate) {
-        RenderPolicy policy = config.getPolicy(runTemplate.getTagName(), runTemplate.getSign());
-        if (null == policy) { throw new RenderException(
-                "Cannot find render policy: [" + runTemplate.getTagName() + "]"); }
-        return policy;
-    }
-
-    private void doRender(ElementTemplate ele, RenderPolicy policy, XWPFTemplate template) {
-        LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", ele.getTagName(),
-                ele.getSign(), ClassUtils.getShortClassName(policy.getClass()));
-        policy.render(ele, renderDataCompute.compute(ele.getTagName()), template);
-    }
-
-    private void doRender(ReferenceRenderPolicy<?> policy, XWPFTemplate template) {
-        LOGGER.info("Start apply Reference Render Policy:{}", ClassUtils.getShortClassName(policy.getClass()));
-        policy.render(template);
-    }
 }

@@ -1,7 +1,7 @@
 package com.deepoove.poi.tl.example;
 
-import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.el.Name;
 
 public class StoryData {
 

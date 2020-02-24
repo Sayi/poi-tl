@@ -1,9 +1,9 @@
 package com.deepoove.poi.tl.source;
 
-import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.el.Name;
 
 public class MyDataModel extends DataSourceBaseTest {
 

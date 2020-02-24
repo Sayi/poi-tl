@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2019 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.render;
+package com.deepoove.poi.resolver;
 
-/**
- * 
- * 根据表达式计算渲染数据
- * 
- * @author Sayi
- * @since 1.5.0
- */
-@FunctionalInterface
-public interface RenderDataCompute {
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-    Object compute(String el);
+import com.deepoove.poi.template.run.RunTemplate;
+
+public interface RunTemplateFactory<T extends RunTemplate> {
+
+    T createRunTemplate(String tag, XWPFRun run);
 
 }

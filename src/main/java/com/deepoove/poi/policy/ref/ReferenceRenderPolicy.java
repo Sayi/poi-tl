@@ -52,6 +52,7 @@ public abstract class ReferenceRenderPolicy<T> {
 
     public void render(XWPFTemplate template) {
         try {
+            logger.info("Start apply Reference Render Policy:{}", ClassUtils.getShortClassName(this.getClass()));
             T locate = locate(template);
             logger.info("Located the {} object: {}", ClassUtils.getSimpleName(locate.getClass()),
                     locate);

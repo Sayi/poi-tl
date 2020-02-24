@@ -17,16 +17,42 @@ package com.deepoove.poi.resolver;
 
 import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.template.MetaTemplate;
 
 /**
+ * Resolver document and part
+ * 
  * @author Sayi
- * @version 
+ * @version
  */
-public interface Visitor {
+public interface Resolver {
 
-    List<ElementTemplate> visitDocument(XWPFDocument doc);
+    /**
+     * resolve document
+     * 
+     * @param doc
+     * @return
+     */
+    List<MetaTemplate> resolveDocument(XWPFDocument doc);
+
+    /**
+     * resolve body elements
+     * 
+     * @param bodyElements
+     * @return
+     */
+    List<MetaTemplate> resolveBodyElements(List<IBodyElement> bodyElements);
+
+    /**
+     * resolve runs at same paragraph
+     * 
+     * @param runs
+     * @return
+     */
+    List<MetaTemplate> resolveXWPFRuns(List<XWPFRun> runs);
 
 }

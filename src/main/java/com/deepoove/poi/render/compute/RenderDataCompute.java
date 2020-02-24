@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.resolver;
+package com.deepoove.poi.render.compute;
 
-import com.deepoove.poi.data.RenderData;
+/**
+ * 
+ * 根据表达式计算渲染数据
+ * 
+ * @author Sayi
+ * @since 1.5.0
+ */
+@FunctionalInterface
+public interface RenderDataCompute {
 
-public class StyleTextParser {
-
-    public static RenderData parse(String value) {
-        // TO DO
-        return null;
-    }
+    Object compute(String el);
 
 }

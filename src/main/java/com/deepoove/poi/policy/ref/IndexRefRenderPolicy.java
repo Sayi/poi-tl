@@ -24,8 +24,8 @@ import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 下标引用渲染策略

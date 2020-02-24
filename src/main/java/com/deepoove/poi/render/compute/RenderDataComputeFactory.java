@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.config;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.deepoove.poi.render.compute;
 
 /**
- * Class field 对应的模板标签的名称
- * 
  * @author Sayi
+ * @version 1.7.0
  */
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Name {
+public interface RenderDataComputeFactory {
 
-    public String value();
+    RenderDataCompute newCompute(Object model);
 
 }

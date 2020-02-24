@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi;
+package com.deepoove.poi.xwpf;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +36,8 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
@@ -50,9 +52,7 @@ import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
@@ -160,12 +160,6 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
     }
 
-    public XWPFTable getTableByCTTbl(CTTbl ctTbl) {
-        for (int i = 0; i < allTables.size(); i++) {
-            if (allTables.get(i).getCTTbl() == ctTbl) { return allTables.get(i); }
-        }
-        return null;
-    }
     
     public List<XWPFPicture> getAllEmbeddedPictures() {
         return Collections.unmodifiableList(allPictures);
@@ -175,58 +169,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         return Collections.unmodifiableList(allTables);
     }
 
-    /**
-     * 在某个段落起始处插入表格
-     * 
-     * @param run
-     * @param row
-     * @param col
-     * @return
-     */
-    public XWPFTable insertNewTable(XWPFRun run, int row, int col) {
-        XmlCursor cursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
-
-        // XmlCursor cursor = run.getCTR().newCursor();
-        if (isCursorInBody(cursor)) {
-            String uri = CTTbl.type.getName().getNamespaceURI();
-            String localPart = "tbl";
-            cursor.beginElement(localPart, uri);
-            cursor.toParent();
-
-            CTTbl t = (CTTbl) cursor.getObject();
-            XWPFTable newT = new XWPFTable(t, this, row, col);
-            XmlObject o = null;
-            while (!(o instanceof CTTbl) && (cursor.toPrevSibling())) {
-                o = cursor.getObject();
-            }
-            if (!(o instanceof CTTbl)) {
-                tables.add(0, newT);
-            } else {
-                int pos = tables.indexOf(getTable((CTTbl) o)) + 1;
-                tables.add(pos, newT);
-            }
-            int i = 0;
-            XmlCursor tableCursor = t.newCursor();
-            try {
-                cursor.toCursor(tableCursor);
-                while (cursor.toPrevSibling()) {
-                    o = cursor.getObject();
-                    if (o instanceof CTP || o instanceof CTTbl) {
-                        i++;
-                    }
-                }
-                bodyElements.add(i > bodyElements.size() ? bodyElements.size() : i, newT);
-                // bodyElements.add(i, newT);
-                cursor.toCursor(tableCursor);
-                cursor.toEndToken();
-                return newT;
-            }
-            finally {
-                tableCursor.dispose();
-            }
-        }
-        return null;
-    }
+    
 
     /**
      * 设置表格的宽度
@@ -242,92 +185,6 @@ public class NiceXWPFDocument extends XWPFDocument {
         TableTools.borderTable(table, 4);
     }
 
-    /**
-     * 在某个段落起始处插入段落
-     * 
-     * @param run
-     * @return
-     */
-    public XWPFParagraph insertNewParagraph(XWPFRun run) {
-        // XmlCursor cursor = run.getCTR().newCursor();
-        XmlCursor cursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
-        if (isCursorInBody(cursor)) {
-            String uri = CTP.type.getName().getNamespaceURI();
-            /*
-             * TODO DO not use a coded constant, find the constant in the OOXML
-             * classes instead, as the child of type CT_Paragraph is defined in
-             * the OOXML schema as 'p'
-             */
-            String localPart = "p";
-            // creates a new Paragraph, cursor is positioned inside the new
-            // element
-            cursor.beginElement(localPart, uri);
-            // move the cursor to the START token to the paragraph just created
-            cursor.toParent();
-            CTP p = (CTP) cursor.getObject();
-            XWPFParagraph newP = new XWPFParagraph(p, this);
-            XmlObject o = null;
-            /*
-             * move the cursor to the previous element until a) the next
-             * paragraph is found or b) all elements have been passed
-             */
-            while (!(o instanceof CTP) && (cursor.toPrevSibling())) {
-                o = cursor.getObject();
-            }
-            /*
-             * if the object that has been found is a) not a paragraph or b) is
-             * the paragraph that has just been inserted, as the cursor in the
-             * while loop above was not moved as there were no other siblings,
-             * then the paragraph that was just inserted is the first paragraph
-             * in the body. Otherwise, take the previous paragraph and calculate
-             * the new index for the new paragraph.
-             */
-            if ((!(o instanceof CTP)) || (CTP) o == p) {
-                paragraphs.add(0, newP);
-            } else {
-                int pos = paragraphs.indexOf(getParagraph((CTP) o)) + 1;
-                paragraphs.add(pos, newP);
-            }
-
-            /*
-             * create a new cursor, that points to the START token of the just
-             * inserted paragraph
-             */
-            XmlCursor newParaPos = p.newCursor();
-            try {
-                /*
-                 * Calculate the paragraphs index in the list of all body
-                 * elements
-                 */
-                int i = 0;
-                cursor.toCursor(newParaPos);
-                while (cursor.toPrevSibling()) {
-                    o = cursor.getObject();
-                    if (o instanceof CTP || o instanceof CTTbl) i++;
-                }
-                bodyElements.add(i > bodyElements.size() ? bodyElements.size() : i, newP);
-                cursor.toCursor(newParaPos);
-                cursor.toEndToken();
-                return newP;
-            }
-            finally {
-                newParaPos.dispose();
-            }
-        }
-        return null;
-    }
-
-    private boolean isCursorInBody(XmlCursor cursor) {
-        XmlCursor verify = cursor.newCursor();
-        verify.toParent();
-        try {
-            return true;// (verify.getObject() == this.getDocument().getBody());
-        }
-        finally {
-            verify.dispose();
-        }
-    }
-    
     public static XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
         XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
         int pos = -1;
@@ -354,7 +211,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         // if we have an existing document, we must determine the next
         // free number first.
         cTAbstractNum
-                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
+                .setAbstractNumId(numberingWrapper.getMaxIdOfAbstractNum().add(BigInteger.valueOf(1)));
 
         Enum fmt = numFmt.getLeft();
         String val = numFmt.getRight();
@@ -599,7 +456,9 @@ public class NiceXWPFDocument extends XWPFDocument {
                 }
                 cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
                 cTAbstractNum
-                        .setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
+                        .setAbstractNumId(wrapper.getMaxIdOfAbstractNum().add(BigInteger.valueOf(1)));
+                if (cTAbstractNum.isSetNsid()) cTAbstractNum.unsetNsid();
+                if (cTAbstractNum.isSetTmpl()) cTAbstractNum.unsetTmpl();
                 cache.put(xwpfNum.getCTNum().getAbstractNumId().getVal(), cTAbstractNum);
             }
 
@@ -654,5 +513,60 @@ public class NiceXWPFDocument extends XWPFDocument {
         // TODO
         return map;
     }
+
+    public int getPosOfParagraphCTP(CTP bodyObj) {
+        IBodyElement current;
+        for (int i = 0; i < bodyElements.size(); i++) {
+            current = bodyElements.get(i);
+            if (current.getElementType() == BodyElementType.PARAGRAPH) {
+                if (((XWPFParagraph)current).getCTP().equals(bodyObj)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public int getPosOfTableCTTbl(CTTbl bodyObj) {
+        IBodyElement current;
+        for (int i = 0; i < bodyElements.size(); i++) {
+            current = bodyElements.get(i);
+            if (current.getElementType() == BodyElementType.TABLE) {
+                if (((XWPFTable)current).getCTTbl().equals(bodyObj)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
     
+    public int getParaPos(XWPFParagraph insertNewParagraph) {
+        for (int i = 0; i < paragraphs.size(); i++) {
+            if (paragraphs.get(i) == insertNewParagraph) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getTablePos(XWPFTable insertNewTbl) {
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i) == insertNewTbl) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void updateBodyElements(IBodyElement insertNewParagraph, IBodyElement copy) {
+        int pos = -1;
+        for (int i = 0; i < bodyElements.size(); i++) {
+            if (bodyElements.get(i) == insertNewParagraph) {
+                pos =  i;
+            }
+        }
+        if (-1 != pos) bodyElements.set(pos, copy);
+        
+    }
+
 }

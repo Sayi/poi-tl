@@ -35,10 +35,13 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.render.processor.Visitor;
 import com.deepoove.poi.template.ElementTemplate;
 
 /**
- * basic docx template element：run
+ * Basic docx template element: XWPFRun
  * 
  * @author Sayi
  * @version 0.0.1
@@ -46,7 +49,7 @@ import com.deepoove.poi.template.ElementTemplate;
 public class RunTemplate extends ElementTemplate {
 
     protected XWPFRun run;
-
+    
     public RunTemplate() {}
 
     public RunTemplate(String tagName, XWPFRun run) {
@@ -91,6 +94,17 @@ public class RunTemplate extends ElementTemplate {
      */
     public void setRun(XWPFRun run) {
         this.run = run;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    public RenderPolicy findPolicy(Configure config) {
+        return config.getPolicy(getTagName(), getSign());
+//        if (null == policy) { throw new RenderException(
+//                "Cannot find render policy: [" + getTagName() + "]"); }
     }
 
 }

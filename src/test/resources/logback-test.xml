@@ -6,7 +6,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.deepoove.poi" level="debug" additivity="false">
+	<logger name="com.deepoove.poi" level="info" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 	<root level="info">

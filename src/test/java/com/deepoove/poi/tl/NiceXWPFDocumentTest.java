@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.deepoove.poi.NiceXWPFDocument;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 public class NiceXWPFDocumentTest {
     

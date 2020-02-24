@@ -33,15 +33,17 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
-import com.deepoove.poi.render.RenderFactory;
-import com.deepoove.poi.resolver.TemplateVisitor;
-import com.deepoove.poi.resolver.Visitor;
-import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.render.DefaultRender;
+import com.deepoove.poi.render.Render;
+import com.deepoove.poi.resolver.Resolver;
+import com.deepoove.poi.resolver.TemplateResolver;
+import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.util.Preconditions;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * 模板
+ * The template of word(docx)
  * 
  * @author Sayi
  * @version 0.0.1
@@ -52,8 +54,10 @@ public class XWPFTemplate {
 
     private NiceXWPFDocument doc;
     private Configure config;
-    private Visitor visitor;
-    private List<ElementTemplate> eleTemplates;
+    private Resolver resolver;
+    private Render renderer;
+
+    private List<MetaTemplate> eleTemplates;
 
     static {
         Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION,
@@ -61,11 +65,9 @@ public class XWPFTemplate {
                         + ", please check the dependency of project.");
     }
 
-    private XWPFTemplate() {}
+    private XWPFTemplate() {
+    }
 
-    /**
-     * @version 0.0.4
-     */
     public static XWPFTemplate compile(String filePath) {
         return compile(new File(filePath));
     }
@@ -74,33 +76,14 @@ public class XWPFTemplate {
         return compile(file, Configure.createDefault());
     }
 
-    /**
-     * template file as InputStream
-     * 
-     * @param inputStream
-     * @return
-     * @version 1.2.0
-     */
     public static XWPFTemplate compile(InputStream inputStream) {
         return compile(inputStream, Configure.createDefault());
     }
 
-    /**
-     * @param filePath
-     * @param config
-     * @return
-     * @version 1.0.0
-     */
     public static XWPFTemplate compile(String filePath, Configure config) {
         return compile(new File(filePath), config);
     }
 
-    /**
-     * @param file
-     * @param config
-     * @return
-     * @version 1.0.0
-     */
     public static XWPFTemplate compile(File file, Configure config) {
         try {
             return compile(new FileInputStream(file), config);
@@ -119,12 +102,13 @@ public class XWPFTemplate {
      */
     public static XWPFTemplate compile(InputStream inputStream, Configure config) {
         try {
-            XWPFTemplate instance = new XWPFTemplate();
-            instance.config = config;
-            instance.doc = new NiceXWPFDocument(inputStream);
-            instance.visitor = new TemplateVisitor(instance.config);
-            instance.eleTemplates = instance.visitor.visitDocument(instance.doc);
-            return instance;
+            XWPFTemplate template = new XWPFTemplate();
+            template.config = config;
+            template.doc = new NiceXWPFDocument(inputStream);
+            template.resolver = new TemplateResolver(template.config);
+            template.renderer = new DefaultRender();
+            template.eleTemplates = template.resolver.resolveDocument(template.doc);
+            return template;
         } catch (OLE2NotOfficeXmlFileException e) {
             logger.error("Poi-tl currently only supports .docx format");
             throw new ResolverException("Compile template failed", e);
@@ -134,13 +118,13 @@ public class XWPFTemplate {
     }
 
     /**
-     * render the template by date model
+     * Render the template by date model
      * 
      * @param model
      * @return
      */
     public XWPFTemplate render(Object model) {
-        RenderFactory.getRender(model, config.getElMode()).render(this);
+        this.renderer.render(this, model);
         return this;
     }
 
@@ -170,8 +154,7 @@ public class XWPFTemplate {
     /**
      * write to output stream
      * 
-     * @param out
-     *            eg.ServletOutputStream
+     * @param out eg.ServletOutputStream
      * @throws IOException
      */
     public void write(OutputStream out) throws IOException {
@@ -190,8 +173,7 @@ public class XWPFTemplate {
             out = new FileOutputStream(path);
             this.write(out);
             out.flush();
-        }
-        finally {
+        } finally {
             PoitlIOUtils.closeQuietlyMulti(this.doc, out);
         }
     }
@@ -204,7 +186,7 @@ public class XWPFTemplate {
     public void reload(NiceXWPFDocument doc) {
         PoitlIOUtils.closeLoggerQuietly(this.doc);
         this.doc = doc;
-        this.eleTemplates = this.visitor.visitDocument(doc);
+        this.eleTemplates = this.resolver.resolveDocument(doc);
     }
 
     /**
@@ -216,7 +198,7 @@ public class XWPFTemplate {
         this.doc.close();
     }
 
-    public List<ElementTemplate> getElementTemplates() {
+    public List<MetaTemplate> getElementTemplates() {
         return eleTemplates;
     }
 
@@ -226,6 +208,10 @@ public class XWPFTemplate {
 
     public Configure getConfig() {
         return config;
+    }
+
+    public Resolver getResolver() {
+        return resolver;
     }
 
 }

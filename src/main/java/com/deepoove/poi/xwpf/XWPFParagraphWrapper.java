@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi;
+package com.deepoove.poi.xwpf;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -145,6 +145,30 @@ public class XWPFParagraphWrapper {
             logger.error("Cannot get XWPFParagraph'iRuns", e);
         }
         return null;
+    }
+
+    public void setAndUpdateRun(XWPFRun xwpfRun, XWPFRun source, int insertPostionCursor) {
+        // body
+        // maybe need find correct position:rPos;
+        paragraph.getCTP().setRArray(insertPostionCursor, xwpfRun.getCTR());
+        
+        // runs
+        List<XWPFRun> runs = getRuns();
+        for (int i = 0; i < runs.size(); i++) {
+            XWPFRun ele = runs.get(i);
+            if (ele == source) {
+                runs.set(i, xwpfRun);
+            }
+        }
+        
+        // iruns
+        List<IRunElement> iruns = getIRuns();
+        for (int i = 0; i < iruns.size(); i++) {
+            IRunElement ele = iruns.get(i);
+            if (ele == source) {
+                iruns.set(i, xwpfRun);
+            }
+        }
     }
 
 }

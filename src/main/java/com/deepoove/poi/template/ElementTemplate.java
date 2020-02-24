@@ -16,15 +16,17 @@
 package com.deepoove.poi.template;
 
 /**
+ * sign + tagName == source
+ * 
  * @author Sayi
- * @version 
  */
-public class ElementTemplate {
+public abstract class ElementTemplate implements MetaTemplate {
     protected Character sign;
     protected String tagName;
     protected String source;
 
-    public ElementTemplate() {}
+    public ElementTemplate() {
+    }
 
     /**
      * @return the tagName
@@ -34,8 +36,7 @@ public class ElementTemplate {
     }
 
     /**
-     * @param tagName
-     *            the tagName to set
+     * @param tagName the tagName to set
      */
     public void setTagName(String tagName) {
         this.tagName = tagName;

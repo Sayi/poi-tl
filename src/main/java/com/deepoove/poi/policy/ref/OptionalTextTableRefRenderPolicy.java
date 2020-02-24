@@ -27,8 +27,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTTblPrImpl;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 可选文字匹配XWPFTable

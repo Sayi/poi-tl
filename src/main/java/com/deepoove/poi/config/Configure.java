@@ -17,19 +17,26 @@ package com.deepoove.poi.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.deepoove.poi.policy.AbstractRenderPolicy.ClearHandler;
 import com.deepoove.poi.policy.AbstractRenderPolicy.ValidErrorHandler;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
+import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
+import com.deepoove.poi.render.compute.RenderDataComputeFactory;
+import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
+import com.deepoove.poi.resolver.RunTemplateFactory;
 import com.deepoove.poi.util.RegexUtils;
 
 /**
@@ -48,6 +55,8 @@ public class Configure {
     // Low priority
     private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
 
+    private Pair<Character, Character> iterable = Pair.of('?', '/');
+    
     /**
      * 引用渲染策略
      */
@@ -81,6 +90,10 @@ public class Configure {
      * </ul>
      */
     private ValidErrorHandler handler = new ClearHandler();
+    
+    private RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(this);
+    
+    private RunTemplateFactory<?> runTemplateFactory = new DefaultRunTemplateFactory(this);
 
     private Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -192,7 +205,11 @@ public class Configure {
     }
 
     public Set<Character> getGramerChars() {
-        return defaultPolicys.keySet();
+        Set<Character> ret = new HashSet<Character>(defaultPolicys.keySet());
+        // ? /
+        ret.add(iterable.getKey());
+        ret.add(iterable.getValue());
+        return ret;
     }
 
     public String getGramerPrefix() {
@@ -214,6 +231,24 @@ public class Configure {
     public ValidErrorHandler getValidErrorHandler() {
         return handler;
     }
+    
+    public RenderDataComputeFactory getRenderDataComputeFactory() {
+        return renderDataComputeFactory;
+    }
+
+    public void setRenderDataComputeFactory(RenderDataComputeFactory renderDataComputeFactory) {
+        this.renderDataComputeFactory = renderDataComputeFactory;
+    }
+
+    public RunTemplateFactory<?> getRunTemplateFactory() {
+        return runTemplateFactory;
+    }
+
+    public void setRunTemplateFactory(RunTemplateFactory<?> runTemplateFactory) {
+        this.runTemplateFactory = runTemplateFactory;
+    }
+
+
 
     public static class ConfigureBuilder {
         private boolean regexForAll;

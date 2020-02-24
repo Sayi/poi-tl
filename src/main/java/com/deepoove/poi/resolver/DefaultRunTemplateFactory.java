@@ -38,15 +38,19 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
- * 
  * @author Sayi
- * @version 1.0.0
  */
-public class TemplateFactory {
+public class DefaultRunTemplateFactory implements RunTemplateFactory<RunTemplate> {
 
     public static final char EMPTY_CHAR = '\0';
+    private final Configure config;
 
-    public static RunTemplate createRunTemplate(String tag, Configure config, XWPFRun run) {
+    public DefaultRunTemplateFactory(Configure config) {
+        this.config = config;
+    }
+
+    @Override
+    public RunTemplate createRunTemplate(String tag, XWPFRun run) {
         RunTemplate template = new RunTemplate();
         Set<Character> gramerChars = config.getGramerChars();
         char fisrtChar = tag.charAt(0);

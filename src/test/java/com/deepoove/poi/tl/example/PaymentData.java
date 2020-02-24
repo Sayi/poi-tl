@@ -1,7 +1,7 @@
 package com.deepoove.poi.tl.example;
 
-import com.deepoove.poi.config.Name;
 import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.el.Name;
 
 public class PaymentData {
     private MiniTableRenderData order;

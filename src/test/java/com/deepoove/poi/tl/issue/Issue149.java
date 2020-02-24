@@ -9,7 +9,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
-import com.deepoove.poi.NiceXWPFDocument;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 public class Issue149 {
 

@@ -175,7 +175,16 @@ public final class TableTools {
     public static void borderTable(XWPFTable table, int size) {
         CTTblPr tblPr = getTblPr(table);
         CTTblBorders tblBorders = tblPr.getTblBorders();
+        if (null == tblBorders) {
+            tblBorders = tblPr.addNewTblBorders();
+        }
         BigInteger borderSize = BigInteger.valueOf(size);
+        if (!tblBorders.isSetBottom()) tblBorders.addNewBottom();
+        if (!tblBorders.isSetLeft()) tblBorders.addNewLeft();
+        if (!tblBorders.isSetTop()) tblBorders.addNewTop();
+        if (!tblBorders.isSetRight()) tblBorders.addNewRight();
+        if (!tblBorders.isSetInsideH()) tblBorders.addNewInsideH();
+        if (!tblBorders.isSetInsideV()) tblBorders.addNewInsideV();
         tblBorders.getBottom().setSz(borderSize);
         tblBorders.getLeft().setSz(borderSize);
         tblBorders.getTop().setSz(borderSize);

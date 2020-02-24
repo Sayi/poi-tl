@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.xwpf.Container;
+import com.deepoove.poi.xwpf.ContainerFactory;
 
 public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
@@ -21,12 +22,12 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
     @Override
     public void doRender(RenderContext<List<Object>> context) throws Exception {
-        NiceXWPFDocument document = context.getXWPFDocument();
         XWPFRun run = context.getRun();
+        Container container = ContainerFactory.getContainer(run);
         List<Object> datas = context.getData();
         for (Object data : datas) {
             if (data instanceof TextRenderData) {
-                XWPFRun createRun = document.insertNewParagraph(run).createRun();
+                XWPFRun createRun = container.insertNewParagraph(run).createRun();
                 StyleUtils.styleRun(createRun, run);
                 TextRenderPolicy.Helper.renderTextRun(createRun, data);
             } else if (data instanceof MiniTableRenderData) {
@@ -34,8 +35,8 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
             } else if (data instanceof NumbericRenderData) {
                 NumbericRenderPolicy.Helper.renderNumberic(run, (NumbericRenderData) data);
             } else if (data instanceof PictureRenderData) {
-                PictureRenderPolicy.Helper.renderPicture(
-                        document.insertNewParagraph(run).createRun(), (PictureRenderData) data);
+                PictureRenderPolicy.Helper.renderPicture(container.insertNewParagraph(run).createRun(),
+                        (PictureRenderData) data);
             }
 
         }

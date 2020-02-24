@@ -21,8 +21,6 @@ import java.util.LinkedHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deepoove.poi.config.Name;
-
 /**
  * 寻找合适的属性，支持@Name注解
  * 

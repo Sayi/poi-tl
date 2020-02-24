@@ -21,8 +21,8 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.xmlbeans.XmlCursor;
 
-import com.deepoove.poi.NiceXWPFDocument;
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
@@ -31,6 +31,9 @@ import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.xwpf.Container;
+import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * @author Sayi
@@ -63,9 +66,10 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
 
             BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
 
+            Container container = ContainerFactory.getContainer(run);
             XWPFRun newRun;
             for (RenderData line : datas) {
-                newRun = createRunLine(run, doc, style, numID);
+                newRun = createRunLine(run, container, style, numID);
                 if (line instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(newRun, (PictureRenderData) line);
                 } else if (line instanceof TextRenderData) {
@@ -77,9 +81,11 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
             }
         }
 
-        private static XWPFRun createRunLine(XWPFRun run, NiceXWPFDocument doc, Style style,
+        private static XWPFRun createRunLine(XWPFRun run, Container container, Style style,
                 BigInteger numID) {
-            XWPFParagraph paragraph = doc.insertNewParagraph(run);
+            // TODO container
+            XmlCursor cursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
+            XWPFParagraph paragraph = container.insertNewParagraph(cursor);
             StyleUtils.styleParagraph(paragraph, style);
             paragraph.setNumID(numID);
             return paragraph.createRun();

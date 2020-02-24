@@ -1,11 +1,13 @@
-package com.deepoove.poi;
+package com.deepoove.poi.xwpf;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +69,19 @@ public class NumberingWrapper {
 
     public int getAbstractNumsSize() {
         return abstractNums == null ? 0 : abstractNums.size();
+    }
+    
+    public BigInteger getMaxIdOfAbstractNum() {
+        if (abstractNums == null) return BigInteger.valueOf(0);
+        BigInteger max = BigInteger.valueOf(0);
+        for (XWPFAbstractNum abstractNum : abstractNums) {
+            CTAbstractNum ctAbstractNum = abstractNum.getCTAbstractNum();
+            BigInteger abstractNumId = ctAbstractNum.getAbstractNumId();
+            if (null != abstractNumId && abstractNumId.compareTo(max) == 1) {
+                max = abstractNumId;
+            }
+        }
+        return max;
     }
 
 }
