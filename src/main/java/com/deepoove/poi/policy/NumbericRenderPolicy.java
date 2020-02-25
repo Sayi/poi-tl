@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.xmlbeans.XmlCursor;
 
 import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
@@ -83,9 +82,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
 
         private static XWPFRun createRunLine(XWPFRun run, Container container, Style style,
                 BigInteger numID) {
-            // TODO container
-            XmlCursor cursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
-            XWPFParagraph paragraph = container.insertNewParagraph(cursor);
+            XWPFParagraph paragraph = container.insertNewParagraph(run);
             StyleUtils.styleParagraph(paragraph, style);
             paragraph.setNumID(numID);
             return paragraph.createRun();

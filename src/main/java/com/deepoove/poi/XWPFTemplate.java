@@ -54,6 +54,7 @@ public class XWPFTemplate implements Closeable {
     private static final String SUPPORT_MINIMUM_VERSION = "4.0.0";
 
     private NiceXWPFDocument doc;
+
     private Configure config;
     private Resolver resolver;
     private Render renderer;
