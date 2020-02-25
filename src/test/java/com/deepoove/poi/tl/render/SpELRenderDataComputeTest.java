@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ELMode;
+import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 
 public class SpELRenderDataComputeTest {

@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
@@ -34,7 +35,7 @@ import com.deepoove.poi.xwpf.ContainerFactory;
  * @version
  */
 public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
-    
+
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("unchecked")
@@ -45,8 +46,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         try {
             model = (T) data;
         } catch (ClassCastException e) {
-            throw new RenderException(
-                    "Error Render Data format for template: " + eleTemplate.getSource(), e);
+            throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
         }
 
         // validate
@@ -73,9 +73,11 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         return true;
     };
 
-    protected void beforeRender(RenderContext<T> context) {}
+    protected void beforeRender(RenderContext<T> context) {
+    }
 
-    protected void afterRender(RenderContext<T> context) {}
+    protected void afterRender(RenderContext<T> context) {
+    }
 
     protected void reThrowException(RenderContext<T> context, Exception e) {
         throw new RenderException("Render template " + context.getEleTemplate() + " error", e);
@@ -83,40 +85,9 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     protected void postValidError(RenderContext<T> context) {
         ValidErrorHandler errorHandler = context.getConfig().getValidErrorHandler();
-        logger.debug("The data [{}] of the template {} is illegal, will apply error handler [{}]",
-                context.getData(), context.getTagSource(),
-                ClassUtils.getSimpleName(errorHandler.getClass()));
+        logger.debug("The data [{}] of the template {} is illegal, will apply error handler [{}]", context.getData(),
+                context.getTagSource(), ClassUtils.getSimpleName(errorHandler.getClass()));
         errorHandler.handler(context);
-    }
-
-    public interface ValidErrorHandler {
-        void handler(RenderContext<?> context);
-    }
-
-    public static class DiscardHandler implements ValidErrorHandler {
-
-        @Override
-        public void handler(RenderContext<?> context) {}
-
-    }
-
-    public static class ClearHandler implements ValidErrorHandler {
-
-        @Override
-        public void handler(RenderContext<?> context) {
-            clearPlaceholder(context, false);
-        }
-
-    }
-
-    public static class AbortHandler implements ValidErrorHandler {
-
-        @Override
-        public void handler(RenderContext<?> context) {
-            throw new RenderException("Validate the data of the element " + context.getTagSource()
-                    + " error, data may be illegal: " + context.getData());
-        }
-
     }
 
     /**

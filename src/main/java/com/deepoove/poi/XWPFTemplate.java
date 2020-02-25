@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,7 +49,7 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * @author Sayi
  * @version 0.0.1
  */
-public class XWPFTemplate {
+public class XWPFTemplate implements Closeable {
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
     private static final String SUPPORT_MINIMUM_VERSION = "4.0.0";
 
@@ -194,6 +195,7 @@ public class XWPFTemplate {
      * 
      * @throws IOException
      */
+    @Override
     public void close() throws IOException {
         this.doc.close();
     }

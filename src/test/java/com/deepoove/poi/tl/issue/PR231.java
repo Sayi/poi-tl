@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.ConfigureBuilder;
 
 public class PR231 {
 
@@ -16,7 +17,7 @@ public class PR231 {
     @SuppressWarnings("serial")
     @Test
     public void testChinese() {
-        Configure.ConfigureBuilder builder = Configure.newBuilder();
+        ConfigureBuilder builder = Configure.newBuilder();
         builder.buildGramer("${", "}");
         XWPFTemplate template = XWPFTemplate
                 .compile("src/test/resources/issue/231.docx", builder.build())

@@ -24,8 +24,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.deepoove.poi.policy.AbstractRenderPolicy.ClearHandler;
-import com.deepoove.poi.policy.AbstractRenderPolicy.ValidErrorHandler;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
@@ -33,69 +32,85 @@ import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
-import com.deepoove.poi.util.RegexUtils;
 
 /**
- * 插件化配置
+ * The config of template
  * 
  * @author Sayi
  * @version 1.0.0
  */
 public class Configure {
 
-    // defalut expression
-    private static final String DEFAULT_GRAMER_REGEX = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
-
-    // Highest priority
-    private Map<String, RenderPolicy> customPolicys = new HashMap<String, RenderPolicy>();
-    // Low priority
-    private Map<Character, RenderPolicy> defaultPolicys = new HashMap<Character, RenderPolicy>();
-
-    private Pair<Character, Character> iterable = Pair.of('?', '/');
-    
     /**
-     * 引用渲染策略
+     * regular expression: Chinese, letters, numbers and underscores
      */
-    private List<ReferenceRenderPolicy<?>> referencePolicies = new ArrayList<>();
+    public static final String DEFAULT_GRAMER_REGEX = "[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*";
 
     /**
-     * 语法前缀
+     * template by bind: Highest priority
      */
-    private String gramerPrefix = "{{";
-    /**
-     * 语法后缀
-     */
-    private String gramerSuffix = "}}";
+    private final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
 
     /**
-     * 默认支持中文、字母、数字、下划线的正则
+     * template by plugin: Low priority
      */
-    private String grammerRegex = DEFAULT_GRAMER_REGEX;
+    private final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
 
     /**
-     * 模板表达式模式，默认为POI_TL_MODE
+     * template by reference
      */
-    private ELMode elMode = ELMode.POI_TL_STANDARD_MODE;
+    private final List<ReferenceRenderPolicy<?>> REFERENCE_POLICIES = new ArrayList<>();
 
     /**
-     * 渲染数据校验不通过时的处理策略
-     * <ul>
-     * <li>DiscardHandler: 什么都不做</li>
-     * <li>ClearHandler: 清空标签</li>
-     * <li>AbortHandler: 抛出异常</li>
-     * </ul>
+     * if & for each
+     * <p>
+     * eg. {{?user}} Hello, World {{/user}}
+     * </p>
      */
-    private ValidErrorHandler handler = new ClearHandler();
-    
-    private RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(this);
-    
-    private RunTemplateFactory<?> runTemplateFactory = new DefaultRunTemplateFactory(this);
+    private final Pair<Character, Character> ITERABLE = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
+            GramerSymbol.BLOCK_END.getSymbol());
 
-    private Configure() {
+    /**
+     * tag prefix
+     */
+    String gramerPrefix = "{{";
+
+    /**
+     * tag suffix
+     */
+    String gramerSuffix = "}}";
+
+    /**
+     * tag regular expression
+     */
+    String grammerRegex = DEFAULT_GRAMER_REGEX;
+
+    /**
+     * the mode of compute tag
+     */
+    ELMode elMode = ELMode.POI_TL_STANDARD_MODE;
+
+    /**
+     * the factory of render data compute
+     */
+    RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(this);
+
+    /**
+     * the factory of resovler run template
+     */
+    RunTemplateFactory<?> runTemplateFactory = new DefaultRunTemplateFactory(this);
+
+    /**
+     * the policy of process tag for valid render data error(null or illegal)
+     */
+    ValidErrorHandler handler = new ClearHandler();
+
+    Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
         plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
         plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
@@ -124,40 +139,34 @@ public class Configure {
     /**
      * 新增或变更语法插件
      * 
-     * @param c
-     *            语法
-     * @param policy
-     *            策略
+     * @param c      语法
+     * @param policy 策略
      */
     public Configure plugin(char c, RenderPolicy policy) {
-        defaultPolicys.put(Character.valueOf(c), policy);
+        DEFAULT_POLICYS.put(Character.valueOf(c), policy);
         return this;
     }
 
     /**
      * 新增或变更语法插件
      * 
-     * @param symbol
-     *            语法
-     * @param policy
-     *            策略
+     * @param symbol 语法
+     * @param policy 策略
      * @return
      */
     Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
-        defaultPolicys.put(symbol.getSymbol(), policy);
+        DEFAULT_POLICYS.put(symbol.getSymbol(), policy);
         return this;
     }
 
     /**
      * 自定义模板和策略
      * 
-     * @param tagName
-     *            模板名称
-     * @param policy
-     *            策略
+     * @param tagName 模板名称
+     * @param policy  策略
      */
     public void customPolicy(String tagName, RenderPolicy policy) {
-        customPolicys.put(tagName, policy);
+        CUSTOM_POLICYS.put(tagName, policy);
     }
 
     /**
@@ -166,49 +175,45 @@ public class Configure {
      * @param policy
      */
     public void referencePolicy(ReferenceRenderPolicy<?> policy) {
-        referencePolicies.add(policy);
+        REFERENCE_POLICIES.add(policy);
     }
 
     /**
      * 获取标签策略
      * 
-     * @param tagName
-     *            模板名称
-     * @param sign
-     *            语法
+     * @param tagName 模板名称
+     * @param sign    语法
      */
-    // Query Operations
-
     public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
     }
 
     public List<ReferenceRenderPolicy<?>> getReferencePolicies() {
-        return referencePolicies;
+        return REFERENCE_POLICIES;
     }
-    
+
     private RenderPolicy getCustomPolicy(String tagName) {
-        return customPolicys.get(tagName);
+        return CUSTOM_POLICYS.get(tagName);
     }
 
     private RenderPolicy getDefaultPolicy(Character sign) {
-        return defaultPolicys.get(sign);
+        return DEFAULT_POLICYS.get(sign);
     }
 
     public Map<Character, RenderPolicy> getDefaultPolicys() {
-        return defaultPolicys;
+        return DEFAULT_POLICYS;
     }
 
     public Map<String, RenderPolicy> getCustomPolicys() {
-        return customPolicys;
+        return CUSTOM_POLICYS;
     }
 
     public Set<Character> getGramerChars() {
-        Set<Character> ret = new HashSet<Character>(defaultPolicys.keySet());
+        Set<Character> ret = new HashSet<Character>(DEFAULT_POLICYS.keySet());
         // ? /
-        ret.add(iterable.getKey());
-        ret.add(iterable.getValue());
+        ret.add(ITERABLE.getKey());
+        ret.add(ITERABLE.getValue());
         return ret;
     }
 
@@ -231,88 +236,60 @@ public class Configure {
     public ValidErrorHandler getValidErrorHandler() {
         return handler;
     }
-    
+
     public RenderDataComputeFactory getRenderDataComputeFactory() {
         return renderDataComputeFactory;
-    }
-
-    public void setRenderDataComputeFactory(RenderDataComputeFactory renderDataComputeFactory) {
-        this.renderDataComputeFactory = renderDataComputeFactory;
     }
 
     public RunTemplateFactory<?> getRunTemplateFactory() {
         return runTemplateFactory;
     }
 
-    public void setRunTemplateFactory(RunTemplateFactory<?> runTemplateFactory) {
-        this.runTemplateFactory = runTemplateFactory;
+    public Pair<Character, Character> getIterable() {
+        return ITERABLE;
     }
 
+    public enum ELMode {
 
+        /**
+         * 标准模式：无法计算表达式时，RenderData默认为null值
+         */
+        POI_TL_STANDARD_MODE,
+        /**
+         * 严格模式：无法计算表达式直接抛出异常
+         */
+        POI_TL_STICT_MODE,
+        /**
+         * Spring EL模式
+         */
+        SPEL_MODE;
 
-    public static class ConfigureBuilder {
-        private boolean regexForAll;
-        private Configure config;
+    }
 
-        public ConfigureBuilder() {
-            config = new Configure();
-        }
+    public interface ValidErrorHandler {
+        void handler(RenderContext<?> context);
+    }
 
-        public ConfigureBuilder buildGramer(String prefix, String suffix) {
-            config.gramerPrefix = prefix;
-            config.gramerSuffix = suffix;
-            return this;
-        }
-
-        public ConfigureBuilder buildGrammerRegex(String reg) {
-            config.grammerRegex = reg;
-            return this;
-        }
-
-        public ConfigureBuilder supportGrammerRegexForAll() {
-            this.regexForAll = true;
-            return this;
-        }
-
-        public ConfigureBuilder setElMode(ELMode mode) {
-            config.elMode = mode;
-            return this;
-        }
-
-        public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {
-            config.handler = handler;
-            return this;
-        }
-
-        public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
-            config.plugin(c, policy);
-            return this;
-        }
-
-        public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
-            config.customPolicy(tagName, policy);
-            return this;
-        }
-
-        public ConfigureBuilder referencePolicy(ReferenceRenderPolicy<?> policy) {
-            config.referencePolicy(policy);
-            return this;
-        }
-
-        public ConfigureBuilder bind(String tagName, RenderPolicy policy) {
-            config.customPolicy(tagName, policy);
-            return this;
-        }
-
-        public Configure build() {
-            if (config.elMode == ELMode.SPEL_MODE) {
-                regexForAll = true;
-            }
-            if (regexForAll) {
-                config.grammerRegex = RegexUtils.createGeneral(config.gramerPrefix,
-                        config.gramerSuffix);
-            }
-            return config;
+    public static class DiscardHandler implements ValidErrorHandler {
+        @Override
+        public void handler(RenderContext<?> context) {
+            // no-op
         }
     }
+
+    public static class ClearHandler implements ValidErrorHandler {
+        @Override
+        public void handler(RenderContext<?> context) {
+            context.getRun().setText("", 0);
+        }
+    }
+
+    public static class AbortHandler implements ValidErrorHandler {
+        @Override
+        public void handler(RenderContext<?> context) {
+            throw new RenderException("Validate the data of the element " + context.getTagSource()
+                    + " error, data may be illegal: " + context.getData());
+        }
+    }
+
 }

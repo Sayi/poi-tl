@@ -43,9 +43,19 @@ public enum GramerSymbol {
     NUMBERIC('*'),
 
     /**
-     * word文档模板
+     * 引用
      */
-    DOCX_TEMPLATE('+');
+    DOCX_TEMPLATE('+'),
+
+    /**
+     * 循环(if & for each)语法块起始
+     */
+    ITERABLE_START('?'),
+
+    /**
+     * 语法块结束
+     */
+    BLOCK_END('/');
 
     private char symbol;
 

@@ -10,7 +10,8 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ELMode;
+import com.deepoove.poi.config.Configure.ELMode;
+import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.PictureRenderData;
@@ -81,7 +82,7 @@ public class ELTemplateTest {
     @SuppressWarnings("serial")
     @Test
     public void testChinese() throws IOException {
-        Configure.ConfigureBuilder builder = Configure.newBuilder();
+        ConfigureBuilder builder = Configure.newBuilder();
         XWPFTemplate template = XWPFTemplate
                 .compile("src/test/resources/chinese.docx", builder.build())
                 .render(new HashMap<String, Object>() {

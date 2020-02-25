@@ -8,10 +8,10 @@ import org.junit.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.Configure.DiscardHandler;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
-import com.deepoove.poi.policy.AbstractRenderPolicy.DiscardHandler;
 
 public class ConfigurePluginTest {
 
