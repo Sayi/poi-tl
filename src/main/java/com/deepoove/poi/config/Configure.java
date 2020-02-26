@@ -287,8 +287,8 @@ public class Configure {
     public static class AbortHandler implements ValidErrorHandler {
         @Override
         public void handler(RenderContext<?> context) {
-            throw new RenderException("Validate the data of the element " + context.getTagSource()
-                    + " error, data may be illegal: " + context.getData());
+            throw new RenderException("Non-existent variable and a variable with illegal value for " + context.getTagSource()
+                    + ", data: " + context.getData());
         }
     }
 

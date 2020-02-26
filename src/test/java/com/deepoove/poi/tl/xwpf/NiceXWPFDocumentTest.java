@@ -1,11 +1,11 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.xwpf;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 

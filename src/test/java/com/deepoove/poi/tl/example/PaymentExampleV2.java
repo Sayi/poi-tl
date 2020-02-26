@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -33,7 +33,7 @@ public class PaymentExampleV2 {
     TableStyle headStyle = new TableStyle();
     TableStyle rowStyle = new TableStyle();
     
-    @Before
+    @BeforeEach
     public void init(){
         headTextStyle.setFontFamily("Hei");
         headTextStyle.setFontSize(9);

@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -82,12 +82,12 @@ public class TextRenderTest {
         String text3 = "\n\npoi-tl";
         String text4 = "\n\n\n\n";
         String text5 = "hi\n\n\n\nwhat\nis\n\n\nthis";
-        Assert.assertEquals(Arrays.toString(text.split("\\n", -1)), "[hello, poi-tl]");
-        Assert.assertEquals(Arrays.toString(text1.split("\\n", -1)), "[hello, , poi-tl]");
-        Assert.assertEquals(Arrays.toString(text2.split("\\n", -1)), "[hello, , ]");
-        Assert.assertEquals(Arrays.toString(text3.split("\\n", -1)), "[, , poi-tl]");
-        Assert.assertEquals(Arrays.toString(text4.split("\\n", -1)), "[, , , , ]");
-        Assert.assertEquals(Arrays.toString(text5.split("\\n", -1)),
+        Assertions.assertEquals(Arrays.toString(text.split("\\n", -1)), "[hello, poi-tl]");
+        Assertions.assertEquals(Arrays.toString(text1.split("\\n", -1)), "[hello, , poi-tl]");
+        Assertions.assertEquals(Arrays.toString(text2.split("\\n", -1)), "[hello, , ]");
+        Assertions.assertEquals(Arrays.toString(text3.split("\\n", -1)), "[, , poi-tl]");
+        Assertions.assertEquals(Arrays.toString(text4.split("\\n", -1)), "[, , , , ]");
+        Assertions.assertEquals(Arrays.toString(text5.split("\\n", -1)),
                 "[hi, , , , what, is, , , this]");
     }
 

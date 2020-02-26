@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -19,7 +19,7 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.tl.ext.CustomTableRenderPolicy;
+import com.deepoove.poi.tl.source.CustomTableRenderPolicy;
 
 /**
  * @author Sayi
@@ -40,7 +40,7 @@ public class MiniTableRenderTest {
 
     RowRenderData row3;
 
-    @Before
+    @BeforeEach
     public void init() {
         List<CellRenderData> cellDatas = new ArrayList<CellRenderData>();
         TableStyle cellStyle = new TableStyle();

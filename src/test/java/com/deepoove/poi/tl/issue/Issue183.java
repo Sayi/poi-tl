@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
@@ -23,7 +23,7 @@ public class Issue183 {
     RowRenderData header;
     List<RowRenderData> tableDatas;
 
-    @Before
+    @BeforeEach
     public void init() {
         header = new RowRenderData(
                 Arrays.asList(new TextRenderData("FFFFFF", "Word处理解决方案"),

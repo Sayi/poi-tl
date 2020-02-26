@@ -171,20 +171,6 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     
 
-    /**
-     * 设置表格的宽度
-     * 
-     * @param table
-     * @param width
-     *            单位cm
-     * @param rows
-     * @param cols
-     */
-    public void widthTable(XWPFTable table, float widthCM, int rows, int cols) {
-        TableTools.widthTable(table, widthCM, cols);
-        TableTools.borderTable(table, 4);
-    }
-
     public static XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
         XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
         int pos = -1;

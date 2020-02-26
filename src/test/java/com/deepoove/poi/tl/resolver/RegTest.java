@@ -1,10 +1,10 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.resolver;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.config.Configure;
 
@@ -23,32 +23,32 @@ public class RegTest {
     public void testTagReg() {
         Pattern pattern = Pattern.compile(TAG_REGEX);
         testReg(pattern);
-        Assert.assertFalse(pattern.matcher("abc-123").matches());
+        Assertions.assertFalse(pattern.matcher("abc-123").matches());
     }
 
     public void testReg(Pattern pattern) {
-        Assert.assertTrue(pattern.matcher("123").matches());
-        Assert.assertTrue(pattern.matcher("ABC").matches());
-        Assert.assertTrue(pattern.matcher("abc123").matches());
-        Assert.assertTrue(pattern.matcher("_123abc").matches());
-        Assert.assertTrue(pattern.matcher("abc_123").matches());
-        Assert.assertTrue(pattern.matcher("好123").matches());
-        Assert.assertTrue(pattern.matcher("123好_好abc").matches());
-        Assert.assertTrue(pattern.matcher("abc.123").matches());
+        Assertions.assertTrue(pattern.matcher("123").matches());
+        Assertions.assertTrue(pattern.matcher("ABC").matches());
+        Assertions.assertTrue(pattern.matcher("abc123").matches());
+        Assertions.assertTrue(pattern.matcher("_123abc").matches());
+        Assertions.assertTrue(pattern.matcher("abc_123").matches());
+        Assertions.assertTrue(pattern.matcher("好123").matches());
+        Assertions.assertTrue(pattern.matcher("123好_好abc").matches());
+        Assertions.assertTrue(pattern.matcher("abc.123").matches());
 
-        Assert.assertTrue(pattern.matcher("abc.123").matches());
+        Assertions.assertTrue(pattern.matcher("abc.123").matches());
 
-        Assert.assertTrue(pattern.matcher("abc.123.123").matches());
-        Assert.assertTrue(pattern.matcher("abc.好.123").matches());
-        Assert.assertTrue(pattern.matcher("abc.好123").matches());
-        Assert.assertTrue(pattern.matcher("好.123").matches());
-        Assert.assertTrue(pattern.matcher("好.123.好").matches());
+        Assertions.assertTrue(pattern.matcher("abc.123.123").matches());
+        Assertions.assertTrue(pattern.matcher("abc.好.123").matches());
+        Assertions.assertTrue(pattern.matcher("abc.好123").matches());
+        Assertions.assertTrue(pattern.matcher("好.123").matches());
+        Assertions.assertTrue(pattern.matcher("好.123.好").matches());
 
-        Assert.assertFalse(pattern.matcher("好..123").matches());
-        Assert.assertFalse(pattern.matcher("abc..123").matches());
-        Assert.assertFalse(pattern.matcher("abc23.").matches());
-        Assert.assertFalse(pattern.matcher("好123.").matches());
-        Assert.assertFalse(pattern.matcher(".好123").matches());
+        Assertions.assertFalse(pattern.matcher("好..123").matches());
+        Assertions.assertFalse(pattern.matcher("abc..123").matches());
+        Assertions.assertFalse(pattern.matcher("abc23.").matches());
+        Assertions.assertFalse(pattern.matcher("好123.").matches());
+        Assertions.assertFalse(pattern.matcher(".好123").matches());
     }
     
     

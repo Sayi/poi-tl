@@ -3,7 +3,7 @@ package com.deepoove.poi.tl.issue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 

@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -53,7 +53,7 @@ public class ReferencePolicyTest {
                     @Override
                     public void doRender(XWPFTable t, XWPFTemplate template) {
                         System.out.println(t);
-                        Assert.assertNotNull(t);
+                        Assertions.assertNotNull(t);
                     }
 
                     @Override
@@ -73,7 +73,7 @@ public class ReferencePolicyTest {
                     @Override
                     public void doRender(XWPFPicture t, XWPFTemplate template) {
                         System.out.println(t);
-                        Assert.assertNotNull(t);
+                        Assertions.assertNotNull(t);
                     }
 
                     @Override

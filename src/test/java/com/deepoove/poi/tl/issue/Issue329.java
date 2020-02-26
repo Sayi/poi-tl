@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.poi.openxml4j.util.ZipSecureFile;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
@@ -20,7 +20,7 @@ public class Issue329 {
 
     List<DataTest> dataList;
 
-    @Before
+    @BeforeEach
     public void init() {
         DataTest data1 = new DataTest();
         data1.setQuestion("贞观之治是历史上哪个朝代");

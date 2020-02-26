@@ -1,12 +1,12 @@
-package com.deepoove.poi.tl.render;
+package com.deepoove.poi.tl.config;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -32,7 +32,7 @@ public class ELTemplateTest {
     RowRenderData header;
     List<RowRenderData> tableDatas;
 
-    @Before
+    @BeforeEach
     public void init() {
         header = new RowRenderData(
                 Arrays.asList(new TextRenderData("FFFFFF", "Word处理解决方案"),

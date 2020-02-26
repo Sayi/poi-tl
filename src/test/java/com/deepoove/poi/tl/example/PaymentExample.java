@@ -4,8 +4,8 @@ import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -29,7 +29,7 @@ public class PaymentExample {
     TableStyle headStyle = new TableStyle();
     TableStyle rowStyle = new TableStyle();
     
-    @Before
+    @BeforeEach
     public void init(){
         headTextStyle.setFontFamily("Hei");
         headTextStyle.setFontSize(9);

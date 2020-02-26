@@ -8,8 +8,8 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
@@ -25,7 +25,7 @@ public class PictureRenderTest {
 
     BufferedImage bufferImage;
 
-    @Before
+    @BeforeEach
     public void init() {
         bufferImage = BytePictureUtils.newBufferImage(100, 100);
         Graphics2D g = (Graphics2D) bufferImage.getGraphics();

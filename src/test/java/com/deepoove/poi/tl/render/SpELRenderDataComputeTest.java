@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -134,7 +134,7 @@ public class SpELRenderDataComputeTest {
     }
 
     @SuppressWarnings("serial")
-    @Before
+    @BeforeEach
     public void init() throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>() {
             {
@@ -163,38 +163,38 @@ public class SpELRenderDataComputeTest {
     @Test
     public void testCompute() {
         // map
-        Assert.assertEquals(spel1.compute("['name']"), "Sayi");
-        Assert.assertEquals(spel1.compute("['data']['hello']"), "poi-tl");
+        Assertions.assertEquals(spel1.compute("['name']"), "Sayi");
+        Assertions.assertEquals(spel1.compute("['data']['hello']"), "poi-tl");
 
-        Assert.assertEquals(spel2.compute("name"), "poi-tl");
+        Assertions.assertEquals(spel2.compute("name"), "poi-tl");
         // 调用method转大写
-        Assert.assertEquals(spel2.compute("name.toUpperCase()"), "POI-TL");
+        Assertions.assertEquals(spel2.compute("name.toUpperCase()"), "POI-TL");
         // 空值特殊显示
-        Assert.assertEquals(spel2.compute("empty?:'这个字段为空'"), "这个字段为空");
+        Assertions.assertEquals(spel2.compute("empty?:'这个字段为空'"), "这个字段为空");
         // 三目运算符
-        Assert.assertEquals(spel2.compute("sex ? '男' : '女'"), "男");
+        Assertions.assertEquals(spel2.compute("sex ? '男' : '女'"), "男");
         // 同样的时间字段，不同的格式
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 spel2.compute("new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)"),
                 "2019-05-20 22:14:10");
-        Assert.assertEquals(
+        Assertions.assertEquals(
                 spel2.compute("new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)"),
                 "2019-05-20 10:14");
 
         // 运算符
-        Assert.assertEquals(spel2.compute("price"), 88880000l);
-        Assert.assertEquals(spel2.compute("price + '元'"), "88880000元");
-        Assert.assertEquals(spel2.compute("price/1000 + '千元'"), "88880千元");
-        Assert.assertEquals(spel2.compute("price/10000 + '万元'"), "8888万元");
+        Assertions.assertEquals(spel2.compute("price"), 88880000l);
+        Assertions.assertEquals(spel2.compute("price + '元'"), "88880000元");
+        Assertions.assertEquals(spel2.compute("price/1000 + '千元'"), "88880千元");
+        Assertions.assertEquals(spel2.compute("price/10000 + '万元'"), "8888万元");
 
         // 数组、列表
-        Assert.assertEquals(spel2.compute("dogs[0].name"), "阿黄");
-        Assert.assertEquals(spel2.compute("dogs[1].age"), 6);
-        Assert.assertEquals(spel2.compute("dogs[2].name"), "阿蓝");
-        Assert.assertEquals(spel2.compute("dogsArr[2].name"), "阿蓝");
+        Assertions.assertEquals(spel2.compute("dogs[0].name"), "阿黄");
+        Assertions.assertEquals(spel2.compute("dogs[1].age"), 6);
+        Assertions.assertEquals(spel2.compute("dogs[2].name"), "阿蓝");
+        Assertions.assertEquals(spel2.compute("dogsArr[2].name"), "阿蓝");
 
         // map
-        Assert.assertEquals(spel2.compute("data['hello']"), "poi-tl");
+        Assertions.assertEquals(spel2.compute("data['hello']"), "poi-tl");
 
     }
 

@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
@@ -26,7 +26,7 @@ public class DocxRenderTest {
 
     List<DataTest> dataList;
 
-    @Before
+    @BeforeEach
     public void init() {
         DataTest data1 = new DataTest();
         data1.setQuestion("贞观之治是历史上哪个朝代");
