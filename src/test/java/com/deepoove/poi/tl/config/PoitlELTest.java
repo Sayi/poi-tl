@@ -1,17 +1,21 @@
-package com.deepoove.poi.tl.el;
+package com.deepoove.poi.tl.config;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.el.ELObject;
 import com.deepoove.poi.exception.ExpressionEvalException;
 
-public class ELObjectTest {
+@DisplayName("Poitl EL test case")
+public class PoitlELTest {
 
     public class Person {
         private User user;
@@ -89,7 +93,7 @@ public class ELObjectTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testApp() {
+    public void test4Bean() {
         Person person = new Person();
         person.setWork("deepoove.com");
         final User user = new User();
@@ -115,7 +119,7 @@ public class ELObjectTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testMap() {
+    public void test4Map() {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("header", "Deeply love what you love.");
@@ -128,45 +132,45 @@ public class ELObjectTest {
             }
         };
         ELObject elObject = ELObject.create(datas);
-        Assertions.assertEquals(elObject.eval("header"), "Deeply love what you love.");
-        Assertions.assertEquals(elObject.eval("name"), "Poi-tl");
-        Assertions.assertEquals(elObject.eval("word"), "模板引擎");
-        Assertions.assertEquals(elObject.eval("time"), "2019-05-31");
+        assertEquals(elObject.eval("header"), "Deeply love what you love.");
+        assertEquals(elObject.eval("name"), "Poi-tl");
+        assertEquals(elObject.eval("word"), "模板引擎");
+        assertEquals(elObject.eval("time"), "2019-05-31");
     }
 
     private void testEL(final User user, List<String> asList, ELObject elObject) {
-        Assertions.assertEquals(user, elObject.eval("user"));
-        Assertions.assertEquals(18, elObject.eval("user.age"));
-        Assertions.assertEquals("Sayi", elObject.eval("user.name"));
-        Assertions.assertEquals("Sayi", elObject.eval("user.name"));
-        Assertions.assertEquals("浙江杭州", elObject.eval("user.place"));
-        Assertions.assertEquals(false, elObject.eval("user.enable"));
-        Assertions.assertEquals(asList, elObject.eval("user.alias"));
+        assertEquals(user, elObject.eval("user"));
+        assertEquals(18, elObject.eval("user.age"));
+        assertEquals("Sayi", elObject.eval("user.name"));
+        assertEquals("Sayi", elObject.eval("user.name"));
+        assertEquals("浙江杭州", elObject.eval("user.place"));
+        assertEquals(false, elObject.eval("user.enable"));
+        assertEquals(asList, elObject.eval("user.alias"));
 
         try {
             elObject.eval("user.alias.name..");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof ExpressionEvalException);
+            assertTrue(e instanceof ExpressionEvalException);
         }
 
         try {
             elObject.eval("user.alias.name");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof ExpressionEvalException);
+            assertTrue(e instanceof ExpressionEvalException);
         }
 
         try {
             elObject.eval("user.sex");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            Assertions.assertTrue(e instanceof ExpressionEvalException);
+            assertTrue(e instanceof ExpressionEvalException);
         }
         try {
             elObject.eval("ada");
         } catch (Exception e) {
-            Assertions.assertTrue(e instanceof ExpressionEvalException);
+            assertTrue(e instanceof ExpressionEvalException);
         }
     }
 }

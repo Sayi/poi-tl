@@ -1,4 +1,6 @@
-package com.deepoove.poi.tl.render;
+package com.deepoove.poi.tl.config;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -9,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -18,10 +20,11 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 
-public class SpELRenderDataComputeTest {
+@DisplayName("Spring Expression language test case")
+public class SpELTest {
 
-    SpELRenderDataCompute spel1;
-    SpELRenderDataCompute spel2;
+    SpELRenderDataCompute spelForMap;
+    SpELRenderDataCompute spelForBean;
 
     SpELData data = new SpELData();
 
@@ -146,9 +149,9 @@ public class SpELRenderDataComputeTest {
                 });
             }
         };
-        spel1 = new SpELRenderDataCompute(map);
+        spelForMap = new SpELRenderDataCompute(map);
 
-        List<Dog> dogs = new ArrayList<SpELRenderDataComputeTest.Dog>();
+        List<Dog> dogs = new ArrayList<SpELTest.Dog>();
         dogs.add(new Dog("阿黄", 8));
         dogs.add(new Dog("阿绿", 6));
         dogs.add(new Dog("阿蓝", 5));
@@ -157,53 +160,50 @@ public class SpELRenderDataComputeTest {
         data.setDogsArr(dogs.toArray(new Dog[] {}));
         data.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-05-20 22:14:10"));
 
-        spel2 = new SpELRenderDataCompute(data);
+        spelForBean = new SpELRenderDataCompute(data);
     }
 
     @Test
-    public void testCompute() {
+    public void testSpELCompute() {
         // map
-        Assertions.assertEquals(spel1.compute("['name']"), "Sayi");
-        Assertions.assertEquals(spel1.compute("['data']['hello']"), "poi-tl");
+        assertEquals(spelForMap.compute("['name']"), "Sayi");
+        assertEquals(spelForMap.compute("['data']['hello']"), "poi-tl");
 
-        Assertions.assertEquals(spel2.compute("name"), "poi-tl");
+        assertEquals(spelForBean.compute("name"), "poi-tl");
         // 调用method转大写
-        Assertions.assertEquals(spel2.compute("name.toUpperCase()"), "POI-TL");
+        assertEquals(spelForBean.compute("name.toUpperCase()"), "POI-TL");
         // 空值特殊显示
-        Assertions.assertEquals(spel2.compute("empty?:'这个字段为空'"), "这个字段为空");
+        assertEquals(spelForBean.compute("empty?:'这个字段为空'"), "这个字段为空");
         // 三目运算符
-        Assertions.assertEquals(spel2.compute("sex ? '男' : '女'"), "男");
+        assertEquals(spelForBean.compute("sex ? '男' : '女'"), "男");
         // 同样的时间字段，不同的格式
-        Assertions.assertEquals(
-                spel2.compute("new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)"),
+        assertEquals(spelForBean.compute("new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)"),
                 "2019-05-20 22:14:10");
-        Assertions.assertEquals(
-                spel2.compute("new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)"),
+        assertEquals(spelForBean.compute("new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)"),
                 "2019-05-20 10:14");
 
         // 运算符
-        Assertions.assertEquals(spel2.compute("price"), 88880000l);
-        Assertions.assertEquals(spel2.compute("price + '元'"), "88880000元");
-        Assertions.assertEquals(spel2.compute("price/1000 + '千元'"), "88880千元");
-        Assertions.assertEquals(spel2.compute("price/10000 + '万元'"), "8888万元");
+        assertEquals(spelForBean.compute("price"), 88880000l);
+        assertEquals(spelForBean.compute("price + '元'"), "88880000元");
+        assertEquals(spelForBean.compute("price/1000 + '千元'"), "88880千元");
+        assertEquals(spelForBean.compute("price/10000 + '万元'"), "8888万元");
 
         // 数组、列表
-        Assertions.assertEquals(spel2.compute("dogs[0].name"), "阿黄");
-        Assertions.assertEquals(spel2.compute("dogs[1].age"), 6);
-        Assertions.assertEquals(spel2.compute("dogs[2].name"), "阿蓝");
-        Assertions.assertEquals(spel2.compute("dogsArr[2].name"), "阿蓝");
+        assertEquals(spelForBean.compute("dogs[0].name"), "阿黄");
+        assertEquals(spelForBean.compute("dogs[1].age"), 6);
+        assertEquals(spelForBean.compute("dogs[2].name"), "阿蓝");
+        assertEquals(spelForBean.compute("dogsArr[2].name"), "阿蓝");
 
         // map
-        Assertions.assertEquals(spel2.compute("data['hello']"), "poi-tl");
+        assertEquals(spelForBean.compute("data['hello']"), "poi-tl");
 
     }
 
     @Test
     public void testSpELTemplate() throws IOException {
         Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/spel.docx", config)
-                .render(data);
-        template.writeToFile("out_spel.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config_spel.docx", config).render(data);
+        template.writeToFile("out_config_spel.docx");
     }
 
 }

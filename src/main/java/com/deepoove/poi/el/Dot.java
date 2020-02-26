@@ -67,7 +67,9 @@ public class Dot {
     }
 
     private Object evalKey(Object obj) {
-        Objects.requireNonNull(obj, "Cannot read value from null Prefix-Model, Prefix-Model EL: " + target);
+        if (null == obj) {
+            throw new ExpressionEvalException("Cannot read value from null, Prefix-Model EL: " + target);
+        }
         final Class<?> objClass = obj.getClass();
         if (obj instanceof String || obj instanceof Number || obj instanceof java.util.Date || obj instanceof Collection
                 || objClass.isArray() || objClass.isPrimitive()) {
