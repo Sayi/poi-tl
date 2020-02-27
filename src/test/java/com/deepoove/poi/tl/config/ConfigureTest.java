@@ -23,7 +23,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.template.run.RunTemplate;
-import com.deepoove.poi.tl.XWPFTestSupport;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Configure test case")
 public class ConfigureTest {

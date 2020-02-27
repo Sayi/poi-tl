@@ -1,5 +1,7 @@
 package com.deepoove.poi.tl.policy;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
@@ -15,7 +17,9 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.policy.TextRenderPolicy;
 
+@DisplayName("Text Render test case")
 public class TextRenderTest {
 
     @SuppressWarnings("serial")
@@ -25,15 +29,14 @@ public class TextRenderTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "Hello, poi tl.");
-                put("text", new TextRenderData("28a745", "我是\n绿色的文字"));
+                put("text", new TextRenderData("28a745", "我是\n绿色且换行的文字"));
 
                 // 超链接
-                HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData(
-                        "Deepoove website.", "http://www.deepoove.com");
+                HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData("Deepoove website.",
+                        "http://www.deepoove.com");
                 hyperLinkTextRenderData.getStyle().setBold(true);
                 put("link", hyperLinkTextRenderData);
-                put("maillink", new HyperLinkTextRenderData("发邮件给作者",
-                        "mailto:adasai90@gmail.com?subject=poi-tl"));
+                put("maillink", new HyperLinkTextRenderData("发邮件给作者", "mailto:adasai90@gmail.com?subject=poi-tl"));
 
                 // 指定文本样式
                 TextRenderData textRenderData = new TextRenderData("just deepoove.");
@@ -53,7 +56,7 @@ public class TextRenderTest {
                 put("newline", "hi\n\n\n\n\nhello");
 
                 // 从文件读取文字
-                File file = new File("src/test/resources/word.txt");
+                File file = new File("src/test/resources/render_text_word.txt");
                 FileInputStream in = new FileInputStream(file);
                 int size = in.available();
                 byte[] buffer = new byte[size];
@@ -63,10 +66,9 @@ public class TextRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/text_render.docx")
-                .render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_text.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_text_render.docx");
+        FileOutputStream out = new FileOutputStream("out_render_text.docx");
         template.write(out);
         out.flush();
         out.close();
@@ -82,13 +84,15 @@ public class TextRenderTest {
         String text3 = "\n\npoi-tl";
         String text4 = "\n\n\n\n";
         String text5 = "hi\n\n\n\nwhat\nis\n\n\nthis";
-        Assertions.assertEquals(Arrays.toString(text.split("\\n", -1)), "[hello, poi-tl]");
-        Assertions.assertEquals(Arrays.toString(text1.split("\\n", -1)), "[hello, , poi-tl]");
-        Assertions.assertEquals(Arrays.toString(text2.split("\\n", -1)), "[hello, , ]");
-        Assertions.assertEquals(Arrays.toString(text3.split("\\n", -1)), "[, , poi-tl]");
-        Assertions.assertEquals(Arrays.toString(text4.split("\\n", -1)), "[, , , , ]");
-        Assertions.assertEquals(Arrays.toString(text5.split("\\n", -1)),
-                "[hi, , , , what, is, , , this]");
+
+        String regexLine = TextRenderPolicy.REGEX_LINE_CHARACTOR;
+
+        assertEquals(Arrays.toString(text.split(regexLine, -1)), "[hello, poi-tl]");
+        assertEquals(Arrays.toString(text1.split(regexLine, -1)), "[hello, , poi-tl]");
+        assertEquals(Arrays.toString(text2.split(regexLine, -1)), "[hello, , ]");
+        assertEquals(Arrays.toString(text3.split(regexLine, -1)), "[, , poi-tl]");
+        assertEquals(Arrays.toString(text4.split(regexLine, -1)), "[, , , , ]");
+        assertEquals(Arrays.toString(text5.split(regexLine, -1)), "[hi, , , , what, is, , , this]");
     }
 
 }

@@ -1,0 +1,12 @@
+10 languages with most speakers as first language
+countries,speakers,language
+58,315,العربية
+4,243,বাংলা
+38,1299,中文
+118,378,English
+4,260,हिन्दी
+2,128,日本語
+15,223,português
+6,119,ਪੰਜਾਬੀ
+18,154,Русский язык
+31,442,español

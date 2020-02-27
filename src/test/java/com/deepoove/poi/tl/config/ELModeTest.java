@@ -23,7 +23,7 @@ import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.exception.RenderException;
-import com.deepoove.poi.tl.XWPFTestSupport;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("ELMode test case")
 public class ELModeTest {

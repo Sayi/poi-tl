@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
-import com.deepoove.poi.tl.XWPFTestSupport;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Issue157 引入文档变量null")
 public class Issue157 {

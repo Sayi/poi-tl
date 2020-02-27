@@ -1,9 +1,7 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.source;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -28,21 +26,18 @@ import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
 
 public class ChartRenderTest {
 
-    @SuppressWarnings("serial")
-    @Test
     public void testChartRender() throws Exception {
 
-        Map<String, Object> datas = new HashMap<String, Object>() {
-            {
-                put("chart", "");
-            }
-        };
+//        Map<String, Object> datas = new HashMap<String, Object>() {
+//            {
+//                put("chart", "");
+//            }
+//        };
 
 //        Configure configure = Configure.newBuilder().customPolicy("chart", new ChartRenderPolicy()) // 自定义标签text的策略：不是文本，是图片
 //                .build();
@@ -51,7 +46,6 @@ public class ChartRenderTest {
 
     }
 
-    @Test
     public void testChart() throws Exception {
         try (XWPFDocument doc = new XWPFDocument()) {
 
@@ -117,7 +111,6 @@ public class ChartRenderTest {
         }
     }
 
-    @Test
     public void testBar() throws IOException, InvalidFormatException {
         try (XWPFDocument doc = new XWPFDocument()) {
             XWPFChart chart = doc.createChart(5143500, 2495550);

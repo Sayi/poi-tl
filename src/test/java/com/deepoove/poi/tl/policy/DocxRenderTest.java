@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -16,12 +17,7 @@ import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.tl.source.DataTest;
 
-/**
- * 模板循坏
- * 
- * @author Sayi
- * @version 1.3.0
- */
+@DisplayName("Include Docx Render test case")
 public class DocxRenderTest {
 
     List<DataTest> dataList;
@@ -55,29 +51,26 @@ public class DocxRenderTest {
             {
                 put("title", "Hello, poi tl.");
 
-                // 循环合并模板merge_xwpf_template.docx
+                // 循环合并模板render_include_merge_template.docx
                 put("docx_template", new DocxRenderData(
-                        new File("src/test/resources/merge_xwpf_template.docx"), dataList));
+                        new File("src/test/resources/render_include_merge_template.docx"), dataList));
 
-                // 合并文档merge_picture.docx
-                put("docx_template2",
-                        new DocxRenderData(new File("src/test/resources/merge_picture.docx")));
+                // 合并文档render_include_picture.docx
+                put("docx_template2", new DocxRenderData(new File("src/test/resources/render_include_picture.docx")));
 
-                put("docx_template3",
-                        new DocxRenderData(new File("src/test/resources/merge_table.docx")));
+                put("docx_template3", new DocxRenderData(new File("src/test/resources/render_include_table.docx")));
 
                 put("docx_template4", new DocxRenderData(
-                        new FileInputStream(new File("src/test/resources/merge_all.docx"))));
+                        new FileInputStream(new File("src/test/resources/render_include_all.docx"))));
 
                 put("newline", "Why poi-tl?");
 
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx")
-                .render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_include.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_docx_render.docx");
+        FileOutputStream out = new FileOutputStream("out_render_include.docx");
         template.write(out);
         out.flush();
         out.close();

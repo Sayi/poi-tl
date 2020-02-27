@@ -29,7 +29,7 @@ public class Issue225 {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/merge.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/244.docx")
                 .render(datas);
 
         FileOutputStream out = new FileOutputStream("out_issue_225.docx");

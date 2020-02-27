@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.tl.XWPFTestSupport;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Issue111 模板生成模板")
 public class Issue111 {

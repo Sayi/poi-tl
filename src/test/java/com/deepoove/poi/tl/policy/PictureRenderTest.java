@@ -9,18 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.util.BytePictureUtils;
 
-/**
- * 图片模板
- * 
- * @author Sayi
- * @version 1.0.0
- */
+@DisplayName("Picture Render test case")
 public class PictureRenderTest {
 
     BufferedImage bufferImage;
@@ -29,8 +25,10 @@ public class PictureRenderTest {
     public void init() {
         bufferImage = BytePictureUtils.newBufferImage(100, 100);
         Graphics2D g = (Graphics2D) bufferImage.getGraphics();
-        g.setColor(Color.red);
+        g.setColor(Color.CYAN);
         g.fillRect(0, 0, 100, 100);
+        g.setColor(Color.BLACK);
+        g.drawString("Java Image", 0, 50);
         g.dispose();
         bufferImage.flush();
     }
@@ -42,26 +40,28 @@ public class PictureRenderTest {
             {
                 // 本地图片
                 put("localPicture", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+
                 // 图片流文件
-                put("localBytePicture", new PictureRenderData(100, 120, ".png",
-                        new FileInputStream("src/test/resources/logo.png")));
+                put("localBytePicture",
+                        new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/logo.png")));
+
                 // 网络图片
-                put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils
-                        .getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
+                put("urlPicture", new PictureRenderData(100, 100, ".png",
+                        BytePictureUtils.getUrlBufferedImage("http://deepoove.com/images/icecream.png")));
+
                 // java 图片
                 put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage));
 
-                PictureRenderData pictureRenderData = new PictureRenderData(120, 120,
-                        "src/test/resources/sayi11.png");
+                // 不存在图片使用alt文字代替
+                PictureRenderData pictureRenderData = new PictureRenderData(120, 120, "src/test/resources/sayi11.png");
                 pictureRenderData.setAltMeta("图片不存在");
                 put("image", pictureRenderData);
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/picture.docx")
-                .render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_picture.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_picture.docx");
+        FileOutputStream out = new FileOutputStream("out_render_picture.docx");
         template.write(out);
         out.flush();
         out.close();

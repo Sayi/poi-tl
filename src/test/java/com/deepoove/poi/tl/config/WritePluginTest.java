@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl;
+package com.deepoove.poi.tl.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -23,13 +24,8 @@ import com.deepoove.poi.util.TableTools;
 import com.deepoove.poi.xwpf.Container;
 import com.deepoove.poi.xwpf.ContainerFactory;
 
-/**
- * 在文档的任何地方做任何事情（Do Anything Anywhere）是poi-tl的星辰大海。
- * 
- * @author Sayi
- * @version 1.5.1
- */
-public class SimpleXWPFTemplateTest {
+@DisplayName("Full custom plug-in example")
+public class WritePluginTest {
 
     @Test
     public void testPoitlSea() throws IOException {
@@ -56,9 +52,8 @@ public class SimpleXWPFTemplateTest {
                 FileInputStream stream = null;
                 try {
                     stream = new FileInputStream(thing);
-                    where.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, 500, 300);
-                }
-                finally {
+                    where.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, 400, 450);
+                } finally {
                     IOUtils.closeQuietly(stream);
                 }
                 // clear
@@ -81,7 +76,7 @@ public class SimpleXWPFTemplateTest {
             public void doRender(RenderContext<List<String>> context) throws Exception {
                 // anywhere
                 XWPFRun where = context.getWhere();
-                
+
                 // anything
                 List<String> thing = context.getThing();
 
@@ -108,12 +103,12 @@ public class SimpleXWPFTemplateTest {
         // 初始化where的数据
         HashMap<String, Object> args = new HashMap<String, Object>();
         args.put("sea", "Hello, world!");
-        args.put("sea_img", "src/test/resources/sea.jpg");
+        args.put("sea_img", "src/test/resources/sayi.png");
         args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
         args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
 
-        XWPFTemplate.compile("src/test/resources/sea.docx", config).render(args)
-                .writeToFile("out_sea.docx");
+        XWPFTemplate.compile("src/test/resources/config_sea.docx", config).render(args)
+                .writeToFile("out_config_sea.docx");
     }
 
 }

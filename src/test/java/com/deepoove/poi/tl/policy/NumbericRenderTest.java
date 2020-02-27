@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
@@ -26,12 +27,7 @@ import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 
-/**
- * 列表模板
- * 
- * @author Sayi
- * @version 0.0.5
- */
+@DisplayName("Numberic Render test case")
 public class NumbericRenderTest {
 
     @SuppressWarnings("serial")
@@ -64,26 +60,21 @@ public class NumbericRenderTest {
                 fmtStyle.setItalic(true);
                 fmtStyle.setStrike(true);
                 fmtStyle.setFontSize(24);
-                put("custom_style", new NumbericRenderData(FMT_LOWER_ROMAN, fmtStyle,
-                        new ArrayList<TextRenderData>() {
-                            {
-                                add(new TextRenderData("df2d4f",
-                                        "Deeply in love with the things you love, just deepoove."));
-                                add(new TextRenderData(
-                                        "Deeply in love with the things you love, just deepoove."));
-                                add(new TextRenderData("5285c5",
-                                        "Deeply in love with the things you love, just deepoove."));
-                            }
-                        }));
+                put("custom_style", new NumbericRenderData(FMT_LOWER_ROMAN, fmtStyle, new ArrayList<TextRenderData>() {
+                    {
+                        add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
+                        add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
+                        add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
+                    }
+                }));
                 // 图片、超链接、文本
-                put("picture_hyper_text", getPictureData(FMT_DECIMAL_PARENTHESES));
+                put("picture_hyper_text", getPictureData());
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/numberic.docx")
-                .render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_numberic.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_numberic.docx");
+        FileOutputStream out = new FileOutputStream("out_render_numberic.docx");
         template.write(out);
         out.flush();
         out.close();
@@ -94,29 +85,26 @@ public class NumbericRenderTest {
     private NumbericRenderData getData(Pair<Enum, String> pair) {
         return new NumbericRenderData(pair, new ArrayList<TextRenderData>() {
             {
-                add(new TextRenderData("df2d4f",
-                        "Deeply in love with the things you love, just deepoove."));
+                add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
                 add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-                add(new TextRenderData("5285c5",
-                        "Deeply in love with the things you love, just deepoove."));
+                add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
             }
         });
     }
 
     @SuppressWarnings("serial")
-    private NumbericRenderData getPictureData(Pair<Enum, String> pair) {
-        final HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData(
-                "Deepoove website.", "http://www.deepoove.com");
+    private NumbericRenderData getPictureData() {
+        final HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData("Deepoove website.",
+                "http://www.deepoove.com");
         hyperLinkTextRenderData.getStyle().setBold(true);
-        return new NumbericRenderData(pair, new ArrayList<RenderData>() {
+        return new NumbericRenderData(FMT_DECIMAL_PARENTHESES, new ArrayList<RenderData>() {
             {
                 add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 add(hyperLinkTextRenderData);
                 add(hyperLinkTextRenderData);
                 add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-                add(new TextRenderData("df2d4f",
-                        "Deeply in love with the things you love,\n just deepoove."));
+                add(new TextRenderData("df2d4f", "Deeply in love with the things you love,\n just deepoove."));
                 add(hyperLinkTextRenderData);
                 // add(getData(FMT_UPPER_LETTER));
             }

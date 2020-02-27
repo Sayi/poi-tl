@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +45,7 @@ public class Issue329 {
 
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
-                // 循环合并模板merge_xwpf_template.docx
+                // 循环合并模板
                 put("docx_template", new DocxRenderData(
                         new File("src/test/resources/merge_xwpf_template.docx"), dataList));
             }
@@ -55,14 +54,14 @@ public class Issue329 {
         // Zip Bomb detected
         ZipSecureFile.setMinInflateRatio(-1.0d);
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/docx_render.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_include.docx")
                 .render(datas);
 
         template.writeToFile("out_329.docx");
 
-        System.out.println("game over................");
+        //System.out.println("game over................");
 
-        TimeUnit.SECONDS.sleep(10);
+        //TimeUnit.SECONDS.sleep(10);
 
     }
 

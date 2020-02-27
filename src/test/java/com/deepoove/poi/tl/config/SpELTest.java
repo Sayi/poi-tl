@@ -21,7 +21,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
-import com.deepoove.poi.tl.XWPFTestSupport;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Spring Expression language test case")
 public class SpELTest {

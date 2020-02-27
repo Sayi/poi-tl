@@ -9,12 +9,13 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.TableTools;
 import com.deepoove.poi.xwpf.Container;
 import com.deepoove.poi.xwpf.ContainerFactory;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * 通过
- * <code>Configure.newBuilder().customPolicy("report", new
- * CustomTableRenderPolicy());</code>
+ *  <code>
+ * Configure.newBuilder().bind("report", new
+ * CustomTableRenderPolicy());
+ * </code> 
  * 将模板report的策略设置成自定义的表格策略
  * 
  * @author Sayi
@@ -29,10 +30,8 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
     }
 
     @Override
-    public void doRender(RenderContext<Object> context)
-            throws Exception {
+    public void doRender(RenderContext<Object> context) throws Exception {
 
-        NiceXWPFDocument doc = context.getXWPFDocument();
         XWPFRun run = context.getRun();
         Container container = ContainerFactory.getContainer(run);
         // 定义行列
@@ -50,8 +49,7 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         // ......
         TableTools.mergeCellsHorizonal(table, 0, 0, 7);
         TableTools.mergeCellsVertically(table, 0, 1, 9);
-        
-        
+
     }
 
 }
