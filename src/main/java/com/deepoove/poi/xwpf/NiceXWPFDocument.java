@@ -67,7 +67,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.util.StyleUtils;
-import com.deepoove.poi.util.TableTools;
 
 /**
  * 对原生poi的扩展

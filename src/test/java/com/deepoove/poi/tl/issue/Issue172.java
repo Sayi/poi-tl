@@ -5,11 +5,13 @@ import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 
+@DisplayName("Issue172 图表合并")
 public class Issue172 {
 
     @Test

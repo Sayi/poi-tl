@@ -6,11 +6,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 
+@DisplayName("Issue225 子文档形状")
 public class Issue225 {
 
     @SuppressWarnings("serial")
@@ -30,7 +32,7 @@ public class Issue225 {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/merge.docx")
                 .render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_225.docx");
+        FileOutputStream out = new FileOutputStream("out_issue_225.docx");
         template.write(out);
         out.flush();
         out.close();

@@ -1,158 +1,171 @@
 package com.deepoove.poi.tl.issue;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
+@DisplayName("Issue149 新建文档合并")
 public class Issue149 {
 
-    @Test
-    public void testMerge() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        NiceXWPFDocument doc = docFirst.merge(new NiceXWPFDocument(
-                new FileInputStream("src/test/resources/issue/test_stu_tea.docx")));
+    /**
+     * {{title}} {{+students}} {{+teachers}}
+     */
+    String resource = "src/test/resources/issue/149.docx";
 
-        FileOutputStream out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+    NiceXWPFDocument source;
+    NiceXWPFDocument target;
+    NiceXWPFDocument result;
+
+    @BeforeEach
+    public void init() {
+
+    }
+
+    @AfterEach
+    public void detroy() throws IOException {
+        if (null != source) source.close();
+        if (null != target) target.close();
+        if (null != result) result.close();
+    }
+
+    @Test
+    public void testNewMergeOld() throws Exception {
+        source = new NiceXWPFDocument();
+        target = new NiceXWPFDocument(new FileInputStream(resource));
+        result = source.merge(target);
+
+        XWPFParagraph paragraph = result.getParagraphArray(0);
+        assertEquals(paragraph.getText(), "{{title}}");
+        paragraph = result.getParagraphArray(1);
+        assertEquals(paragraph.getText(), "{{+students}}");
+        paragraph = result.getParagraphArray(2);
+        assertEquals(paragraph.getText(), "{{+teachers}}");
+
+        source.close();
+        target.close();
+        result.close();
 
     }
 
     @Test
-    public void testMerge2() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        FileOutputStream out = new FileOutputStream("out_issue_docfirst.docx");
-        docFirst.write(out);
-        docFirst.close();
+    public void testOldMergeOld() throws Exception {
+        source = new NiceXWPFDocument();
+        FileOutputStream out = new FileOutputStream("out_149temp.docx");
+        source.write(out);
+        source.close();
         out.close();
-        docFirst.close();
+        source.close();
 
-        docFirst = new NiceXWPFDocument(new FileInputStream("out_issue_docfirst.docx"));
+        source = new NiceXWPFDocument(new FileInputStream("out_149temp.docx"));
+        target = new NiceXWPFDocument(new FileInputStream(resource));
+        result = source.merge(target);
 
-        NiceXWPFDocument doc = docFirst.merge(new NiceXWPFDocument(
-                new FileInputStream("src/test/resources/issue/test_stu_tea.docx")));
+        XWPFParagraph paragraph = result.getParagraphArray(0);
+        assertEquals(paragraph.getText(), "{{title}}");
+        paragraph = result.getParagraphArray(1);
+        assertEquals(paragraph.getText(), "{{+students}}");
+        paragraph = result.getParagraphArray(2);
+        assertEquals(paragraph.getText(), "{{+teachers}}");
 
-        out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+        source.close();
+        target.close();
+        result.close();
+
+        new File("out_149temp.docx").deleteOnExit();
 
     }
 
     @Test
-    public void testMerge3() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        XWPFParagraph createParagraph = docFirst.createParagraph();
+    public void testNewMergeOld2() throws Exception {
+        source = new NiceXWPFDocument();
+        XWPFParagraph createParagraph = source.createParagraph();
         createParagraph.createRun();
-        // FileOutputStream out = new
-        // FileOutputStream("out_issue_docfirst.docx");
-        // docFirst.write(out);
-        // docFirst.close();
-        // out.close();
-        // docFirst.close();
-        //
-        // docFirst = new NiceXWPFDocument(
-        // new FileInputStream("out_issue_docfirst.docx"));
-        //
-        NiceXWPFDocument doc = docFirst.merge(new NiceXWPFDocument(
-                new FileInputStream("src/test/resources/issue/test_stu_tea.docx")));
 
-        FileOutputStream out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+        target = new NiceXWPFDocument(new FileInputStream(resource));
+        result = source.merge(target);
+
+        XWPFParagraph paragraph = result.getParagraphArray(0);
+        assertEquals(paragraph.getText(), "");
+        paragraph = result.getParagraphArray(1);
+        assertEquals(paragraph.getText(), "{{title}}");
+        paragraph = result.getParagraphArray(2);
+        assertEquals(paragraph.getText(), "{{+students}}");
+        paragraph = result.getParagraphArray(3);
+        assertEquals(paragraph.getText(), "{{+teachers}}");
+
+        source.close();
+        target.close();
+        result.close();
 
     }
 
     @Test
-    public void testMerge4() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        NiceXWPFDocument doc = docFirst.merge(new NiceXWPFDocument());
+    public void testNewMergeNew() throws Exception {
+        source = new NiceXWPFDocument();
+        target = new NiceXWPFDocument();
+        result = source.merge(target);
 
-        FileOutputStream out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+        assertEquals(result.getParagraphs().size(), 1);
+        assertEquals(result.getParagraphArray(0).getText(), "");
 
-    }
-
-    @Test
-    public void testMerge6() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        NiceXWPFDocument niceXWPFDocument = new NiceXWPFDocument();
-        FileOutputStream out = new FileOutputStream("out_issue_docfirst.docx");
-        niceXWPFDocument.write(out);
-        niceXWPFDocument.close();
-        out.close();
-        niceXWPFDocument.close();
-        NiceXWPFDocument doc = docFirst
-                .merge(new NiceXWPFDocument(new FileInputStream("out_issue_docfirst.docx")));
-
-        out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+        source.close();
+        target.close();
+        result.close();
 
     }
 
     @Test
-    public void testMerge5() throws Exception {
-        NiceXWPFDocument docFirst = new NiceXWPFDocument();
-        NiceXWPFDocument niceXWPFDocument = new NiceXWPFDocument();
-        XWPFParagraph createParagraph = niceXWPFDocument.createParagraph();
+    public void testNewMergeNew2() throws Exception {
+        target = new NiceXWPFDocument();
+        FileOutputStream out = new FileOutputStream("out_149temp1.docx");
+        target.write(out);
+        target.close();
+        out.close();
+        target.close();
+
+        target = new NiceXWPFDocument(new FileInputStream("out_149temp1.docx"));
+
+        source = new NiceXWPFDocument();
+        result = source.merge(target);
+
+        assertEquals(result.getParagraphs().size(), 1);
+        assertEquals(result.getParagraphArray(0).getText(), "");
+
+        source.close();
+        target.close();
+        result.close();
+
+        new File("out_149temp1.docx").deleteOnExit();
+
+    }
+
+    @Test
+    public void testNewMergeNew3() throws Exception {
+        source = new NiceXWPFDocument();
+
+        target = new NiceXWPFDocument();
+        XWPFParagraph createParagraph = target.createParagraph();
         createParagraph.createRun();
-        NiceXWPFDocument doc = docFirst.merge(niceXWPFDocument);
 
-        FileOutputStream out = new FileOutputStream("out_issue_149.docx");
-        doc.write(out);
-        doc.close();
-        out.close();
-        docFirst.close();
+        result = source.merge(target);
 
-    }
+        assertEquals(result.getParagraphs().size(), 1);
+        assertEquals(result.getParagraphArray(0).getText(), "");
 
-    @SuppressWarnings("resource")
-    @Test
-    public void testTT() {
-        // XmlOptions xmlOptions = POIXMLTypeLoader.DEFAULT_XML_OPTIONS;
-        // xmlOptions.setSaveImplicitNamespaces((Map)
-        // xmlOptions.get("SAVE_SUGGESTED_PREFIXES"));
-        // xmlOptions.setLoadAdditionalNamespaces((Map)
-        // xmlOptions.get("SAVE_SUGGESTED_PREFIXES"));
-        // xmlOptions.setCompileSubstituteNames((Map)
-        // xmlOptions.get("SAVE_SUGGESTED_PREFIXES"));
-        // xmlOptions.setSaveAggressiveNamespaces();
-        // xmlOptions.setSaveInner();
-        //
-        // CTDocument1 ctDocument = CTDocument1.Factory.newInstance(xmlOptions);
-        // ctDocument.addNewBody();
-        // System.out.println(ctDocument);
-
-        NiceXWPFDocument doc = new NiceXWPFDocument();
-        XWPFParagraph paragraph = doc.createParagraph();
-        paragraph.createRun();
-        CTP ctp = paragraph.getCTP();
-        System.out.println(ctp.xmlText());
-
-        CTDocument1 document = doc.getDocument();
-        CTBody body = document.getBody();
-        body.addNewSectPr();
-        System.out.println(body);
-        System.out.println(body.xmlText());
-        System.out.println(document.xmlText());
+        source.close();
+        target.close();
+        result.close();
 
     }
 

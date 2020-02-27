@@ -58,7 +58,7 @@ public class Issue183 {
         }));
 
         params.put("docx",
-                new DocxRenderData(new File("src/test/resources/issue/test_teacher.docx")));
+                new DocxRenderData(new File("src/test/resources/issue/157_MERGE.docx")));
 
         XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/issue/183.docx");
         doc.render(params);

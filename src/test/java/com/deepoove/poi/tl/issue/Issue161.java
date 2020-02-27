@@ -3,10 +3,12 @@ package com.deepoove.poi.tl.issue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 
+@DisplayName("Issue161 enter回车")
 public class Issue161 {
 
     @Test

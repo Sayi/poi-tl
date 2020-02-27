@@ -11,20 +11,20 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 
-public class IssueMerge {
+public class Issue244 {
 
     @SuppressWarnings("serial")
     @Test
     public void test143() throws Exception {
         Map<String, Object> datas = new HashMap<String, Object>();
         datas.put("date", "2018-11-12");
-        datas.put("first", new DocxRenderData(new File("src/test/resources/issue/merge_1.docx"), new ArrayList<Map<String, Object>>(){{
+        datas.put("first", new DocxRenderData(new File("src/test/resources/issue/244_1.docx"), new ArrayList<Map<String, Object>>(){{
             add(new HashMap<String, Object>(){{
                 put("f_title", "一级标题1");
-                put("second", new DocxRenderData(new File("src/test/resources/issue/merge_2.docx"), new ArrayList<Map<String, Object>>(){{
+                put("second", new DocxRenderData(new File("src/test/resources/issue/244_2.docx"), new ArrayList<Map<String, Object>>(){{
                     add(new HashMap<String, Object>(){{
                         put("s_title", "二级标题1");
-                        put("three", new DocxRenderData(new File("src/test/resources/issue/merge_3.docx"), new ArrayList<Map<String, Object>>(){{
+                        put("three", new DocxRenderData(new File("src/test/resources/issue/244_3.docx"), new ArrayList<Map<String, Object>>(){{
                             add(new HashMap<String, Object>(){{
                                 put("t_title", "三级标题1");
                                 put("content", "三级内容1");
@@ -41,7 +41,7 @@ public class IssueMerge {
                     }});
                     add(new HashMap<String, Object>(){{
                         put("s_title", "二级标题2");
-                        put("three", new DocxRenderData(new File("src/test/resources/issue/merge_3.docx"), new ArrayList<Map<String, Object>>(){{
+                        put("three", new DocxRenderData(new File("src/test/resources/issue/244_3.docx"), new ArrayList<Map<String, Object>>(){{
                             add(new HashMap<String, Object>(){{
                                 put("t_title", "三级标题1");
                                 put("content", "三级内容1");
@@ -64,10 +64,10 @@ public class IssueMerge {
         
         }}));
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/merge.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/244.docx")
                 .render(datas);;
 
-        FileOutputStream out = new FileOutputStream("out_issue_merge.docx");
+        FileOutputStream out = new FileOutputStream("out_issue_244.docx");
         template.write(out);
         out.flush();
         out.close();

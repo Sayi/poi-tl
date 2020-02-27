@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
+import com.deepoove.poi.tl.XWPFTestSupport;
 
 @DisplayName("Spring Expression language test case")
 public class SpELTest {
@@ -203,7 +206,33 @@ public class SpELTest {
     public void testSpELTemplate() throws IOException {
         Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config_spel.docx", config).render(data);
-        template.writeToFile("out_config_spel.docx");
+
+        XWPFDocument document = XWPFTestSupport.readNewDocument(template);
+        XWPFParagraph paragraph = document.getParagraphArray(0);
+        assertEquals(paragraph.getText(), "poi-tl");
+        paragraph = document.getParagraphArray(1);
+        assertEquals(paragraph.getText(), "lowCase:poi-tlUpcase:POI-TL");
+        paragraph = document.getParagraphArray(2);
+        assertEquals(paragraph.getText(), "这个字段为空");
+        paragraph = document.getParagraphArray(3);
+        assertEquals(paragraph.getText(), "男");
+        paragraph = document.getParagraphArray(4);
+        assertEquals(paragraph.getText(), "2019-05-20 22:14:10");
+        paragraph = document.getParagraphArray(5);
+        assertEquals(paragraph.getText(), "2019-05-20 10:14");
+        paragraph = document.getParagraphArray(6);
+        assertEquals(paragraph.getText(), "88880000");
+        paragraph = document.getParagraphArray(7);
+        assertEquals(paragraph.getText(), "8888万元");
+        paragraph = document.getParagraphArray(8);
+        assertEquals(paragraph.getText(), "阿黄");
+        paragraph = document.getParagraphArray(9);
+        assertEquals(paragraph.getText(), "6");
+        paragraph = document.getParagraphArray(10);
+        assertEquals(paragraph.getText(), "阿蓝");
+
+        document.close();
+
     }
 
 }

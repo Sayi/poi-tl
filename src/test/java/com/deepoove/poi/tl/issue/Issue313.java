@@ -1,5 +1,6 @@
 package com.deepoove.poi.tl.issue;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,13 +22,13 @@ public class Issue313 {
         map.put("item1", "{{#excel_first}}\n{{#excel_second}}");
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/313.docx")
                 .render(map);
-        FileOutputStream out = new FileOutputStream("out_issue_template_313.docx");
+        FileOutputStream out = new FileOutputStream("out_313temp.docx");
         template.write(out);
         out.flush();
         out.close();
         template.close();
 
-        excelRender("out_issue_template_313.docx", "out_issue_313.docx");
+        excelRender("out_313temp.docx", "out_issue_313.docx");
     }
 
     public void excelRender(String temppath, String outpath) throws Exception {
@@ -50,6 +51,8 @@ public class Issue313 {
         out.flush();
         out.close();
         template.close();
+        
+        new File("out_313temp.docx").deleteOnExit();
     }
 
 }

@@ -82,12 +82,12 @@ public class ConfigureTest {
 
         XWPFTemplate renew = XWPFTestSupport.readNewTemplate(template);
         assertEquals(renew.getElementTemplates().size(), 0);
+        renew.close();
 
     }
 
     @Test
     public void testDiscardHandler() throws Exception {
-
         // 没有变量时，保留标签
         builder.setValidErrorHandler(new DiscardHandler());
 
@@ -96,29 +96,27 @@ public class ConfigureTest {
 
         XWPFTemplate renew = XWPFTestSupport.readNewTemplate(template);
         assertEquals(renew.getElementTemplates().size(), 4);
+        renew.close();
 
     }
 
     @Test
     public void testAbortHandler() {
-
         // 没有变量时，无法容忍，抛出异常
         builder.setValidErrorHandler(new AbortHandler());
 
         assertThrows(RenderException.class,
                 () -> XWPFTemplate.compile(resource, builder.build()).render(new HashMap<String, Object>()));
-
     }
 
     @Test
-    public void testRegex() {
-
+    public void testRegex() throws IOException {
         // A~Z,a~z,0~9,_ 组合
         builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
 
         XWPFTemplate template = XWPFTemplate.compile(resource, builder.build());
         assertEquals(template.getElementTemplates().size(), 3);
-
+        template.close();
     }
 
     /**
@@ -152,6 +150,7 @@ public class ConfigureTest {
 
         XWPFTemplate renew = XWPFTestSupport.readNewTemplate(template);
         assertEquals(renew.getElementTemplates().size(), 0);
+        renew.close();
     }
 
 }
