@@ -82,7 +82,7 @@ public class MiniTableRenderTest {
         // 自定义表格策略
         // {{report}}
         Configure config = Configure.newBuilder().bind("report", new CustomTableRenderPolicy()).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_table.docx", config).render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_table.docx", config).render(datas);
 
         FileOutputStream out = new FileOutputStream("out_render_table.docx");
         template.write(out);

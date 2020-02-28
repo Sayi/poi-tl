@@ -68,13 +68,13 @@ public class Dot {
 
     private Object evalKey(Object obj) {
         if (null == obj) {
-            throw new ExpressionEvalException("Cannot read value from null, Prefix-Model EL: " + target);
+            throw new ExpressionEvalException("Error eval " + key + ", the value of " + target + " is null");
         }
         final Class<?> objClass = obj.getClass();
         if (obj instanceof String || obj instanceof Number || obj instanceof java.util.Date || obj instanceof Collection
                 || objClass.isArray() || objClass.isPrimitive()) {
-            throw new ExpressionEvalException("Prefix-Model must be JavaBean or Map, Prefix-Model EL: " + target
-                    + ", Prefix-Model type: " + objClass);
+            throw new ExpressionEvalException(
+                    "Error eval " + key + ", the type of " + target + "must be Hash, but is " + objClass);
         }
 
         if (obj instanceof Map) {
@@ -94,7 +94,7 @@ public class Dot {
         // reflect
         Field field = FieldFinder.find(objClass, key);
         if (null == field) {
-            throw new ExpressionEvalException("Cannot find the key:" + key + " from Prefix-Model EL:" + target);
+            throw new ExpressionEvalException("Cannot find property " + key + " from " + objClass);
         } else {
             try {
                 return field.get(obj);

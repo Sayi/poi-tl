@@ -33,7 +33,7 @@ public class ELModeTest {
      * 
      * {{#detail.diff}} {{detail.desc.date}} {{detail.desc.website}}
      */
-    String resource = "src/test/resources/config_elmode.docx";
+    String resource = "src/test/resources/template/config_elmode.docx";
 
     DataModel model = new DataModel();
 

@@ -59,7 +59,7 @@ public class PictureRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_picture.docx").render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_picture.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_render_picture.docx");
         template.write(out);

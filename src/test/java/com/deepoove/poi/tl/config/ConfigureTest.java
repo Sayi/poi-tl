@@ -37,7 +37,7 @@ public class ConfigureTest {
      * 
      * [[姓名]]
      */
-    String resource = "src/test/resources/config.docx";
+    String resource = "src/test/resources/template/config.docx";
     ConfigureBuilder builder = Configure.newBuilder();
 
     @BeforeEach
@@ -127,7 +127,7 @@ public class ConfigureTest {
     @SuppressWarnings("serial")
     @Test
     public void testSupportChineseAndDot() throws IOException {
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config_chinese.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/config_chinese.docx");
         assertEquals(template.getElementTemplates().size(), 5);
 
         template.render(new HashMap<String, Object>() {

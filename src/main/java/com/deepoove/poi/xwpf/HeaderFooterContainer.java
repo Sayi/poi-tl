@@ -61,7 +61,7 @@ public class HeaderFooterContainer implements Container {
     @SuppressWarnings("unchecked")
     @Override
     public List<IBodyElement> getBodyElements() {
-        return ReflectionUtils.getValue("bodyElements", headerFooter, List.class);
+        return (List<IBodyElement>) ReflectionUtils.getValue("bodyElements", headerFooter);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class HeaderFooterContainer implements Container {
     @SuppressWarnings("unchecked")
     @Override
     public void setParagraph(XWPFParagraph p, int paraPos) {
-        List<XWPFParagraph> paragraphs = ReflectionUtils.getValue("paragraphs", headerFooter, List.class);
+        List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", headerFooter);
         paragraphs.set(paraPos, p);
         CTHdrFtr ctTc = headerFooter._getHdrFtr();
         ctTc.setPArray(paraPos, p.getCTP());
@@ -128,7 +128,7 @@ public class HeaderFooterContainer implements Container {
     @Override
     public void setTable(int pos, XWPFTable table) {
         // cell.getTables().set(pos, table);
-        List<XWPFTable> tables = ReflectionUtils.getValue("tables", headerFooter, List.class);
+        List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", headerFooter);
         tables.set(pos, table);
         headerFooter._getHdrFtr().setTblArray(pos, table.getCTTbl());
 

@@ -49,7 +49,7 @@ public class CellContainer implements Container {
             if (type == BodyElementType.TABLE) {
                 int indexOf = cell.getTables().indexOf(bodyElements.get(pos));
                 // remove cell's table
-                List<XWPFTable> tables = ReflectionUtils.getValue("tables", cell, List.class);
+                List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", cell);
                 tables.remove(indexOf);
                 cell.getCTTc().removeTbl(pos);
             }
@@ -70,7 +70,7 @@ public class CellContainer implements Container {
     @SuppressWarnings("unchecked")
     @Override
     public List<IBodyElement> getBodyElements() {
-        return ReflectionUtils.getValue("bodyElements", cell, List.class);
+        return (List<IBodyElement>)ReflectionUtils.getValue("bodyElements", cell);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CellContainer implements Container {
     @SuppressWarnings("unchecked")
     @Override
     public void setParagraph(XWPFParagraph p, int paraPos) {
-        List<XWPFParagraph> paragraphs = ReflectionUtils.getValue("paragraphs", cell, List.class);
+        List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", cell);
         paragraphs.set(paraPos, p);
         CTTc ctTc = cell.getCTTc();
         ctTc.setPArray(paraPos, p.getCTP());
@@ -137,7 +137,7 @@ public class CellContainer implements Container {
     @Override
     public void setTable(int pos, XWPFTable table) {
         // cell.getTables().set(pos, table);
-        List<XWPFTable> tables = ReflectionUtils.getValue("tables", cell, List.class);
+        List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", cell);
         tables.set(pos, table);
         cell.getCTTc().setTblArray(pos, table.getCTTbl());
 

@@ -64,7 +64,7 @@ public class ComplexRenderTest {
                 String code = "detect_";
                 for (int i = 0; i < 25; i++) {
                     put(code + i + "pic",
-                            new PictureRenderData(8, 8, "src/test/resources/0-1.png"));
+                            new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
                     put(code + i, new TextRenderData("df2d4f", "玻璃"));
                     put(code + i + "pro", new TextRenderData("模糊"));
                 }
@@ -89,8 +89,8 @@ public class ComplexRenderTest {
                     }
                 };
                 for (String text : cfgs) {
-                    put(text + "_p", new PictureRenderData(8, 8, "src/test/resources/0-1.png"));
-                    put(text + "_v", new PictureRenderData(8, 8, "src/test/resources/0-1.png"));
+                    put(text + "_p", new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
+                    put(text + "_v", new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
                 }
                 put("c_cfgWord", "一切正常");
 

@@ -72,7 +72,7 @@ public class NumbericRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_numberic.docx").render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_numberic.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_render_numberic.docx");
         template.write(out);

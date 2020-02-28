@@ -80,7 +80,7 @@ public class IterableRenderResumeExample {
 
     @Test
     public void testResumeExample() throws Exception {
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/iterable_resume.docx").render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_resume.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_iterable_resume.docx");
         template.write(out);

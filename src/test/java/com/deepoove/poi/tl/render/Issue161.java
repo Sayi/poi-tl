@@ -34,7 +34,7 @@ public class Issue161 {
 
             }
         };
-        XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/condition161.docx");
+        XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/template/condition161.docx");
         
         doc.render(datas);
         doc.writeToFile("out_condition161.docx");

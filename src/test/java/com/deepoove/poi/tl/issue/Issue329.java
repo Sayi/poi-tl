@@ -47,17 +47,17 @@ public class Issue329 {
             {
                 // 循环合并模板
                 put("docx_template", new DocxRenderData(
-                        new File("src/test/resources/merge_xwpf_template.docx"), dataList));
+                        new File("src/test/resources/template/render_include_merge_template.docx"), dataList));
             }
         };
 
         // Zip Bomb detected
         ZipSecureFile.setMinInflateRatio(-1.0d);
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_include.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx")
                 .render(datas);
 
-        template.writeToFile("out_329.docx");
+        template.writeToFile("out_issue_329.docx");
 
         //System.out.println("game over................");
 

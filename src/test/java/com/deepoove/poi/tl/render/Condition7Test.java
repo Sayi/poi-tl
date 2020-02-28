@@ -83,7 +83,7 @@ public class Condition7Test {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition7.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition7.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {

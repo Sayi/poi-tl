@@ -18,10 +18,10 @@ public class NiceXWPFDocumentTest {
     @Test
     public void testMergeAtEnd() throws Exception {
         NiceXWPFDocument source = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/render_include.docx")));
+                new FileInputStream(new File("src/test/resources/template/render_include.docx")));
         int sourceSize = source.getBodyElements().size();
         NiceXWPFDocument target = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/render_include_all.docx")));
+                new FileInputStream(new File("src/test/resources/template/render_include_all.docx")));
         int targetSize = target.getBodyElements().size();
         source = source.merge(target);
 
@@ -36,14 +36,14 @@ public class NiceXWPFDocumentTest {
     @Test
     public void testMergeAtRun() throws Exception {
         NiceXWPFDocument source = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/render_text.docx")));
+                new FileInputStream(new File("src/test/resources/template/render_text.docx")));
         int sourceSize = source.getBodyElements().size();
         NiceXWPFDocument target1 = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/render_include_table.docx")));
+                new FileInputStream(new File("src/test/resources/template/render_include_table.docx")));
         int targetSize1 = target1.getBodyElements().size();
 
         NiceXWPFDocument target2 = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/render_include_picture.docx")));
+                new FileInputStream(new File("src/test/resources/template/render_include_picture.docx")));
         int targetSize2 = target2.getBodyElements().size();
         source = source.merge(Arrays.asList(target1, target2), source.getParagraphArray(0).getRuns().get(0));
 

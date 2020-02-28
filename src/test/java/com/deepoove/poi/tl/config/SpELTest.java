@@ -205,7 +205,7 @@ public class SpELTest {
     @Test
     public void testSpELTemplate() throws IOException {
         Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/config_spel.docx", config).render(data);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/config_spel.docx", config).render(data);
 
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
         XWPFParagraph paragraph = document.getParagraphArray(0);

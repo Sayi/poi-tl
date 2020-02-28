@@ -39,7 +39,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -97,7 +97,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition2.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition2.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -136,7 +136,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition3.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition3.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -191,7 +191,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition4.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition4.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -247,7 +247,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition5.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition5.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -327,7 +327,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/condition6.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition6.docx");
 
 //        List<MetaTemplate> elementTemplates = template.getElementTemplates();
 //        for (MetaTemplate temp : elementTemplates) {

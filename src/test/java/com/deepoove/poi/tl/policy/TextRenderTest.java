@@ -56,7 +56,7 @@ public class TextRenderTest {
                 put("newline", "hi\n\n\n\n\nhello");
 
                 // 从文件读取文字
-                File file = new File("src/test/resources/render_text_word.txt");
+                File file = new File("src/test/resources/template/render_text_word.txt");
                 FileInputStream in = new FileInputStream(file);
                 int size = in.available();
                 byte[] buffer = new byte[size];
@@ -66,7 +66,7 @@ public class TextRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_text.docx").render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_text.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_render_text.docx");
         template.write(out);

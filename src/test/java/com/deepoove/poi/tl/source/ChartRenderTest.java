@@ -41,7 +41,7 @@ public class ChartRenderTest {
 
 //        Configure configure = Configure.newBuilder().customPolicy("chart", new ChartRenderPolicy()) // 自定义标签text的策略：不是文本，是图片
 //                .build();
-//        XWPFTemplate.compile("src/test/resources/chart.docx", configure).render(datas)
+//        XWPFTemplate.compile("src/test/resources/template/chart.docx", configure).render(datas)
 //                .writeToFile("out_chart.docx");
 
     }

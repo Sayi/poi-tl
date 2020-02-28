@@ -53,22 +53,22 @@ public class DocxRenderTest {
 
                 // 循环合并模板render_include_merge_template.docx
                 put("docx_template", new DocxRenderData(
-                        new File("src/test/resources/render_include_merge_template.docx"), dataList));
+                        new File("src/test/resources/template/render_include_merge_template.docx"), dataList));
 
                 // 合并文档render_include_picture.docx
-                put("docx_template2", new DocxRenderData(new File("src/test/resources/render_include_picture.docx")));
+                put("docx_template2", new DocxRenderData(new File("src/test/resources/template/render_include_picture.docx")));
 
-                put("docx_template3", new DocxRenderData(new File("src/test/resources/render_include_table.docx")));
+                put("docx_template3", new DocxRenderData(new File("src/test/resources/template/render_include_table.docx")));
 
                 put("docx_template4", new DocxRenderData(
-                        new FileInputStream(new File("src/test/resources/render_include_all.docx"))));
+                        new FileInputStream(new File("src/test/resources/template/render_include_all.docx"))));
 
                 put("newline", "Why poi-tl?");
 
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/render_include.docx").render(datas);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx").render(datas);
 
         FileOutputStream out = new FileOutputStream("out_render_include.docx");
         template.write(out);

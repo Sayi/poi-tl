@@ -107,7 +107,7 @@ public class WritePluginTest {
         args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
         args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
 
-        XWPFTemplate.compile("src/test/resources/config_sea.docx", config).render(args)
+        XWPFTemplate.compile("src/test/resources/template/config_sea.docx", config).render(args)
                 .writeToFile("out_config_sea.docx");
     }
 

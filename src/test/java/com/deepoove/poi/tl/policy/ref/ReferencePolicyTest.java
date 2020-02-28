@@ -21,7 +21,7 @@ import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 @DisplayName("ReferencePolicy test case")
 public class ReferencePolicyTest {
 
-    private static String template_file = "src/test/resources/reference_policy.docx";
+    private static String template_file = "src/test/resources/template/reference_policy.docx";
 
     @Test
     public void testReplacePictureByIndex() throws Exception {

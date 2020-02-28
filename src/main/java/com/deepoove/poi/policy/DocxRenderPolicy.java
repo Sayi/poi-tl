@@ -41,7 +41,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
     protected boolean validate(DocxRenderData data) {
-        return null != data;
+        return null != data && null != data.getDocx();
     }
 
     @Override

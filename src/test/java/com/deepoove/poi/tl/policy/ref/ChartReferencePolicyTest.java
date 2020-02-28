@@ -16,7 +16,7 @@ public class ChartReferencePolicyTest {
 
         Configure configure = Configure.newBuilder().referencePolicy(new MyChartReferenceRenderPolicy()).build();
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/reference_chart.docx", configure)
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx", configure)
                 .render(new HashMap<>());
 
         template.writeToFile("out_reference_chart.docx");

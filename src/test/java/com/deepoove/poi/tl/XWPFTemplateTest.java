@@ -72,7 +72,7 @@ public class XWPFTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/template.docx")
                 .render(datas);;
 
         FileOutputStream out = new FileOutputStream("out_template.docx");
@@ -105,7 +105,7 @@ public class XWPFTemplateTest {
             }
         }));
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template.docx")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/template.docx")
                 .render(obj);
 
         FileOutputStream out = new FileOutputStream("out_template_object.docx");
