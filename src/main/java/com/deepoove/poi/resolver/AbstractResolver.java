@@ -68,4 +68,12 @@ public abstract class AbstractResolver implements Resolver {
         return reg.toString();
     }
 
+    public Pattern getTemplatePattern() {
+        return templatePattern;
+    }
+
+    public Pattern getGramerPattern() {
+        return gramerPattern;
+    }
+
 }

@@ -66,11 +66,11 @@ public class TemplateResolver extends AbstractResolver {
     public List<MetaTemplate> resolveDocument(XWPFDocument doc) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
         if (null == doc) return metaTemplates;
-        logger.info("Visit the document start...");
+        logger.info("Resolve the document start...");
         metaTemplates.addAll(resolveBodyElements(doc.getBodyElements()));
         metaTemplates.addAll(resolveHeaders(doc.getHeaderList()));
         metaTemplates.addAll(resolveFooters(doc.getFooterList()));
-        logger.info("Visit the document end, resolve and create {} MetaTemplates.", metaTemplates.size());
+        logger.info("Resolve the document end, resolve and create {} MetaTemplates.", metaTemplates.size());
         return metaTemplates;
     }
 
