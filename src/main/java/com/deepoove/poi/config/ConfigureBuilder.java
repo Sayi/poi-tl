@@ -24,7 +24,6 @@ import com.deepoove.poi.resolver.RunTemplateFactory;
 import com.deepoove.poi.util.RegexUtils;
 
 public class ConfigureBuilder {
-    private boolean regexForAll;
     private Configure config;
 
     public ConfigureBuilder() {
@@ -39,11 +38,6 @@ public class ConfigureBuilder {
 
     public ConfigureBuilder buildGrammerRegex(String reg) {
         config.grammerRegex = reg;
-        return this;
-    }
-
-    public ConfigureBuilder supportGrammerRegexForAll() {
-        this.regexForAll = true;
         return this;
     }
 
@@ -72,6 +66,10 @@ public class ConfigureBuilder {
         return this;
     }
 
+    /**
+     * @deprecated use {@link ConfigureBuilder#bind()} instead
+     */
+    @Deprecated
     public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
         config.customPolicy(tagName, policy);
         return this;
@@ -89,9 +87,6 @@ public class ConfigureBuilder {
 
     public Configure build() {
         if (config.elMode == ELMode.SPEL_MODE) {
-            regexForAll = true;
-        }
-        if (regexForAll) {
             config.grammerRegex = RegexUtils.createGeneral(config.gramerPrefix, config.gramerSuffix);
         }
         return config;

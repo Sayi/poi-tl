@@ -26,7 +26,7 @@ import com.deepoove.poi.render.compute.SpELRenderDataCompute;
  */
 public class DefaultRenderDataComputeFactory implements RenderDataComputeFactory {
 
-    private Configure config;
+    private final Configure config;
 
     public DefaultRenderDataComputeFactory(Configure config) {
         this.config = config;

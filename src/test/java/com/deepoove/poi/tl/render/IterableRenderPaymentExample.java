@@ -95,7 +95,7 @@ public class IterableRenderPaymentExample {
             }
         };
 
-        Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
+        Configure config = Configure.newBuilder().bind("detail_table", new DetailTablePolicy()).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/iterable_payment.docx", config);
         template.render(datas);
         FileOutputStream out = new FileOutputStream("out_iterable_payment.docx");

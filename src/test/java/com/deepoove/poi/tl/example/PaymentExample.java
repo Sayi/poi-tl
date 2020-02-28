@@ -76,7 +76,7 @@ public class PaymentExample {
 
     @Test
     public void testPaymentExample() throws Exception {
-        Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
+        Configure config = Configure.newBuilder().bind("detail_table", new DetailTablePolicy()).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(datas);
         template.writeToFile("out_example_payment.docx");
     }

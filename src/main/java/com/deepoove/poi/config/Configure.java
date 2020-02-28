@@ -249,6 +249,34 @@ public class Configure {
         return ITERABLE;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Configure Info").append(":\n");
+        sb.append("  Basic gramer: ").append(gramerPrefix).append(gramerSuffix).append("\n");
+        sb.append("  If and foreach gramer: ").append(gramerPrefix).append(ITERABLE.getLeft()).append(gramerSuffix);
+        sb.append(gramerPrefix).append(ITERABLE.getRight()).append(gramerSuffix).append("\n");
+        sb.append("  EL Mode: ").append(elMode).append("\n");
+        sb.append("  Regex:").append(grammerRegex).append("\n");
+        sb.append("  Valid Error Handler: ").append(handler.getClass().getSimpleName()).append("\n");
+        sb.append("  Default Plugin: ").append("\n");
+        DEFAULT_POLICYS.forEach((chara, policy) -> {
+            sb.append("    ").append(gramerPrefix).append(chara.charValue()).append(gramerSuffix);
+            sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
+        });
+        sb.append("  Bind Plugin: ").append("\n");
+        CUSTOM_POLICYS.forEach((str, policy) -> {
+            sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
+            sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
+        });
+        sb.append("  Reference Plugin: ").append("\n");
+        REFERENCE_POLICIES.forEach(policy -> {
+            sb.append("    ").append(policy.getClass().getSimpleName()).append("\n");
+        });
+
+        return sb.toString();
+    }
+
     public enum ELMode {
 
         /**
@@ -287,8 +315,8 @@ public class Configure {
     public static class AbortHandler implements ValidErrorHandler {
         @Override
         public void handler(RenderContext<?> context) {
-            throw new RenderException("Non-existent variable and a variable with illegal value for " + context.getTagSource()
-                    + ", data: " + context.getData());
+            throw new RenderException("Non-existent variable and a variable with illegal value for "
+                    + context.getTagSource() + ", data: " + context.getData());
         }
     }
 
