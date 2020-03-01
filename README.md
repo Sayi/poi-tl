@@ -2,38 +2,21 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi4.0.0](https://img.shields.io/badge/apache--poi-4.0.0-blue.svg) [![Gitter](https://badges.gitter.im/Sayi/poi-tl.svg)](https://gitter.im/Sayi/poi-tl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-:memo:  Word 模板引擎，基于Apache poi，目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
+:memo:  Word 模板引擎，基于Apache POI。
 
-下表对一些处理Word的解决方案作了一些比较：
+## Why Poi-tl
 
-| 方案 | 跨平台 | 样式处理  | 易用性
-| --- | --- | --- | --- |
-| **Poi-tl** | 纯Java组件，跨平台 | :white_check_mark: 不需要编码，模板即样式 | :white_check_mark: 简单：模板引擎，对POI进行封装，支持Word文档合并、表格处理等
-| Apache POI | 纯Java组件，跨平台 | 编码 | 简单，没有模板引擎功能
-| Freemarker | XML操作，跨平台 | 无 | 复杂，需要理解XML结构，基于XML构造模板
-| OpenOffice | 需要安装OpenOffice软件 | 编码 | 复杂，需要了解OpenOffice的API
-| Jacob、winlib | Windows平台 | 编码 | 复杂，不推荐使用
 
 ## Maven
-v1.6.0为最新版本，要求JDK1.8+、Apache poi4.0.0+：
 
 ```xml
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.0</version>
 </dependency>
 ```
 
-v1.5.1是构建在JDK1.6+、Apache poi3.16+上的版本：
-
-```xml
-<dependency>
-  <groupId>com.deepoove</groupId>
-  <artifactId>poi-tl</artifactId>
-  <version>1.5.1</version>
-</dependency>
-```
 
 ## 2分钟快速入门
 从一个超级简单的例子开始：把{{title}}替换成"Poi-tl 模板引擎"。
@@ -57,13 +40,13 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 * [循环模板示例：文章写作](http://deepoove.com/poi-tl/#example-article)
 * [Example：个人简历](http://deepoove.com/poi-tl/#_%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86)
 
-关于Apache POI的使用，这里有个入门教程：[Apache POI Word(docx) 入门示例教程](http://deepoove.com/poi-tl/apache-poi-guide.html)，更多的示例以及所有示例的源码参见JUnit单元测试。
+更多的示例以及所有示例的源码参见JUnit单元测试。
 
 ![](http://deepoove.com/poi-tl/demo.png)
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
 ## 架构设计
-**模板和插件丰富了Poi-tl的想象力。** 整体设计采用`Template + data-model = output`模式，**Configure**提供了配置功能，**Visitor**提供了解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**标签表达式计算扩展点，通过插件对每个标签进行渲染。
+目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)**模板和插件丰富了Poi-tl的想象力。** 整体设计采用`Template + data-model = output`模式，**Configure**提供了配置功能，**Visitor**提供了解析功能，**RenderPolicy**是渲染策略扩展点，**Render**模块提供了**RenderDataCompute**标签表达式计算扩展点，通过插件对每个标签进行渲染。
 
 ![](http://deepoove.com/poi-tl/arch.png)
 

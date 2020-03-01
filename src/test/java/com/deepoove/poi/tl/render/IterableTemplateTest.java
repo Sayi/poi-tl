@@ -24,31 +24,7 @@ import com.deepoove.poi.template.MetaTemplate;
  */
 public class IterableTemplateTest {
 
-    @SuppressWarnings("serial")
-    @Test
-    public void testRenderMap() throws Exception {
-        Map<String, Object> datas = new HashMap<String, Object>() {
-            {
-                put("title", "poi-tl");
-                put("showUser", false);
-                // put("showUser", false);
-                put("user", "Sayi");
-                put("showDate", false);
-                put("date", "2020-02-10");
-
-            }
-        };
-
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition.docx");
-
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
-        template.render(datas);
-        template.writeToFile("out_condition.docx");
-    }
+   
     
     @SuppressWarnings("serial")
     @Test
@@ -97,7 +73,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition2.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_withstyle.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -105,12 +81,12 @@ public class IterableTemplateTest {
         }
 
         template.render(datas);
-        template.writeToFile("out_condition2.docx");
+        template.writeToFile("out_iterable_foreach_withstyle.docx");
     }
     
     @SuppressWarnings("serial")
     @Test
-    public void testInternal() throws Exception {
+    public void testInlineIterableTemplate() throws Exception {
        
         List<Map<String, Object>> users = new ArrayList<>();
         users.add(new HashMap<String, Object>() {
@@ -136,7 +112,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition3.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_inline.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -144,7 +120,7 @@ public class IterableTemplateTest {
         }
 
         template.render(datas);
-        template.writeToFile("out_condition3.docx");
+        template.writeToFile("out_iterable_foreach_inline.docx");
     }
     
     @SuppressWarnings("serial")
@@ -191,7 +167,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition4.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach1.docx");
 
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         for (MetaTemplate temp : elementTemplates) {
@@ -199,65 +175,10 @@ public class IterableTemplateTest {
         }
 
         template.render(datas);
-        template.writeToFile("out_condition4.docx");
+        template.writeToFile("out_iterable_foreach1.docx");
     }
     
-    @SuppressWarnings("serial")
-    @Test
-    public void testShow() throws Exception {
-        List<Map<String, Object>> addrs = new ArrayList<>();
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Sayi");
-               
-
-            }
-        });
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Deepoove");
-                
-                
-            }
-        });
-       
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(new HashMap<String, Object>() {
-            {
-                put("name", "Sayi");
-                put("addrs", addrs);
-               
-
-            }
-        });
-        users.add(new HashMap<String, Object>() {
-            {
-                put("name", "Deepoove");
-                
-                
-            }
-        });
-        Map<String, Object> datas = new HashMap<String, Object>() {
-            {
-                put("title", "poi-tl");
-                put("show", true);
-                put("users", users);
-               
-
-            }
-        };
-
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition5.docx");
-
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
-        template.render(datas);
-        template.writeToFile("out_condition5.docx");
-    }
-    
+  
     @SuppressWarnings("serial")
     @Test
     public void testFor() throws Exception {
@@ -327,7 +248,7 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/condition6.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach2.docx");
 
 //        List<MetaTemplate> elementTemplates = template.getElementTemplates();
 //        for (MetaTemplate temp : elementTemplates) {
@@ -335,7 +256,7 @@ public class IterableTemplateTest {
 //        }
 
         template.render(datas);
-        template.writeToFile("out_condition6.docx");
+        template.writeToFile("out_iterable_foreach2.docx");
     }
 
 

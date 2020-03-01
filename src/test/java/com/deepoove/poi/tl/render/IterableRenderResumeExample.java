@@ -16,7 +16,7 @@ import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.tl.example.ExperienceData;
 
-@DisplayName("Foreach table example")
+@DisplayName("Foreach resume example")
 public class IterableRenderResumeExample {
 
     ResumeDataV2 datas = new ResumeDataV2();

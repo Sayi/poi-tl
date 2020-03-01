@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.render.DefaultRender;
 
-public class Issue161 {
+@DisplayName("Foreach table example")
+public class IterableRenderTableExample {
 
     @Test
     public void testEmptyRun() throws Exception {
@@ -23,21 +24,20 @@ public class Issue161 {
         dataMap.put("optimizeChangeName", "t审查方案test");
         dataMap.put("changeType", "t变更类型test");
         dataMap.put("moneyChange", "t变更数test");
-        
+
         List<Map<String, String>> mores = new ArrayList<Map<String, String>>();
         mores.add(dataMap);
         mores.add(dataMap);
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("mores", mores);
-               
 
             }
         };
-        XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/template/condition161.docx");
-        
+        XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/template/iterable_table.docx");
+
         doc.render(datas);
-        doc.writeToFile("out_condition161.docx");
+        doc.writeToFile("out_iterable_table.docx");
 
     }
 
