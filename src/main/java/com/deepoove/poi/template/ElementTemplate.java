@@ -62,4 +62,9 @@ public abstract class ElementTemplate implements MetaTemplate {
     public String toString() {
         return source;
     }
+    
+    @Override
+    public String variable() {
+        return source;
+    }
 }

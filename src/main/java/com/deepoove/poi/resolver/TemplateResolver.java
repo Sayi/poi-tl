@@ -134,8 +134,7 @@ public class TemplateResolver extends AbstractResolver {
             if (null == runTemplate) continue;
             switch (runTemplate.getSign().charValue()) {
             case '?':
-                IterableTemplate freshIterableTemplate = new IterableTemplate();
-                freshIterableTemplate.setStartMark(runTemplate);
+                IterableTemplate freshIterableTemplate = new IterableTemplate(runTemplate);
                 stack.push(freshIterableTemplate);
                 break;
             case '/':
@@ -150,7 +149,7 @@ public class TemplateResolver extends AbstractResolver {
                 if (stack.isEmpty()) {
                     metaTemplates.add(latestIterableTemplate.buildIfInline());
                 } else {
-                    stack.peek().getTemplates().add(latestIterableTemplate);
+                    stack.peek().getTemplates().add(latestIterableTemplate.buildIfInline());
                 }
                 break;
             default:

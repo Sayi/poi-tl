@@ -1,8 +1,13 @@
 package com.deepoove.poi.template;
 
 import com.deepoove.poi.render.processor.Visitor;
+import com.deepoove.poi.template.run.RunTemplate;
 
 public class InlineIterableTemplate extends IterableTemplate {
+
+    public InlineIterableTemplate(RunTemplate startMark) {
+        super(startMark);
+    }
 
     @Override
     public void accept(Visitor visitor) {

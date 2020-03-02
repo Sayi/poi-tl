@@ -16,7 +16,7 @@ class ReadMethodFinder {
             PropertyDescriptor propDesc = new PropertyDescriptor(key, objClass);
             return propDesc.getReadMethod();
         } catch (IntrospectionException e1) {
-            logger.error("Fail introspector the property: {} from {}, {}", key, objClass, e1.getMessage());
+            logger.debug("Fail introspector the property: {} from {}, {}", key, objClass, e1.getMessage());
         }
         return null;
     }

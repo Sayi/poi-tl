@@ -13,8 +13,9 @@ import com.deepoove.poi.XWPFTemplate;
 @DisplayName("Foreach table example")
 public class IterableRenderTableExample {
 
+    @SuppressWarnings("serial")
     @Test
-    public void testEmptyRun() throws Exception {
+    public void testForTable() throws Exception {
         Map<String, String> dataMap = new HashMap<String, String>();
         dataMap.put("projectName", "t项目名称test");
         dataMap.put("designDeptName", "t设计单位test");

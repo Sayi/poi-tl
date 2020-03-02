@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.IRunElement;
+import org.apache.poi.xwpf.usermodel.XWPFFieldRun;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
@@ -114,6 +115,9 @@ public class XWPFParagraphWrapper {
         // the correct insert hyperlink as our run/irun list contains
         // all runs
         CTPImpl ctpImpl = (CTPImpl) paragraph.getCTP();
+//        ctpImpl.insertNewR(arg0)
+//        ctpImpl.insertNewHyperlink(arg0)
+//        ctpImpl.insertNewFldSimple(arg0)
         synchronized (ctpImpl.monitor()) {
             // check_orphaned();
             CTHyperlink localCTHyperlink = null;
@@ -150,10 +154,23 @@ public class XWPFParagraphWrapper {
     public void setAndUpdateRun(XWPFRun xwpfRun, XWPFRun source, int insertPostionCursor) {
         // body
         // maybe need find correct position:rPos;
-        paragraph.getCTP().setRArray(insertPostionCursor, xwpfRun.getCTR());
+        int rPos = 0;
+        List<XWPFRun> runs = getRuns();
+        if (insertPostionCursor >= 0 && insertPostionCursor <= runs.size()) {
+            // calculate the correct pos as our run/irun list contains
+            // hyperlinks
+            // and fields so it is different to the paragraph R array.
+            for (int i = 0; i < insertPostionCursor; i++) {
+                XWPFRun currRun = runs.get(i);
+                if (!(currRun instanceof XWPFHyperlinkRun
+                        || currRun instanceof XWPFFieldRun)) {
+                    rPos++;
+                }
+            }
+        }
+        paragraph.getCTP().setRArray(rPos, xwpfRun.getCTR());
         
         // runs
-        List<XWPFRun> runs = getRuns();
         for (int i = 0; i < runs.size(); i++) {
             XWPFRun ele = runs.get(i);
             if (ele == source) {

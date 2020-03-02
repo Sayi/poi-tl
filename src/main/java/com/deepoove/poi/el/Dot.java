@@ -45,9 +45,7 @@ public class Dot {
 
     public Dot(String el) {
         Objects.requireNonNull(el, "EL cannot be null.");
-        if (!EL_PATTERN.matcher(el).matches()) {
-            throw new ExpressionEvalException("Error EL fomart: " + el);
-        }
+        if (!EL_PATTERN.matcher(el).matches()) { throw new ExpressionEvalException("Error EL fomart: " + el); }
 
         this.el = el;
         int dotIndex = el.lastIndexOf(".");
@@ -72,14 +70,12 @@ public class Dot {
         }
         final Class<?> objClass = obj.getClass();
         if (obj instanceof String || obj instanceof Number || obj instanceof java.util.Date || obj instanceof Collection
-                || objClass.isArray() || objClass.isPrimitive()) {
+                || obj instanceof Boolean || objClass.isArray() || objClass.isPrimitive()) {
             throw new ExpressionEvalException(
                     "Error eval " + key + ", the type of " + target + "must be Hash, but is " + objClass);
         }
 
-        if (obj instanceof Map) {
-            return ((Map<?, ?>) obj).get(key);
-        }
+        if (obj instanceof Map) { return ((Map<?, ?>) obj).get(key); }
 
         // introspector
         Method readMethod = ReadMethodFinder.find(objClass, key);

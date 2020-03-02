@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.MetaTemplate;
-import com.deepoove.poi.template.run.RunTemplate;
 
 @DisplayName("Running run paragraph resolver test case")
 public class RunningRunParagraphTest {
@@ -25,64 +24,66 @@ public class RunningRunParagraphTest {
         assertEquals(elementTemplates.size(), 22);
 
         int i = 0;
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{@icon}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{author}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{date}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{dfa}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{fafd}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{author}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{madan}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{aad}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{date}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{ada}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{faf}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{dfa}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{dfdf}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{fafd}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{adaf}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{ada}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{yi}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{dafd}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{dfas}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{@af}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{table0}}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "{{table}}");
-        
+        assertEquals(elementTemplates.get(i++).variable(), "{{@icon}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{author}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{date}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{dfa}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{fafd}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{author}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{madan}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{aad}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{date}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{ada}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{faf}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{dfa}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{dfdf}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{fafd}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{adaf}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{ada}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{yi}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{dafd}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{dfas}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{@af}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{table0}}");
+        assertEquals(elementTemplates.get(i++).variable(), "{{table}}");
+
         template.close();
     }
+
     @Test
     public void testCustomGramer() throws IOException {
-        
+
         Configure config = Configure.newBuilder().buildGramer("${", "}").build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/resolver_running_run_custom.docx", config);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/resolver_running_run_custom.docx",
+                config);
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        
+
         assertEquals(elementTemplates.size(), 22);
-        
+
         int i = 0;
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${@icon}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${author}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${date}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${dfa}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${fafd}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${author}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${madan}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${aad}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${date}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${ada}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${faf}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${dfa}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${dfdf}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${fafd}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${adaf}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${ada}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${yi}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${dafd}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${dfas}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${@af}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${table0}");
-        assertEquals(((RunTemplate) elementTemplates.get(i++)).getSource(), "${table}");
-        
+        assertEquals(elementTemplates.get(i++).variable(), "${@icon}");
+        assertEquals(elementTemplates.get(i++).variable(), "${author}");
+        assertEquals(elementTemplates.get(i++).variable(), "${date}");
+        assertEquals(elementTemplates.get(i++).variable(), "${dfa}");
+        assertEquals(elementTemplates.get(i++).variable(), "${fafd}");
+        assertEquals(elementTemplates.get(i++).variable(), "${author}");
+        assertEquals(elementTemplates.get(i++).variable(), "${madan}");
+        assertEquals(elementTemplates.get(i++).variable(), "${aad}");
+        assertEquals(elementTemplates.get(i++).variable(), "${date}");
+        assertEquals(elementTemplates.get(i++).variable(), "${ada}");
+        assertEquals(elementTemplates.get(i++).variable(), "${faf}");
+        assertEquals(elementTemplates.get(i++).variable(), "${dfa}");
+        assertEquals(elementTemplates.get(i++).variable(), "${dfdf}");
+        assertEquals(elementTemplates.get(i++).variable(), "${fafd}");
+        assertEquals(elementTemplates.get(i++).variable(), "${adaf}");
+        assertEquals(elementTemplates.get(i++).variable(), "${ada}");
+        assertEquals(elementTemplates.get(i++).variable(), "${yi}");
+        assertEquals(elementTemplates.get(i++).variable(), "${dafd}");
+        assertEquals(elementTemplates.get(i++).variable(), "${dfas}");
+        assertEquals(elementTemplates.get(i++).variable(), "${@af}");
+        assertEquals(elementTemplates.get(i++).variable(), "${table0}");
+        assertEquals(elementTemplates.get(i++).variable(), "${table}");
+
         template.close();
     }
 

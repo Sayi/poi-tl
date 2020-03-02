@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -16,183 +17,108 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.render.DefaultRender;
-import com.deepoove.poi.template.MetaTemplate;
 
-/**
- * @author Sayi
- */
+@DisplayName("Foreach template test case")
 public class IterableTemplateTest {
 
-   
-    
     @SuppressWarnings("serial")
     @Test
-    public void testIterable() throws Exception {
-        List<Map<String, Object>> contents = new ArrayList<>();
-        contents.add(new HashMap<String, Object>() {
+    public void testIterableWithStyle() throws Exception {
+        List<Map<String, Object>> sections = new ArrayList<>();
+        sections.add(new HashMap<String, Object>() {
             {
                 put("title", "1.1 小节");
-                put("word", "Sayi");
-               
+                put("word", "这是第一小节的内容");
 
             }
         });
-        contents.add(new HashMap<String, Object>() {
+        sections.add(new HashMap<String, Object>() {
             {
                 put("title", "1.2 小节");
-                put("word", "Deepoove");
-                
-                
+                put("word", "这是第二小节的内容");
+
             }
         });
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(new HashMap<String, Object>() {
+        List<Map<String, Object>> chapters = new ArrayList<>();
+        chapters.add(new HashMap<String, Object>() {
             {
                 put("title", "第一章");
                 put("name", "Sayi");
-                put("contents", contents);
-               
+                put("sections", sections);
 
             }
         });
-        users.add(new HashMap<String, Object>() {
+        chapters.add(new HashMap<String, Object>() {
             {
                 put("title", "第二章");
                 put("name", "Deepoove");
-                
-                
+
             }
         });
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
-                put("users", users);
-               
+                put("chapters", chapters);
 
             }
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_withstyle.docx");
 
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
         template.render(datas);
         template.writeToFile("out_iterable_foreach_withstyle.docx");
     }
-    
+
     @SuppressWarnings("serial")
     @Test
-    public void testInlineIterableTemplate() throws Exception {
-       
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(new HashMap<String, Object>() {
-            {
-                put("name", "Sayi");
-               
-
-            }
-        });
-        users.add(new HashMap<String, Object>() {
-            {
-                put("name", "Deepoove");
-                
-                
-            }
-        });
-        Map<String, Object> datas = new HashMap<String, Object>() {
-            {
-                put("title", "poi-tl");
-                put("users", users);
-               
-
-            }
-        };
-
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_inline.docx");
-
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
-        template.render(datas);
-        template.writeToFile("out_iterable_foreach_inline.docx");
-    }
-    
-    @SuppressWarnings("serial")
-    @Test
-    public void testTableInternal() throws Exception {
+    public void testForeach() throws Exception {
         List<Map<String, Object>> addrs = new ArrayList<>();
         addrs.add(new HashMap<String, Object>() {
             {
-                put("position", "Sayi");
-               
-
+                put("position", "Hangzhou,China");
             }
         });
         addrs.add(new HashMap<String, Object>() {
             {
-                put("position", "Deepoove");
-                
-                
+                put("position", "Shanghai,China");
             }
         });
-       
+
         List<Map<String, Object>> users = new ArrayList<>();
         users.add(new HashMap<String, Object>() {
             {
                 put("name", "Sayi");
                 put("addrs", addrs);
-               
-
             }
         });
         users.add(new HashMap<String, Object>() {
             {
                 put("name", "Deepoove");
-                
-                
             }
         });
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
                 put("users", users);
-               
-
             }
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach1.docx");
-
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
         template.render(datas);
         template.writeToFile("out_iterable_foreach1.docx");
     }
-    
-  
+
     @SuppressWarnings("serial")
     @Test
-    public void testFor() throws Exception {
-        RowRenderData header = RowRenderData.build(new TextRenderData("FFFFFF", "姓名"),
-                new TextRenderData("FFFFFF", "学历"));
-
-        RowRenderData row0 = RowRenderData.build(
-                new HyperLinkTextRenderData("张三", "http://deepoove.com"),
+    @DisplayName("using all gramer together")
+    public void testTogether() throws Exception {
+        RowRenderData row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
                 new TextRenderData("1E915D", "研究生"));
 
         RowRenderData row1 = RowRenderData.build("李四", "博士");
 
         RowRenderData row2 = RowRenderData.build("王五", "博士后");
-        
+
         final TextRenderData textRenderData = new TextRenderData("负责生产BUG，然后修复BUG，同时有效实施招聘行为");
         Style style = new Style();
         style.setFontSize(10);
@@ -203,29 +129,25 @@ public class IterableTemplateTest {
         addrs.add(new HashMap<String, Object>() {
             {
                 put("position", "Sayi");
-               
 
             }
         });
         addrs.add(new HashMap<String, Object>() {
             {
                 put("position", "Deepoove");
-                
-                
+
             }
         });
-       
+
         List<Map<String, Object>> users = new ArrayList<>();
         users.add(new HashMap<String, Object>() {
             {
                 put("name", "Sayi");
                 put("addrs", addrs);
-                put("list", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL, 
-                Arrays.asList(textRenderData, textRenderData)));
+                put("list", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL,
+                        Arrays.asList(textRenderData, textRenderData)));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-                put("table",
-                        new MiniTableRenderData(Arrays.asList(row0, row1, row2)));
-               
+                put("table", new MiniTableRenderData(Arrays.asList(row0, row1, row2)));
 
             }
         });
@@ -235,29 +157,20 @@ public class IterableTemplateTest {
                 put("list", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL,
                         Arrays.asList(textRenderData, textRenderData)));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-                
-                
+
             }
         });
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
                 put("users", users);
-               
 
             }
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach2.docx");
-
-//        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-//        for (MetaTemplate temp : elementTemplates) {
-//            System.out.println(temp);
-//        }
-
         template.render(datas);
         template.writeToFile("out_iterable_foreach2.docx");
     }
-
 
 }

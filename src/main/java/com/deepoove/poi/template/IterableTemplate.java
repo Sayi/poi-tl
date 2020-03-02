@@ -15,7 +15,13 @@ public class IterableTemplate implements MetaTemplate {
 
     protected List<MetaTemplate> templates = new ArrayList<MetaTemplate>();
 
-    public IterableTemplate() {
+    public IterableTemplate(RunTemplate startMark) {
+        this.startMark = startMark;
+    }
+    
+    @Override
+    public String variable() {
+        return startMark.variable();
     }
 
     @Override
@@ -28,8 +34,7 @@ public class IterableTemplate implements MetaTemplate {
         XWPFRun endRun = endMark.getRun();
 
         if (startRun.getParent() == endRun.getParent()) {
-            InlineIterableTemplate instance = new InlineIterableTemplate();
-            instance.startMark = startMark;
+            InlineIterableTemplate instance = new InlineIterableTemplate(startMark);
             instance.endMark = endMark;
             instance.templates = templates;
             return instance;
@@ -69,4 +74,5 @@ public class IterableTemplate implements MetaTemplate {
         sb.append(endMark);
         return sb.toString();
     }
+
 }
