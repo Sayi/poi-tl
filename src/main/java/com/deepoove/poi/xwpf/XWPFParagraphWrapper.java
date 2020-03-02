@@ -30,7 +30,9 @@ import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.QNameSet;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class XWPFParagraphWrapper {
     static final QName FLDSIMPLE_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
             "fldSimple");
     static final QName R_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "r");
-    
+
     static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME, FLDSIMPLE_QNAME, R_QNAME });
 
     XWPFParagraph paragraph;
@@ -128,6 +130,86 @@ public class XWPFParagraphWrapper {
                     paramInt);
             return localCTHyperlink;
         }
+    }
+
+    public CTR insertNewR(int pos) {
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTR localCTR = null;
+            localCTR = (CTR) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, R_QNAME, pos);
+            return localCTR;
+        }
+    }
+
+    public XWPFRun insertNewRun(int pos) {
+        if (pos >= 0 && pos <= paragraph.getRuns().size()) {
+
+            CTR ctRun = this.insertNewR(pos);
+            XWPFRun newRun = new XWPFRun(ctRun, (IRunBody) this);
+
+            // To update the iruns, find where we're going
+            // in the normal runs, and go in there
+            List<IRunElement> iruns = getIRuns();
+            List<XWPFRun> runs = getRuns();
+            int iPos = iruns.size();
+            if (pos < runs.size()) {
+                XWPFRun oldAtPos = runs.get(pos);
+                int oldAt = iruns.indexOf(oldAtPos);
+                if (oldAt != -1) {
+                    iPos = oldAt;
+                }
+            }
+            iruns.add(iPos, newRun);
+
+            // Runs itself is easy to update
+            runs.add(pos, newRun);
+
+            return newRun;
+        }
+
+        return null;
+    }
+
+    public CTSimpleField insertNewFldSimple(int paramInt) {
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTSimpleField localCTSimpleField = null;
+            localCTSimpleField = (CTSimpleField) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET,
+                    FLDSIMPLE_QNAME, paramInt);
+            return localCTSimpleField;
+        }
+    }
+
+    public XWPFFieldRun insertNewField(int pos) {
+        if (pos >= 0 && pos <= paragraph.getRuns().size()) {
+
+            CTSimpleField ctSimpleField = this.insertNewFldSimple(pos);
+            CTR addNewR = ctSimpleField.addNewR();
+            XWPFFieldRun newRun = new XWPFFieldRun(ctSimpleField, addNewR, (IRunBody) paragraph);
+
+            // To update the iruns, find where we're going
+            // in the normal runs, and go in there
+            List<IRunElement> iruns = getIRuns();
+            List<XWPFRun> runs = getRuns();
+            int iPos = iruns.size();
+            if (pos < runs.size()) {
+                XWPFRun oldAtPos = runs.get(pos);
+                int oldAt = iruns.indexOf(oldAtPos);
+                if (oldAt != -1) {
+                    iPos = oldAt;
+                }
+            }
+            iruns.add(iPos, newRun);
+
+            // Runs itself is easy to update
+            runs.add(pos, newRun);
+
+            return newRun;
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
