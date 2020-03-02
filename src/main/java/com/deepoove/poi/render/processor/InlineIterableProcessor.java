@@ -49,6 +49,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
             XWPFRun endRun = end.getRun();
 
             XWPFParagraph currentParagraph = (XWPFParagraph) startRun.getParent();
+            XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
 
             Integer startRunPos = start.getRunPos();
             Integer endRunPos = end.getRunPos();
@@ -68,15 +69,14 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
                     insertPostionCursor = end.getRunPos();
 
                     XWPFRun xwpfRun = runs.get(i);
-                    XWPFRun insertNewRun = currentParagraph.insertNewRun(insertPostionCursor);
-                    XWPFRun xwpfRun2 = new XWPFRun((CTR) xwpfRun.getCTR().copy(), (IRunBody)currentParagraph);
-                    XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
+                    XWPFRun insertNewRun = paragraphWrapper.insertNewRun(xwpfRun, insertPostionCursor);
+                    XWPFRun xwpfRun2 = paragraphWrapper.createRun(xwpfRun, (IRunBody)currentParagraph);
                     paragraphWrapper.setAndUpdateRun(xwpfRun2, insertNewRun, insertPostionCursor);
 
                     XmlCursor newCursor = endCtr.newCursor();
                     newCursor.toPrevSibling();
                     XmlObject object = newCursor.getObject();
-                    XWPFRun copy = new XWPFRun((CTR) object,  (IRunBody)currentParagraph);
+                    XWPFRun copy = paragraphWrapper.createRun(object, (IRunBody)currentParagraph);
                     copies.add(copy);
                     paragraphWrapper.setAndUpdateRun(copy, xwpfRun2, insertPostionCursor);
                 }
@@ -91,18 +91,19 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
 
             // clear self iterable template
             for (int i = endRunPos - 1; i > startRunPos; i--) {
-                currentParagraph.removeRun(i);
+                paragraphWrapper.removeRun(i);
             }
 
         } else {
 
             XWPFParagraph currentParagraph = (XWPFParagraph) iterableTemplate.getStartMark().getRun().getParent();
+            XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
 
             Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
             Integer endRunPos = iterableTemplate.getEndMark().getRunPos();
 
             for (int i = endRunPos - 1; i > startRunPos; i--) {
-                currentParagraph.removeRun(i);
+                paragraphWrapper.removeRun(i);
             }
 
         }

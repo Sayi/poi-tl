@@ -110,6 +110,49 @@ public class IterableTemplateTest {
 
     @SuppressWarnings("serial")
     @Test
+    public void testHyperField() throws Exception {
+        List<Map<String, Object>> addrs = new ArrayList<>();
+        addrs.add(new HashMap<String, Object>() {
+            {
+                put("position", "Hangzhou,China");
+
+            }
+        });
+        addrs.add(new HashMap<String, Object>() {
+            {
+                put("position", "Shanghai,China");
+
+            }
+        });
+
+        List<Map<String, Object>> users = new ArrayList<>();
+        users.add(new HashMap<String, Object>() {
+            {
+                put("name", "Sayi");
+                put("addrs", addrs);
+
+            }
+        });
+        users.add(new HashMap<String, Object>() {
+            {
+                put("name", new HyperLinkTextRenderData("Deepoove website.", "http://www.google.com"));
+
+            }
+        });
+        Map<String, Object> datas = new HashMap<String, Object>() {
+            {
+                put("users", users);
+
+            }
+        };
+
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_hyperlink.docx");
+        template.render(datas);
+        template.writeToFile("out_iterable_hyperlink.docx");
+    }
+
+    @SuppressWarnings("serial")
+    @Test
     @DisplayName("using all gramer together")
     public void testTogether() throws Exception {
         RowRenderData row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
@@ -128,13 +171,13 @@ public class IterableTemplateTest {
         List<Map<String, Object>> addrs = new ArrayList<>();
         addrs.add(new HashMap<String, Object>() {
             {
-                put("position", "Sayi");
+                put("position", "Hangzhou,China");
 
             }
         });
         addrs.add(new HashMap<String, Object>() {
             {
-                put("position", "Deepoove");
+                put("position", "Shanghai,China");
 
             }
         });
@@ -169,6 +212,7 @@ public class IterableTemplateTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach2.docx");
+        System.out.println(template.getXWPFDocument().getDocument());
         template.render(datas);
         template.writeToFile("out_iterable_foreach2.docx");
     }

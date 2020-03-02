@@ -29,6 +29,7 @@ import com.deepoove.poi.xwpf.Container;
 import com.deepoove.poi.xwpf.ContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.NumberingWrapper;
+import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 public class IterableProcessor extends AbstractIterableProcessor {
 
@@ -126,6 +127,8 @@ public class IterableProcessor extends AbstractIterableProcessor {
 
             XWPFParagraph startParagraph = (XWPFParagraph) iterableTemplate.getStartMark().getRun().getParent();
             XWPFParagraph endParagraph = (XWPFParagraph) iterableTemplate.getEndMark().getRun().getParent();
+            XWPFParagraphWrapper startParagraphWrapper = new XWPFParagraphWrapper(startParagraph);
+            XWPFParagraphWrapper endParagraphWrapper = new XWPFParagraphWrapper(endParagraph);
 
             CTP startCtp = startParagraph.getCTP();
             CTP endCtp = endParagraph.getCTP();
@@ -145,10 +148,10 @@ public class IterableProcessor extends AbstractIterableProcessor {
             List<XWPFRun> startRuns = startParagraph.getRuns();
             int startSize = startRuns.size();
             for (int i = startSize - 1; i > startRunPos; i--) {
-                startParagraph.removeRun(i);
+                startParagraphWrapper.removeRun(i);
             }
             for (int i = endRunPos - 1; i >= 0; i--) {
-                endParagraph.removeRun(i);
+                endParagraphWrapper.removeRun(i);
             }
         }
 
