@@ -44,10 +44,13 @@ import org.slf4j.LoggerFactory;
 public class XWPFParagraphWrapper {
 
     private static Logger logger = LoggerFactory.getLogger(XWPFParagraphWrapper.class);
-    static final QName HYPER_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "hyperlink");
-    static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME,
-            new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "r") });
-
+    static final QName HYPER_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "hyperlink");
+    static final QName FLDSIMPLE_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "fldSimple");
+    static final QName R_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "r");
+    
+    static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME, FLDSIMPLE_QNAME, R_QNAME });
 
     XWPFParagraph paragraph;
 
@@ -56,8 +59,8 @@ public class XWPFParagraphWrapper {
     }
 
     public XWPFHyperlinkRun createHyperLinkRun(String link) {
-        PackageRelationship relationship = paragraph.getDocument().getPackagePart()
-                .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
+        PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
+                XWPFRelation.HYPERLINK.getRelation());
         CTHyperlink hyperlink = paragraph.getCTP().addNewHyperlink();
         hyperlink.setId(relationship.getId());
         CTR ctr = hyperlink.addNewR();
@@ -78,8 +81,8 @@ public class XWPFParagraphWrapper {
      */
     public XWPFRun insertNewHyperLinkRun(int pos, String link) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
-            PackageRelationship relationship = paragraph.getDocument().getPackagePart()
-                    .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
+            PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
+                    XWPFRelation.HYPERLINK.getRelation());
             CTHyperlink hyperlink = insertNewHyperlink(pos);
             hyperlink.setId(relationship.getId());
             CTR ctr = hyperlink.addNewR();
@@ -107,7 +110,7 @@ public class XWPFParagraphWrapper {
 
         return null;
     }
-    
+
     private CTHyperlink insertNewHyperlink(int paramInt) {
         // do not insert hyperlink directly #issue 331
         // CTHyperlink hyperlink = paragraph.getCTP().insertNewHyperlink(rPos);
@@ -115,14 +118,14 @@ public class XWPFParagraphWrapper {
         // the correct insert hyperlink as our run/irun list contains
         // all runs
         CTPImpl ctpImpl = (CTPImpl) paragraph.getCTP();
-//        ctpImpl.insertNewR(arg0)
-//        ctpImpl.insertNewHyperlink(arg0)
-//        ctpImpl.insertNewFldSimple(arg0)
+        // ctpImpl.insertNewR(arg0)
+        // ctpImpl.insertNewHyperlink(arg0)
+        // ctpImpl.insertNewFldSimple(arg0)
         synchronized (ctpImpl.monitor()) {
             // check_orphaned();
             CTHyperlink localCTHyperlink = null;
-            localCTHyperlink = (CTHyperlink) ctpImpl.get_store().insert_element_user(RUN_QNAME_SET,
-                    HYPER_QNAME, paramInt);
+            localCTHyperlink = (CTHyperlink) ctpImpl.get_store().insert_element_user(RUN_QNAME_SET, HYPER_QNAME,
+                    paramInt);
             return localCTHyperlink;
         }
     }
@@ -162,14 +165,13 @@ public class XWPFParagraphWrapper {
             // and fields so it is different to the paragraph R array.
             for (int i = 0; i < insertPostionCursor; i++) {
                 XWPFRun currRun = runs.get(i);
-                if (!(currRun instanceof XWPFHyperlinkRun
-                        || currRun instanceof XWPFFieldRun)) {
+                if (!(currRun instanceof XWPFHyperlinkRun || currRun instanceof XWPFFieldRun)) {
                     rPos++;
                 }
             }
         }
         paragraph.getCTP().setRArray(rPos, xwpfRun.getCTR());
-        
+
         // runs
         for (int i = 0; i < runs.size(); i++) {
             XWPFRun ele = runs.get(i);
@@ -177,7 +179,7 @@ public class XWPFParagraphWrapper {
                 runs.set(i, xwpfRun);
             }
         }
-        
+
         // iruns
         List<IRunElement> iruns = getIRuns();
         for (int i = 0; i < iruns.size(); i++) {

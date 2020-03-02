@@ -1,7 +1,13 @@
 package com.deepoove.poi.tl.issue;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +29,34 @@ public class Issue331 {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/331.docx").render(map);
         template.writeToFile("out_issue_331.docx");
+    }
+
+    // insertNewRun 实现的bug，如果找不到i元素则在末尾插入，可能需要cursor或者qnameset来插入
+    // @Test
+    public void testinsertNewRunRun() throws FileNotFoundException, IOException {
+        XWPFDocument doc = new XWPFDocument(new FileInputStream("src/test/resources/issue/331_hyper.docx"));
+        XWPFParagraph createParagraph = doc.getParagraphArray(0);
+        XWPFRun insertNewRun = createParagraph.insertNewRun(0);
+        insertNewRun.setText("Hi");
+
+        // FileOutputStream out = new FileOutputStream("out_tem.docx");
+        // doc.write(out);
+        // doc.close();
+        // out.close();
+
+    }
+
+    // @Test
+    public void testRunTemlate() throws FileNotFoundException, IOException {
+        XWPFTemplate template = XWPFTemplate.compile(new FileInputStream("src/test/resources/issue/331_hyper.docx"));
+
+        template.render(new HashMap<String, Object>() {
+            {
+                put("title", "Hi");
+            }
+        });
+        // template.writeToFile("out_temp11.docx");
+
     }
 
 }
