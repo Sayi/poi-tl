@@ -13,7 +13,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import com.deepoove.poi.util.ParagraphUtils;
 
-public interface BodyContainer {
+public interface BodyContainer extends ParentContext{
 
     int getPosOfParagraphCTP(CTP startCtp);
 

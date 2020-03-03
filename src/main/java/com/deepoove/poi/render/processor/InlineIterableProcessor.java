@@ -14,10 +14,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.template.InlineIterableTemplate;
+import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
-import com.deepoove.poi.xwpf.BodyContainerFactory;
+import com.deepoove.poi.xwpf.ParagraphContext;
+import com.deepoove.poi.xwpf.ParentContext;
+import com.deepoove.poi.xwpf.XWPFParagraphContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 public class InlineIterableProcessor extends AbstractIterableProcessor {
@@ -28,88 +31,80 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
 
     @Override
     public void visit(InlineIterableTemplate iterableTemplate) {
-
         logger.info("Process InlineIterableTemplate:{}", iterableTemplate);
-        BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
+        super.visit((IterableTemplate) iterableTemplate);
+    }
 
-        Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
-        int times = conditionTimes(compute);
+    @Override
+    protected void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer) {
+        ParagraphContext parentContext = new XWPFParagraphContext(
+                new XWPFParagraphWrapper((XWPFParagraph) iterableTemplate.getStartRun().getParent()));
 
-        if (TIMES_ONCE == times) {
+        Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
+        Integer endRunPos = iterableTemplate.getEndMark().getRunPos();
 
-            RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory().newCompute(compute);
-            new DocumentProcessor(this.template, dataCompute).process(iterableTemplate.getTemplates());
+        for (int i = endRunPos - 1; i > startRunPos; i--) {
+            parentContext.removeRun(i);
+        }
+    }
 
-        } else if (TIMES_N == times) {
+    @Override
+    protected void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer, Iterable<?> compute) {
+        RunTemplate start = iterableTemplate.getStartMark();
+        RunTemplate end = iterableTemplate.getEndMark();
 
-            RunTemplate start = iterableTemplate.getStartMark();
-            RunTemplate end = iterableTemplate.getEndMark();
+        ParagraphContext parentContext = new XWPFParagraphContext(
+                new XWPFParagraphWrapper((XWPFParagraph) start.getRun().getParent()));
 
-            XWPFRun startRun = start.getRun();
-            XWPFRun endRun = end.getRun();
+        Integer startRunPos = start.getRunPos();
+        Integer endRunPos = end.getRunPos();
 
-            XWPFParagraph currentParagraph = (XWPFParagraph) startRun.getParent();
-            XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
-
-            Integer startRunPos = start.getRunPos();
-            Integer endRunPos = end.getRunPos();
-
-            CTR endCtr = endRun.getCTR();
-
-            Iterable<?> model = (Iterable<?>) compute;
-            Iterator<?> iterator = model.iterator();
-            while (iterator.hasNext()) {
-                // copy position cursor
-                int insertPostionCursor = end.getRunPos();
-
-                // copy content
-                List<XWPFRun> runs = currentParagraph.getRuns();
-                List<XWPFRun> copies = new ArrayList<XWPFRun>();
-                for (int i = startRunPos + 1; i < endRunPos; i++) {
-                    insertPostionCursor = end.getRunPos();
-
-                    XWPFRun xwpfRun = runs.get(i);
-                    XWPFRun insertNewRun = paragraphWrapper.insertNewRun(xwpfRun, insertPostionCursor);
-                    XWPFRun xwpfRun2 = paragraphWrapper.createRun(xwpfRun, (IRunBody)currentParagraph);
-                    paragraphWrapper.setAndUpdateRun(xwpfRun2, insertNewRun, insertPostionCursor);
-
-                    XmlCursor newCursor = endCtr.newCursor();
-                    newCursor.toPrevSibling();
-                    XmlObject object = newCursor.getObject();
-                    XWPFRun copy = paragraphWrapper.createRun(object, (IRunBody)currentParagraph);
-                    copies.add(copy);
-                    paragraphWrapper.setAndUpdateRun(copy, xwpfRun2, insertPostionCursor);
-                }
-
-                // re-parse
-                List<MetaTemplate> templates = template.getResolver().resolveXWPFRuns(copies);
-
-                // render
-                RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory().newCompute(iterator.next());
-                new DocumentProcessor(this.template, dataCompute).process(templates);
-            }
-
-            // clear self iterable template
-            for (int i = endRunPos - 1; i > startRunPos; i--) {
-                paragraphWrapper.removeRun(i);
-            }
-
-        } else {
-
-            XWPFParagraph currentParagraph = (XWPFParagraph) iterableTemplate.getStartRun().getParent();
-            XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
-
-            Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
-            Integer endRunPos = iterableTemplate.getEndMark().getRunPos();
-
-            for (int i = endRunPos - 1; i > startRunPos; i--) {
-                paragraphWrapper.removeRun(i);
-            }
-
+        Iterator<?> iterator = compute.iterator();
+        while (iterator.hasNext()) {
+            next(iterableTemplate, parentContext, startRunPos, endRunPos, iterator.next());
         }
 
-        bodyContainer.clearPlaceholder(iterableTemplate.getStartRun());
-        bodyContainer.clearPlaceholder(iterableTemplate.getEndRun());
+        // clear self iterable template
+        for (int i = endRunPos - 1; i > startRunPos; i--) {
+            parentContext.removeRun(i);
+        }
+    }
+
+    @Override
+    public void next(IterableTemplate iterable, ParentContext parentContext, int startPos, int endPos,
+            Object model) {
+
+        ParagraphContext paragraphContext = (ParagraphContext) parentContext;
+        RunTemplate end = iterable.getEndMark();
+        CTR endCtr = end.getRun().getCTR();
+
+        // copy position cursor
+        int insertPostionCursor = end.getRunPos();
+
+        // copy content
+        List<XWPFRun> runs = paragraphContext.getParagraph().getRuns();
+        List<XWPFRun> copies = new ArrayList<XWPFRun>();
+        for (int i = startPos + 1; i < endPos; i++) {
+            insertPostionCursor = end.getRunPos();
+
+            XWPFRun xwpfRun = runs.get(i);
+            XWPFRun insertNewRun = paragraphContext.insertNewRun(xwpfRun, insertPostionCursor);
+            XWPFRun replaceXwpfRun = paragraphContext.createRun(xwpfRun, (IRunBody) paragraphContext.getParagraph());
+            paragraphContext.setAndUpdateRun(replaceXwpfRun, insertNewRun, insertPostionCursor);
+
+            XmlCursor newCursor = endCtr.newCursor();
+            newCursor.toPrevSibling();
+            XmlObject object = newCursor.getObject();
+            XWPFRun copy = paragraphContext.createRun(object, (IRunBody) paragraphContext.getParagraph());
+            copies.add(copy);
+            paragraphContext.setAndUpdateRun(copy, replaceXwpfRun, insertPostionCursor);
+        }
+
+        // re-parse
+        List<MetaTemplate> templates = template.getResolver().resolveXWPFRuns(copies);
+
+        // render
+        process(templates, model);
     }
 
 }

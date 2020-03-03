@@ -353,4 +353,8 @@ public class XWPFParagraphWrapper {
         return false;
     }
 
+    public XWPFParagraph getParagraph() {
+        return paragraph;
+    }
+
 }
