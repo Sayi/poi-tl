@@ -25,8 +25,8 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.NumberingWrapper;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
@@ -42,7 +42,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
 
         logger.info("Process iterableTemplate:{}", iterableTemplate);
 
-        Container container = ContainerFactory.getContainer(iterableTemplate);
+        BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
         NiceXWPFDocument doc = template.getXWPFDocument();
 
         Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
@@ -55,11 +55,11 @@ public class IterableProcessor extends AbstractIterableProcessor {
 
         } else if (TIMES_N == times) {
 
-            CTP startCtp = ((XWPFParagraph) iterableTemplate.getStartMark().getRun().getParent()).getCTP();
-            CTP endCtp = ((XWPFParagraph) iterableTemplate.getEndMark().getRun().getParent()).getCTP();
+            CTP startCtp = ((XWPFParagraph) iterableTemplate.getStartRun().getParent()).getCTP();
+            CTP endCtp = ((XWPFParagraph) iterableTemplate.getEndRun().getParent()).getCTP();
 
-            int startPos = container.getPosOfParagraphCTP(startCtp);
-            int endPos = container.getPosOfParagraphCTP(endCtp);
+            int startPos = bodyContainer.getPosOfParagraphCTP(startCtp);
+            int endPos = bodyContainer.getPosOfParagraphCTP(endCtp);
 
             Iterable<?> model = (Iterable<?>) compute;
             Iterator<?> iterator = model.iterator();
@@ -68,44 +68,44 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 XmlCursor insertPostionCursor = endCtp.newCursor();
 
                 // copy content
-                List<IBodyElement> bodyElements = container.getBodyElements();
+                List<IBodyElement> bodyElements = bodyContainer.getBodyElements();
                 List<IBodyElement> copies = new ArrayList<IBodyElement>();
                 Map<BigInteger, BigInteger> consistCache = new HashMap<>();
                 for (int i = startPos + 1; i < endPos; i++) {
                     IBodyElement iBodyElement = bodyElements.get(i);
                     if (iBodyElement.getElementType() == BodyElementType.PARAGRAPH) {
                         insertPostionCursor = endCtp.newCursor();
-                        XWPFParagraph insertNewParagraph = container.insertNewParagraph(insertPostionCursor);
+                        XWPFParagraph insertNewParagraph = bodyContainer.insertNewParagraph(insertPostionCursor);
                         // find insert paragraph pos
-                        int paraPos = container.getParaPos(insertNewParagraph);
-                        container.setParagraph((XWPFParagraph) iBodyElement, paraPos);
+                        int paraPos = bodyContainer.getParaPos(insertNewParagraph);
+                        bodyContainer.setParagraph((XWPFParagraph) iBodyElement, paraPos);
                         // re-update ctp reference
                         insertPostionCursor = endCtp.newCursor();
                         insertPostionCursor.toPrevSibling();
                         XmlObject object = insertPostionCursor.getObject();
-                        XWPFParagraph copy = new XWPFParagraph((CTP) object, container.getTarget());
+                        XWPFParagraph copy = new XWPFParagraph((CTP) object, bodyContainer.getTarget());
 
                         // update numbering
                         updateNumbering((XWPFParagraph) iBodyElement, copy, doc, consistCache);
 
                         copies.add(copy);
-                        container.updateBodyElements(insertNewParagraph, copy);
-                        container.setParagraph(copy, paraPos);
+                        bodyContainer.updateBodyElements(insertNewParagraph, copy);
+                        bodyContainer.setParagraph(copy, paraPos);
                     } else if (iBodyElement.getElementType() == BodyElementType.TABLE) {
                         insertPostionCursor = endCtp.newCursor();
-                        XWPFTable insertNewTbl = container.insertNewTbl(insertPostionCursor);
+                        XWPFTable insertNewTbl = bodyContainer.insertNewTbl(insertPostionCursor);
                         // find insert table pos
-                        int tablePos = container.getTablePos(insertNewTbl);
-                        container.setTable(tablePos, (XWPFTable) iBodyElement);
+                        int tablePos = bodyContainer.getTablePos(insertNewTbl);
+                        bodyContainer.setTable(tablePos, (XWPFTable) iBodyElement);
 
                         insertPostionCursor = endCtp.newCursor();
                         insertPostionCursor.toPrevSibling();
                         XmlObject object = insertPostionCursor.getObject();
 
-                        XWPFTable copy = new XWPFTable((CTTbl) object, container.getTarget());
+                        XWPFTable copy = new XWPFTable((CTTbl) object, bodyContainer.getTarget());
                         copies.add(copy);
-                        container.updateBodyElements(insertNewTbl, copy);
-                        container.setTable(tablePos, copy);
+                        bodyContainer.updateBodyElements(insertNewTbl, copy);
+                        bodyContainer.setTable(tablePos, copy);
                     }
                 }
 
@@ -120,28 +120,28 @@ public class IterableProcessor extends AbstractIterableProcessor {
 
             // clear self iterable template
             for (int i = endPos - 1; i > startPos; i--) {
-                container.removeBodyElement(i);
+                bodyContainer.removeBodyElement(i);
             }
 
         } else {
 
-            XWPFParagraph startParagraph = (XWPFParagraph) iterableTemplate.getStartMark().getRun().getParent();
-            XWPFParagraph endParagraph = (XWPFParagraph) iterableTemplate.getEndMark().getRun().getParent();
+            XWPFParagraph startParagraph = (XWPFParagraph) iterableTemplate.getStartRun().getParent();
+            XWPFParagraph endParagraph = (XWPFParagraph) iterableTemplate.getEndRun().getParent();
             XWPFParagraphWrapper startParagraphWrapper = new XWPFParagraphWrapper(startParagraph);
             XWPFParagraphWrapper endParagraphWrapper = new XWPFParagraphWrapper(endParagraph);
 
             CTP startCtp = startParagraph.getCTP();
             CTP endCtp = endParagraph.getCTP();
 
-            int startPos = container.getPosOfParagraphCTP(startCtp);
-            int endPos = container.getPosOfParagraphCTP(endCtp);
+            int startPos = bodyContainer.getPosOfParagraphCTP(startCtp);
+            int endPos = bodyContainer.getPosOfParagraphCTP(endCtp);
 
             Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
             Integer endRunPos = iterableTemplate.getEndMark().getRunPos();
 
             // remove content
             for (int i = endPos - 1; i > startPos; i--) {
-                container.removeBodyElement(i);
+                bodyContainer.removeBodyElement(i);
             }
 
             // remove run content
@@ -155,8 +155,8 @@ public class IterableProcessor extends AbstractIterableProcessor {
             }
         }
 
-        container.clearPlaceholder(iterableTemplate.getStartMark().getRun());
-        container.clearPlaceholder(iterableTemplate.getEndMark().getRun());
+        bodyContainer.clearPlaceholder(iterableTemplate.getStartRun());
+        bodyContainer.clearPlaceholder(iterableTemplate.getEndRun());
     }
 
     private static void updateNumbering(XWPFParagraph source, XWPFParagraph target, NiceXWPFDocument doc,

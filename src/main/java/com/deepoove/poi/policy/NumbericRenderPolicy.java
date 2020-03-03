@@ -30,8 +30,8 @@ import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
@@ -65,10 +65,10 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
 
             BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
 
-            Container container = ContainerFactory.getContainer(run);
+            BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
             XWPFRun newRun;
             for (RenderData line : datas) {
-                newRun = createRunLine(run, container, style, numID);
+                newRun = createRunLine(run, bodyContainer, style, numID);
                 if (line instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(newRun, (PictureRenderData) line);
                 } else if (line instanceof TextRenderData) {
@@ -80,9 +80,9 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
             }
         }
 
-        private static XWPFRun createRunLine(XWPFRun run, Container container, Style style,
+        private static XWPFRun createRunLine(XWPFRun run, BodyContainer bodyContainer, Style style,
                 BigInteger numID) {
-            XWPFParagraph paragraph = container.insertNewParagraph(run);
+            XWPFParagraph paragraph = bodyContainer.insertNewParagraph(run);
             StyleUtils.styleParagraph(paragraph, style);
             paragraph.setNumID(numID);
             return paragraph.createRun();

@@ -18,7 +18,7 @@ public class IterableTemplate implements MetaTemplate {
     public IterableTemplate(RunTemplate startMark) {
         this.startMark = startMark;
     }
-    
+
     @Override
     public String variable() {
         return startMark.variable();
@@ -46,12 +46,20 @@ public class IterableTemplate implements MetaTemplate {
         return startMark;
     }
 
+    public XWPFRun getStartRun() {
+        return startMark.getRun();
+    }
+
     public void setStartMark(RunTemplate startMark) {
         this.startMark = startMark;
     }
 
     public RunTemplate getEndMark() {
         return endMark;
+    }
+
+    public XWPFRun getEndRun() {
+        return endMark.getRun();
     }
 
     public void setEndMark(RunTemplate endMark) {

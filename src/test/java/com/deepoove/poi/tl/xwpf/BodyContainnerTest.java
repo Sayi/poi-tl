@@ -2,7 +2,7 @@ package com.deepoove.poi.tl.xwpf;
 
 import org.junit.jupiter.api.Test;
 
-public class ContainnerTest {
+public class BodyContainnerTest {
 
     @Test
     void testGetPosOfParagraphCTP() {

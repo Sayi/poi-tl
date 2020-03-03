@@ -16,11 +16,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
 import com.deepoove.poi.util.ReflectionUtils;
 
-public class CellContainer implements Container {
+public class CellBodyContainer implements BodyContainer {
 
     XWPFTableCell cell;
 
-    public CellContainer(XWPFTableCell cell) {
+    public CellBodyContainer(XWPFTableCell cell) {
         this.cell = cell;
     }
 

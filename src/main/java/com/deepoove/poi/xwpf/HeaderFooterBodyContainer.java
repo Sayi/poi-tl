@@ -16,11 +16,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import com.deepoove.poi.util.ReflectionUtils;
 
-public class HeaderFooterContainer implements Container {
+public class HeaderFooterBodyContainer implements BodyContainer {
 
     XWPFHeaderFooter headerFooter;
 
-    public HeaderFooterContainer(XWPFHeaderFooter cell) {
+    public HeaderFooterBodyContainer(XWPFHeaderFooter cell) {
         this.headerFooter = cell;
     }
 

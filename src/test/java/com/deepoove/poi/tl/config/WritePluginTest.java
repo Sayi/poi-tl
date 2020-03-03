@@ -21,8 +21,8 @@ import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.WhereDelegate;
 import com.deepoove.poi.util.TableTools;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 @DisplayName("Full custom plug-in example")
 public class WritePluginTest {
@@ -82,8 +82,8 @@ public class WritePluginTest {
 
                 // do 表格
                 int row = thing.size() + 1, col = 2;
-                Container container = ContainerFactory.getContainer(where);
-                XWPFTable table = container.insertNewTable(where, row, col);
+                BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(where);
+                XWPFTable table = bodyContainer.insertNewTable(where, row, col);
                 TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
                 TableTools.borderTable(table, 4);
 

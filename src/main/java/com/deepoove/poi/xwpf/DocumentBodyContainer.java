@@ -11,11 +11,11 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
-public class DocContainer implements Container {
+public class DocumentBodyContainer implements BodyContainer {
 
     NiceXWPFDocument doc;
 
-    public DocContainer(NiceXWPFDocument doc) {
+    public DocumentBodyContainer(NiceXWPFDocument doc) {
         this.doc = doc;
     }
 

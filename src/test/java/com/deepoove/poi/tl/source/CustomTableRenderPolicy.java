@@ -7,8 +7,8 @@ import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.TableTools;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * 通过
@@ -33,11 +33,11 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
     public void doRender(RenderContext<Object> context) throws Exception {
 
         XWPFRun run = context.getRun();
-        Container container = ContainerFactory.getContainer(run);
+        BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
         // 定义行列
         int row = 10, col = 8;
         // 插入表格
-        XWPFTable table = container.insertNewTable(run, row, col);
+        XWPFTable table = bodyContainer.insertNewTable(run, row, col);
 
         // 定义表格宽度、边框和样式
         TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);

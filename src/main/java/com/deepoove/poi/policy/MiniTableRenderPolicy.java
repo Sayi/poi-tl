@@ -37,8 +37,8 @@ import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
@@ -158,8 +158,8 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             
 
             // 2.创建表格
-            Container container = ContainerFactory.getContainer(run);
-             XWPFTable table = container.insertNewTable(run, row, col);
+            BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
+             XWPFTable table = bodyContainer.insertNewTable(run, row, col);
             TableTools.initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 
             // 3.渲染数据
@@ -175,8 +175,8 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 MiniTableRenderData tableData) {
             int row = 2, col = tableData.getHeader().size();
 
-            Container container = ContainerFactory.getContainer(run);
-            XWPFTable table = container.insertNewTable(run, row, col);
+            BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
+            XWPFTable table = bodyContainer.insertNewTable(run, row, col);
             
             TableTools.initBasicTable(table, col, tableData.getWidth(), tableData.getStyle());
 

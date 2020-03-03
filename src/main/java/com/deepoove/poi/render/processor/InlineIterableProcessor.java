@@ -16,8 +16,8 @@ import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 public class InlineIterableProcessor extends AbstractIterableProcessor {
@@ -30,7 +30,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
     public void visit(InlineIterableTemplate iterableTemplate) {
 
         logger.info("Process InlineIterableTemplate:{}", iterableTemplate);
-        Container container = ContainerFactory.getContainer(iterableTemplate);
+        BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
 
         Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
         int times = conditionTimes(compute);
@@ -96,7 +96,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
 
         } else {
 
-            XWPFParagraph currentParagraph = (XWPFParagraph) iterableTemplate.getStartMark().getRun().getParent();
+            XWPFParagraph currentParagraph = (XWPFParagraph) iterableTemplate.getStartRun().getParent();
             XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(currentParagraph);
 
             Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
@@ -108,8 +108,8 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
 
         }
 
-        container.clearPlaceholder(iterableTemplate.getStartMark().getRun());
-        container.clearPlaceholder(iterableTemplate.getEndMark().getRun());
+        bodyContainer.clearPlaceholder(iterableTemplate.getStartRun());
+        bodyContainer.clearPlaceholder(iterableTemplate.getEndRun());
     }
 
 }

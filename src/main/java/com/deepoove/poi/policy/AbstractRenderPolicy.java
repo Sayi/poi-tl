@@ -25,8 +25,8 @@ import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.xwpf.Container;
-import com.deepoove.poi.xwpf.ContainerFactory;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * 提供了数据校验、渲染、清空模板标签、异常处理的通用逻辑
@@ -101,8 +101,8 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     public static void clearPlaceholder(RenderContext<?> context, boolean clearParagraph) {
         XWPFRun run = context.getRun();
         if (clearParagraph) {
-            Container container = ContainerFactory.getContainer(run);
-            container.clearPlaceholder(run);
+            BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
+            bodyContainer.clearPlaceholder(run);
         } else {
             run.setText("", 0);
         }
