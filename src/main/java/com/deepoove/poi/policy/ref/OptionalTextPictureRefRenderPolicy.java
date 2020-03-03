@@ -21,7 +21,6 @@ import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.SimpleValue;
@@ -34,7 +33,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.ReflectionException;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**

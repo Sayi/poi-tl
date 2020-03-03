@@ -92,7 +92,7 @@ public class XWPFParagraphWrapper {
         return xwpfRun;
     }
 
-    public XWPFRun insertNewHyperLinkRun(int pos, String link) {
+    public XWPFHyperlinkRun insertNewHyperLinkRun(int pos, String link) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
             PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
                     XWPFRelation.HYPERLINK.getRelation());

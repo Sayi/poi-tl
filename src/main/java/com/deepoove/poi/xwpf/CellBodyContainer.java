@@ -51,7 +51,7 @@ public class CellBodyContainer implements BodyContainer {
                 // remove cell's table
                 List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", cell);
                 tables.remove(indexOf);
-                cell.getCTTc().removeTbl(pos);
+                cell.getCTTc().removeTbl(indexOf);
             }
             if (type == BodyElementType.PARAGRAPH) {
                 int indexOf = cell.getParagraphs().indexOf(bodyElements.get(pos));
