@@ -475,6 +475,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                 styles.addStyle(xwpfStyle);
             }
         } catch (Exception e) {
+            // throw exception?
             logger.error("merge style error", e);
         }
         return styleIdsMap;

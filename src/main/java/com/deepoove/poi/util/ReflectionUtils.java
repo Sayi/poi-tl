@@ -3,6 +3,8 @@ package com.deepoove.poi.util;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+import com.deepoove.poi.exception.ReflectionException;
+
 public class ReflectionUtils {
 
     public static Object getValue(String fieldName, Object obj) {
@@ -16,7 +18,7 @@ public class ReflectionUtils {
             field.setAccessible(true);
             return field.get(obj);
         } catch (Exception e) {
-            throw new IllegalStateException("Relefect field " + fieldName + " error", e);
+            throw new ReflectionException(fieldName, obj.getClass(), e);
         }
     }
 

@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.SimpleValue;
@@ -32,6 +33,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.exception.ReflectionException;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
@@ -96,7 +98,7 @@ public abstract class OptionalTextPictureRefRenderPolicy extends ReferenceRender
             field.setAccessible(true);
             run = (XWPFRun) field.get(pic);
         } catch (Exception e) {
-            throw new RenderException("Get XWPFPicture CTDrawing error", e);
+            throw new ReflectionException("run", XWPFPicture.class, e);
         }
         CTR ctr = run.getCTR();
         return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;

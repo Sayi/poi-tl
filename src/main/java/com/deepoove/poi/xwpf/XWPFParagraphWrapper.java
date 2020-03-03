@@ -31,14 +31,13 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.QNameSet;
-import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.deepoove.poi.exception.ReflectionException;
 
 /**
  * XWPFParagraph 包装器
@@ -47,8 +46,6 @@ import org.slf4j.LoggerFactory;
  * @version
  */
 public class XWPFParagraphWrapper {
-
-    private static Logger logger = LoggerFactory.getLogger(XWPFParagraphWrapper.class);
 
     static final QName HYPER_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
             "hyperlink");
@@ -186,7 +183,7 @@ public class XWPFParagraphWrapper {
         return null;
     }
 
-    public void updateRunsAndIRuns(int pos, XWPFRun newRun) {
+    private void updateRunsAndIRuns(int pos, XWPFRun newRun) {
         List<IRunElement> iruns = getIRuns();
         List<XWPFRun> runs = getRuns();
         int iPos = iruns.size();
@@ -210,9 +207,8 @@ public class XWPFParagraphWrapper {
             runsField.setAccessible(true);
             return (List<XWPFRun>) runsField.get(paragraph);
         } catch (Exception e) {
-            logger.error("Cannot get XWPFParagraph'runs", e);
+            throw new ReflectionException("runs", XWPFParagraph.class, e);
         }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -222,9 +218,8 @@ public class XWPFParagraphWrapper {
             runsField.setAccessible(true);
             return (List<IRunElement>) runsField.get(paragraph);
         } catch (Exception e) {
-            logger.error("Cannot get XWPFParagraph'iRuns", e);
+            throw new ReflectionException("iruns", XWPFParagraph.class, e);
         }
-        return null;
     }
 
     public void setAndUpdateRun(XWPFRun xwpfRun, XWPFRun source, int insertPostionCursor) {
@@ -277,38 +272,6 @@ public class XWPFParagraphWrapper {
             if (ele == source) {
                 iruns.set(i, xwpfRun);
             }
-        }
-    }
-
-    public XWPFRun insertNewRun(XWPFRun xwpfRun, int insertPostionCursor) {
-        if (xwpfRun instanceof XWPFHyperlinkRun) {
-            return insertNewHyperLinkRun(insertPostionCursor, "");
-        } else if (xwpfRun instanceof XWPFFieldRun) {
-            return insertNewField(insertPostionCursor);
-        } else {
-            return insertNewRun(insertPostionCursor);
-        }
-    }
-
-    public XWPFRun createRun(XWPFRun xwpfRun, IRunBody p) {
-        if (xwpfRun instanceof XWPFHyperlinkRun) {
-            return new XWPFHyperlinkRun((CTHyperlink) ((XWPFHyperlinkRun) xwpfRun).getCTHyperlink().copy(),
-                    (CTR) ((XWPFHyperlinkRun) xwpfRun).getCTR().copy(), p);
-        } else if (xwpfRun instanceof XWPFFieldRun) {
-            return new XWPFFieldRun((CTSimpleField) ((XWPFFieldRun) xwpfRun).getCTField().copy(),
-                    (CTR) ((XWPFFieldRun) xwpfRun).getCTR().copy(), p);
-        } else {
-            return new XWPFRun((CTR) xwpfRun.getCTR().copy(), p);
-        }
-    }
-
-    public XWPFRun createRun(XmlObject object, IRunBody p) {
-        if (object instanceof CTHyperlink) {
-            return new XWPFHyperlinkRun((CTHyperlink) object, ((CTHyperlink) object).getRArray(0), p);
-        } else if (object instanceof CTSimpleField) {
-            return new XWPFFieldRun((CTSimpleField) object, ((CTSimpleField) object).getRArray(0), p);
-        } else {
-            return new XWPFRun((CTR) object, p);
         }
     }
 

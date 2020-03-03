@@ -8,16 +8,14 @@ import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.deepoove.poi.exception.ReflectionException;
 
 /**
  * This is a utility class so that I can get access to the protected fields
  * within XWPFNumbering.
  */
 public class NumberingWrapper {
-
-    private static Logger logger = LoggerFactory.getLogger(NumberingWrapper.class);
 
     private final XWPFNumbering numbering;
 
@@ -38,9 +36,8 @@ public class NumberingWrapper {
             field.setAccessible(true);
             return (List<XWPFNum>) field.get(this.numbering);
         } catch (Exception e) {
-            logger.error("Cannot get XWPFNumbering nums", e);
+            throw new ReflectionException("nums", XWPFNumbering.class, e);
         }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -50,9 +47,8 @@ public class NumberingWrapper {
             field.setAccessible(true);
             return (List<XWPFAbstractNum>) field.get(this.numbering);
         } catch (Exception e) {
-            logger.error("Cannot get XWPFNumbering abstractNums", e);
+            throw new ReflectionException("abstractNums", XWPFNumbering.class, e);
         }
-        return null;
     }
 
     public List<XWPFAbstractNum> getAbstractNums() {
