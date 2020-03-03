@@ -4,6 +4,7 @@
 .settings/
 *.iml
 bin/
+.idea/*
 
 # Package Files #
 *.jar
