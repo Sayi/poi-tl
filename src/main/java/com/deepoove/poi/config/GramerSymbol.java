@@ -67,6 +67,7 @@ public enum GramerSymbol {
         return this.symbol;
     }
 
+    @Override
     public String toString() {
         return String.valueOf(this.symbol);
     }

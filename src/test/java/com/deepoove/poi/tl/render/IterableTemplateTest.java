@@ -212,7 +212,6 @@ public class IterableTemplateTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach2.docx");
-        System.out.println(template.getXWPFDocument().getDocument());
         template.render(datas);
         template.writeToFile("out_iterable_foreach2.docx");
     }

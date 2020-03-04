@@ -34,15 +34,18 @@ public class XWPFParagraphContext implements ParagraphContext {
         this.paragraphWrapper = paragraphWrapper;
     }
 
+    @Override
     public XWPFParagraph getParagraph() {
         return paragraphWrapper.getParagraph();
     }
 
+    @Override
     public void setAndUpdateRun(XWPFRun xwpfRun2, XWPFRun insertNewRun, int insertPostionCursor) {
         paragraphWrapper.setAndUpdateRun(xwpfRun2, insertNewRun, insertPostionCursor);
 
     }
 
+    @Override
     public XWPFRun insertNewRun(XWPFRun xwpfRun, int insertPostionCursor) {
         if (xwpfRun instanceof XWPFHyperlinkRun) {
             return paragraphWrapper.insertNewHyperLinkRun(insertPostionCursor, "");
@@ -53,6 +56,7 @@ public class XWPFParagraphContext implements ParagraphContext {
         }
     }
 
+    @Override
     public XWPFRun createRun(XWPFRun xwpfRun, IRunBody p) {
         if (xwpfRun instanceof XWPFHyperlinkRun) {
             return new XWPFHyperlinkRun((CTHyperlink) ((XWPFHyperlinkRun) xwpfRun).getCTHyperlink().copy(),
@@ -65,6 +69,7 @@ public class XWPFParagraphContext implements ParagraphContext {
         }
     }
 
+    @Override
     public XWPFRun createRun(XmlObject object, IRunBody p) {
         if (object instanceof CTHyperlink) {
             return new XWPFHyperlinkRun((CTHyperlink) object, ((CTHyperlink) object).getRArray(0), p);

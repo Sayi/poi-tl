@@ -32,6 +32,7 @@ public class DefaultRenderDataComputeFactory implements RenderDataComputeFactory
         this.config = config;
     }
 
+    @Override
     public RenderDataCompute newCompute(Object model) {
         RenderDataCompute render = null;
         switch (this.config.getElMode()) {

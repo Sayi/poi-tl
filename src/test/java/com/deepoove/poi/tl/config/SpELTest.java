@@ -186,7 +186,7 @@ public class SpELTest {
                 "2019-05-20 10:14");
 
         // 运算符
-        assertEquals(spelForBean.compute("price"), 88880000l);
+        assertEquals(spelForBean.compute("price"), 88880000L);
         assertEquals(spelForBean.compute("price + '元'"), "88880000元");
         assertEquals(spelForBean.compute("price/1000 + '千元'"), "88880千元");
         assertEquals(spelForBean.compute("price/10000 + '万元'"), "8888万元");

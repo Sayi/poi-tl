@@ -76,12 +76,6 @@ public class IterableRenderBasicExample {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_basic.docx");
-
-        List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        for (MetaTemplate temp : elementTemplates) {
-            System.out.println(temp);
-        }
-
         template.render(datas);
         template.writeToFile("out_iterable_basic.docx");
     }

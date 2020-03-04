@@ -45,7 +45,6 @@ public class Issue111 {
         // template.writeToFile("out_issue_111.docx");
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
         XWPFParagraph paragraph = document.getParagraphArray(0);
-        System.out.println(paragraph.getText());
         assertEquals(paragraph.getText(), "姓名测试姓名0，年龄：测试年龄0。\n" + 
                 "姓名测试姓名1，年龄：测试年龄1。\n" + 
                 "姓名测试姓名2，年龄：测试年龄2。\n" + 
