@@ -135,6 +135,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 XWPFRun run;
                 for (int j = 0; j < fragment.length; j++) {
                     if (0 != j) {
+                        // attention: addParagraph has bug
                         par = cell.addParagraph();
                         StyleUtils.styleTableParagraph(par, cellStyle);
                     }

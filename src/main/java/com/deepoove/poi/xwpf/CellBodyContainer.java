@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -30,6 +31,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
+import com.deepoove.poi.util.ParagraphUtils;
 import com.deepoove.poi.util.ReflectionUtils;
 
 public class CellBodyContainer implements BodyContainer {
@@ -47,9 +49,7 @@ public class CellBodyContainer implements BodyContainer {
         for (int i = 0; i < bodyElements.size(); i++) {
             current = bodyElements.get(i);
             if (current.getElementType() == BodyElementType.PARAGRAPH) {
-                if (((XWPFParagraph) current).getCTP().equals(startCtp)) {
-                    return i;
-                }
+                if (((XWPFParagraph) current).getCTP().equals(startCtp)) { return i; }
             }
         }
         return -1;
@@ -71,7 +71,11 @@ public class CellBodyContainer implements BodyContainer {
             }
             if (type == BodyElementType.PARAGRAPH) {
                 int indexOf = cell.getParagraphs().indexOf(bodyElements.get(pos));
-                cell.removeParagraph(indexOf);;
+                // cell.removeParagraph may has bug
+                // cell.removeParagraph(indexOf);
+                List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", cell);
+                paragraphs.remove(indexOf);
+                cell.getCTTc().removeP(indexOf);
             }
             bodyElements.remove(pos);
         }
@@ -86,7 +90,7 @@ public class CellBodyContainer implements BodyContainer {
     @SuppressWarnings("unchecked")
     @Override
     public List<IBodyElement> getBodyElements() {
-        return (List<IBodyElement>)ReflectionUtils.getValue("bodyElements", cell);
+        return (List<IBodyElement>) ReflectionUtils.getValue("bodyElements", cell);
     }
 
     @Override
@@ -98,9 +102,7 @@ public class CellBodyContainer implements BodyContainer {
     public int getParaPos(XWPFParagraph insertNewParagraph) {
         List<XWPFParagraph> paragraphs = cell.getParagraphs();
         for (int i = 0; i < paragraphs.size(); i++) {
-            if (paragraphs.get(i) == insertNewParagraph) {
-                return i;
-            }
+            if (paragraphs.get(i) == insertNewParagraph) { return i; }
         }
         return -1;
     }
@@ -142,9 +144,7 @@ public class CellBodyContainer implements BodyContainer {
     public int getTablePos(XWPFTable insertNewTbl) {
         List<XWPFTable> tables = cell.getTables();
         for (int i = 0; i < tables.size(); i++) {
-            if (tables.get(i) == insertNewTbl) {
-                return i;
-            }
+            if (tables.get(i) == insertNewTbl) { return i; }
         }
         return -1;
     }
@@ -178,6 +178,28 @@ public class CellBodyContainer implements BodyContainer {
             }
         }
         return table;
+    }
+
+    @Override
+    public void clearPlaceholder(XWPFRun run) {
+        IRunBody parent = run.getParent();
+        run.setText("", 0);
+        // 遇到不明确的单元格匹配问题, 可能丢失段落元素，<p>元素必须位于</tc>元素之前
+        if (parent instanceof XWPFParagraph) {
+            String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
+            if ("".equals(paragraphText)) {
+                int pos = getPosOfParagraph((XWPFParagraph) parent);
+                int lastPos = cell.getBodyElements().size() - 1;
+                if (canRemoveParagraph(pos, lastPos)) {
+                    removeBodyElement(pos);
+                }
+            }
+        }
+    }
+
+    private boolean canRemoveParagraph(int pos, int lastPos) {
+        return pos < lastPos
+                || (pos > 0 && cell.getBodyElements().get(pos - 1).getElementType() == BodyElementType.PARAGRAPH);
     }
 
 }

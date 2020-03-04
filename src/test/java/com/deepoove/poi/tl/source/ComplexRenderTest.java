@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -116,7 +119,7 @@ public class ComplexRenderTest {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
         // 动态持有XWPFTable对象
-        // template.registerPolicy("table", new MiniTableRenderPolicy());
+        template.bind("table", new MiniTableRenderPolicy());
         template.render(datas);
 
         FileOutputStream out = new FileOutputStream("out_complex.docx");
