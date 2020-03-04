@@ -17,7 +17,6 @@ import com.deepoove.poi.data.NumbericRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.template.MetaTemplate;
 
 @DisplayName("Foreach basic example")
 public class IterableRenderBasicExample {

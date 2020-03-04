@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.config;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -33,6 +35,11 @@ public class ConfigureBuilder {
     public ConfigureBuilder buildGramer(String prefix, String suffix) {
         config.gramerPrefix = prefix;
         config.gramerSuffix = suffix;
+        return this;
+    }
+
+    public ConfigureBuilder buidIterableLeft(char c) {
+        config.iterable = Pair.of(c, config.iterable.getRight());
         return this;
     }
 

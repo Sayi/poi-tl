@@ -96,4 +96,8 @@ public class NumberingWrapper {
         return max;
     }
 
+    public BigInteger getNextAbstractNumID() {
+        return getMaxIdOfAbstractNum().add(BigInteger.valueOf(1));
+    }
+
 }

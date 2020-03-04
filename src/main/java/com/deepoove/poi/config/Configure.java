@@ -72,7 +72,7 @@ public class Configure {
      * eg. {{?user}} Hello, World {{/user}}
      * </p>
      */
-    private final Pair<Character, Character> ITERABLE = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
+    Pair<Character, Character> iterable = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
             GramerSymbol.BLOCK_END.getSymbol());
 
     /**
@@ -212,8 +212,8 @@ public class Configure {
     public Set<Character> getGramerChars() {
         Set<Character> ret = new HashSet<Character>(DEFAULT_POLICYS.keySet());
         // ? /
-        ret.add(ITERABLE.getKey());
-        ret.add(ITERABLE.getValue());
+        ret.add(iterable.getKey());
+        ret.add(iterable.getValue());
         return ret;
     }
 
@@ -246,7 +246,7 @@ public class Configure {
     }
 
     public Pair<Character, Character> getIterable() {
-        return ITERABLE;
+        return iterable;
     }
 
     @Override
@@ -254,8 +254,8 @@ public class Configure {
         StringBuilder sb = new StringBuilder();
         sb.append("Configure Info").append(":\n");
         sb.append("  Basic gramer: ").append(gramerPrefix).append(gramerSuffix).append("\n");
-        sb.append("  If and foreach gramer: ").append(gramerPrefix).append(ITERABLE.getLeft()).append(gramerSuffix);
-        sb.append(gramerPrefix).append(ITERABLE.getRight()).append(gramerSuffix).append("\n");
+        sb.append("  If and foreach gramer: ").append(gramerPrefix).append(iterable.getLeft()).append(gramerSuffix);
+        sb.append(gramerPrefix).append(iterable.getRight()).append(gramerSuffix).append("\n");
         sb.append("  EL Mode: ").append(elMode).append("\n");
         sb.append("  Regex:").append(grammerRegex).append("\n");
         sb.append("  Valid Error Handler: ").append(handler.getClass().getSimpleName()).append("\n");

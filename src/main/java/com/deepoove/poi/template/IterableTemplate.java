@@ -16,28 +16,15 @@
 
 package com.deepoove.poi.template;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.render.processor.Visitor;
 import com.deepoove.poi.template.run.RunTemplate;
 
-public class IterableTemplate implements MetaTemplate {
-
-    protected RunTemplate startMark;
-    protected RunTemplate endMark;
-
-    protected List<MetaTemplate> templates = new ArrayList<MetaTemplate>();
+public class IterableTemplate extends BlockTemplate {
 
     public IterableTemplate(RunTemplate startMark) {
-        this.startMark = startMark;
-    }
-
-    @Override
-    public String variable() {
-        return startMark.variable();
+        super(startMark);
     }
 
     @Override
@@ -56,47 +43,6 @@ public class IterableTemplate implements MetaTemplate {
             return instance;
         }
         return this;
-    }
-
-    public RunTemplate getStartMark() {
-        return startMark;
-    }
-
-    public XWPFRun getStartRun() {
-        return startMark.getRun();
-    }
-
-    public void setStartMark(RunTemplate startMark) {
-        this.startMark = startMark;
-    }
-
-    public RunTemplate getEndMark() {
-        return endMark;
-    }
-
-    public XWPFRun getEndRun() {
-        return endMark.getRun();
-    }
-
-    public void setEndMark(RunTemplate endMark) {
-        this.endMark = endMark;
-    }
-
-    public List<MetaTemplate> getTemplates() {
-        return templates;
-    }
-
-    public void setTemplates(List<MetaTemplate> templates) {
-        this.templates = templates;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(startMark);
-        templates.forEach(temp -> sb.append(temp).append(" "));
-        sb.append(endMark);
-        return sb.toString();
     }
 
 }

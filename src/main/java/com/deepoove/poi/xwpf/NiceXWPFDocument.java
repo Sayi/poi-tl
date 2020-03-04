@@ -196,7 +196,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         // if we have an existing document, we must determine the next
         // free number first.
         cTAbstractNum
-                .setAbstractNumId(numberingWrapper.getMaxIdOfAbstractNum().add(BigInteger.valueOf(1)));
+                .setAbstractNumId(numberingWrapper.getNextAbstractNumID());
 
         Enum fmt = numFmt.getLeft();
         String val = numFmt.getRight();
@@ -441,7 +441,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                 }
                 cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
                 cTAbstractNum
-                        .setAbstractNumId(wrapper.getMaxIdOfAbstractNum().add(BigInteger.valueOf(1)));
+                        .setAbstractNumId(wrapper.getNextAbstractNumID());
                 if (cTAbstractNum.isSetNsid()) cTAbstractNum.unsetNsid();
                 if (cTAbstractNum.isSetTmpl()) cTAbstractNum.unsetTmpl();
                 cache.put(xwpfNum.getCTNum().getAbstractNumId().getVal(), cTAbstractNum);

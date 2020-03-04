@@ -185,7 +185,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
         if (null == num) return;
         XWPFAbstractNum abstractNum = numbering.getAbstractNum(num.getCTNum().getAbstractNumId().getVal());
         CTAbstractNum ctAbstractNum = (CTAbstractNum) abstractNum.getAbstractNum().copy();
-        ctAbstractNum.setAbstractNumId(wrapper.getMaxIdOfAbstractNum().add(BigInteger.valueOf(1)));
+        ctAbstractNum.setAbstractNumId(wrapper.getNextAbstractNumID());
 
         // clear continues list
         // (related to tracking numbering definitions when documents are

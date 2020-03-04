@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
+import com.deepoove.poi.template.BlockTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
@@ -80,7 +81,7 @@ public class TemplateResolver extends AbstractResolver {
         if (null == bodyElements) return metaTemplates;
 
         // current iterable templates state
-        Deque<IterableTemplate> stack = new LinkedList<IterableTemplate>();
+        Deque<BlockTemplate> stack = new LinkedList<BlockTemplate>();
 
         for (IBodyElement element : bodyElements) {
             if (element == null) continue;
@@ -119,51 +120,51 @@ public class TemplateResolver extends AbstractResolver {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
         if (runs == null) return metaTemplates;
 
-        Deque<IterableTemplate> stack = new LinkedList<IterableTemplate>();
+        Deque<BlockTemplate> stack = new LinkedList<BlockTemplate>();
         resolveXWPFRuns(runs, metaTemplates, stack);
         checkStack(stack);
         return metaTemplates;
     }
 
     private void resolveXWPFRuns(List<XWPFRun> runs, final List<MetaTemplate> metaTemplates,
-            final Deque<IterableTemplate> stack) {
+            final Deque<BlockTemplate> stack) {
         for (XWPFRun run : runs) {
             String text = null;
             if (null == run || StringUtils.isBlank(text = run.getText(0))) continue;
             RunTemplate runTemplate = parseTemplateFactory(text, run);
             if (null == runTemplate) continue;
-            switch (runTemplate.getSign().charValue()) {
-            case '?':
+            char charValue = runTemplate.getSign().charValue();
+            if (charValue == config.getIterable().getLeft()) {
                 IterableTemplate freshIterableTemplate = new IterableTemplate(runTemplate);
                 stack.push(freshIterableTemplate);
-                break;
-            case '/':
+            } else if (charValue == config.getIterable().getRight()) {
                 if (stack.isEmpty()) throw new ResolverException(
-                        "Mismatched start/end tags: No start iterable mark found for end mark " + runTemplate);
-                IterableTemplate latestIterableTemplate = stack.pop();
+                        "Mismatched start/end tags: No start mark found for end mark " + runTemplate);
+                BlockTemplate latestIterableTemplate = stack.pop();
                 if (!latestIterableTemplate.getStartMark().getTagName().equals(runTemplate.getTagName())) {
                     throw new ResolverException("Mismatched start/end tags: start mark "
                             + latestIterableTemplate.getStartMark() + " does not match to end mark " + runTemplate);
                 }
                 latestIterableTemplate.setEndMark(runTemplate);
-                if (stack.isEmpty()) {
-                    metaTemplates.add(latestIterableTemplate.buildIfInline());
-                } else {
-                    stack.peek().getTemplates().add(latestIterableTemplate.buildIfInline());
+                if (latestIterableTemplate instanceof IterableTemplate) {
+                    latestIterableTemplate = ((IterableTemplate) latestIterableTemplate).buildIfInline();
                 }
-                break;
-            default:
+                if (stack.isEmpty()) {
+                    metaTemplates.add(latestIterableTemplate);
+                } else {
+                    stack.peek().getTemplates().add(latestIterableTemplate);
+                }
+            } else {
                 if (stack.isEmpty()) {
                     metaTemplates.add(runTemplate);
                 } else {
                     stack.peek().getTemplates().add(runTemplate);
                 }
-                break;
             }
         }
     }
 
-    private void checkStack(Deque<IterableTemplate> stack) {
+    private void checkStack(Deque<BlockTemplate> stack) {
         if (!stack.isEmpty()) {
             throw new ResolverException(
                     "Mismatched start/end tags: No end iterable mark found for start mark " + stack.peek());
