@@ -149,9 +149,9 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         private static void renderTable(NiceXWPFDocument doc, XWPFRun run,
                 MiniTableRenderData tableData) {
             // 1.计算行和列
-            int row = tableData.getDatas().size(), col = 0;
+            int row = tableData.getRowDatas().size(), col = 0;
             if (!tableData.isSetHeader()) {
-                col = getMaxColumFromData(tableData.getDatas());
+                col = getMaxColumFromData(tableData.getRowDatas());
             } else {
                 row++;
                 col = tableData.getHeader().size();
@@ -166,7 +166,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             // 3.渲染数据
             int startRow = 0;
             if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeader());
-            for (RowRenderData data : tableData.getDatas()) {
+            for (RowRenderData data : tableData.getRowDatas()) {
                 Helper.renderRow(table, startRow++, data);
             }
 

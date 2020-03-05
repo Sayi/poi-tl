@@ -33,11 +33,14 @@ public class DocxRenderData implements RenderData {
      * stream流无法重用，使用字节数组表示待合并文档
      */
     private transient byte[] mergeBytes;
+    
+    @SuppressWarnings("unused")
+    private File file;
 
     /**
      * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
      */
-    private List<?> renderDatas;
+    private List<?> dataModels;
 
     /**
      * @param docx
@@ -57,6 +60,7 @@ public class DocxRenderData implements RenderData {
      */
     public DocxRenderData(File docx, List<?> renderDatas) {
         this(ByteUtils.getLocalByteArray(docx), renderDatas);
+        this.file = docx;
     }
 
     /**
@@ -81,7 +85,7 @@ public class DocxRenderData implements RenderData {
      * @param renderDatas
      */
     public DocxRenderData(byte[] input, List<?> renderDatas) {
-        this.renderDatas = renderDatas;
+        this.dataModels = renderDatas;
         this.mergeBytes = input;
     }
 
@@ -89,12 +93,16 @@ public class DocxRenderData implements RenderData {
         return mergeBytes;
     }
 
-    public List<?> getRenderDatas() {
-        return renderDatas;
+    public List<?> getDataModels() {
+        return dataModels;
     }
 
+    public void setDataModels(List<?> renderDatas) {
+        this.dataModels = renderDatas;
+    }
+    
     public void setRenderDatas(List<?> renderDatas) {
-        this.renderDatas = renderDatas;
+        this.dataModels = renderDatas;
     }
 
 }

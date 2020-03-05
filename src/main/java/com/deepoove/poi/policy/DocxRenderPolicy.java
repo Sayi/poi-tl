@@ -69,7 +69,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
         XWPFDocumentIterator(DocxRenderData data, Configure config) {
             this.docx = data.getDocx();
-            this.datas = data.getRenderDatas();
+            this.datas = data.getDataModels();
             this.config = config;
         }
 

@@ -67,8 +67,7 @@ public class XWPFTemplate implements Closeable {
                         + ", please check the dependency of project.");
     }
 
-    private XWPFTemplate() {
-    }
+    private XWPFTemplate() {}
 
     public static XWPFTemplate compile(String filePath) {
         return compile(new File(filePath));
@@ -120,13 +119,29 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * Render the template by date model
+     * Render the template by data model
      * 
      * @param model
      * @return
      */
     public XWPFTemplate render(Object model) {
         this.renderer.render(this, model);
+        return this;
+    }
+
+    /**
+     * Render the template by data model and write to OutputStream, do'not
+     * forget invoke #{@link XWPFTemplate#close()},
+     * #{@link OutputStream#close()}
+     * 
+     * @param model
+     * @param out
+     * @return
+     * @throws IOException
+     */
+    public XWPFTemplate render(Object model, OutputStream out) throws IOException {
+        this.render(model);
+        this.write(out);
         return this;
     }
 
@@ -154,9 +169,11 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * write to output stream
+     * write to output stream, do'not forget invoke
+     * #{@link XWPFTemplate#close()}, #{@link OutputStream#close()} finally
      * 
-     * @param out eg.ServletOutputStream
+     * @param out
+     *            eg.ServletOutputStream
      * @throws IOException
      */
     public void write(OutputStream out) throws IOException {
@@ -175,7 +192,8 @@ public class XWPFTemplate implements Closeable {
             out = new FileOutputStream(path);
             this.write(out);
             out.flush();
-        } finally {
+        }
+        finally {
             PoitlIOUtils.closeQuietlyMulti(this.doc, out);
         }
     }

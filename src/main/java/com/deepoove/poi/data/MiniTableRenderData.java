@@ -147,11 +147,11 @@ public class MiniTableRenderData implements RenderData {
         this.header = header;
     }
 
-    public List<RowRenderData> getDatas() {
+    public List<RowRenderData> getRowDatas() {
         return rowDatas;
     }
 
-    public void setDatas(List<RowRenderData> datas) {
+    public void setRowDatas(List<RowRenderData> datas) {
         this.rowDatas = datas;
     }
 
