@@ -5,13 +5,13 @@
 Word 模板引擎，基于Apache POI - the Java API for Microsoft Documents。
 
 ## Why poi-tl
-常见的文本型模板引擎（如FreeMarker、Velocity）是通过**文本模板**和可变数据生成新的HTML页面，配置文件等，而poi-tl是Word模板引擎，通过**Microsoft Word模板**和可变数据生成新的Word文档。
+常见的模板引擎（如FreeMarker、Velocity）是通过**文本模板**和数据生成新的HTML页面，配置文件等，而poi-tl是Word模板引擎，通过**Microsoft Word模板**和数据生成新的Word文档。
 
 poi-tl是一种"logic-less"模板引擎，没有复杂的控制结构和变量赋值，只有标签，一些标签可以被替换为文档元素，有些标签则会隐藏文档元素，而另一些则被替换为一系列文档元素。
 
-与文本型模板不同的是Word模板文档拥有样式，poi-tl在生成的文档中Word模板原有的样式都会被保留，标签的样式也会被应用到替换后的文本上，因此你可以专注于模板设计。
+文本型模板由字符串表示，而Word模板文档除了文本，还有图片、表格等，因此你可能需要准备好要展示的数据。Word模板同时拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，标签的样式也会被应用到替换后的文本上，因此你可以专注于模板设计。
 
-poi-tl支持自定义渲染函数（插件），函数可以应用到Word模板的任何位置，poi-tl的设计目标是在文档的任何地方做任何事情(*Do Anything Anywhere*)。
+poi-tl支持自定义渲染函数（插件），函数可以应用到Word模板的任何位置，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
 
 ## Maven
 
@@ -24,27 +24,27 @@ poi-tl支持自定义渲染函数（插件），函数可以应用到Word模板�
 ```
 
 ## 2分钟快速入门
-从一个超级简单的例子开始：把{{title}}替换成"Poi-tl 模板引擎"。
+从一个超级简单的例子开始：把`{{title}}`替换成"poi-tl 模板引擎"。
 
-1. 新建文档模板template.docx，包含标签{{title}}
+1. 新建文档模板template.docx，包含标签`{{title}}`
 2. TDO模式：Template + data-model = output
 
 ```java
 //核心API采用了极简设计，只需要一行代码
 XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
-        put("title", "Poi-tl 模板引擎");
+        put("title", "poi-tl 模板引擎");
 }}).writeToFile("out_template.docx");
 ```
 
 ## 标签
-标签由前后两个大括号环绕，`{{var}}`是标签，`{{?var}}`也是标签，`?`标识了标签类型，`var`是这个标签的键。
+标签由前后两个大括号组成，`{{title}}`是标签，`{{?title}}`也是标签，`?`标识了标签类型，`title`是这个标签的名称，接下来我们来看看有哪些标签类型。
 
 ### 文本
-Word模板中最基本的标签类型是文本，`{{var}}`会在数据中寻找key为var的值然后进行渲染，如果找不到var，默认会清空标签，可以配置是保留标签还是快速抛出异常。
+文本是Word模板中最基本的标签类型，`{{name}}`会在数据中寻找key为`name`的值进行渲染，如果找不到默认会清空标签，可以配置是保留还是抛出异常。
 
-模板中标签的样式会被保留到生成的文档中。
+文本标签的样式会应用到替换后的文本上，如示例中的`{{name}}`标签。
 
-可变的数据:
+准备数据:
 ```json
 {
   "name": "Mama",
@@ -54,21 +54,22 @@ Word模板中最基本的标签类型是文本，`{{var}}`会在数据中寻找k
 
 给定Word模板:
 
-**{{name}}** always said life was like a box of {{thing}}.
+**{{name}}** always said life was like a box of {{thing}}.  
 ~~{{name}}~~ always said life was like a box of {{thing}}.
 
 将输出以下内容:
 
-**Mama** always said life was like a box of chocolates.
+**Mama** always said life was like a box of chocolates.  
 ~~Mama~~ always said life was like a box of chocolates.
 
 ### 图片
-图片标签以`@`开始，如`{{@var}}`，它会被渲染成指定地址的图片。
-可变的数据:
+图片标签以`@`开始，如`{{@logo}}`会在数据中寻找key为`logo`的值，然后将标签替换成图片。由于Word文档中图片不是由字符串表示(在HTML网页中，图片是由字符串`<img src="" />`表示)，所以图片标签对应的数据有一定的结构要求。
+
+准备数据:
 ```json
 {
   "watermelon": {
-    "path": "watermelon.png"
+    "path": "assets/watermelon.png"
   },
   "lemon": {
     "path": "http://xxx/lemon.png"
@@ -100,24 +101,25 @@ banana 🍌
 ```
 
 ### 表格
-表格标签以`#`开始，如`{{#var}}`，它会被渲染成word表格。
-可变的数据:
+表格标签以`#`开始，如`{{#table}}`，它会被渲染成N行N列的word表格，N取决于数据中key为`table`对应的值。
+
+准备数据:
 ```json
 {
   "song": {
-    "header": [
+    "rows": [
       {
-        "cellDatas": [
-          {"renderData": {"text": "Song name"}},
-          {"renderData": {"text": "artist"}}
+        "cells": [
+          {"cellText": {"text": "Song name"}},
+          {"cellText": {"text": "artist"}}
         ]
       }
     ],
-    "rowDatas": [
+    "rows": [
       {
-        "cellDatas": [
-          {"renderData": {"text": "Memories"}},
-          {"renderData": {"text": "Maroon 5"}}
+        "cells": [
+          {"cellText": {"text": "Memories"}},
+          {"cellText": {"text": "Maroon 5"}}
         ],
         "rowStyle":{
           "backgroundColor":"f6f8fa"
@@ -142,8 +144,9 @@ banana 🍌
 </table>
 
 ### 列表
-列表标签以`*`开始，如`{{*var}}`，它会被渲染成Word符号列表或者编号列表。
-可变的数据:
+列表标签对应Word的符号列表或者编号列表，以`*`开始，如`{{*var}}`。
+
+准备数据:
 ```json
 {
   "feature": {
@@ -179,15 +182,15 @@ banana 🍌
 3) Templates, not just templates, but also style templates
 ```
 
-### 区块标签对
-区块标签对是由前后两个标签组成，开始标签以`?`标识，结束标签以`/`标识，如`{{?var}}`作为var区块的起始标签，`{{/var}}`为结束标签，var是这个区块标签对的键。
+### 区块对
+区块对由前后两个标签组成，开始标签以`?`标识，结束标签以`/`标识，如`{{?sections}}`作为sections区块的起始标签，`{{/sections}}`为结束标签，sections是这个区块对的名称。
 
-位于区块中的文档元素（文本、图片、表格等）可以被渲染零次，一次或N次，这取决于区块键的取值。
+区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素（文本、图片、表格等）可以被渲染零次，一次或N次，这取决于区块对的取值。
 
-#### False值或空的集合
-如果区块键的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将不会显示。
+#### False或空集合
+如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将不会显示，类似于if语句。
 
-可变的数据:
+准备数据:
 ```json
 {
   "announce": false
@@ -211,10 +214,10 @@ Made it,Ma!
 Made it,Ma!
 ```
 
-#### 非False值，且不是集合
-如果区块键的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素只会被渲染一次。
+#### 非False且不是集合
+如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被渲染一次。
 
-可变的数据:
+准备数据:
 ```json
 {
   "person": { "name": "Sayi" }
@@ -236,9 +239,9 @@ Made it,Ma!
 ```
 
 #### 非空集合
-如果区块键的值是一个集合，区块中的文档元素会被渲染一次或者N次，这取决于集合的大小，类似于foreach语法。
+如果区块对的值是一个集合，区块中的文档元素会被迭代渲染一次或者N次，这取决于集合的大小，类似于foreach语法。
 
-可变的数据:
+数据:
 ```json
 {
   "songs": [
@@ -266,9 +269,9 @@ Last Dance(伍佰)
 ```
 
 ### 嵌套
-嵌套标签是在模板中引入另一个模板，可以理解为import导入、include包含或者word文档合并，以`+`标识，如{{+var}}。
+嵌套是在Word模板中引入另一个Word模板，可以理解为import、include或者word文档合并，以`+`标识，如{{+nested}}。
 
-可变的数据:
+数据:
 ```json
 {
   "nested": {
@@ -276,6 +279,9 @@ Last Dance(伍佰)
     "dataModels": [
       {
         "addr": "Hangzhou,China"
+      },
+      {
+        "addr": "Shanghai,China"
       }
     ]
   }
@@ -298,11 +304,12 @@ Address: {{addr}}
 ```
 Hello, World
 Address: Hangzhou,China
+Address: Shanghai,China
 ```
 
 ## 详细文档与示例
 
-[中文文档](http://deepoove.com/poi-tl) 
+[中文文档](http://deepoove.com/poi-tl)  
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)

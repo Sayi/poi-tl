@@ -29,7 +29,7 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class RowRenderData implements RenderData {
 
-    private List<CellRenderData> cellDatas;
+    private List<CellRenderData> cells;
 
     /**
      * 行级样式，应用到该行所有单元格：背景色、行文字对齐方式
@@ -39,7 +39,7 @@ public class RowRenderData implements RenderData {
     public RowRenderData() {}
 
     public RowRenderData(List<CellRenderData> cellDatas) {
-        this.cellDatas = cellDatas;
+        this.cells = cellDatas;
     }
 
     public static RowRenderData build(String... cellStr) {
@@ -57,10 +57,10 @@ public class RowRenderData implements RenderData {
     }
 
     public RowRenderData(List<TextRenderData> rowData, String backgroundColor) {
-        this.cellDatas = new ArrayList<CellRenderData>();
+        this.cells = new ArrayList<CellRenderData>();
         if (null != rowData) {
             for (TextRenderData data : rowData) {
-                this.cellDatas.add(new CellRenderData(data));
+                this.cells.add(new CellRenderData(data));
             }
         }
         TableStyle style = new TableStyle();
@@ -69,15 +69,15 @@ public class RowRenderData implements RenderData {
     }
 
     public int size() {
-        return null == cellDatas ? 0 : cellDatas.size();
+        return null == cells ? 0 : cells.size();
     }
 
-    public List<CellRenderData> getCellDatas() {
-        return cellDatas;
+    public List<CellRenderData> getCells() {
+        return cells;
     }
 
-    public void setCellDatas(List<CellRenderData> cellDatas) {
-        this.cellDatas = cellDatas;
+    public void setCells(List<CellRenderData> cellDatas) {
+        this.cells = cellDatas;
     }
 
     public TableStyle getRowStyle() {

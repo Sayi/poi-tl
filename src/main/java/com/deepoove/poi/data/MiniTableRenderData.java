@@ -51,7 +51,7 @@ public class MiniTableRenderData implements RenderData {
     /**
      * 表格数据
      */
-    private List<RowRenderData> rowDatas;
+    private List<RowRenderData> rows;
 
     /**
      * 表格数据为空展示的文案
@@ -118,7 +118,7 @@ public class MiniTableRenderData implements RenderData {
     public MiniTableRenderData(RowRenderData headers, List<RowRenderData> datas, String noDatadesc,
             float width) {
         this.header = headers;
-        this.rowDatas = datas;
+        this.rows = datas;
         this.noDatadesc = noDatadesc;
         this.width = width;
     }
@@ -128,7 +128,7 @@ public class MiniTableRenderData implements RenderData {
     }
 
     public boolean isSetBody() {
-        return null != rowDatas && rowDatas.size() > 0;
+        return null != rows && rows.size() > 0;
     }
 
     public String getNoDatadesc() {
@@ -147,12 +147,12 @@ public class MiniTableRenderData implements RenderData {
         this.header = header;
     }
 
-    public List<RowRenderData> getRowDatas() {
-        return rowDatas;
+    public List<RowRenderData> getRows() {
+        return rows;
     }
 
-    public void setRowDatas(List<RowRenderData> datas) {
-        this.rowDatas = datas;
+    public void setRows(List<RowRenderData> datas) {
+        this.rows = datas;
     }
 
     public float getWidth() {

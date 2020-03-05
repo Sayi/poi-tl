@@ -92,7 +92,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             Objects.requireNonNull(tableRow, "Row " + row + " do not exist in the table");
 
             TableStyle rowStyle = rowData.getRowStyle();
-            List<CellRenderData> cellList = rowData.getCellDatas();
+            List<CellRenderData> cellList = rowData.getCells();
             XWPFTableCell cell = null;
 
             for (int i = 0; i < cellList.size(); i++) {
@@ -115,7 +115,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
                 cell.setColor(cellStyle.getBackgroundColor());
             }
 
-            TextRenderData renderData = cellData.getRenderData();
+            TextRenderData renderData = cellData.getCellText();
             String cellText = renderData.getText();
             if (StringUtils.isBlank(cellText)) return;
 
@@ -149,9 +149,9 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         private static void renderTable(NiceXWPFDocument doc, XWPFRun run,
                 MiniTableRenderData tableData) {
             // 1.计算行和列
-            int row = tableData.getRowDatas().size(), col = 0;
+            int row = tableData.getRows().size(), col = 0;
             if (!tableData.isSetHeader()) {
-                col = getMaxColumFromData(tableData.getRowDatas());
+                col = getMaxColumFromData(tableData.getRows());
             } else {
                 row++;
                 col = tableData.getHeader().size();
@@ -166,7 +166,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             // 3.渲染数据
             int startRow = 0;
             if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeader());
-            for (RowRenderData data : tableData.getRowDatas()) {
+            for (RowRenderData data : tableData.getRows()) {
                 Helper.renderRow(table, startRow++, data);
             }
 

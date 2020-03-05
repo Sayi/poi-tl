@@ -25,7 +25,7 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class CellRenderData {
 
-    protected TextRenderData renderData;
+    protected TextRenderData cellText;
 
     /**
      * 单元格级别的样式：背景色、单元格文字对齐方式
@@ -35,20 +35,20 @@ public class CellRenderData {
     public CellRenderData() {}
 
     public CellRenderData(TextRenderData renderData) {
-        this.renderData = renderData;
+        this.cellText = renderData;
     }
 
     public CellRenderData(TextRenderData renderData, TableStyle cellStyle) {
-        this.renderData = renderData;
+        this.cellText = renderData;
         this.cellStyle = cellStyle;
     }
 
-    public TextRenderData getRenderData() {
-        return renderData;
+    public TextRenderData getCellText() {
+        return cellText;
     }
 
-    public void setRenderData(TextRenderData renderData) {
-        this.renderData = renderData;
+    public void setCellText(TextRenderData renderData) {
+        this.cellText = renderData;
     }
 
     public TableStyle getCellStyle() {
