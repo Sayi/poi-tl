@@ -32,7 +32,7 @@ poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何�
 ## 2分钟快速入门
 从一个超级简单的例子开始：把`{{title}}`替换成"poi-tl 模板引擎"。
 
-1. 新建文档模板template.docx，包含标签`{{title}}`
+1. 新建文档模板`template.docx`，包含标签`{{title}}`
 2. TDO模式：Template + data-model = output
 
 ```java
@@ -44,10 +44,10 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 打开`out_template.docx`文档吧，一切如你所愿。
 
 ## 标签
-标签由前后两个大括号组成，在poi-tl中，`{{title}}`是标签，`{{?title}}`也是标签，`title`是这个标签的名称，`?`标识了标签类型，接下来我们来看看有哪些默认标签类型。
+标签由前后两个大括号组成，在poi-tl中，`{{title}}`是标签，`{{?title}}`也是标签，`title`是这个标签的名称，`?`标识了标签类型，接下来我们来看看有哪些标签类型。
 
 ### 文本
-文本标签是Word模板中最基本的标签类型，`{{name}}`会被数据模型中key为`name`的值渲染，如果找不到默认会清空标签，可以配置是保留还是抛出异常。
+文本标签是Word模板中最基本的标签类型，`{{name}}`会被数据模型中key为`name`的值替换，如果找不到默认会清空标签，可以配置是保留还是抛出异常。
 
 文本标签的样式会应用到替换后的文本上，正如下面的例子所示。
 
@@ -195,7 +195,7 @@ Word模板:
 区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素(文本、图片、表格等)可以被渲染零次，一次或N次，这取决于区块对的取值。
 
 #### False或空集合
-如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将不会显示，类似于if语句。
+如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将不会显示，类似于if语句的条件为`false`。
 
 数据:
 ```json
@@ -222,7 +222,7 @@ Made it,Ma!
 ```
 
 #### 非False且不是集合
-如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被渲染一次。
+如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被渲染一次，if语句的条件为`true`。
 
 数据:
 ```json
@@ -316,10 +316,11 @@ Address: Shanghai,China
 
 ## 详细文档与示例
 
-[中文文档](http://deepoove.com/poi-tl)  
+[中文文档Documentation](http://deepoove.com/poi-tl)  
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
+* [循环模板示例：OKR目标制定](http://deepoove.com/poi-tl/#example-okr)
 * [循环模板示例：文章写作](http://deepoove.com/poi-tl/#example-article)
 * [Example：个人简历](http://deepoove.com/poi-tl/#_%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86)
 
