@@ -11,11 +11,9 @@ poi-tl是一种 *"logic-less"* 模板引擎，没有复杂的控制结构和变�
 
 > "Powerful" constructs like variable assignment or conditional statements make it easy to modify the look of an application within the template system exclusively... however, at the cost of separation, turning the templates themselves into part of the application logic.
 > 
-> This template system leans strongly towards preserving the separation of logic and presentation.
-> 
-> 最初是受到来自[Google CTemplate](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)的启发
+> [《Google CTemplate》](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)
 
-文本型模板由字符串(String)表示，而Word模板除了文本字符串，还有图片、表格等不能用字符串表示的元素，因此你可能需要准备好要展示的数据。Word模板同时拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，更强大的是可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
+Word模板拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，还可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
 
 poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何位置执行，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
 
@@ -70,7 +68,7 @@ Word模板:
 ~~Mama~~ always said life was like a box of chocolates.
 
 ### 图片
-图片标签以`@`开始，如`{{@logo}}`会在数据中寻找key为`logo`的值，然后将标签替换成图片。由于Word文档中图片不是由字符串表示(在HTML网页中，图片是由字符串`<img src="" />`表示)，所以图片标签对应的数据有一定的结构要求，这些结构都会有相应的Java类对应。
+图片标签以`@`开始，如`{{@logo}}`会在数据中寻找key为`logo`的值，然后将标签替换成图片。由于Word文档中图片不是由字符串表示(在文本型模板中，比如HTML网页图片是由字符串`<img src="" />`表示)，所以图片标签对应的数据有一定的结构要求，这些结构都会有相应的Java类对应。
 
 数据:
 ```json
@@ -195,7 +193,7 @@ Word模板:
 区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素(文本、图片、表格等)可以被渲染零次，一次或N次，这取决于区块对的取值。
 
 #### False或空集合
-如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将不会显示，类似于if语句的条件为`false`。
+如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将**不会显示**，类似于if语句的条件为`false`。
 
 数据:
 ```json
@@ -222,7 +220,7 @@ Made it,Ma!
 ```
 
 #### 非False且不是集合
-如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被渲染一次，if语句的条件为`true`。
+如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被**渲染一次**，if语句的条件为`true`。
 
 数据:
 ```json
@@ -246,7 +244,7 @@ Word模板:
 ```
 
 #### 非空集合
-如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染一次或者N次，这取决于集合的大小，类似于foreach语法。
+如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染**一次或者N次**，这取决于集合的大小，类似于foreach语法。
 
 数据:
 ```json
