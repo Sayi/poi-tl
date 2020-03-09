@@ -427,7 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Sayi 卅一</span><br>
 <span id="email" class="email"><a href="mailto:adasai90@gmail.com">adasai90@gmail.com</a></span><br>
-<span id="revdate">2019版</span>
+<span id="revdate">2020版</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -482,9 +482,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_nicexwpfdocument">4.2. NiceXWPFDocument</a>
 <ul class="sectlevel3">
-<li><a href="#_某个位置插入表格">4.2.1. 某个位置插入表格</a></li>
-<li><a href="#_某个位置插入段落">4.2.2. 某个位置插入段落</a></li>
-<li><a href="#_word合并">4.2.3. Word合并</a></li>
+<li><a href="#_word合并">4.2.1. Word合并</a></li>
 </ul>
 </li>
 </ul>
@@ -811,29 +809,7 @@ TableTools.styleTable(table, style);</code></pre>
 <p><code>NiceXWPFDocument</code> 是对原生 <code>XWPFDocument</code> 的增强。</p>
 </div>
 <div class="sect3">
-<h4 id="_某个位置插入表格"><a class="anchor" href="#_某个位置插入表格"></a>4.2.1. 某个位置插入表格</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">NiceXWPFDocument doc = new NiceXWPFDocument(new FileInputStream("./deepoove.docx"));
-
-// 在某个run位置插入10行10列的表格
-// XWPFRun run = ...
-XWPFTable table = doc.insertNewTable(run, 10, 10);</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_某个位置插入段落"><a class="anchor" href="#_某个位置插入段落"></a>4.2.2. 某个位置插入段落</h4>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 在某个run位置插入段落
-// XWPFRun run = ...
-doc.insertNewParagraph(run);</code></pre>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_word合并"><a class="anchor" href="#_word合并"></a>4.2.3. Word合并</h4>
+<h4 id="_word合并"><a class="anchor" href="#_word合并"></a>4.2.1. Word合并</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">NiceXWPFDocument main = new NiceXWPFDocument(new FileInputStream("main.docx"));
@@ -865,7 +841,7 @@ out.close();</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-06-04 00:25:02 CST
+Last updated 2020-03-09 21:02:32 CST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">

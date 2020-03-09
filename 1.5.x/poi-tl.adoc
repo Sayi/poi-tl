@@ -16,7 +16,7 @@ v1.5.1
 
 [example]
 --
-关于文档：poi-tl v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本，会持续进行优化和bugfix，如果希望使用Apache poi4.0.0+和JDK1.8+，推荐使用poi-tl最新版本：link:http://deepoove.com/poi-tl[poi-tl v1.6.x最新文档, window=_blank]。
+关于文档：poi-tl v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本，会持续进行优化和bugfix，如果希望使用Apache poi4.0.0+和JDK1.8+，推荐使用poi-tl最新版本：link:http://deepoove.com/poi-tl[poi-tl 最新文档, window=_blank]。
 --
 
 poi-tl（poi template language）是基于Apache POI的Word模板引擎，纯Java组件，跨平台，代码短小精悍，通过插件机制使其具有高度扩展性。

@@ -1,6 +1,6 @@
 = Apache POI Word(docx) 入门示例教程
 Sayi 卅一 <adasai90@gmail.com>
-2019版
+2020版
 :description: poi简短教程
 :keywords: word,poi,教程,入门
 :doctype: book
@@ -247,25 +247,6 @@ TableTools.styleTable(table, style);
 
 === NiceXWPFDocument
 `NiceXWPFDocument` 是对原生 `XWPFDocument` 的增强。
-
-
-==== 某个位置插入表格
-[source, java]
-----
-NiceXWPFDocument doc = new NiceXWPFDocument(new FileInputStream("./deepoove.docx"));
-
-// 在某个run位置插入10行10列的表格
-// XWPFRun run = ...
-XWPFTable table = doc.insertNewTable(run, 10, 10);
-----
-
-==== 某个位置插入段落
-[source, java]
-----
-// 在某个run位置插入段落
-// XWPFRun run = ...
-doc.insertNewParagraph(run);
-----
 
 ==== Word合并
 [source, java]
