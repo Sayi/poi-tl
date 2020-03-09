@@ -25,14 +25,14 @@ ____
 == Why poi-tl
 |===
 | 方案 | 移植性 |  功能性  | 易用性
-| **Poi-tl** | Java跨平台 | Word模板引擎，多种模板标签 | 简单，基于Apache POI
-| Apache POI | Java跨平台 | Apache项目，功能丰富支持文本、图片、表格等 | 简单，这里有一个教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
+| **Poi-tl** | Java跨平台 | Word模板引擎，多种模板标签 | 基于Apache POI
+| Apache POI | Java跨平台 | Apache项目，功能丰富支持文本、图片、表格等 | 简单，文档不全，这里有一个教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
 | Freemarker | XML跨平台 | 仅支持文本，很大的局限性 | 复杂，需要维护XML结构，基本不可迭代
 | OpenOffice | 部署OpenOffice软件，移植性较差 | - | 复杂，需要了解OpenOffice的API
 | Jacob、winlib | Windows平台 | - | 复杂，不推荐使用
 |===
 
-Apache POI可以很好的处理Word文档元素(包括文本、图片、表格、页眉、页脚等)，poi-tl在Apache POI的基础上进行封装和构建，提供Word模板引擎的特性。
+Apache POI可以很好的处理Word文档元素(包括文本、图片、表格、页眉、页脚等)，社区每年会发布好几个版本，**poi-tl**在Apache POI的基础上进行封装和构建，提供Word模板引擎的特性。
 
 [frame=none]
 [grid=rows]
@@ -56,7 +56,7 @@ Apache POI可以很好的处理Word文档元素(包括文本、图片、表格�
 
 **poi-tl**是一个完全的Java类库，你可以非常方便的加入到你的Java项目中。
 
-如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI会是你的选择；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨为你的软件添加导出Word的功能。
+如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI会是你的选择；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨使用poi-tl为你的软件添加导出Word的功能。
 
 == 软件要求
 * Apache POI4.0.0+
@@ -153,7 +153,7 @@ public class MyDataModel {
 [source, html]
 <img src="{{path}}" width="{{width}}" height="{{height}}">
 
-但是Word模板不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，这些数据结构都实现了接口 `public interface RenderData {}`：
+但是Word模板不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，它们都实现了接口 `public interface RenderData {}`：
 
 * 文本数据TextRenderData、HyperLinkTextRenderData
 * 图片数据PictureRenderData
@@ -373,9 +373,9 @@ NOTE: 表格的宽度(单位CM)怎么定义的: 页面宽度 - 页边距宽度 *
 
 需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：
 
-*场景一*： 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件-开发一个插件]。
+- *场景一*： 完全由自己掌控整个表格的生成：参见link:#cus-policy-section[插件-开发一个插件]。
 
-*场景二*： 模板中已经有一个表格，需要动态新增或者删除行或处理单元格数据：提供了抽象表格策略DynamicTableRenderPolicy或者引用渲染策略插件OptionalTextTableRefRenderPolicy，参见link:#example-table[示例-付款通知书]。
+- *场景二*： 模板中已经有一个表格，需要动态新增或者删除行或处理单元格数据：提供了抽象表格策略DynamicTableRenderPolicy或者引用渲染策略插件OptionalTextTableRefRenderPolicy，参见link:#example-table[示例-付款通知书]。
 
 === 列表
 [example]
@@ -558,7 +558,6 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), subData)); <1> <
 <1> 主模板包含嵌套标签{{+docx_word}}
 <2> segment.docx是一个包含了{{title}}和{{content}}的子模板，使用subData集合渲染后合并到主模板
 --
-参见link:#example-article[示例-一篇文章]
 
 == 配置
 poi-tl提供了配置类 `Configure` 来存储常用的设置，配置的使用方式如下：

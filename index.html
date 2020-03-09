@@ -543,13 +543,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Poi-tl</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Word模板引擎，多种模板标签</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">简单，基于Apache POI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">基于Apache POI</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache POI</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache项目，功能丰富支持文本、图片、表格等</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">简单，这里有一个教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">简单，文档不全，这里有一个教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Freemarker</p></td>
@@ -572,7 +572,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p>Apache POI可以很好的处理Word文档元素(包括文本、图片、表格、页眉、页脚等)，poi-tl在Apache POI的基础上进行封装和构建，提供Word模板引擎的特性。</p>
+<p>Apache POI可以很好的处理Word文档元素(包括文本、图片、表格、页眉、页脚等)，社区每年会发布好几个版本，<strong>poi-tl</strong>在Apache POI的基础上进行封装和构建，提供Word模板引擎的特性。</p>
 </div>
 <table class="tableblock frame-none grid-rows stripes-none stretch">
 <colgroup>
@@ -644,7 +644,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>poi-tl</strong>是一个完全的Java类库，你可以非常方便的加入到你的Java项目中。</p>
 </div>
 <div class="paragraph">
-<p>如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI会是你的选择；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨为你的软件添加导出Word的功能。</p>
+<p>如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI会是你的选择；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨使用poi-tl为你的软件添加导出Word的功能。</p>
 </div>
 </div>
 </div>
@@ -824,7 +824,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>但是Word模板不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，这些数据结构都实现了接口 <code>public interface RenderData {}</code>：</p>
+<p>但是Word模板不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，它们都实现了接口 <code>public interface RenderData {}</code>：</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1206,11 +1206,15 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));<
 <div class="paragraph">
 <p>需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：</p>
 </div>
-<div class="paragraph">
+<div class="ulist">
+<ul>
+<li>
 <p><strong>场景一</strong>： 完全由自己掌控整个表格的生成：参见<a href="#cus-policy-section">插件-开发一个插件</a>。</p>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p><strong>场景二</strong>： 模板中已经有一个表格，需要动态新增或者删除行或处理单元格数据：提供了抽象表格策略DynamicTableRenderPolicy或者引用渲染策略插件OptionalTextTableRefRenderPolicy，参见<a href="#example-table">示例-付款通知书</a>。</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
