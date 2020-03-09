@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <adasai90@gmail.com>
-v1.7.0
+v1.7.1
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出
 :doctype: book
