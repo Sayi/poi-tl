@@ -11,9 +11,9 @@ poi-tl是一种 *"logic-less"* 模板引擎，没有复杂的控制结构和变�
 
 > "Powerful" constructs like variable assignment or conditional statements make it easy to modify the look of an application within the template system exclusively... however, at the cost of separation, turning the templates themselves into part of the application logic.
 > 
-> This template system leans strongly towards preserving the separation of logic and presentation
+> This template system leans strongly towards preserving the separation of logic and presentation.
 > 
-> 最初是受到来自[Google CTemplate](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)的启发.
+> 最初是受到来自[Google CTemplate](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)的启发
 
 文本型模板由字符串(String)表示，而Word模板除了文本字符串，还有图片、表格等不能用字符串表示的元素，因此你可能需要准备好要展示的数据。Word模板同时拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，更强大的是可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
 
