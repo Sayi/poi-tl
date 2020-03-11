@@ -173,6 +173,7 @@ public class SpELTest {
         assertEquals(spelForMap.compute("['data']['hello']"), "poi-tl");
 
         assertEquals(spelForBean.compute("name"), "poi-tl");
+        assertEquals(spelForBean.compute("name == 'poi-tl'"), true);
         // 调用method转大写
         assertEquals(spelForBean.compute("name.toUpperCase()"), "POI-TL");
         // 空值特殊显示
@@ -188,6 +189,7 @@ public class SpELTest {
         // 运算符
         assertEquals(spelForBean.compute("price"), 88880000L);
         assertEquals(spelForBean.compute("price + '元'"), "88880000元");
+        assertEquals(spelForBean.compute("price + '元' == '88880000元'"), true);
         assertEquals(spelForBean.compute("price/1000 + '千元'"), "88880千元");
         assertEquals(spelForBean.compute("price/10000 + '万元'"), "8888万元");
 
