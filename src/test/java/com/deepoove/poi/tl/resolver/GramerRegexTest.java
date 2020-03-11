@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.resolver.TemplateResolver;
+import com.deepoove.poi.util.RegexUtils;
 
 @DisplayName("Tag Regex test case")
 public class GramerRegexTest {
@@ -22,28 +23,39 @@ public class GramerRegexTest {
         // 默认tag 正则：Chinese, letters, numbers and underscores
         String defaultRegex = Configure.newBuilder().build().getGrammerRegex();
         Pattern pattern = Pattern.compile(defaultRegex);
-        testMatcherText(pattern);
+        testMatcherTextTrue(pattern);
+        testMatcherTextFalse(pattern);
         assertFalse(pattern.matcher("abc-123").matches());
     }
 
     @Test
-    public void testCustomeRegex() {
+    public void testCustomRegex() {
         // 自定义tag 正则
-        String customeRegex = "^[^\\.]+(\\.[^\\.]+)*$";
+        String customeRegex = "^([^\\.]+(\\.[^\\.]+)*)?$";
         Pattern pattern = Pattern.compile(customeRegex);
-        testMatcherText(pattern);
+        testMatcherTextTrue(pattern);
+        testMatcherTextFalse(pattern);
     }
 
-    private void testMatcherText(Pattern pattern) {
+    @Test
+    public void testSpringELRegex() {
+        String customeRegex = RegexUtils.createGeneral("{{", "}}");
+        Pattern pattern = Pattern.compile(customeRegex);
+        testMatcherTextTrue(pattern);
+    }
+
+    private void testMatcherTextTrue(Pattern pattern) {
         assertTrue(pattern.matcher("123").matches());
         assertTrue(pattern.matcher("ABC").matches());
         assertTrue(pattern.matcher("abc123").matches());
         assertTrue(pattern.matcher("_123abc").matches());
         assertTrue(pattern.matcher("abc_123").matches());
         assertTrue(pattern.matcher("好123").matches());
+        assertTrue(pattern.matcher("你好").matches());
         assertTrue(pattern.matcher("123好_好abc").matches());
         assertTrue(pattern.matcher("abc.123").matches());
 
+        assertTrue(pattern.matcher("").matches());
         assertTrue(pattern.matcher("abc.123").matches());
 
         assertTrue(pattern.matcher("abc.123.123").matches());
@@ -51,7 +63,9 @@ public class GramerRegexTest {
         assertTrue(pattern.matcher("abc.好123").matches());
         assertTrue(pattern.matcher("好.123").matches());
         assertTrue(pattern.matcher("好.123.好").matches());
+    }
 
+    private void testMatcherTextFalse(Pattern pattern) {
         assertFalse(pattern.matcher("好..123").matches());
         assertFalse(pattern.matcher("abc..123").matches());
         assertFalse(pattern.matcher("abc23.").matches());
@@ -97,6 +111,15 @@ public class GramerRegexTest {
 
         assertFalse(matcher.find());
 
+        // 4
+        matcher = pattern.matcher("lowCase:{{/}}Upcase:");
+        matcher.find();
+        assertEquals(matcher.start(), "lowCase:".length());
+        assertEquals(matcher.group(), "{{/}}");
+        assertEquals(matcher.end(), "lowCase:{{/}}".length());
+
+        assertFalse(matcher.find());
+
     }
 
     @Test
@@ -105,7 +128,7 @@ public class GramerRegexTest {
         Configure config = Configure.newBuilder().buildGramer("${", "}").setElMode(ELMode.SPEL_MODE).build();
         TemplateResolver resolver = new TemplateResolver(config);
         Pattern pattern = resolver.getTemplatePattern();
-        
+
         // 1
         Matcher matcher = pattern.matcher("lowCase:${name}Upcase:${name.toUpperCase()}");
 

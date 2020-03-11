@@ -141,7 +141,8 @@ public class TemplateResolver extends AbstractResolver {
                 if (stack.isEmpty()) throw new ResolverException(
                         "Mismatched start/end tags: No start mark found for end mark " + runTemplate);
                 BlockTemplate latestIterableTemplate = stack.pop();
-                if (!latestIterableTemplate.getStartMark().getTagName().equals(runTemplate.getTagName())) {
+                if (StringUtils.isNotEmpty(runTemplate.getTagName())
+                        && !latestIterableTemplate.getStartMark().getTagName().equals(runTemplate.getTagName())) {
                     throw new ResolverException("Mismatched start/end tags: start mark "
                             + latestIterableTemplate.getStartMark() + " does not match to end mark " + runTemplate);
                 }
@@ -193,7 +194,6 @@ public class TemplateResolver extends AbstractResolver {
 
     <T> RunTemplate parseTemplateFactory(String text, T obj) {
         logger.debug("Resolve where text: {}, and create ElementTemplate", text);
-        // temp ,future need to word analyze
         if (templatePattern.matcher(text).matches()) {
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {

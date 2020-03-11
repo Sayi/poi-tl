@@ -39,12 +39,14 @@ public class DefaultRunTemplateFactory implements RunTemplateFactory<RunTemplate
     public RunTemplate createRunTemplate(String tag, XWPFRun run) {
         RunTemplate template = new RunTemplate();
         Set<Character> gramerChars = config.getGramerChars();
-        char fisrtChar = tag.charAt(0);
         Character symbol = Character.valueOf(EMPTY_CHAR);
-        for (Character chara : gramerChars) {
-            if (chara.equals(fisrtChar)) {
-                symbol = Character.valueOf(fisrtChar);
-                break;
+        if (!"".equals(tag)) {
+            char fisrtChar = tag.charAt(0);
+            for (Character chara : gramerChars) {
+                if (chara.equals(fisrtChar)) {
+                    symbol = Character.valueOf(fisrtChar);
+                    break;
+                }
             }
         }
         template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());

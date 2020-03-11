@@ -54,6 +54,7 @@ public class IfTemplateRenderTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
+                put("isShowTitle", true);
                 put("showUser", new HashMap<String, Object>() {
                     {
                         put("user", "Sayi");
