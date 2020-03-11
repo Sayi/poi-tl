@@ -21,6 +21,6 @@ import com.deepoove.poi.xwpf.ParentContext;
 
 public interface Iteration {
 
-    void next(IterableTemplate iterable, ParentContext parentContext, int start, int end, Object model);
+    void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model);
 
 }

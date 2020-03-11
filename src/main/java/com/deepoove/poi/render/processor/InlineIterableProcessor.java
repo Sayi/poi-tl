@@ -68,16 +68,16 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
     protected void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer, Iterable<?> compute) {
         RunTemplate start = iterableTemplate.getStartMark();
         RunTemplate end = iterableTemplate.getEndMark();
-
         ParagraphContext parentContext = new XWPFParagraphContext(
                 new XWPFParagraphWrapper((XWPFParagraph) start.getRun().getParent()));
 
         Integer startRunPos = start.getRunPos();
         Integer endRunPos = end.getRunPos();
+        IterableContext context = new IterableContext(startRunPos, endRunPos);
 
         Iterator<?> iterator = compute.iterator();
         while (iterator.hasNext()) {
-            next(iterableTemplate, parentContext, startRunPos, endRunPos, iterator.next());
+            next(iterableTemplate, parentContext, context, iterator.next());
         }
 
         // clear self iterable template
@@ -87,12 +87,12 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
     }
 
     @Override
-    public void next(IterableTemplate iterable, ParentContext parentContext, int startPos, int endPos,
-            Object model) {
-
+    public void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model) {
         ParagraphContext paragraphContext = (ParagraphContext) parentContext;
         RunTemplate end = iterable.getEndMark();
         CTR endCtr = end.getRun().getCTR();
+        int startPos = context.getStart();
+        int endPos = context.getEnd();
 
         // copy position cursor
         int insertPostionCursor = end.getRunPos();

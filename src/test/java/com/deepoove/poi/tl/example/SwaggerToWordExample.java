@@ -2,7 +2,6 @@ package com.deepoove.poi.tl.example;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 
 import io.swagger.models.ArrayModel;
@@ -29,12 +29,25 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
 
+/**
+ * <p>
+ * 无法输入英文引号：
+ * </p>
+ * <p>
+ * "自动更正选项"——"键入时自动套用格式"——"直引号替换为弯引号"（把√去掉）
+ * </p>
+ * 
+ * @author Sayi
+ */
 public class SwaggerToWordExample {
+    
+    // String location = "https://petstore.swagger.io/v2/swagger.json";
+    String location = "src/test/resources/swagger/petstore.json";
 
     @Test
     public void testSwaggerToWord() throws IOException {
         SwaggerParser swaggerParser = new SwaggerParser();
-        Swagger swagger = swaggerParser.read("https://petstore.swagger.io/v2/swagger.json");
+        Swagger swagger = swaggerParser.read(location);
 
         SwaggerView viewData = convert(swagger);
         System.out.println(viewData);
@@ -42,7 +55,8 @@ public class SwaggerToWordExample {
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
         Configure config = Configure.newBuilder().bind("parameters", hackLoopTableRenderPolicy)
                 .bind("responses", hackLoopTableRenderPolicy)
-                .bind("properties", hackLoopTableRenderPolicy).build();
+                .bind("properties", hackLoopTableRenderPolicy)
+                .setElMode(ELMode.SPEL_MODE).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config).render(viewData);
         template.writeToFile("out_example_swagger.docx");
     }
@@ -227,11 +241,4 @@ public class SwaggerToWordExample {
         return schema.toString();
     }
     
-    public static void main(String[] args) {
-        Arrays.asList("1", "2").forEach(a -> {
-            return;
-        });
-        System.out.println("123555");
-    }
-
 }

@@ -32,8 +32,9 @@ public class IterableTemplateResolverTest {
     }
 
     private void testResolvedMetaTemplate(List<MetaTemplate> elementTemplates) {
-        assertTrue(elementTemplates.get(0) instanceof RunTemplate);
-        assertEquals(elementTemplates.get(0).variable(), "{{title}}");
+        assertTrue(elementTemplates.get(0) instanceof InlineIterableTemplate);
+        assertEquals(elementTemplates.get(0).variable(), "{{?isShowTitle}}");
+        assertEquals(((IterableTemplate) elementTemplates.get(0)).getTemplates().get(0).variable(), "{{title}}");
 
         assertTrue(elementTemplates.get(1) instanceof IterableTemplate);
         IterableTemplate iterable = (IterableTemplate) elementTemplates.get(1);

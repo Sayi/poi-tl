@@ -16,25 +16,17 @@
 
 package com.deepoove.poi.render.processor;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFNum;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 
@@ -43,7 +35,6 @@ import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
-import com.deepoove.poi.xwpf.NumberingWrapper;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
@@ -96,9 +87,12 @@ public class IterableProcessor extends AbstractIterableProcessor {
         int startPos = bodyContainer.getPosOfParagraphCTP(startCtp);
         int endPos = bodyContainer.getPosOfParagraphCTP(endCtp);
 
+        NumberingContinue numbringContinue = NumberingContinue.of(bodyContainer, startPos, endPos, iterableTemplate);
+        IterableContext context = new IterableContext(startPos, endPos, numbringContinue);
+
         Iterator<?> iterator = compute.iterator();
         while (iterator.hasNext()) {
-            next(iterableTemplate, bodyContainer, startPos, endPos, iterator.next());
+            next(iterableTemplate, bodyContainer, context, iterator.next());
         }
 
         // clear self iterable template
@@ -108,12 +102,14 @@ public class IterableProcessor extends AbstractIterableProcessor {
     }
 
     @Override
-    public void next(IterableTemplate iterable, ParentContext parentContext, int start, int end,
-            Object model) {
-
+    public void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model) {
         BodyContainer bodyContainer = (BodyContainer) parentContext;
         XWPFParagraph endParagraph = (XWPFParagraph) iterable.getEndRun().getParent();
         CTP endCtp = endParagraph.getCTP();
+
+        int start = context.getStart();
+        int end = context.getEnd();
+        context.getNumberingContinue().resetCache();
 
         // copy positon cursor
         XmlCursor insertPostionCursor = endCtp.newCursor();
@@ -121,7 +117,6 @@ public class IterableProcessor extends AbstractIterableProcessor {
         // copy content
         List<IBodyElement> bodyElements = bodyContainer.getBodyElements();
         List<IBodyElement> copies = new ArrayList<IBodyElement>();
-        Map<BigInteger, BigInteger> consistCache = new HashMap<>();
         for (int i = start + 1; i < end; i++) {
             IBodyElement iBodyElement = bodyElements.get(i);
             if (iBodyElement.getElementType() == BodyElementType.PARAGRAPH) {
@@ -137,7 +132,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 XWPFParagraph copy = new XWPFParagraph((CTP) object, bodyContainer.getTarget());
 
                 // update numbering
-                updateNumbering((XWPFParagraph) iBodyElement, copy, consistCache);
+                context.getNumberingContinue().updateNumbering((XWPFParagraph) iBodyElement, copy);
 
                 copies.add(copy);
                 bodyContainer.updateBodyElements(insertNewParagraph, copy);
@@ -166,40 +161,4 @@ public class IterableProcessor extends AbstractIterableProcessor {
         // render
         process(templates, model);
     }
-
-    private static void updateNumbering(XWPFParagraph source, XWPFParagraph target,
-            Map<BigInteger, BigInteger> consistCache) {
-        XWPFDocument document = source.getDocument();
-        XWPFNumbering numbering = document.getNumbering();
-        if (null == numbering) return;
-        BigInteger numID = source.getNumID();
-        if (numID == null) return;
-
-        if (consistCache.get(numID) != null) {
-            target.setNumID(consistCache.get(numID));
-            return;
-        }
-
-        NumberingWrapper wrapper = new NumberingWrapper(numbering);
-        XWPFNum num = numbering.getNum(numID);
-        if (null == num) return;
-        XWPFAbstractNum abstractNum = numbering.getAbstractNum(num.getCTNum().getAbstractNumId().getVal());
-        CTAbstractNum ctAbstractNum = (CTAbstractNum) abstractNum.getAbstractNum().copy();
-        ctAbstractNum.setAbstractNumId(wrapper.getNextAbstractNumID());
-
-        // clear continues list
-        // (related to tracking numbering definitions when documents are
-        // repurposed and
-        // changed
-        if (ctAbstractNum.isSetNsid()) ctAbstractNum.unsetNsid();
-        // related to where the definition can be displayed in the user
-        // interface
-        if (ctAbstractNum.isSetTmpl()) ctAbstractNum.unsetTmpl();
-
-        BigInteger abstractNumID = numbering.addAbstractNum(new XWPFAbstractNum(ctAbstractNum));
-        BigInteger newNumId = numbering.addNum(abstractNumID);
-        target.setNumID(newNumId);
-        consistCache.put(numID, newNumId);
-    }
-
 }
