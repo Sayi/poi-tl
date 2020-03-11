@@ -26,6 +26,7 @@ public class IfTemplateRenderTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
+                put("isShowTitle", true);
                 put("showUser", false);
                 put("showDate", false);
             }

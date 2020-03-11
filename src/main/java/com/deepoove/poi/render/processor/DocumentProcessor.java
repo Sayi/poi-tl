@@ -28,7 +28,7 @@ public class DocumentProcessor extends DefaultTemplateProcessor {
     private IterableProcessor iterableProcessor;
     private InlineIterableProcessor inlineIterableProcessor;
 
-    public DocumentProcessor(XWPFTemplate template, RenderDataCompute renderDataCompute) {
+    public DocumentProcessor(XWPFTemplate template, final RenderDataCompute renderDataCompute) {
         super(template, renderDataCompute);
         elementProcessor = new ElementProcessor(template, renderDataCompute);
         iterableProcessor = new IterableProcessor(template, renderDataCompute);

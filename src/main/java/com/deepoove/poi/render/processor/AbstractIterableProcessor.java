@@ -40,13 +40,17 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
     public void visit(IterableTemplate iterableTemplate) {
         BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
         Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
-
+        
         if (null == compute || (compute instanceof Boolean && !(Boolean) compute)) {
             handleNever(iterableTemplate, bodyContainer);
         } else if (compute instanceof Iterable) {
             handleIterable(iterableTemplate, bodyContainer, (Iterable<?>) compute);
         } else {
-            handleOnce(iterableTemplate, compute);
+            if (compute instanceof Boolean && (Boolean) compute) {
+                handleOnceWithScope(iterableTemplate, renderDataCompute);
+            } else {
+                handleOnce(iterableTemplate, compute);
+            }
         }
 
         afterHandle(iterableTemplate, bodyContainer);
@@ -64,6 +68,10 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
 
     protected void handleOnce(IterableTemplate iterableTemplate, Object compute) {
         process(iterableTemplate.getTemplates(), compute);
+    }
+    
+    protected void handleOnceWithScope(IterableTemplate iterableTemplate, RenderDataCompute dataCompute) {
+        new DocumentProcessor(this.template, dataCompute).process(iterableTemplate.getTemplates());
     }
 
     protected void process(List<MetaTemplate> templates, Object model) {

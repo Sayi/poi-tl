@@ -28,9 +28,9 @@ import com.deepoove.poi.template.run.RunTemplate;
 public abstract class DefaultTemplateProcessor implements Visitor {
 
     protected XWPFTemplate template;
-    protected RenderDataCompute renderDataCompute;
+    protected final RenderDataCompute renderDataCompute;
 
-    public DefaultTemplateProcessor(XWPFTemplate template, RenderDataCompute renderDataCompute) {
+    public DefaultTemplateProcessor(XWPFTemplate template, final RenderDataCompute renderDataCompute) {
         this.template = template;
         this.renderDataCompute = renderDataCompute;
     }
