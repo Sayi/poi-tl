@@ -24,7 +24,7 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * insert Book mark plug-in
+ * Book mark plug-in
  */
 public class BookmarkRenderPolicy extends TextRenderPolicy {
 
