@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ import io.swagger.parser.SwaggerParser;
  * @author Sayi
  */
 public class SwaggerToWordExample {
-    
+
     // String location = "https://petstore.swagger.io/v2/swagger.json";
     String location = "src/test/resources/swagger/petstore.json";
 
@@ -48,16 +47,14 @@ public class SwaggerToWordExample {
     public void testSwaggerToWord() throws IOException {
         SwaggerParser swaggerParser = new SwaggerParser();
         Swagger swagger = swaggerParser.read(location);
-
         SwaggerView viewData = convert(swagger);
-        System.out.println(viewData);
-        
+
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
         Configure config = Configure.newBuilder().bind("parameters", hackLoopTableRenderPolicy)
-                .bind("responses", hackLoopTableRenderPolicy)
-                .bind("properties", hackLoopTableRenderPolicy)
+                .bind("responses", hackLoopTableRenderPolicy).bind("properties", hackLoopTableRenderPolicy)
                 .setElMode(ELMode.SPEL_MODE).build();
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config).render(viewData);
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config)
+                .render(viewData);
         template.writeToFile("out_example_swagger.docx");
     }
 
@@ -70,12 +67,12 @@ public class SwaggerToWordExample {
         view.setHost(swagger.getHost());
         view.setSchemes(swagger.getSchemes());
         List<Resource> resources = new ArrayList<>();
-        
+
         List<Endpoint> endpoints = new ArrayList<>();
         Map<String, Path> paths = swagger.getPaths();
         if (null == paths) return view;
         paths.forEach((url, path) -> {
-            
+
             if (null == path.getOperationMap()) return;
             path.getOperationMap().forEach((method, operation) -> {
                 Endpoint endpoint = new Endpoint();
@@ -85,27 +82,13 @@ public class SwaggerToWordExample {
                 endpoint.setDelete(HttpMethod.DELETE == method);
                 endpoint.setPut(HttpMethod.PUT == method);
                 endpoint.setPost(HttpMethod.POST == method);
-                
+
                 endpoint.setSummary(operation.getSummary());
                 endpoint.setDescription(operation.getDescription());
                 endpoint.setTag(operation.getTags());
-                List<String> produces = operation.getProduces();
-                if (null != produces) {
-                    List<DefaultKeyValue<String, String>> pros = new ArrayList<>();
-                    produces.forEach(produce -> {
-                        pros.add(new DefaultKeyValue<String, String>("key", produce));
-                    });
-                    endpoint.setProduces(pros);
-                }
-                List<String> consumes = operation.getConsumes();
-                if (null != consumes) {
-                    List<DefaultKeyValue<String, String>> coms = new ArrayList<>();
-                    consumes.forEach(comsume -> {
-                        coms.add(new DefaultKeyValue<String, String>("key", comsume));
-                    });
-                    endpoint.setConsumes(coms);
-                }
-                
+                endpoint.setProduces(operation.getProduces());
+                endpoint.setConsumes(operation.getConsumes());
+
                 if (null != operation.getParameters()) {
                     List<Parameter> parameters = new ArrayList<>();
                     operation.getParameters().forEach(para -> {
@@ -125,7 +108,8 @@ public class SwaggerToWordExample {
                                 schema.append(((AbstractSerializableParameter) para).getType());
                             }
                             if (StringUtils.isNotBlank(((AbstractSerializableParameter) para).getCollectionFormat())) {
-                                schema.append("(").append(((AbstractSerializableParameter) para).getCollectionFormat()).append(")");
+                                schema.append("(").append(((AbstractSerializableParameter) para).getCollectionFormat())
+                                        .append(")");
                             }
                         }
                         if (para instanceof BodyParameter) {
@@ -137,7 +121,7 @@ public class SwaggerToWordExample {
                     });
                     endpoint.setParameters(parameters);
                 }
-                
+
                 if (null != operation.getResponses()) {
                     List<Response> responses = new ArrayList<>();
                     operation.getResponses().forEach((code, resp) -> {
@@ -146,7 +130,7 @@ public class SwaggerToWordExample {
                         response.setDescription(resp.getDescription());
                         Model schemaModel = resp.getResponseSchema();
                         response.setSchema(fomartSchemaModel(schemaModel));
-                        
+
                         if (null != resp.getHeaders()) {
                             List<Header> headers = new ArrayList<>();
                             resp.getHeaders().forEach((name, property) -> {
@@ -163,20 +147,21 @@ public class SwaggerToWordExample {
                     endpoint.setResponses(responses);
                 }
                 endpoints.add(endpoint);
-            }); 
-            
+            });
+
         });
-        
+
         swagger.getTags().forEach(tag -> {
             Resource resource = new Resource();
             resource.setName(tag.getName());
             resource.setDescription(tag.getDescription());
-            resource.setEndpoints(endpoints.stream().filter(path -> (null != path.getTag() 
-                    && path.getTag().contains(tag.getName()))).collect(Collectors.toList()));
+            resource.setEndpoints(
+                    endpoints.stream().filter(path -> (null != path.getTag() && path.getTag().contains(tag.getName())))
+                            .collect(Collectors.toList()));
             resources.add(resource);
         });
-        view.setResources(resources );
-        
+        view.setResources(resources);
+
         if (null != swagger.getDefinitions()) {
             List<Definition> definitions = new ArrayList<>();
             swagger.getDefinitions().forEach((name, model) -> {
@@ -192,9 +177,9 @@ public class SwaggerToWordExample {
                         property.setSchema(formatProperty(prop));
                         properties.add(property);
                     });
-                    definition.setProperties(properties );
+                    definition.setProperties(properties);
                 }
-                
+
                 definitions.add(definition);
             });
             view.setDefinitions(definitions);
@@ -211,12 +196,12 @@ public class SwaggerToWordExample {
             schema.append(formatProperty(items));
             schema.append(((ArrayModel) schemaModel).getType());
         } else
-        // if ref
-        if (schemaModel instanceof RefModel) {
-            schema.append(((RefModel) schemaModel).get$ref());
-        } else if (schemaModel instanceof ModelImpl) {
-            schema.append(((ModelImpl) schemaModel).getType());
-        } 
+            // if ref
+            if (schemaModel instanceof RefModel) {
+                schema.append(((RefModel) schemaModel).get$ref());
+            } else if (schemaModel instanceof ModelImpl) {
+                schema.append(((ModelImpl) schemaModel).getType());
+            }
         // ComposedModel
         return schema.toString();
     }
@@ -226,8 +211,7 @@ public class SwaggerToWordExample {
         if (null != items) {
             if (items instanceof RefProperty) {
                 schema.append("<").append(((RefProperty) items).get$ref()).append(">");
-            } else
-            if (items instanceof ArrayProperty) {
+            } else if (items instanceof ArrayProperty) {
                 // should recursive
                 Property insideItems = ((ArrayProperty) items).getItems();
                 if (insideItems instanceof RefProperty) {
@@ -240,5 +224,5 @@ public class SwaggerToWordExample {
         }
         return schema.toString();
     }
-    
+
 }

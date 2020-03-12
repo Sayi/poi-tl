@@ -2,8 +2,6 @@ package com.deepoove.poi.tl.example;
 
 import java.util.List;
 
-import org.apache.commons.collections4.keyvalue.DefaultKeyValue;
-
 import io.swagger.models.ExternalDocs;
 import io.swagger.models.Info;
 import io.swagger.models.Scheme;
@@ -128,8 +126,8 @@ class Endpoint {
     private String description;
     private List<Parameter> parameters;
     private List<Response> responses;
-    private List<DefaultKeyValue<String, String>> produces;
-    private List<DefaultKeyValue<String, String>> consumes;
+    private List<String> produces;
+    private List<String> consumes;
 
     public List<String> getTag() {
         return tag;
@@ -219,19 +217,19 @@ class Endpoint {
         this.responses = responses;
     }
 
-    public List<DefaultKeyValue<String, String>> getProduces() {
+    public List<String> getProduces() {
         return produces;
     }
 
-    public void setProduces(List<DefaultKeyValue<String, String>> produces) {
+    public void setProduces(List<String> produces) {
         this.produces = produces;
     }
 
-    public List<DefaultKeyValue<String, String>> getConsumes() {
+    public List<String> getConsumes() {
         return consumes;
     }
 
-    public void setConsumes(List<DefaultKeyValue<String, String>> consumes) {
+    public void setConsumes(List<String> consumes) {
         this.consumes = consumes;
     }
 

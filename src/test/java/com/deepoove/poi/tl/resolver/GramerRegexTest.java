@@ -25,7 +25,12 @@ public class GramerRegexTest {
         Pattern pattern = Pattern.compile(defaultRegex);
         testMatcherTextTrue(pattern);
         testMatcherTextFalse(pattern);
+
         assertFalse(pattern.matcher("abc-123").matches());
+        assertFalse(pattern.matcher("##this").matches());
+        assertFalse(pattern.matcher("#.").matches());
+        assertFalse(pattern.matcher("#.a").matches());
+        assertTrue(pattern.matcher("#23.a").matches());
     }
 
     @Test
@@ -63,6 +68,8 @@ public class GramerRegexTest {
         assertTrue(pattern.matcher("abc.好123").matches());
         assertTrue(pattern.matcher("好.123").matches());
         assertTrue(pattern.matcher("好.123.好").matches());
+
+        assertTrue(pattern.matcher("#this").matches());
     }
 
     private void testMatcherTextFalse(Pattern pattern) {

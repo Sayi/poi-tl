@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 
-public class NumbringContinueTest {
+public class NumberingContinueTest {
 
     @SuppressWarnings("serial")
     @Test

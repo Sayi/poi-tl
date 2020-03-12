@@ -33,6 +33,11 @@ public enum GramerSymbol {
     TEXT('\0'),
 
     /**
+     * 文本别名，兼容#this写法不与现有的表格写法冲突：{{=#this}}
+     */
+    TEXT_ALIAS('='),
+
+    /**
      * 表格
      */
     TABLE('#'),

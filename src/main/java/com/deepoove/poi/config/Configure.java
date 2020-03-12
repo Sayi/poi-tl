@@ -49,7 +49,7 @@ public class Configure {
     /**
      * regular expression: Chinese, letters, numbers and underscores
      */
-    public static final String DEFAULT_GRAMER_REGEX = "([\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*)?";
+    public static final String DEFAULT_GRAMER_REGEX = "((#)?[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*)?";
 
     /**
      * template by bind: Highest priority
@@ -112,6 +112,7 @@ public class Configure {
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
+        plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
         plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
         plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
         plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());

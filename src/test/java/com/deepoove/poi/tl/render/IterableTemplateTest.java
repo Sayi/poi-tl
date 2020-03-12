@@ -207,6 +207,7 @@ public class IterableTemplateTest {
             {
                 put("title", "poi-tl");
                 put("users", users);
+                put("thisref", Arrays.asList("good", "people"));
 
             }
         };

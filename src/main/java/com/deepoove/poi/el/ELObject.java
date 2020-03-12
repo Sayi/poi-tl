@@ -19,7 +19,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 对象点缀法访问
+ * 
+ * calculate expression
  * 
  * @author Sayi
  * @since 1.4.0
@@ -31,6 +32,9 @@ public class ELObject {
 
     final Map<String, Object> cache = new ConcurrentHashMap<String, Object>(32);
 
+    // Same variable reference with SpEL
+    private static final String THIS = "#this";
+
     public ELObject(Object model) {
         this.model = model;
     }
@@ -40,6 +44,7 @@ public class ELObject {
     }
 
     public Object eval(String el) {
+        if (THIS.equals(el)) { return model; }
         Dot dot = new Dot(el);
         return dot.eval(this);
     }
