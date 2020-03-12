@@ -26,7 +26,9 @@ import com.deepoove.poi.data.builder.StyleBuilder;
 public class HyperLinkTextRenderData extends TextRenderData {
 
     /**
-     * 超链接或者发送邮件链接("mailto:adasai90@gmail.com?subject=poi-tl")
+     * 超链接: http://deepoove.com <br/>
+     * 发送邮件链接:mailto:adasai90@gmail.com?subject=poi-tl <br/>
+     * 锚点：anchor:AnchorName
      */
     private String url;
 

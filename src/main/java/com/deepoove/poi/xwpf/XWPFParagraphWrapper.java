@@ -16,12 +16,15 @@
 package com.deepoove.poi.xwpf;
 
 import java.lang.reflect.Field;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.IRunElement;
@@ -31,7 +34,9 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.QNameSet;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTMarkupRange;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
@@ -52,6 +57,10 @@ public class XWPFParagraphWrapper {
     static final QName FLDSIMPLE_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
             "fldSimple");
     static final QName R_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "r");
+    static final QName BOOKMARK_START_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "bookmarkStart");
+    static final QName BOOKMARK_END_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "bookmarkEnd");
 
     static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME, FLDSIMPLE_QNAME, R_QNAME });
 
@@ -80,32 +89,27 @@ public class XWPFParagraphWrapper {
         }
     }
 
-    public XWPFHyperlinkRun createHyperLinkRun(String link) {
-        PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
-                XWPFRelation.HYPERLINK.getRelation());
-        CTHyperlink hyperlink = paragraph.getCTP().addNewHyperlink();
-        hyperlink.setId(relationship.getId());
-        CTR ctr = hyperlink.addNewR();
-        XWPFHyperlinkRun xwpfRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody) paragraph);
-        getRuns().add(xwpfRun);
-        getIRuns().add(xwpfRun);
-        return xwpfRun;
+    public XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
+        if (StringUtils.isBlank(link)) throw new IllegalArgumentException("HyperLink must not be Empty!");
+        return insertNewHyperLinkRun(getPosOfRun(run), link);
     }
 
     public XWPFHyperlinkRun insertNewHyperLinkRun(int pos, String link) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
-            PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
-                    XWPFRelation.HYPERLINK.getRelation());
             CTHyperlink hyperlink = insertNewHyperlink(pos);
-            hyperlink.setId(relationship.getId());
+            if (link.startsWith("anchor:")) {
+                hyperlink.setAnchor(link.substring("anchor:".length()));
+            } else {
+                PackageRelationship relationship = paragraph.getDocument().getPackagePart()
+                        .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
+                hyperlink.setId(relationship.getId());
+            }
+
             CTR ctr = hyperlink.addNewR();
             XWPFHyperlinkRun newRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody) paragraph);
-
             updateRunsAndIRuns(pos, newRun);
-
             return newRun;
         }
-
         return null;
     }
 
@@ -128,6 +132,38 @@ public class XWPFParagraphWrapper {
             localCTHyperlink = (CTHyperlink) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, HYPER_QNAME,
                     paramInt);
             return localCTHyperlink;
+        }
+    }
+
+    public CTBookmark insertNewBookmark(XWPFRun run) {
+        int pos = getPosOfRun(run);
+
+        CTMarkupRange end = insertNewBookmarkEnd(pos + 1);
+        CTBookmark start = insertNewBookmarkStart(pos);
+        start.setId(BigInteger.valueOf(500 + new Random().nextInt(50000)));
+        end.setId(start.getId());
+        return start;
+    }
+
+    public CTMarkupRange insertNewBookmarkEnd(int paramInt) {
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTMarkupRange local = null;
+            local = (CTMarkupRange) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, BOOKMARK_END_QNAME,
+                    paramInt);
+            return local;
+        }
+    }
+
+    public CTBookmark insertNewBookmarkStart(int paramInt) {
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTBookmark local = null;
+            local = (CTBookmark) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, BOOKMARK_START_QNAME,
+                    paramInt);
+            return local;
         }
     }
 
@@ -198,6 +234,18 @@ public class XWPFParagraphWrapper {
 
         // Runs itself is easy to update
         runs.add(pos, newRun);
+    }
+
+    private int getPosOfRun(XWPFRun run) {
+        int pos = -1;
+        List<XWPFRun> runs = paragraph.getRuns();
+        for (int i = 0; i < runs.size(); i++) {
+            if (run == runs.get(i)) {
+                pos = i;
+                break;
+            }
+        }
+        return pos;
     }
 
     @SuppressWarnings("unchecked")

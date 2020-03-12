@@ -42,7 +42,6 @@ public class XWPFParagraphContext implements ParagraphContext {
     @Override
     public void setAndUpdateRun(XWPFRun xwpfRun2, XWPFRun insertNewRun, int insertPostionCursor) {
         paragraphWrapper.setAndUpdateRun(xwpfRun2, insertNewRun, insertPostionCursor);
-
     }
 
     @Override

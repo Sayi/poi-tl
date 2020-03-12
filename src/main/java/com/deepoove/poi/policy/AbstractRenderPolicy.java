@@ -80,7 +80,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     }
 
     protected void reThrowException(RenderContext<T> context, Exception e) {
-        throw new RenderException("Render template " + context.getEleTemplate() + " error", e);
+        throw new RenderException("Render template " + context.getEleTemplate() + " failed!", e);
     }
 
     protected void postValidError(RenderContext<T> context) {

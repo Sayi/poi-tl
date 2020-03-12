@@ -15,13 +15,14 @@
  */
 package com.deepoove.poi.policy;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
  * @author Sayi
@@ -47,15 +48,17 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             XWPFRun textRun = run;
             // create hyper link run
             if (renderData instanceof HyperLinkTextRenderData) {
-                XWPFRun hyperLinkRun = NiceXWPFDocument.insertNewHyperLinkRun(run,
+                XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
+                XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run,
                         ((HyperLinkTextRenderData) renderData).getUrl());
+                StyleUtils.styleRun(hyperLinkRun, run);
+
                 run.setText("", 0);
                 textRun = hyperLinkRun;
             }
 
             // text
-            TextRenderData data = renderData instanceof TextRenderData
-                    ? (TextRenderData) renderData
+            TextRenderData data = renderData instanceof TextRenderData ? (TextRenderData) renderData
                     : new TextRenderData(renderData.toString());
 
             String text = null == data.getText() ? "" : data.getText();
