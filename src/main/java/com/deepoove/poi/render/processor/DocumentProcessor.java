@@ -18,6 +18,7 @@ package com.deepoove.poi.render.processor;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
+import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
@@ -28,11 +29,11 @@ public class DocumentProcessor extends DefaultTemplateProcessor {
     private IterableProcessor iterableProcessor;
     private InlineIterableProcessor inlineIterableProcessor;
 
-    public DocumentProcessor(XWPFTemplate template, final RenderDataCompute renderDataCompute) {
-        super(template, renderDataCompute);
-        elementProcessor = new ElementProcessor(template, renderDataCompute);
-        iterableProcessor = new IterableProcessor(template, renderDataCompute);
-        inlineIterableProcessor = new InlineIterableProcessor(template, renderDataCompute);
+    public DocumentProcessor(XWPFTemplate template, final Resolver resolver, final RenderDataCompute renderDataCompute) {
+        super(template, resolver, renderDataCompute);
+        elementProcessor = new ElementProcessor(template, resolver, renderDataCompute);
+        iterableProcessor = new IterableProcessor(template, resolver, renderDataCompute);
+        inlineIterableProcessor = new InlineIterableProcessor(template, resolver, renderDataCompute);
     }
 
     @Override

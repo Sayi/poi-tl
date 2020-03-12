@@ -83,7 +83,7 @@ public class DefaultRender implements Render {
         new LogProcessor().process(template.getElementTemplates());
         
         // render
-        DocumentProcessor documentRender = new DocumentProcessor(template, renderDataCompute);
+        DocumentProcessor documentRender = new DocumentProcessor(template, template.getResolver(), renderDataCompute);
         documentRender.process(template.getElementTemplates());
     }
 

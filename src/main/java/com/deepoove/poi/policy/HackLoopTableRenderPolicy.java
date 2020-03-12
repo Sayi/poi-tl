@@ -28,7 +28,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.render.processor.DocumentProcessor;
@@ -44,14 +43,16 @@ import com.deepoove.poi.util.TableTools;
  */
 public class HackLoopTableRenderPolicy implements RenderPolicy {
 
-    private TemplateResolver resolver;
+    private String prefix;
+    private String suffix;
 
     public HackLoopTableRenderPolicy() {
-        this(Configure.newBuilder().buildGramer("[", "]").build());
+        this("[", "]");
     }
 
-    public HackLoopTableRenderPolicy(Configure config) {
-        this.resolver = new TemplateResolver(config);
+    public HackLoopTableRenderPolicy(String prefix, String suffix) {
+        this.prefix = prefix;
+        this.suffix = suffix;
     }
 
     @Override
@@ -72,6 +73,8 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                 Iterator<?> iterator = ((Iterable<?>) data).iterator();
                 XWPFTableRow templateRow = table.getRow(templateRowIndex);
                 int insertPosition = templateRowIndex;
+
+                TemplateResolver resolver = new TemplateResolver(template.getConfig().clone(prefix, suffix));
                 while (iterator.hasNext()) {
                     insertPosition = templateRowIndex++;
                     XWPFTableRow nextRow = table.insertNewTableRow(insertPosition);
@@ -89,7 +92,7 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                     List<XWPFTableCell> cells = nextRow.getTableCells();
                     cells.forEach(cell -> {
                         List<MetaTemplate> templates = resolver.resolveBodyElements(cell.getBodyElements());
-                        new DocumentProcessor(template, dataCompute).process(templates);
+                        new DocumentProcessor(template, resolver, dataCompute).process(templates);
                     });
                 }
             }

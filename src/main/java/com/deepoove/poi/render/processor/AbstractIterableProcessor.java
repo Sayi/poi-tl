@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
+import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
@@ -32,15 +33,15 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public AbstractIterableProcessor(XWPFTemplate template, RenderDataCompute renderDataCompute) {
-        super(template, renderDataCompute);
+    public AbstractIterableProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
+        super(template, resolver, renderDataCompute);
     }
 
     @Override
     public void visit(IterableTemplate iterableTemplate) {
         BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
         Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
-        
+
         if (null == compute || (compute instanceof Boolean && !(Boolean) compute)) {
             handleNever(iterableTemplate, bodyContainer);
         } else if (compute instanceof Iterable) {
@@ -69,14 +70,14 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
     protected void handleOnce(IterableTemplate iterableTemplate, Object compute) {
         process(iterableTemplate.getTemplates(), compute);
     }
-    
+
     protected void handleOnceWithScope(IterableTemplate iterableTemplate, RenderDataCompute dataCompute) {
-        new DocumentProcessor(this.template, dataCompute).process(iterableTemplate.getTemplates());
+        new DocumentProcessor(this.template, this.resolver, dataCompute).process(iterableTemplate.getTemplates());
     }
 
     protected void process(List<MetaTemplate> templates, Object model) {
         RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory().newCompute(model);
-        new DocumentProcessor(this.template, dataCompute).process(templates);
+        new DocumentProcessor(this.template, this.resolver, dataCompute).process(templates);
     }
 
 }

@@ -55,10 +55,10 @@ public class TemplateResolver extends AbstractResolver {
     private RunTemplateFactory<?> runTemplateFactory;
 
     public TemplateResolver(Configure config) {
-        this(config, new DefaultRunTemplateFactory(config));
+        this(config, config.getRunTemplateFactory());
     }
 
-    public TemplateResolver(Configure config, RunTemplateFactory<?> runTemplateFactory) {
+    private TemplateResolver(Configure config, RunTemplateFactory<?> runTemplateFactory) {
         super(config);
         this.runTemplateFactory = runTemplateFactory;
     }

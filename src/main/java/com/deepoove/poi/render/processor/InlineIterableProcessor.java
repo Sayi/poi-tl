@@ -29,6 +29,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
+import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
@@ -41,8 +42,8 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 public class InlineIterableProcessor extends AbstractIterableProcessor {
 
-    public InlineIterableProcessor(XWPFTemplate template, RenderDataCompute renderDataCompute) {
-        super(template, renderDataCompute);
+    public InlineIterableProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
+        super(template, resolver, renderDataCompute);
     }
 
     @Override
@@ -117,7 +118,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
         }
 
         // re-parse
-        List<MetaTemplate> templates = template.getResolver().resolveXWPFRuns(copies);
+        List<MetaTemplate> templates = this.resolver.resolveXWPFRuns(copies);
 
         // render
         process(templates, model);

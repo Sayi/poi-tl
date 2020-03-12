@@ -2,6 +2,8 @@ package com.deepoove.poi.tl.example;
 
 import java.util.List;
 
+import com.deepoove.poi.data.TextRenderData;
+
 import io.swagger.models.ExternalDocs;
 import io.swagger.models.Info;
 import io.swagger.models.Scheme;
@@ -240,7 +242,7 @@ class Parameter {
     private String name;
     private boolean required;
     private String description;
-    private String schema;
+    private List<TextRenderData> schema;
     private String defaultValue;
 
     public String getIn() {
@@ -275,11 +277,11 @@ class Parameter {
         this.description = description;
     }
 
-    public String getSchema() {
+    public List<TextRenderData> getSchema() {
         return schema;
     }
 
-    public void setSchema(String schema) {
+    public void setSchema(List<TextRenderData> schema) {
         this.schema = schema;
     }
 
@@ -296,7 +298,7 @@ class Parameter {
 class Response {
     private String code;
     private String description;
-    private String schema;
+    private List<TextRenderData> schema;
     private List<Header> headers;
 
     public String getCode() {
@@ -315,11 +317,11 @@ class Response {
         this.description = description;
     }
 
-    public String getSchema() {
+    public List<TextRenderData> getSchema() {
         return schema;
     }
 
-    public void setSchema(String schema) {
+    public void setSchema(List<TextRenderData> schema) {
         this.schema = schema;
     }
 
@@ -388,7 +390,7 @@ class Definition {
 class Property {
     private String name;
     private boolean required;
-    private String schema;
+    private List<TextRenderData> schema;
     private String description;
 
     public String getName() {
@@ -407,11 +409,11 @@ class Property {
         this.required = required;
     }
 
-    public String getSchema() {
+    public List<TextRenderData> getSchema() {
         return schema;
     }
 
-    public void setSchema(String schema) {
+    public void setSchema(List<TextRenderData> schema) {
         this.schema = schema;
     }
 

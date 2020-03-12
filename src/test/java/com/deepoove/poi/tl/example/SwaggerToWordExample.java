@@ -7,11 +7,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
+import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.policy.BookmarkRenderPolicy;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 
 import io.swagger.models.ArrayModel;
@@ -38,6 +42,7 @@ import io.swagger.parser.SwaggerParser;
  * 
  * @author Sayi
  */
+@DisplayName("Swagger to Word Example")
 public class SwaggerToWordExample {
 
     // String location = "https://petstore.swagger.io/v2/swagger.json";
@@ -52,7 +57,7 @@ public class SwaggerToWordExample {
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
         Configure config = Configure.newBuilder().bind("parameters", hackLoopTableRenderPolicy)
                 .bind("responses", hackLoopTableRenderPolicy).bind("properties", hackLoopTableRenderPolicy)
-                .setElMode(ELMode.SPEL_MODE).build();
+                .addPlugin('>', new BookmarkRenderPolicy()).setElMode(ELMode.SPEL_MODE).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config)
                 .render(viewData);
         template.writeToFile("out_example_swagger.docx");
@@ -97,26 +102,26 @@ public class SwaggerToWordExample {
                         parameter.setIn(para.getIn());
                         parameter.setName(para.getName());
                         parameter.setRequired(para.getRequired());
-                        StringBuilder schema = new StringBuilder();
+                        List<TextRenderData> schema = new ArrayList<>();
                         if (para instanceof AbstractSerializableParameter) {
                             Property items = ((AbstractSerializableParameter) para).getItems();
                             // if array
-                            schema.append(formatProperty(items));
+                            schema.addAll(formatProperty(items));
 
                             // parameter type or array
                             if (StringUtils.isNotBlank(((AbstractSerializableParameter) para).getType())) {
-                                schema.append(((AbstractSerializableParameter) para).getType());
+                                schema.add(new TextRenderData(((AbstractSerializableParameter) para).getType()));
                             }
                             if (StringUtils.isNotBlank(((AbstractSerializableParameter) para).getCollectionFormat())) {
-                                schema.append("(").append(((AbstractSerializableParameter) para).getCollectionFormat())
-                                        .append(")");
+                                schema.add(new TextRenderData(
+                                        "(" + ((AbstractSerializableParameter) para).getCollectionFormat() + ")"));
                             }
                         }
                         if (para instanceof BodyParameter) {
                             Model schemaModel = ((BodyParameter) para).getSchema();
-                            schema.append(fomartSchemaModel(schemaModel));
+                            schema.addAll(fomartSchemaModel(schemaModel));
                         }
-                        parameter.setSchema(schema.toString());
+                        parameter.setSchema(schema);
                         parameters.add(parameter);
                     });
                     endpoint.setParameters(parameters);
@@ -187,42 +192,49 @@ public class SwaggerToWordExample {
         return view;
     }
 
-    private String fomartSchemaModel(Model schemaModel) {
-        if (null == schemaModel) return "";
-        StringBuilder schema = new StringBuilder();
+    private List<TextRenderData> fomartSchemaModel(Model schemaModel) {
+        List<TextRenderData> schema = new ArrayList<>();
+        if (null == schemaModel) return schema;
         // if array
         if (schemaModel instanceof ArrayModel) {
             Property items = ((ArrayModel) schemaModel).getItems();
-            schema.append(formatProperty(items));
-            schema.append(((ArrayModel) schemaModel).getType());
+            schema.addAll(formatProperty(items));
+            schema.add(new TextRenderData(((ArrayModel) schemaModel).getType()));
         } else
             // if ref
             if (schemaModel instanceof RefModel) {
-                schema.append(((RefModel) schemaModel).get$ref());
+                String ref = ((RefModel) schemaModel).get$ref().substring("#/definitions/".length());
+                schema.add(new HyperLinkTextRenderData(ref, "anchor:" + ref));
             } else if (schemaModel instanceof ModelImpl) {
-                schema.append(((ModelImpl) schemaModel).getType());
+                schema.add(new TextRenderData(((ModelImpl) schemaModel).getType()));
             }
         // ComposedModel
-        return schema.toString();
+        return schema;
     }
 
-    private String formatProperty(Property items) {
-        StringBuilder schema = new StringBuilder();
+    private List<TextRenderData> formatProperty(Property items) {
+        List<TextRenderData> schema = new ArrayList<>();
         if (null != items) {
             if (items instanceof RefProperty) {
-                schema.append("<").append(((RefProperty) items).get$ref()).append(">");
+                schema.add(new TextRenderData("<"));
+                String ref = ((RefProperty) items).get$ref().substring("#/definitions/".length());
+                schema.add(new HyperLinkTextRenderData(ref, "anchor:" + ref));
+                schema.add(new TextRenderData(">"));
             } else if (items instanceof ArrayProperty) {
                 // should recursive
                 Property insideItems = ((ArrayProperty) items).getItems();
                 if (insideItems instanceof RefProperty) {
-                    schema.append("<").append(((RefProperty) insideItems).get$ref()).append(">");
+                    schema.add(new TextRenderData("<"));
+                    String ref = ((RefProperty) insideItems).get$ref().substring("#/definitions/".length());
+                    schema.add(new HyperLinkTextRenderData(ref, "anchor:" + ref));
+                    schema.add(new TextRenderData(">"));
                 }
-                schema.append(items.getType());
+                schema.add(new TextRenderData(items.getType()));
             } else {
-                schema.append(items.getType());
+                schema.add(new TextRenderData(items.getType()));
             }
         }
-        return schema.toString();
+        return schema;
     }
 
 }

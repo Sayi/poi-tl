@@ -37,6 +37,7 @@ import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
+import com.deepoove.poi.util.RegexUtils;
 
 /**
  * The config of template
@@ -44,7 +45,7 @@ import com.deepoove.poi.resolver.RunTemplateFactory;
  * @author Sayi
  * @version 1.0.0
  */
-public class Configure {
+public class Configure implements Cloneable {
 
     /**
      * regular expression: Chinese, letters, numbers and underscores
@@ -140,8 +141,10 @@ public class Configure {
     /**
      * 新增或变更语法插件
      * 
-     * @param c      语法
-     * @param policy 策略
+     * @param c
+     *            语法
+     * @param policy
+     *            策略
      */
     public Configure plugin(char c, RenderPolicy policy) {
         DEFAULT_POLICYS.put(Character.valueOf(c), policy);
@@ -151,8 +154,10 @@ public class Configure {
     /**
      * 新增或变更语法插件
      * 
-     * @param symbol 语法
-     * @param policy 策略
+     * @param symbol
+     *            语法
+     * @param policy
+     *            策略
      * @return
      */
     Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
@@ -163,8 +168,10 @@ public class Configure {
     /**
      * 自定义模板和策略
      * 
-     * @param tagName 模板名称
-     * @param policy  策略
+     * @param tagName
+     *            模板名称
+     * @param policy
+     *            策略
      */
     public void customPolicy(String tagName, RenderPolicy policy) {
         CUSTOM_POLICYS.put(tagName, policy);
@@ -182,8 +189,10 @@ public class Configure {
     /**
      * 获取标签策略
      * 
-     * @param tagName 模板名称
-     * @param sign    语法
+     * @param tagName
+     *            模板名称
+     * @param sign
+     *            语法
      */
     public RenderPolicy getPolicy(String tagName, Character sign) {
         RenderPolicy policy = getCustomPolicy(tagName);
@@ -276,6 +285,22 @@ public class Configure {
         });
 
         return sb.toString();
+    }
+
+    @Override
+    protected Configure clone() throws CloneNotSupportedException {
+        // shallow clone
+        return (Configure) super.clone();
+    }
+
+    public Configure clone(String prefix, String suffix) throws CloneNotSupportedException {
+        Configure clone = clone();
+        clone.gramerPrefix = prefix;
+        clone.gramerSuffix = suffix;
+        if (clone.elMode == ELMode.SPEL_MODE) {
+            clone.grammerRegex = RegexUtils.createGeneral(clone.gramerPrefix, clone.gramerSuffix);
+        }
+        return clone;
     }
 
     public enum ELMode {

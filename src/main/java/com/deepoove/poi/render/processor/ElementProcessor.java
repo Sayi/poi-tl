@@ -25,6 +25,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataCompute;
+import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -32,8 +33,8 @@ public class ElementProcessor extends DefaultTemplateProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ElementProcessor.class);
 
-    public ElementProcessor(XWPFTemplate template, RenderDataCompute renderDataCompute) {
-        super(template, renderDataCompute);
+    public ElementProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
+        super(template, resolver, renderDataCompute);
     }
 
     @Override
