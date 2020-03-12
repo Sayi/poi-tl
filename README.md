@@ -23,7 +23,7 @@ poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.7.1</version>
+  <version>1.7.2</version>
 </dependency>
 ```
 
@@ -42,7 +42,7 @@ XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
 打开`out_template.docx`文档吧，一切如你所愿。
 
 ## 标签
-标签由前后两个大括号组成，在poi-tl中，`{{title}}`是标签，`{{?title}}`也是标签，`title`是这个标签的名称，`?`标识了标签类型，接下来我们来看看有哪些标签类型。
+标签由前后两个大括号组成，`{{title}}`是标签，`{{?title}}`也是标签，`title`是这个标签的名称，`?`标识了标签类型，接下来我们来看看有哪些标签类型。
 
 ### 文本
 文本标签是Word模板中最基本的标签类型，`{{name}}`会被数据模型中key为`name`的值替换，如果找不到默认会清空标签，可以配置是保留还是抛出异常。
@@ -273,6 +273,33 @@ Sugar
 Last Dance(伍佰)
 ```
 
+在循环中可以通过一个特殊的标签`{{=#this}}`直接引用当前迭代的对象。
+
+数据:
+```json
+{
+  "produces": [
+    "application/json",
+    "application/xml"
+  ]
+}
+```
+
+Word模板:
+
+```
+{{?produces}}
+{{=#this}}
+{{/produces}}
+```
+
+输出:
+
+```
+application/json
+application/xml
+```
+
 ### 嵌套
 嵌套是在Word模板中引入另一个Word模板，可以理解为import、include或者word文档合并，以`+`标识，如`{{+nested}}`。
 
@@ -318,9 +345,9 @@ Address: Shanghai,China
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
-* [循环模板示例：OKR目标制定](http://deepoove.com/poi-tl/#example-okr)
-* [循环模板示例：文章写作](http://deepoove.com/poi-tl/#example-article)
-* [Example：个人简历](http://deepoove.com/poi-tl/#_%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86)
+* [循环示例：OKR目标制定](http://deepoove.com/poi-tl/#example-okr)
+* [Example：个人简历创作](http://deepoove.com/poi-tl/#_%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86)
+* [Example：Swagger Word文档]()
 
 更多的示例以及所有示例的源码参见JUnit单元测试。
 
@@ -333,8 +360,6 @@ Address: Shanghai,China
 * 分享成功的喜悦
 * 更新和完善文档
 * 解决和讨论Issue
-* 提交Pull Request
-
 
 ## 建议和完善
 参见[常见问题](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)，欢迎在GitHub Issue中提问和交流。
