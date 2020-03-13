@@ -346,8 +346,8 @@ Address: Shanghai,China
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
 * [循环示例：OKR目标制定](http://deepoove.com/poi-tl/#example-okr)
-* [Example：个人简历创作](http://deepoove.com/poi-tl/#_%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86)
-* [Example：Swagger Word文档]()
+* [Example：个人简历创作](http://deepoove.com/poi-tl/#example-resume)
+* [Example：Swagger文档](http://deepoove.com/poi-tl/#example-swagger)
 
 更多的示例以及所有示例的源码参见JUnit单元测试。
 
