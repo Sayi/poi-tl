@@ -134,6 +134,15 @@ public class XWPFParagraphWrapper {
             return localCTHyperlink;
         }
     }
+    
+    public XWPFFieldRun insertNewAnchor(int pos, String anchorName) {
+        if (pos >= 0 && pos <= paragraph.getRuns().size()) {
+              XWPFFieldRun insertNewField = insertNewField(pos);
+              insertNewField.setFieldInstruction("HYPERLINK \\l \"" + anchorName + "\"");
+              return insertNewField;
+        }
+        return null;
+    }
 
     public CTBookmark insertNewBookmark(XWPFRun run) {
         int pos = getPosOfRun(run);
