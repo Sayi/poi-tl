@@ -485,6 +485,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_word合并">4.2.1. Word合并</a></li>
 </ul>
 </li>
+<li><a href="#_xwpfparagraphwrapper">4.3. XWPFParagraphWrapper</a>
+<ul class="sectlevel3">
+<li><a href="#_插入超链接">4.3.1. 插入超链接</a></li>
+<li><a href="#_插入书签">4.3.2. 插入书签</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#_关于作者">5. 关于作者</a></li>
@@ -828,6 +834,31 @@ out.close();</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_xwpfparagraphwrapper"><a class="anchor" href="#_xwpfparagraphwrapper"></a>4.3. XWPFParagraphWrapper</h3>
+<div class="paragraph">
+<p><code>XWPFParagraphWrapper</code> 是对原生 <code>XWPFParagraph</code> 的增强。</p>
+</div>
+<div class="sect3">
+<h4 id="_插入超链接"><a class="anchor" href="#_插入超链接"></a>4.3.1. 插入超链接</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(paragraph);
+XWPFRun hyperRun = wrapper.insertNewHyperLinkRun(0, "http:deepoove.com");
+hyperRun.setText("Deepoove");</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_插入书签"><a class="anchor" href="#_插入书签"></a>4.3.2. 插入书签</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(paragraph);
+wrapper.insertNewBookmark(run);</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -841,7 +872,7 @@ out.close();</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-09 21:02:32 CST
+Last updated 2020-03-13 17:23:22 CST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">

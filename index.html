@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Sayi</span><br>
 <span id="email" class="email"><a href="mailto:adasai90@gmail.com">adasai90@gmail.com</a></span><br>
-<span id="revnumber">version 1.7.1</span>
+<span id="revnumber">version 1.7.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -472,9 +472,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_前后缀">6.1. 前后缀</a></li>
 <li><a href="#_标签类型">6.2. 标签类型</a></li>
-<li><a href="#_标签规则">6.3. 标签规则</a></li>
-<li><a href="#_标签计算">6.4. 标签计算</a></li>
-<li><a href="#_spingel">6.5. SpingEL</a></li>
+<li><a href="#_标签正则">6.3. 标签正则</a></li>
+<li><a href="#_计算标签值">6.4. 计算标签值</a></li>
+<li><a href="#_sping表达式">6.5. Sping表达式</a></li>
 <li><a href="#_错误处理">6.6. 错误处理</a></li>
 <li><a href="#_模板生成模板">6.7. 模板生成模板</a></li>
 <li><a href="#_日志">6.8. 日志</a></li>
@@ -487,17 +487,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_使用插件">7.3. 使用插件</a></li>
 <li><a href="#_辅助类helper">7.4. 辅助类Helper</a></li>
 <li><a href="#_plugin_example">7.5. Plugin Example</a></li>
-<li><a href="#_开发一个引用插件">7.6. 开发一个引用插件</a></li>
-<li><a href="#_可选插件列表">7.7. 可选插件列表</a></li>
+<li><a href="#ref-policy-section">7.6. 开发一个引用插件</a></li>
+<li><a href="#_可选插件">7.7. 可选插件</a></li>
 </ul>
 </li>
 <li><a href="#_示例">8. 示例</a>
 <ul class="sectlevel2">
 <li><a href="#_软件说明文档">8.1. 软件说明文档</a></li>
 <li><a href="#example-table">8.2. 付款通知书</a></li>
-<li><a href="#example-article">8.3. 一篇文章</a></li>
-<li><a href="#example-okr">8.4. OKR目标制定</a></li>
-<li><a href="#_个人简历">8.5. 个人简历</a></li>
+<li><a href="#example-okr">8.3. OKR目标制定</a></li>
+<li><a href="#example-resume">8.4. 个人简历</a></li>
+<li><a href="#example-swagger">8.5. Swagger文档</a></li>
 </ul>
 </li>
 <li><a href="#_license">9. License</a></li>
@@ -542,14 +542,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Poi-tl</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Word模板引擎，多种模板标签</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Word模板引擎</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">基于Apache POI</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache POI</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache项目，功能丰富支持文本、图片、表格等</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">简单，文档不全，这里有一个教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache项目，功能丰富</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">文档不全，这里有一个教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Freemarker</p></td>
@@ -564,6 +564,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">复杂，需要了解OpenOffice的API</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTML浏览器导出</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">依赖浏览器的实现，移植性较差</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTML不能很好的兼容Word的格式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Jacob、winlib</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Windows平台</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
@@ -572,7 +578,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p>Apache POI可以很好的处理Word文档元素(包括文本、图片、表格、页眉、页脚等)，社区每年会发布好几个版本，<strong>poi-tl</strong>在Apache POI的基础上进行封装和构建，提供Word模板引擎的特性。</p>
+<p>操作Word文档最强大的方式要么是直接操作底层的文档结构，要么借助一个直接操作底层文档结构的类库，Apache POI不仅在上层封装了易用的API(文本、图片、表格、页眉、页脚等)，也可以在底层直接操作文档结构。</p>
+</div>
+<div class="paragraph">
+<p><strong>poi-tl</strong>正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。</p>
 </div>
 <table class="tableblock frame-none grid-rows stripes-none stretch">
 <colgroup>
@@ -581,70 +590,82 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">功能</th>
+<th class="tableblock halign-left valign-top">引擎功能</th>
 <th class="tableblock halign-left valign-top">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>文本</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">标签渲染为文本</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将标签渲染为文本</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>图片</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">标签渲染为图片</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将标签渲染为图片</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>表格</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">在标签位置创建表格</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将标签渲染为表格</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>列表</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">在标签位置创建列表</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将标签渲染为列表</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>if条件判断</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">隐藏或者显示某些文档内容，内容可以包含文本、段落、图片、表格等</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>If Condition判断</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">隐藏或者显示某些文档内容（包括文本、段落、图片、表格、列表等）</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>foreach循环迭代</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">循环迭代某些文档内容，内容可以包含文本、段落、图片、表格等</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>Foreach Loop循环</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">循环某些文档内容（包括文本、段落、图片、表格、列表等）</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>嵌套</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">模板包含子模板</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>Loop表格行</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">循环渲染表格的某一行</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>合并</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">支持Word合并</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>Loop有序列表</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持有序列表的循环，同时支持多级列表</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>书签、锚点、超链接</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持设置书签，文档内锚点和超链接功能</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>图片替换</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">将原有图片替换成另一张图片，通常把原有图片称为占位图片</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将原有图片替换成另一张图片</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>强大的表达式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL&#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>标签语法</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">支持自定义标签前后缀</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>样式</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">模板即样式，同时代码也可以设置样式</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>自定义函数(插件)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">在标签位置执行函数</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>模板嵌套</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">模板包含子模板，子模板再包含子模板</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>表达式支持</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">标签支持多种表达式，包括SpringEL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>Merge合并</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Word合并，可以在指定位置进行合并</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>标签语法自定义</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">支持自定义标签前后缀</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check"></i></span>用户自定义函数(插件)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">在文档任何位置执行函数</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>poi-tl</strong>是一个完全的Java类库，你可以非常方便的加入到你的Java项目中。</p>
+<p><strong>poi-tl</strong>是一个免费开源的Java类库，你可以非常方便的加入到你的Java项目中。</p>
 </div>
 <div class="paragraph">
-<p>如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI会是你的选择；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨使用poi-tl为你的软件添加导出Word的功能。</p>
+<p>如果你希望打开一个文档或者创建一个简单的文档，那么Apache POI就可能满足你的需求；如果你是一个需要将数据导出成Word文档的开发者，不妨试试poi-tl；如果你是一个搭建Word模板云服务的开发者，不妨试试poi-tl；如果你开发的某个软件支持导出HTML、Markdown，不妨使用poi-tl为你的软件添加导出Word的功能。</p>
 </div>
 </div>
 </div>
@@ -691,7 +712,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="prettyprint highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
   &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-  &lt;version&gt;1.7.1&lt;/version&gt;
+  &lt;version&gt;1.7.2&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -700,7 +721,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_gradle"><a class="anchor" href="#_gradle"></a><a class="link" href="#_gradle">4.2. Gradle</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.7.1'</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.7.2'</code></pre>
 </div>
 </div>
 </div>
@@ -711,7 +732,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="exampleblock">
 <div class="content">
-{{title}}
+<div class="paragraph">
+<div class="title">template.docx</div>
+<p>{{title}}</p>
+</div>
 </div>
 </div>
 <div class="sidebarblock">
@@ -720,9 +744,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">XWPFTemplate template = XWPFTemplate.compile("template.docx").render(new HashMap&lt;String, Object&gt;(){{ <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-        put("title", "poi-tl 模板引擎");
+        put("title", "poi-tl Word模板引擎");
 }});
-FileOutputStream out = new FileOutputStream("out_template.docx");
+FileOutputStream out = new FileOutputStream("output.docx");
 template.write(out); <i class="conum" data-value="3"></i><b>(3)</b>
 out.flush();
 out.close();
@@ -750,40 +774,41 @@ template.close();</code></pre>
 </div>
 </div>
 </div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output.docx</div>
+<p>poi-tl Word模板引擎</p>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_template模板"><a class="anchor" href="#_template模板"></a><a class="link" href="#_template模板">4.4. Template：模板</a></h3>
 <div class="paragraph">
-<p>模板是Word文档，支持docx格式，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。</p>
+<p>模板是docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-表格布局可以设计出很多优秀专业的文档，模板文档推荐使用表格布局，暂不支持文本框。
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>poi-tl遵循<strong>“所见即所得”</strong>的设计，模板的样式会被完全保留，标签的样式也会应用在替换后的文本上。</p>
 </div>
 <div class="paragraph">
 <p>poi-tl是一种 "logic-less" 模板引擎，没有复杂的控制结构和变量赋值，只有标签。所有的标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，模板标签可以出现在任何非文本框的位置，包括页眉，页脚，表格内部等等。</p>
 </div>
 <div class="paragraph">
-<p>poi-tl遵循<strong>“所见即所得”</strong>的设计，模板的样式会被完全保留，标签的样式也会应用在替换后的文本上，这意味着如果模板标签{{title}}是<strong>蓝色微软雅黑加粗四号字体</strong>，则替换后的文本也是<strong>蓝色微软雅黑加粗四号字体</strong>，因此你可以专注于模板设计。</p>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="./style.png" alt="style">
-</div>
+<p>表格布局可以设计出很多优秀专业的文档，模板文档推荐使用表格，暂不支持文本框。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_data_model数据"><a class="anchor" href="#_data_model数据"></a><a class="link" href="#_data_model数据">4.5. Data-model：数据</a></h3>
+<div class="quoteblock">
+<blockquote>
 <div class="paragraph">
-<p>数据模型是一种哈希或者字典，在Java中可以是一个Map，其中key是标签名称：</p>
+<p>数据模型类似于哈希或字典。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>数据可以是 <code>Map</code> （key是标签名称）：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -793,30 +818,30 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>可以是一个JavaBean，属性名称是标签名称(可以通过注解 <code>@Name</code> 设置别名):</p>
+<p>数据可以是JavaBean（属性名是标签名称，可以通过注解 <code>@Name</code> 设置别名）：</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">public class MyDataModel {
 
-  // 对应模板标签{{name}}
+  // {{name}}
   private String name;
 
-  // 对应模板标签{{start_time}}
+  // {{start_time}}
   @Name("start_time")
   private String startTime;
 
-  // 对应模板标签{{author.XXX}},XXX是Author的属性名
+  // {{author.XXX}},XXX是Author的属性名
   private Author author;
 
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>数据模型可以是树结构，每级之间用点来分隔开，比如 <code>{{author.name}}</code> 的模板标签对应的数据是author对象的name属性值。</p>
+<p>数据可以是树结构，每级之间用点来分隔开，比如 <code>{{author.name}}</code> 标签对应的数据是author对象的name属性值。</p>
 </div>
 <div class="paragraph">
-<p>对于普通的文本模板，我们可以通过三个字符串类型的标签设置图片：</p>
+<p>对于常见的文本模板，所有Key映射的Value值可以是简单类型：字符串、数字等，比如通过三个字符串变量设置图片路径、宽和高：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -824,7 +849,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>但是Word模板不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，它们都实现了接口 <code>public interface RenderData {}</code>：</p>
+<p>但是Word文档不是由简单的字符串表示，所以在渲染图片、表格等元素时数据结构会稍微复杂点，poi-tl提供了这些数据结构，它们都实现了接口 <code>RenderData</code> ：</p>
 </div>
 <div class="ulist">
 <ul>
@@ -849,19 +874,19 @@ data.put("start_time", "2019-08-04");</code></pre>
 <div class="sect2">
 <h3 id="_output输出"><a class="anchor" href="#_output输出"></a><a class="link" href="#_output输出">4.6. Output：输出</a></h3>
 <div class="paragraph">
-<p>模板引擎的渲染结果是以流的方式进行输出：</p>
+<p>模板引擎以流的方式进行输出：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 输出到任何流
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 输出流
 template.write(OutputStream stream)
 
-// 便捷的输出到文件
+// 输出到文件
 template.writeToFile(String path)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>可以写到任意输出流中，比如文件流FileOutputStream、网络流ServletOutputStream：</p>
+<p>可以写到任意输出流中，比如文件流FileOutputStream或网络流ServletOutputStream：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -870,7 +895,6 @@ response.setHeader("Content-disposition","attachment;filename=\""+"out_template.
 
 // HttpServletResponse response
 OutputStream out = response.getOutputStream();
-// 输出流
 BufferedOutputStream bos = new BufferedOutputStream(out);
 template.write(bos);
 template.close();
@@ -888,17 +912,35 @@ out.close();</code></pre>
 <h2 id="_标签"><a class="anchor" href="#_标签"></a><a class="link" href="#_标签">5. 标签</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>标签由前后分别两个大括号组成， <code>{{title}}</code> 是标签， <code>{{?title}}</code> 也是标签， <code>title</code> 是这个标签的名称， <code>?</code> 标识了标签类型，接下来我们来看看有哪些默认标签类型(用户可以创建新的标签类型，这属于更高级的话题)。</p>
+<p>标签由前后两个大括号组成， <code>{{title}}</code> 是标签， <code>{{?title}}</code> 也是标签， <code>title</code> 是这个标签的名称， <code>?</code> 标识了标签类型，接下来我们来看看有哪些默认标签类型(用户可以创建新的标签类型，这属于更高级的话题)。</p>
 </div>
 <div class="sect2">
 <h3 id="_文本"><a class="anchor" href="#_文本"></a><a class="link" href="#_文本">5.1. 文本</a></h3>
 <div class="exampleblock">
 <div class="content">
-{{var}}
+<div class="paragraph">
+<p>{{var}}</p>
+</div>
 </div>
 </div>
 <div class="paragraph">
-<p><code>TextRenderData</code> 、<code>HyperLinkTextRenderData</code> 或 <code>String</code> 数据模型。</p>
+<p>数据模型：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>String</code> ：文本</p>
+</li>
+<li>
+<p><code>TextRenderData</code> ：有样式的文本</p>
+</li>
+<li>
+<p><code>HyperLinkTextRenderData</code> ：超链接文本</p>
+</li>
+<li>
+<p><code>Object</code> ：调用 <code>toString()</code> 方法转化为文本</p>
+</li>
+</ul>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -907,7 +949,12 @@ out.close();</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">put("name", "Sayi");
 put("author", new TextRenderData("000000", "Sayi"));
-put("link", new HyperLinkTextRenderData("website", "http://www.deepoove.com"));</code></pre>
+// 超链接
+put("link",
+  new HyperLinkTextRenderData("website", "http://deepoove.com"));
+// 锚点
+put("anchor",
+  new HyperLinkTextRenderData("anchortxt", "anchor:appendix1"));</code></pre>
 </div>
 </div>
 </div>
@@ -971,22 +1018,7 @@ put("link", new HyperLinkTextRenderData("website", "http://www.deepoove.com"));<
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p>注：HyperLinkTextRenderData继承于TextRenderData，实现了超链接文本的功能。</p>
 </div>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-结构体只是数据的可视化展示，数据不是文本型的，而是Java对象。下文中出现的所有结构体也都如此。
-</td>
-</tr>
-</table>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -1017,16 +1049,16 @@ put("link", new HyperLinkTextRenderData("website", "http://www.deepoove.com"));<
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 本地图片
-put("local", new PictureRenderData(120, 120, "./sayi.png"));
+put("local", new PictureRenderData(80, 100, "./sayi.png"));
 
 // 图片流
-put("localByte", new PictureRenderData(100, 120, ".png", new FileInputStream("./logo.png")));
+put("localbyte", new PictureRenderData(80, 100, ".png", new FileInputStream("./logo.png")));
 
 // 网络图片
-put("urlPicture", new PictureRenderData(100, 100, ".png", BytePictureUtils.getUrlBufferedImage("https://avatars3.githubusercontent.com/u/1394854")));
+put("urlpicture", new PictureRenderData(50, 50, ".png", BytePictureUtils.getUrlBufferedImage("http://deepoove.com/images/icecream.png")));
 
 // java 图片
-put("bufferImage", new PictureRenderData(100, 120, ".png", bufferImage)));</code></pre>
+put("bufferimage", new PictureRenderData(80, 100, ".png", bufferImage)));</code></pre>
 </div>
 </div>
 </div>
@@ -1073,6 +1105,18 @@ put("bufferImage", new PictureRenderData(100, 120, ".png", bufferImage)));</code
 </table>
 </div>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+图片标签无法设置环绕版式，如果对环绕版式有更高的要求可以自定义图片插件进行设置，或者采用替换占位图片方式：<a href="#ref-policy-section">引用插件</a>。
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -1168,7 +1212,7 @@ put("bufferImage", new PictureRenderData(100, 120, ".png", bufferImage)));</code
 </tr>
 <tr>
 <td><i class="conum" data-value="8"></i><b>8</b></td>
-<td>表格宽度，单位cm</td>
+<td>表格宽度(单位cm)，表格的最大宽度 = 页面宽度 - 页边距宽度 * 2，页面宽度为A4(20.99 * 29.6，页边距为3.17 * 2.54)的文档最大表格宽度14.65CM。</td>
 </tr>
 </table>
 </div>
@@ -1183,38 +1227,39 @@ put("bufferImage", new PictureRenderData(100, 120, ".png", bufferImage)));</code
 
 RowRenderData row0 = RowRenderData.build("张三", "研究生");
 RowRenderData row1 = RowRenderData.build("李四", "博士");
-RowRenderData row2 = RowRenderData.build("王五", "博士后");
+RowRenderData row2 = RowRenderData.build("王五", "小学生");
 
 put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock tip">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-表格的宽度(单位CM)怎么定义的: 页面宽度 - 页边距宽度 * 2 = 表格的最大宽度。
-页面宽度为A4(20.99 * 29.6，页边距为3.17 * 2.54)的文档最大表格宽度14.65CM。可以根据需要指定表格宽度。
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
-<p>需求的丰富多彩往往是默认表格样式无法满足的，我们通常会遇到以下两个场景：</p>
+<p>现实需求中表格的布局和样式可能很复杂，此时默认表格样式将无法满足，可以尝试其它方案来解决：</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>场景一</strong>： 完全由自己掌控整个表格的生成：参见<a href="#cus-policy-section">插件-开发一个插件</a>。</p>
+<p><strong>方案一</strong>： 有时候仅仅希望将集合循环展示成表格若干行而已，参见 <a href="#hack-loop-table">行循环插件-HackLoopTableRenderPolicy</a>。</p>
 </li>
 <li>
-<p><strong>场景二</strong>： 模板中已经有一个表格，需要动态新增或者删除行或处理单元格数据：提供了抽象表格策略DynamicTableRenderPolicy或者引用渲染策略插件OptionalTextTableRefRenderPolicy，参见<a href="#example-table">示例-付款通知书</a>。</p>
+<p><strong>方案二</strong>： 模板中已经有一个表格，我们只想动态的处理表格的某一部分数据，poi-tl提供了 <code>DynamicTableRenderPolicy</code> 动态表格策略，参见 <a href="#example-table">示例-付款通知书</a>。</p>
+</li>
+<li>
+<p><strong>方案三</strong>： 编写插件，完全由自己生成整个表格，这个方案需要你熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 <a href="#cus-policy-section">插件-开发一个插件</a>。</p>
 </li>
 </ul>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -1256,6 +1301,21 @@ FMT_LOWER_ROMAN //i ⅱ ⅲ
 FMT_UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>如果列表的每一项不是简单的文本，而是包含很多文档内容，或者多级列表该怎么生成？</strong>
+区块对的循环功能可以很好的循环列表，并且支持编号有序。</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_区块对"><a class="anchor" href="#_区块对"></a><a class="link" href="#_区块对">5.5. 区块对</a></h3>
@@ -1265,34 +1325,27 @@ FMT_UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>区块对开始和结束标签中间可以包含多个图片、表格、段落、列表等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。</p>
+</div>
+<div class="paragraph">
 <p>区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素可以被渲染零次，一次或N次，这取决于区块对的取值。</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-center valign-top">区块对的值</th>
-<th class="tableblock halign-center valign-top">区块内容显示</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">False或空集合</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">隐藏区块中的所有文档元素</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">非False且不是集合</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">显示区块中的文档元素，渲染一次</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-center valign-top"><p class="tableblock">非空集合</p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock">根据集合的大小，循环渲染区块中的文档元素</p></td>
-</tr>
-</tbody>
-</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">False或空集合</dt>
+<dd>
+<p>隐藏区块中的所有文档元素</p>
+</dd>
+<dt class="hdlist1">非False且不是集合</dt>
+<dd>
+<p>显示区块中的文档元素，渲染一次</p>
+</dd>
+<dt class="hdlist1">非空集合</dt>
+<dd>
+<p>根据集合的大小，循环渲染区块中的文档元素</p>
+</dd>
+</dl>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1300,13 +1353,10 @@ FMT_UPPER_LETTER //A. B. C.</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-值是否是集合是根据值的类型是否实现了 <code>Iterable</code> 接口来判断。
+集合是根据值的类型是否实现了 <code>Iterable</code> 接口来判断。
 </td>
 </tr>
 </table>
-</div>
-<div class="paragraph">
-<p>区块对开始和结束标签中间可以包含多个图片、表格、段落等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。</p>
 </div>
 <div class="sect3">
 <h4 id="_false或空集合"><a class="anchor" href="#_false或空集合"></a><a class="link" href="#_false或空集合">5.5.1. False或空集合</a></h4>
@@ -1408,6 +1458,18 @@ FMT_UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+区块对中标签的作用域为当前区块对，当且仅当区块对的值是 <code>boolean</code> 类型且为 <code>true</code> 时，这些标签作用域才不会改变。
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_非空集合"><a class="anchor" href="#_非空集合"></a><a class="link" href="#_非空集合">5.5.3. 非空集合</a></h4>
@@ -1464,17 +1526,57 @@ FMT_UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">#this：引用当前对象</div>
+<div class="paragraph">
+<p>在循环中，有一个特殊的变量#this可以直接引用当前迭代的对象。由于#和已有表格标签标识冲突，所以在文本标签中需要使用=号标识来输出文本。</p>
+</div>
+<div class="paragraph">
+<p>数据:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-json" data-lang="json">{
+  "produces": [
+    "application/json",
+    "application/xml"
+  ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Word模板:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>{{?produces}}
+{{=#this}}
+{{/produces}}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>输出:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>application/json
+application/xml</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_嵌套"><a class="anchor" href="#_嵌套"></a><a class="link" href="#_嵌套">5.6. 嵌套</a></h3>
 <div class="exampleblock">
 <div class="content">
-嵌套是又称为导入、包含或者合并，以+标识，{{+var}}
+嵌套是又称为导入、包含或者合并，以+标识：{{+var}}
 </div>
 </div>
 <div class="paragraph">
-<p><code>DocxRenderData</code> 数据模型，可以是合并子模板文档，或者是合并子模板文档循环渲染的结果文档。</p>
+<p><code>DocxRenderData</code> 数据模型。</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -1509,9 +1611,6 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), subData)); <i cl
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>参见<a href="#example-article">示例-一篇文章</a></p>
-</div>
 </div>
 </div>
 </div>
@@ -1530,7 +1629,7 @@ XWPFTemplate.compile("~/template.docx", builder.buid());</code></pre>
 <div class="sect2">
 <h3 id="_前后缀"><a class="anchor" href="#_前后缀"></a><a class="link" href="#_前后缀">6.1. 前后缀</a></h3>
 <div class="paragraph">
-<p>如果你不喜欢 <code>{{}}</code> 的方式，更偏爱freemarker <code>${}</code> 的方式：</p>
+<p>我一直使用 <code>{{}}</code> 的方式来致敬Google CTemplate，如果你更偏爱freemarker <code>${}</code> 的方式：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1562,7 +1661,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_标签规则"><a class="anchor" href="#_标签规则"></a><a class="link" href="#_标签规则">6.3. 标签规则</a></h3>
+<h3 id="_标签正则"><a class="anchor" href="#_标签正则"></a><a class="link" href="#_标签正则">6.3. 标签正则</a></h3>
 <div class="paragraph">
 <p>标签默认支持<strong>中文、字母、数字、下划线</strong>的组合，比如 <code>{{客户手机号}}</code> ，我们可以通过正则表达式来配置标签的规则，比如不允许中文：</p>
 </div>
@@ -1581,14 +1680,13 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_标签计算"><a class="anchor" href="#_标签计算"></a><a class="link" href="#_标签计算">6.4. 标签计算</a></h3>
+<h3 id="_计算标签值"><a class="anchor" href="#_计算标签值"></a><a class="link" href="#_计算标签值">6.4. 计算标签值</a></h3>
 <div class="paragraph">
-<p>标签计算是指如何在数据中寻找key为标签名称的值，你可以完全自定义计算的方式。</p>
+<p>计算标签值是指如何在数据中寻找标签的值，你可以完全自定义计算的方式。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 中断执行，抛出异常
-builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -1604,13 +1702,13 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </table>
 </div>
 <div class="paragraph">
-<p>我们可以通过此方式定义自己的表达式计算算法，或者支持任何的表达式引擎，SpEL模式正是通过 <code>SpELRenderDataCompute</code> 实现。</p>
+<p>我们可以通过此方式支持任何的表达式引擎，Sping表达式正是通过 <code>SpELRenderDataCompute</code> 实现。</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spingel"><a class="anchor" href="#_spingel"></a><a class="link" href="#_spingel">6.5. SpingEL</a></h3>
+<h3 id="_sping表达式"><a class="anchor" href="#_sping表达式"></a><a class="link" href="#_sping表达式">6.5. Sping表达式</a></h3>
 <div class="paragraph">
-<p>Spring Expression Language (SpEL)是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用SpEL前需要引入相应的依赖：</p>
+<p>Spring Expression Language 是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用前需要引入相应的依赖：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1622,15 +1720,17 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 <div class="paragraph">
-<p>poi-tl的标签支持切换到SpEL模式：</p>
+<p>为了在模板标签中使用SpEL表达式，需要将标签配置为SpEL模式：</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setElMode(ELMode.SPEL_MODE);</code></pre>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_基本使用"><a class="anchor" href="#_基本使用"></a><a class="link" href="#_基本使用">6.5.1. 基本使用</a></h4>
 <div class="paragraph">
-<p>关于SpEL的写法可以参见官网，下面给出一些典型的示例。</p>
+<p>关于SpEL的写法可以参见<a href="https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/htmlsingle/#expressions">官方文档</a>，下面给出一些典型的示例。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -1638,39 +1738,102 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="content">
 <pre class="prettyprint highlight"><code>{{name}}
 {{name.toUpperCase()}} <i class="conum" data-value="1"></i><b>(1)</b>
+{{name == 'poi-tl'}} <i class="conum" data-value="2"></i><b>(2)</b>
 {{empty?:'这个字段为空'}}
-{{sex ? '男' : '女'}} <i class="conum" data-value="2"></i><b>(2)</b>
-{{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <i class="conum" data-value="3"></i><b>(3)</b>
-{{new java.text.SimpleDateFormat('yyyy-MM-dd hh:mm').format(time)}}
-{{price/10000 + '万元'}} <i class="conum" data-value="4"></i><b>(4)</b>
-{{dogs[0].name}} <i class="conum" data-value="5"></i><b>(5)</b>
-{{dogs[0].age}}</code></pre>
+{{sex ? '男' : '女'}} <i class="conum" data-value="3"></i><b>(3)</b>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <i class="conum" data-value="4"></i><b>(4)</b>
+{{price/10000 + '万元'}} <i class="conum" data-value="5"></i><b>(5)</b>
+{{dogs[0].name}} <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>方法调用</td>
+<td>方法调用，转大写</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>三目运算符</td>
+<td>条件</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>方法调用</td>
+<td>三目运算符</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>运算符</td>
+<td>方法调用，时间格式化</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>运算符</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
 <td>数组列表使用下标访问</td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_springel作为区块对的条件"><a class="anchor" href="#_springel作为区块对的条件"></a><a class="link" href="#_springel作为区块对的条件">6.5.2. SpringEL作为区块对的条件</a></h4>
+<div class="paragraph">
+<p>Spring表达式与区块对结合可以实现更强大的功能。</p>
+</div>
+<div class="paragraph">
+<p>数据:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-json" data-lang="json">{
+  "desc": "",
+  "summary": "Find A Pet",
+  "produces": [
+    "application/xml"
+  ]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>模板:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>{{?desc == null or desc == ''}}{{summary}}{{/}}</p>
+</div>
+<div class="paragraph">
+<p>{{?produces == null or produces.size() == 0}}无{{/}}</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>输出:</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>Find A Pet</p>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+使用SpringEL时区块对的结束标签可以是：{{/}}。
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1716,8 +1879,7 @@ builder.setElMode(ELMode.POI_TL_STICT_MODE);</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 默认行为，静默删除文档中该标签
-builder.setValidErrorHandler(new ClearHandler());</code></pre>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setValidErrorHandler(new ClearHandler());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1725,8 +1887,7 @@ builder.setValidErrorHandler(new ClearHandler());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 什么都不做，文档中保留该标签
-builder.setValidErrorHandler(new DiscardHandler());</code></pre>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setValidErrorHandler(new DiscardHandler());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1734,8 +1895,7 @@ builder.setValidErrorHandler(new DiscardHandler());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">// 中断执行，抛出异常
-builder.setValidErrorHandler(new AbortHandler());</code></pre>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">builder.setValidErrorHandler(new AbortHandler());</code></pre>
 </div>
 </div>
 </div>
@@ -1999,7 +2159,7 @@ builder.setValidErrorHandler(new AbortHandler());</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-随心所欲的意思是原则上Apache POI支持的操作，都可以在当前标签位置进行渲染，Apache POI不支持的操作也可以通过直接操纵XML来实现。
+随心所欲的意思是原则上Apache POI支持的操作，都可以在当前标签位置进行渲染，Apache POI不支持的操作也可以通过直接操纵底层XML来实现。
 </td>
 </tr>
 </table>
@@ -2158,7 +2318,7 @@ XWPFTemplate.compile("src/test/resources/sea.docx", config).render(args)
 </div>
 </div>
 <div class="sect2">
-<h3 id="_开发一个引用插件"><a class="anchor" href="#_开发一个引用插件"></a><a class="link" href="#_开发一个引用插件">7.6. 开发一个引用插件</a></h3>
+<h3 id="ref-policy-section"><a class="anchor" href="#ref-policy-section"></a><a class="link" href="#ref-policy-section">7.6. 开发一个引用插件</a></h3>
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
@@ -2215,8 +2375,9 @@ XWPFTemplate.compile("src/test/resources/sea.docx", config).render(args)
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">Configure configure = Configure.newBuilder()
-    .referencePolicy(new ReplaceOptionalTextPictureRefRenderPolicy("let's img", <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-        new FileInputStream("sayi.png"),
+    .referencePolicy( <i class="conum" data-value="1"></i><b>(1)</b>
+      new ReplaceOptionalTextPictureRefRenderPolicy("let's img", <i class="conum" data-value="2"></i><b>(2)</b>
+        new FileInputStream("sayi.png"), <i class="conum" data-value="3"></i><b>(3)</b>
         XWPFDocument.PICTURE_TYPE_PNG))
     .build();
 
@@ -2230,11 +2391,15 @@ template.writeToFile("out.docx");</code></pre>
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>通过配置类的referencePolicy方法绑定引用渲染策略</td>
+<td>绑定引用渲染策略</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
 <td>"let&#8217;s img"为匹配文字，优先匹配标题，再匹配说明文字</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>待替换的图片</td>
 </tr>
 </table>
 </div>
@@ -2245,7 +2410,7 @@ template.writeToFile("out.docx");</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_可选插件列表"><a class="anchor" href="#_可选插件列表"></a><a class="link" href="#_可选插件列表">7.7. 可选插件列表</a></h3>
+<h3 id="_可选插件"><a class="anchor" href="#_可选插件"></a><a class="link" href="#_可选插件">7.7. 可选插件</a></h3>
 <div class="paragraph">
 <p>除了五个通用的策略插件外，还内置了一些额外用途的插件。</p>
 </div>
@@ -2257,35 +2422,31 @@ template.writeToFile("out.docx");</code></pre>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicTableRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">动态表格插件，允许直接操作表格对象，功能和 <code>OptionalTextTableRefRenderPolicy</code> 相似</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">动态表格插件，允许直接操作XWPFTable表格对象</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ListRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">集合插件，允许同时渲染多个文本、图片、表格、列表等。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HackLoopTableRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">循环表格行，下文会详细介绍</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelfRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">自渲染插件，使用模板标签本身渲染模板</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BookmarkRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">书签和锚点</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TOCRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">实验功能：目录，打开文档时需要更新域</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IndexRefRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">引用渲染策略插件，定位方式是元素在文档中的位置</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OptionalTextPictureRefRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">引用渲染策略插件，定位图片方式是图片的可选文字</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据元素在文档的位置来渲染</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>OptionalTextTableRefRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">引用渲染策略插件，定位表格方式是表格的可选文字</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReplaceIndexPictureRefRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">引用渲染策略插件，通过图片位置引用图片元素后替换图片</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据表格的可选文字来操作表格</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReplaceOptionalTextPictureRefRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">引用渲染策略插件，通过可选文字引用图片元素后替换图片</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">根据图片可选文字来替换占位图片</p></td>
 </tr>
 </tbody>
 </table>
@@ -2296,10 +2457,105 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-如果你写了一个不错的插件，欢迎提交Pull Request。
+如果你写了一个不错的插件，欢迎分享。
 </td>
 </tr>
 </table>
+</div>
+<div class="sect3">
+<h4 id="hack-loop-table"><a class="anchor" href="#hack-loop-table"></a><a class="link" href="#hack-loop-table">7.7.1. HackLoopTableRenderPolicy</a></h4>
+<div class="paragraph">
+<p>这是一个特定场景的插件，根据集合数据循环表格行。</p>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">template</div>
+<p>货物明细和人工费在同一个表格中，货物明细需要展示所有货物，人工费需要展示所有费用。<code>{{goods}}</code> 是个标准的标签，将 <code>{{goods}}</code> <strong>置于循环行的上一行</strong>，循环行设置要循环的标签和内容，注意此时的标签应该使用 <code>[]</code> ，以此来区别poi-tl的默认标签语法。同理，<code>{{labors}}</code> 也<strong>置于循环行的上一行</strong>。</p>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_looptable_template.png" alt="example looptable template">
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">代码示例</div>
+<p><code>{{goods}}</code> 和 <code>{{labors}}</code> 标签对应的数据分别是货物集合和人工费集合，如果集合为空则会删除循环行。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">class Goods {
+  private int count;
+  private String name;
+  private String desc;
+  private int discount;
+  private int tax;
+  private int price;
+  private int totalPrice;
+  // getter setter
+}
+
+class Labor {
+  private String category;
+  private int people;
+  private int price;
+  private int totalPrice;
+  // getter setter
+}
+
+List&lt;Labor&gt; labors = new ArrayList&lt;&gt;();
+List&lt;Goods&gt; goods = new ArrayList&lt;&gt;();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>接下来我们将插件应用到这两个标签。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+
+Configure config = Configure.newBuilder()
+        .bind("goods", policy).bind("labors", policy).build(); <i class="conum" data-value="1"></i><b>(1)</b>
+
+XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
+  new HashMap&lt;String, Object&gt;() {{
+      put("goods", goods);
+      put("labors", labors);
+    }}
+);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output</div>
+<p>最终生成的文档列出了所有货物和人工费。</p>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_looptable_output.png" alt="example looptable output">
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/java/com/deepoove/poi/policy/HackLoopTableRenderPolicyTest.java">JUnit HackLoopTableRenderPolicyTest</a>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -2308,7 +2564,7 @@ template.writeToFile("out.docx");</code></pre>
 <h2 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">8. 示例</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型做个介绍。</p>
+<p>接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。</p>
 </div>
 <div class="sect2">
 <h3 id="_软件说明文档"><a class="anchor" href="#_软件说明文档"></a><a class="link" href="#_软件说明文档">8.1. 软件说明文档</a></h3>
@@ -2348,7 +2604,7 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java">Junit XWPFTemplateTest</a>
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java">JUnit XWPFTemplateTest</a>
 </td>
 </tr>
 </table>
@@ -2455,7 +2711,7 @@ template.writeToFile("out.docx");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>OptionalTextTableRefRenderPolicy</code> 引用渲染策略也可以实现 <code>DynamicTableRenderPolicy</code> 同样的功能，它通过匹配可选文字引用XWPFTable对象进而操作整个表格。</p>
+<p>付款通知书是用来展示 <code>DynamicTableRenderPolicy</code> 的用法，示例中货物明细和人工费仅仅是循环渲染表格行，使用<a href="#hack-loop-table">HackLoopTableRenderPolicy</a> 插件会更方便。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2464,100 +2720,19 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java">Junit PaymentExample</a>
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java">JUnit PaymentExample</a>
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-article"><a class="anchor" href="#example-article"></a><a class="link" href="#example-article">8.3. 一篇文章</a></h3>
+<h3 id="example-okr"><a class="anchor" href="#example-okr"></a><a class="link" href="#example-okr">8.3. OKR目标制定</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>需要生成这样的一系列文章：除了标题作者之外，它的内容是有规律的，内容是由一行蓝色的标题，一段文字，一张图片构成。下载最终生成的文件<a href="example/story.docx">story.docx</a></p>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="example/example_story_output.png" alt="example story output">
-</div>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_方案一使用区块对标签"><a class="anchor" href="#_方案一使用区块对标签"></a><a class="link" href="#_方案一使用区块对标签">8.3.1. 方案一：使用区块对标签</a></h4>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<div class="title">template</div>
-<p>将重复展示的内容放到区块对{{?sections}}{{/sections}}中。</p>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="example/example_iterable_story_template.png" alt="example iterable story template">
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>这个方案展示了区块对的循环Foreach功能，它可以对段落、图片进行循环渲染。</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/render/IterableRenderStoryExample.java">Junit Iterable StoryExample</a>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_方案二使用嵌套标签"><a class="anchor" href="#_方案二使用嵌套标签"></a><a class="link" href="#_方案二使用嵌套标签">8.3.2. 方案二：使用嵌套标签</a></h4>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<div class="title">template</div>
-<p>制作一个子文档模板segment.docx(下图右侧)，主模板story.docx看包含嵌套标签，其中{{+segment}}标签将会循环合并子文档模板。</p>
-</div>
-<div class="imageblock" style="text-align: center">
-<div class="content">
-<img src="example/example_story_template.png" alt="example story template">
-</div>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p>这个方案展示了poi-tl的嵌套模板和循环功能。当有一段固定样式的重复段落，根据集合数据循环填充后展示，示例中标题+文字+图片就是这样的可重复段落。</p>
-</div>
-<div class="paragraph">
-<p>基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/StoryExample.java">Junit StoryExample</a>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="example-okr"><a class="anchor" href="#example-okr"></a><a class="link" href="#example-okr">8.4. OKR目标制定</a></h3>
-<div class="exampleblock">
-<div class="content">
-<div class="paragraph">
-<div class="title">output</div>
-<p>需要指定一份OKR目标计划，每个目标使用一个表格呈现，业务目标可能有多少个不一定，管理目标也可能没有。下载最终生成的文件<a href="example/okr.docx">okr.docx</a></p>
+<p>需要指定一份OKR目标计划，每个目标使用一个表格呈现，业务目标有多少个不一定，管理目标也可能没有。下载最终生成的文件<a href="example/okr.docx">okr.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
@@ -2580,7 +2755,7 @@ template.writeToFile("out.docx");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>这个示例展示了区块对的循环Foreach功能，它可以对表格进行循环渲染。</p>
+<p>这个示例展示了区块对的循环Foreach功能，它可以对文档内容进行循环渲染。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -2589,14 +2764,14 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/OKRExample.java">Junit OKRExample</a>
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/OKRExample.java">JUnit OKRExample</a>
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_个人简历"><a class="anchor" href="#_个人简历"></a><a class="link" href="#_个人简历">8.5. 个人简历</a></h3>
+<h3 id="example-resume"><a class="anchor" href="#example-resume"></a><a class="link" href="#example-resume">8.4. 个人简历</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -2611,7 +2786,7 @@ template.writeToFile("out.docx");</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_方案一使用区块对标签_2"><a class="anchor" href="#_方案一使用区块对标签_2"></a><a class="link" href="#_方案一使用区块对标签_2">8.5.1. 方案一：使用区块对标签</a></h4>
+<h4 id="_方案一使用区块对标签"><a class="anchor" href="#_方案一使用区块对标签"></a><a class="link" href="#_方案一使用区块对标签">8.4.1. 方案一：使用区块对标签</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -2632,14 +2807,14 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java">Junit Iterable ResumeExample</a>
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java">JUnit Iterable ResumeExample</a>
 </td>
 </tr>
 </table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_方案二使用嵌套标签_2"><a class="anchor" href="#_方案二使用嵌套标签_2"></a><a class="link" href="#_方案二使用嵌套标签_2">8.5.2. 方案二：使用嵌套标签</a></h4>
+<h4 id="_方案二使用嵌套标签"><a class="anchor" href="#_方案二使用嵌套标签"></a><a class="link" href="#_方案二使用嵌套标签">8.4.2. 方案二：使用嵌套标签</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -2666,11 +2841,100 @@ template.writeToFile("out.docx");</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java">Junit ResumeExample</a>
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java">JUnit ResumeExample</a>
 </td>
 </tr>
 </table>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="example-swagger"><a class="anchor" href="#example-swagger"></a><a class="link" href="#example-swagger">8.5. Swagger文档</a></h3>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output</div>
+<p>这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型。下载最终生成的文件<a href="example/swagger.docx">swagger.docx</a></p>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_swagger_output.png" alt="example swagger output">
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">template</div>
+<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表，表格使用 <code>HackLoopTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值和数据模型表格的渲染，使用Spring表达式来支持丰富的条件判断。</p>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_swagger_template1.png" alt="example swagger template1">
+</div>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_swagger_template2.png" alt="example swagger template2">
+</div>
+</div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="listingblock">
+<div class="title">代码示例</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">SwaggerParser swaggerParser = new SwaggerParser();
+Swagger swagger = swaggerParser.read("https://petstore.swagger.io/v2/swagger.json");
+SwaggerView viewData = convert(swagger); <i class="conum" data-value="1"></i><b>(1)</b>
+
+HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+Configure config = Configure.newBuilder()
+        .bind("parameters", hackLoopTableRenderPolicy)
+        .bind("responses", hackLoopTableRenderPolicy)
+        .bind("properties", hackLoopTableRenderPolicy)
+        .addPlugin('&gt;', new BookmarkRenderPolicy())
+        .setElMode(ELMode.SPEL_MODE)
+        .build(); <i class="conum" data-value="2"></i><b>(2)</b>
+
+XWPFTemplate template = XWPFTemplate.compile("swagger.docx", config).render(viewData); <i class="conum" data-value="3"></i><b>(3)</b>
+template.writeToFile("out_example_swagger.docx");</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>解析Swagger.json</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>配置模板引擎</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Swagger导出Word</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>没错，一起都是如此简洁：简洁的代码 ，简洁的模板，甚至生成的文档都看起来那么简洁，愿一切如你所愿。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/SwaggerToWordExample.java">JUnit SwaggerToWordExample</a>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -2702,6 +2966,16 @@ template.writeToFile("out.docx");</code></pre>
 <img src="./pay.jpeg" alt="pay" width="256" height="280">
 </div>
 </div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>poi-tl是给你的礼物!</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Sayi
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -2718,16 +2992,40 @@ template.writeToFile("out.docx");</code></pre>
 <p>不支持，表格布局可以设计出几乎所有优秀专业的文档，请使用表格。</p>
 </li>
 <li>
-<p><em>是否支持生成目录？</em></p>
-<p>暂不支持，参考原生POI API编写插件。</p>
-</li>
-<li>
 <p><em>是否支持Android客户端使用？</em></p>
 <p>未知，有些朋友尝试成功，但我尚未在Android环境中验证过。</p>
 </li>
 <li>
 <p><em>有没有提供图表、数学公式模板？</em></p>
 <p>暂不支持，如果是简单的图表，可以考虑通过Java提供的 <code>BufferedImage</code> 类创建图片后插入。</p>
+</li>
+<li>
+<p><em>如何通过标签指定格式化函数？</em></p>
+<p>Spring表达式，应有尽有。</p>
+</li>
+<li>
+<p><em>如何在一行中显示不同样式的文本？</em></p>
+<p>可能你需要多个标签；或者使用区块对，区块对的集合数据是拥有不同样式的TextRenderData。</p>
+</li>
+<li>
+<p><em>我不是很熟悉Apache POI，我该怎么编写插件？</em></p>
+<p>编写插件还是需要熟悉下POI，你可以参考现有插件的源码，或者Google下Apache POI的用法，这里有一个入门教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p>
+</li>
+<li>
+<p><em>Apache POI不支持的功能，我该怎么编写插件？</em></p>
+<p>Apache POI底层的组件也是直接操作XML的，你可以使用POI背后的组件。</p>
+</li>
+<li>
+<p><em>有没有HTML转Word的插件？</em></p>
+<p>网上有一些这样的插件，我也很期待有人能Pull Request。</p>
+</li>
+<li>
+<p><em>为什么没有技术群？</em></p>
+<p>技术群只在你第一次加入的时候有用，后来就会成为恼人的群。</p>
+</li>
+<li>
+<p><em>有什么感谢的心里话？</em></p>
+<p>我感谢所有对poi-tl有过支持的人，特别感谢下那个打赏给我一天工资的朋友，是你让我知道我的薪水是多么的卑微(开个玩笑)。</p>
 </li>
 </ol>
 </div>

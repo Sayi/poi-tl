@@ -265,5 +265,23 @@ doc.close();
 out.close();
 ----
 
+=== XWPFParagraphWrapper
+`XWPFParagraphWrapper` 是对原生 `XWPFParagraph` 的增强。
+
+==== 插入超链接
+[source, java]
+----
+XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(paragraph);
+XWPFRun hyperRun = wrapper.insertNewHyperLinkRun(0, "http:deepoove.com");
+hyperRun.setText("Deepoove");
+----
+
+==== 插入书签
+[source, java]
+----
+XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(paragraph);
+CTBookmark bookMark = wrapper.insertNewBookmark(run);
+----
+
 == 关于作者
 link:https://github.com/Sayi[Sayi's GitHub]
