@@ -44,17 +44,17 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
         public static final String REGEX_LINE_CHARACTOR = "\\n";
 
-        public static void renderTextRun(XWPFRun run, Object renderData) {
+        public static void renderTextRun(XWPFRun run, Object data) {
             XWPFRun textRun = run;
             // create hyper link run
-            if (renderData instanceof HyperLinkTextRenderData) {
-                textRun = createHyperLinkRun(run, renderData);
+            if (data instanceof HyperLinkTextRenderData) {
+                textRun = createHyperLinkRun(run, data);
             }
 
             // text
-            TextRenderData data = wrapperText(renderData);
-            String text = null == data.getText() ? "" : data.getText();
-            StyleUtils.styleRun(textRun, data.getStyle());
+            TextRenderData wrapperData = wrapperText(data);
+            String text = null == wrapperData.getText() ? "" : wrapperData.getText();
+            StyleUtils.styleRun(textRun, wrapperData.getStyle());
 
             // render
             String[] split = text.split(REGEX_LINE_CHARACTOR, -1);
@@ -71,10 +71,9 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             return obj instanceof TextRenderData ? (TextRenderData) obj : new TextRenderData(obj.toString());
         }
 
-        private static XWPFRun createHyperLinkRun(XWPFRun run, Object renderData) {
+        private static XWPFRun createHyperLinkRun(XWPFRun run, Object data) {
             XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
-            XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run,
-                    ((HyperLinkTextRenderData) renderData).getUrl());
+            XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run, ((HyperLinkTextRenderData) data).getUrl());
             StyleUtils.styleRun(hyperLinkRun, run);
 
             run.setText("", 0);
