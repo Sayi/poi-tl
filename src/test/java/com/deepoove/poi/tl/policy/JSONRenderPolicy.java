@@ -79,8 +79,8 @@ public class JSONRenderPolicy extends AbstractRenderPolicy<String> {
         String indent = "";
         String cindent = "";
         for (int i = 0; i < level; i++) {
-            indent += "  ";
-            if (i != level - 1) cindent += "  ";
+            indent += "    ";
+            if (i != level - 1) cindent += "    ";
         }
         List<TextRenderData> result = new ArrayList<>();
         if (jsonNode.isValueNode()) {

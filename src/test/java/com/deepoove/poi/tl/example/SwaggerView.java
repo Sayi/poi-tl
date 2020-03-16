@@ -369,6 +369,7 @@ class Header {
 class Definition {
     private String name;
     List<Property> properties;
+    List<TextRenderData> codes;
 
     public String getName() {
         return name;
@@ -384,6 +385,14 @@ class Definition {
 
     public void setProperties(List<Property> properties) {
         this.properties = properties;
+    }
+
+    public List<TextRenderData> getCodes() {
+        return codes;
+    }
+
+    public void setCodes(List<TextRenderData> codes) {
+        this.codes = codes;
     }
 }
 

@@ -2,8 +2,11 @@ package com.deepoove.poi.tl.example;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +20,10 @@ import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.BookmarkRenderPolicy;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.deepoove.poi.tl.policy.JSONRenderPolicy;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.models.ArrayModel;
 import io.swagger.models.HttpMethod;
@@ -27,7 +34,9 @@ import io.swagger.models.RefModel;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.properties.AbstractNumericProperty;
 import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.BooleanProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.SwaggerParser;
@@ -105,12 +114,19 @@ public class SwaggerToWordExample {
                         List<TextRenderData> schema = new ArrayList<>();
                         if (para instanceof AbstractSerializableParameter) {
                             Property items = ((AbstractSerializableParameter) para).getItems();
+                            String type = ((AbstractSerializableParameter) para).getType();
                             // if array
-                            schema.addAll(formatProperty(items));
+                            if (ArrayProperty.isType(type)) {
+                                schema.add(new TextRenderData("<"));
+                                schema.addAll(formatProperty(items));
+                                schema.add(new TextRenderData(">"));
+                            } else {
+                                schema.addAll(formatProperty(items));
+                            }
 
                             // parameter type or array
-                            if (StringUtils.isNotBlank(((AbstractSerializableParameter) para).getType())) {
-                                schema.add(new TextRenderData(((AbstractSerializableParameter) para).getType()));
+                            if (StringUtils.isNotBlank(type)) {
+                                schema.add(new TextRenderData(type));
                             }
                             if (StringUtils.isNotBlank(((AbstractSerializableParameter) para).getCollectionFormat())) {
                                 schema.add(new TextRenderData(
@@ -167,6 +183,7 @@ public class SwaggerToWordExample {
         });
         view.setResources(resources);
 
+        ObjectMapper objectMapper = new ObjectMapper();
         if (null != swagger.getDefinitions()) {
             List<Definition> definitions = new ArrayList<>();
             swagger.getDefinitions().forEach((name, model) -> {
@@ -183,6 +200,14 @@ public class SwaggerToWordExample {
                         properties.add(property);
                     });
                     definition.setProperties(properties);
+                    Map map = valueOfModel(swagger.getDefinitions(), model, new HashSet<>());
+                    try {
+                        String writeValueAsString = objectMapper.writeValueAsString(map);
+                        JsonNode readTree = objectMapper.readTree(writeValueAsString);
+                        definition.setCodes(new JSONRenderPolicy("ffffff").convert(readTree, 1));
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 definitions.add(definition);
@@ -192,13 +217,45 @@ public class SwaggerToWordExample {
         return view;
     }
 
+    private Map<String, Object> valueOfModel(Map<String, Model> definitions, Model model, Set<String> keyCache) {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        model.getProperties().forEach((key, prop) -> {
+            Object value = valueOfProperty(definitions, prop, keyCache);
+            map.put(key, value);
+        });
+        return map;
+    }
+
+    private Object valueOfProperty(Map<String, Model> definitions, Property prop, Set<String> keyCache) {
+        Object value;
+        if (prop instanceof RefProperty) {
+            String ref = ((RefProperty) prop).get$ref().substring("#/definitions/".length());
+            if (keyCache.contains(ref)) value = ((RefProperty) prop).get$ref();
+            else value = valueOfModel(definitions, definitions.get(ref), keyCache);
+        } else if (prop instanceof ArrayProperty) {
+            List<Object> list = new ArrayList<>();
+            Property insideItems = ((ArrayProperty) prop).getItems();
+            list.add(valueOfProperty(definitions, insideItems, keyCache));
+            value = list;
+        } else if (prop instanceof AbstractNumericProperty) {
+            value = 0;
+        } else if (prop instanceof BooleanProperty) {
+            value = false;
+        } else {
+            value = prop.getType();
+        }
+        return value;
+    }
+
     private List<TextRenderData> fomartSchemaModel(Model schemaModel) {
         List<TextRenderData> schema = new ArrayList<>();
         if (null == schemaModel) return schema;
         // if array
         if (schemaModel instanceof ArrayModel) {
             Property items = ((ArrayModel) schemaModel).getItems();
+            schema.add(new TextRenderData("<"));
             schema.addAll(formatProperty(items));
+            schema.add(new TextRenderData(">"));
             schema.add(new TextRenderData(((ArrayModel) schemaModel).getType()));
         } else
             // if ref
@@ -216,19 +273,13 @@ public class SwaggerToWordExample {
         List<TextRenderData> schema = new ArrayList<>();
         if (null != items) {
             if (items instanceof RefProperty) {
-                schema.add(new TextRenderData("<"));
                 String ref = ((RefProperty) items).get$ref().substring("#/definitions/".length());
                 schema.add(new HyperLinkTextRenderData(ref, "anchor:" + ref));
-                schema.add(new TextRenderData(">"));
             } else if (items instanceof ArrayProperty) {
-                // should recursive
                 Property insideItems = ((ArrayProperty) items).getItems();
-                if (insideItems instanceof RefProperty) {
-                    schema.add(new TextRenderData("<"));
-                    String ref = ((RefProperty) insideItems).get$ref().substring("#/definitions/".length());
-                    schema.add(new HyperLinkTextRenderData(ref, "anchor:" + ref));
-                    schema.add(new TextRenderData(">"));
-                }
+                schema.add(new TextRenderData("<"));
+                schema.addAll(formatProperty(insideItems));
+                schema.add(new TextRenderData(">"));
                 schema.add(new TextRenderData(items.getType()));
             } else {
                 schema.add(new TextRenderData(items.getType()));
