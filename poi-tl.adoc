@@ -53,7 +53,7 @@ ____
 |icon:check[role="green"]书签、锚点、超链接 |支持设置书签，文档内锚点和超链接功能
 |icon:check[role="green"]图片替换 |将原有图片替换成另一张图片
 |icon:check[role="green"]强大的表达式 |完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL...
-|icon:check[role="green"]标签语法 |支持自定义标签前后缀
+|icon:check[role="green"]标签定制 |支持自定义标签前后缀
 |icon:check[role="green"]样式 |模板即样式，同时代码也可以设置样式
 |icon:check[role="green"]模板嵌套 |模板包含子模板，子模板再包含子模板
 |icon:check[role="green"]Merge合并 |Word合并，可以在指定位置进行合并
@@ -1385,7 +1385,7 @@ NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java
 [example]
 --
 .output
-这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型。下载最终生成的文件link:example/swagger.docx[swagger.docx]
+这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型。点击link:example/example_swagger_output.png[查看大图 , window=_blank]，下载最终生成的文件link:example/swagger.docx[swagger.docx]
 
 image::example/example_swagger_output.png[align='center']
 --
@@ -1425,7 +1425,7 @@ template.writeToFile("out_example_swagger.docx");
 <3> Swagger导出Word
 --
 
-没错，一起都是如此简洁：简洁的代码 ，简洁的模板，甚至生成的文档都看起来那么简洁，愿一切如你所愿。
+没错，一切都是如此简洁：简洁的导出代码 ，简洁的Word模板，甚至生成的Swagger文档都看起来那么简洁，愿一切如你所愿。
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
 
@@ -1467,5 +1467,3 @@ Apache POI不支持的功能，我该怎么编写插件？::
   网上有一些这样的插件，我也很期待有人能Pull Request。
 为什么没有技术群？::
   技术群只在你第一次加入的时候有用，后来就会成为恼人的群。
-有什么感谢的心里话？::
-  我感谢所有对poi-tl有过支持的人，特别感谢下那个打赏给我一天工资的朋友，是你让我知道我的薪水是多么的卑微(开个玩笑)。
