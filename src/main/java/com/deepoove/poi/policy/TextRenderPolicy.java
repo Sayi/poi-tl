@@ -30,8 +30,6 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  */
 public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
-    public static final String REGEX_LINE_CHARACTOR = "\\n";
-
     @Override
     protected boolean validate(Object data) {
         return null != data;
@@ -44,27 +42,21 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
     public static class Helper {
 
+        public static final String REGEX_LINE_CHARACTOR = "\\n";
+
         public static void renderTextRun(XWPFRun run, Object renderData) {
             XWPFRun textRun = run;
             // create hyper link run
             if (renderData instanceof HyperLinkTextRenderData) {
-                XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
-                XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run,
-                        ((HyperLinkTextRenderData) renderData).getUrl());
-                StyleUtils.styleRun(hyperLinkRun, run);
-
-                run.setText("", 0);
-                textRun = hyperLinkRun;
+                textRun = createHyperLinkRun(run, renderData);
             }
 
             // text
-            TextRenderData data = renderData instanceof TextRenderData ? (TextRenderData) renderData
-                    : new TextRenderData(renderData.toString());
-
+            TextRenderData data = wrapperText(renderData);
             String text = null == data.getText() ? "" : data.getText();
-
             StyleUtils.styleRun(textRun, data.getStyle());
 
+            // render
             String[] split = text.split(REGEX_LINE_CHARACTOR, -1);
             if (null != split && split.length > 0) {
                 textRun.setText(split[0], 0);
@@ -73,6 +65,20 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
                     textRun.setText(split[i]);
                 }
             }
+        }
+
+        private static TextRenderData wrapperText(Object obj) {
+            return obj instanceof TextRenderData ? (TextRenderData) obj : new TextRenderData(obj.toString());
+        }
+
+        private static XWPFRun createHyperLinkRun(XWPFRun run, Object renderData) {
+            XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
+            XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run,
+                    ((HyperLinkTextRenderData) renderData).getUrl());
+            StyleUtils.styleRun(hyperLinkRun, run);
+
+            run.setText("", 0);
+            return hyperLinkRun;
         }
     }
 }

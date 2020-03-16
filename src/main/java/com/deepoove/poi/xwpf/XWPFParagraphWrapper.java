@@ -91,19 +91,19 @@ public class XWPFParagraphWrapper {
 
     public XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
         if (StringUtils.isBlank(link)) throw new IllegalArgumentException("HyperLink must not be Empty!");
+        if (link.startsWith("anchor:")) {
+            return insertNewAnchor(getPosOfRun(run), link.substring("anchor:".length()));
+        }
         return insertNewHyperLinkRun(getPosOfRun(run), link);
     }
 
     public XWPFHyperlinkRun insertNewHyperLinkRun(int pos, String link) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
             CTHyperlink hyperlink = insertNewHyperlink(pos);
-            if (link.startsWith("anchor:")) {
-                hyperlink.setAnchor(link.substring("anchor:".length()));
-            } else {
-                PackageRelationship relationship = paragraph.getDocument().getPackagePart()
-                        .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
-                hyperlink.setId(relationship.getId());
-            }
+            // hyperlink.setAnchor(link.substring("anchor:".length()));
+            PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
+                    XWPFRelation.HYPERLINK.getRelation());
+            hyperlink.setId(relationship.getId());
 
             CTR ctr = hyperlink.addNewR();
             XWPFHyperlinkRun newRun = new XWPFHyperlinkRun(hyperlink, ctr, (IRunBody) paragraph);
@@ -114,17 +114,6 @@ public class XWPFParagraphWrapper {
     }
 
     public CTHyperlink insertNewHyperlink(int paramInt) {
-        // org.apache.xmlbeans.impl.values.TypeStore.insert_element_user(QName,
-        // int)
-        // Note that if there are no existing elements of the given
-        // name, you may need to call back to discover the proper
-        // ordering to use to insert the first one. Otherwise,
-        // it should be inserted adjacent to existing elements with
-        // the same name.
-
-        // do not insert hyperlink directly #issue 331
-        // CTHyperlink hyperlink = paragraph.getCTP().insertNewHyperlink(rPos);
-
         CTP ctp = paragraph.getCTP();
         synchronized (ctp.monitor()) {
             // check_orphaned();
@@ -134,12 +123,12 @@ public class XWPFParagraphWrapper {
             return localCTHyperlink;
         }
     }
-    
+
     public XWPFFieldRun insertNewAnchor(int pos, String anchorName) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
-              XWPFFieldRun insertNewField = insertNewField(pos);
-              insertNewField.setFieldInstruction("HYPERLINK \\l \"" + anchorName + "\"");
-              return insertNewField;
+            XWPFFieldRun insertNewField = insertNewField(pos);
+            insertNewField.setFieldInstruction("HYPERLINK \\l \"" + anchorName + "\"");
+            return insertNewField;
         }
         return null;
     }

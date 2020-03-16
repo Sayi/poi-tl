@@ -126,7 +126,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
             StyleUtils.styleTableParagraph(par, cellStyle);
 
             String text = renderData.getText();
-            String[] fragment = text.split(TextRenderPolicy.REGEX_LINE_CHARACTOR, -1);
+            String[] fragment = text.split(TextRenderPolicy.Helper.REGEX_LINE_CHARACTOR, -1);
 
             if (fragment.length <= 1) {
                 TextRenderPolicy.Helper.renderTextRun(par.createRun(), renderData);

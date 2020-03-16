@@ -85,7 +85,7 @@ public class TextRenderTest {
         String text4 = "\n\n\n\n";
         String text5 = "hi\n\n\n\nwhat\nis\n\n\nthis";
 
-        String regexLine = TextRenderPolicy.REGEX_LINE_CHARACTOR;
+        String regexLine = TextRenderPolicy.Helper.REGEX_LINE_CHARACTOR;
 
         assertEquals(Arrays.toString(text.split(regexLine, -1)), "[hello, poi-tl]");
         assertEquals(Arrays.toString(text1.split(regexLine, -1)), "[hello, , poi-tl]");
