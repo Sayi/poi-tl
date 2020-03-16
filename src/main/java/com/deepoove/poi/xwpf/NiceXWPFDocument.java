@@ -37,6 +37,7 @@ import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -121,47 +122,40 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     private void myDocumentRead() {
-        readParagraphs(this.getParagraphs());
-        readTables(this.getTables());
+        initAllElement(this);
+        this.getHeaderList().forEach(header -> initAllElement(header));
+        this.getFooterList().forEach(header -> initAllElement(header));
+    }
+
+    private void initAllElement(IBody body) {
+        readParagraphs(body.getParagraphs());
+        readTables(body.getTables());
+    }
+
+    private void readParagraphs(List<XWPFParagraph> paragraphs) {
+        paragraphs.forEach(
+                paragraph -> paragraph.getRuns().forEach(run -> allPictures.addAll(run.getEmbeddedPictures())));
     }
 
     private void readTables(List<XWPFTable> tables) {
         allTables.addAll(tables);
-        
-        List<XWPFTableRow> rows = null;
-        List<XWPFTableCell> cells = null;
-        List<XWPFTable> cellTables = null;
         for (XWPFTable table : tables) {
-            rows = table.getRows();
-            if (null == rows) return;
+            List<XWPFTableRow> rows = table.getRows();
+            if (null == rows) continue;;
             for (XWPFTableRow row : rows) {
-                cells = row.getTableCells();
+                List<XWPFTableCell> cells = row.getTableCells();
                 if (null == cells) continue;
                 for (XWPFTableCell cell : cells) {
-                    cellTables = cell.getTables();
-                    if (!cellTables.isEmpty()) {
-                        readTables(cellTables);
-                    }
-                    readParagraphs(cell.getParagraphs());
+                    initAllElement(cell);
                 }
             }
         }
     }
 
-    private void readParagraphs(List<XWPFParagraph> paragraphs) {
-        for (XWPFParagraph paragraph : paragraphs) {
-            List<XWPFRun> runs = paragraph.getRuns();
-            for (XWPFRun run : runs) {
-                allPictures.addAll(run.getEmbeddedPictures());
-            }
-        }
-    }
-
-    
     public List<XWPFPicture> getAllEmbeddedPictures() {
         return Collections.unmodifiableList(allPictures);
     }
-    
+
     public List<XWPFTable> getAllTables() {
         return Collections.unmodifiableList(allTables);
     }

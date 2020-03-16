@@ -16,6 +16,7 @@
 package com.deepoove.poi.policy.ref;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,15 +42,15 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * @author Sayi
  * @version 1.6.0
  */
-public abstract class OptionalTextPictureRefRenderPolicy extends ReferenceRenderPolicy<XWPFPicture>
+public abstract class OptionalTextPictureRefRenderPolicy extends ReferenceRenderPolicy<List<XWPFPicture>>
         implements OptionalText {
 
     protected static final QName TITLE = new QName("", "title");
 
     @Override
-    protected XWPFPicture locate(XWPFTemplate template) {
-        logger.info("Try locate the XWPFPicture object which mathing optional text [{}]...",
-                optionalText());
+    protected List<XWPFPicture> locate(XWPFTemplate template) {
+        logger.info("Try locate the XWPFPicture object which mathing optional text [{}]...", optionalText());
+        List<XWPFPicture> optionalPictures = new ArrayList<>();
         NiceXWPFDocument document = template.getXWPFDocument();
         List<XWPFPicture> pictures = document.getAllEmbeddedPictures();
         for (XWPFPicture pic : pictures) {
@@ -69,12 +70,18 @@ public abstract class OptionalTextPictureRefRenderPolicy extends ReferenceRender
 
             if (null != docPr) {
                 String title = getTitle(docPr);
-                if (Objects.equals(optionalText(), title)) { return pic; }
+                if (Objects.equals(optionalText(), title)) {
+                    optionalPictures.add(pic);
+                    continue;
+                }
                 String descr = docPr.getDescr();
-                if (Objects.equals(optionalText(), descr)) { return pic; }
+                if (Objects.equals(optionalText(), descr)) {
+                    optionalPictures.add(pic);
+                    continue;
+                }
             }
         }
-        return null;
+        return optionalPictures;
 
     }
 

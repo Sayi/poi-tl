@@ -15,16 +15,21 @@
  */
 package com.deepoove.poi.policy.ref;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTBlip;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTBlipFillProperties;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.util.ByteUtils;
+import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
@@ -37,7 +42,7 @@ public class ReplaceOptionalTextPictureRefRenderPolicy extends OptionalTextPictu
 
     private final String optionalText;
     private byte[] data;
-    private int fomart;
+    private int format;
 
     /**
      * 替换匹配可选文字的图片
@@ -49,8 +54,7 @@ public class ReplaceOptionalTextPictureRefRenderPolicy extends OptionalTextPictu
      * @param fomart
      *            参见XWPFDocument.PICTURE_TYPE_PNG
      */
-    public ReplaceOptionalTextPictureRefRenderPolicy(String optionalText, InputStream replaceStream,
-            int fomart) {
+    public ReplaceOptionalTextPictureRefRenderPolicy(String optionalText, InputStream replaceStream, int fomart) {
         this(optionalText, ByteUtils.toByteArray(replaceStream), fomart);
     }
 
@@ -64,11 +68,10 @@ public class ReplaceOptionalTextPictureRefRenderPolicy extends OptionalTextPictu
      * @param fomart
      *            参见XWPFDocument.PICTURE_TYPE_PNG
      */
-    public ReplaceOptionalTextPictureRefRenderPolicy(String optionalText, byte[] replaceData,
-            int fomart) {
+    public ReplaceOptionalTextPictureRefRenderPolicy(String optionalText, byte[] replaceData, int format) {
         this.optionalText = optionalText;
         this.data = replaceData;
-        this.fomart = fomart;
+        this.format = format;
     }
 
     @Override
@@ -77,16 +80,31 @@ public class ReplaceOptionalTextPictureRefRenderPolicy extends OptionalTextPictu
     }
 
     @Override
-    public void doRender(XWPFPicture t, XWPFTemplate template) throws Exception {
-        logger.info("Replace the picture data for the reference object: {}", t);
+    public void doRender(List<XWPFPicture> pictures, XWPFTemplate template) throws Exception {
         NiceXWPFDocument doc = template.getXWPFDocument();
-        try (InputStream ins = new ByteArrayInputStream(data)) {
-            String relationId = doc.addPictureData(ins, fomart);
-            CTPicture ctPic = t.getCTPicture();
-            CTBlipFillProperties bill = ctPic.getBlipFill();
-            CTBlip blip = bill.getBlip();
-            blip.setEmbed(relationId);
+        String docId = null;
+        String hid = null;
+        String fid = null;
+        for (XWPFPicture t : pictures) {
+            logger.info("Replace the picture data for the reference object: {}", t);
+            XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", t);
+            if (run.getParent().getPart() instanceof XWPFHeader) {
+                XWPFHeaderFooter headerFooter = (XWPFHeaderFooter) run.getParent().getPart();
+                setPictureReference(t, hid == null ? hid = headerFooter.addPictureData(data, format) : hid);
+            } else if (run.getParent().getPart() instanceof XWPFFooter) {
+                XWPFHeaderFooter headerFooter = (XWPFHeaderFooter) run.getParent().getPart();
+                setPictureReference(t, fid == null ? fid = headerFooter.addPictureData(data, format) : fid);
+            } else {
+                setPictureReference(t, docId == null ? docId = doc.addPictureData(data, format) : docId);
+            }
         }
+    }
+
+    private void setPictureReference(XWPFPicture t, String relationId) {
+        CTPicture ctPic = t.getCTPicture();
+        CTBlipFillProperties bill = ctPic.getBlipFill();
+        CTBlip blip = bill.getBlip();
+        blip.setEmbed(relationId);
     }
 
 }

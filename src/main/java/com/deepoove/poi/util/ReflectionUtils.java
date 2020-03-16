@@ -19,6 +19,8 @@ package com.deepoove.poi.util;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import com.deepoove.poi.exception.ReflectionException;
 
 public class ReflectionUtils {
@@ -26,11 +28,12 @@ public class ReflectionUtils {
     public static Object getValue(String fieldName, Object obj) {
         Objects.requireNonNull(obj, "Class must not be null");
         Objects.requireNonNull(fieldName, "Name must not be null");
+        Field field = findField(obj.getClass(), fieldName);
+        if (null == field) {
+            throw new ReflectionException(
+                    "No Such field " + fieldName + " from class" + ClassUtils.getShortClassName(obj.getClass()));
+        }
         try {
-            Field field = findField(obj.getClass(), fieldName);
-            if (null == field) {
-                throw new NoSuchFieldException("No Such field:" + fieldName);
-            }
             field.setAccessible(true);
             return field.get(obj);
         } catch (Exception e) {

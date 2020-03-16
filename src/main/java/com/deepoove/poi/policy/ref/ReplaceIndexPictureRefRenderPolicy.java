@@ -33,6 +33,7 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * @author Sayi
  * @version
  */
+@Deprecated
 public class ReplaceIndexPictureRefRenderPolicy extends IndexRefRenderPolicy<XWPFPicture> {
 
     private final int index;

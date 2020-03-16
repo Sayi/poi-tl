@@ -1,9 +1,11 @@
 package com.deepoove.poi.tl.policy.ref;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
@@ -15,22 +17,12 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.policy.ref.OptionalTextPictureRefRenderPolicy;
 import com.deepoove.poi.policy.ref.OptionalTextTableRefRenderPolicy;
-import com.deepoove.poi.policy.ref.ReplaceIndexPictureRefRenderPolicy;
 import com.deepoove.poi.policy.ref.ReplaceOptionalTextPictureRefRenderPolicy;
 
 @DisplayName("ReferencePolicy test case")
 public class ReferencePolicyTest {
 
     private static String template_file = "src/test/resources/template/reference_policy.docx";
-
-    @Test
-    public void testReplacePictureByIndex() throws Exception {
-        Configure configure = Configure.newBuilder().referencePolicy(new ReplaceIndexPictureRefRenderPolicy(0,
-                new FileInputStream("src/test/resources/sayi.png"), XWPFDocument.PICTURE_TYPE_PNG)).build();
-
-        XWPFTemplate template = XWPFTemplate.compile(template_file, configure).render(new HashMap<>());
-        template.writeToFile("out_reference_replace_index_picture.docx");
-    }
 
     @Test
     @DisplayName("Replace placeholder picture with 'let's img' as optional text")
@@ -69,9 +61,10 @@ public class ReferencePolicyTest {
         Configure configure = Configure.newBuilder().referencePolicy(new OptionalTextPictureRefRenderPolicy() {
 
             @Override
-            public void doRender(XWPFPicture t, XWPFTemplate template) {
+            public void doRender(List<XWPFPicture> t, XWPFTemplate template) {
                 System.out.println(t);
                 assertNotNull(t);
+                assertEquals(t.size(), 6);
             }
 
             @Override
