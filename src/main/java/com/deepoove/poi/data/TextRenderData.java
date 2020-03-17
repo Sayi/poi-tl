@@ -29,7 +29,7 @@ public class TextRenderData implements RenderData {
     protected Style style;
 
     /**
-     * \n 表示换行，表格内换行参见：https://github.com/Sayi/poi-tl/issues/295
+     * \n 表示换行
      */
     protected String text;
 

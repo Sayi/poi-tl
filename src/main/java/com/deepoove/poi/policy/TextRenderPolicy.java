@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.policy;
 
+import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -22,11 +23,11 @@ import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.util.TableTools;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * @author Sayi
- * @version
+ * text render
  */
 public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
@@ -46,28 +47,31 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
         public static void renderTextRun(XWPFRun run, Object data) {
             XWPFRun textRun = run;
-            // create hyper link run
             if (data instanceof HyperLinkTextRenderData) {
                 textRun = createHyperLinkRun(run, data);
             }
 
-            // text
-            TextRenderData wrapperData = wrapperText(data);
+            TextRenderData wrapperData = wrapper(data);
             String text = null == wrapperData.getText() ? "" : wrapperData.getText();
             StyleUtils.styleRun(textRun, wrapperData.getStyle());
 
-            // render
             String[] split = text.split(REGEX_LINE_CHARACTOR, -1);
-            if (null != split && split.length > 0) {
+            if (split.length > 0) {
                 textRun.setText(split[0], 0);
+                boolean lineAtTable = split.length > 1 && !(data instanceof HyperLinkTextRenderData)
+                        && TableTools.isInsideTable(run);
                 for (int i = 1; i < split.length; i++) {
-                    textRun.addCarriageReturn();
+                    if (lineAtTable) {
+                        textRun.addBreak(BreakType.TEXT_WRAPPING);
+                    } else {
+                        textRun.addCarriageReturn();
+                    }
                     textRun.setText(split[i]);
                 }
             }
         }
 
-        private static TextRenderData wrapperText(Object obj) {
+        private static TextRenderData wrapper(Object obj) {
             return obj instanceof TextRenderData ? (TextRenderData) obj : new TextRenderData(obj.toString());
         }
 
@@ -75,7 +79,6 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             XWPFParagraphWrapper paragraph = new XWPFParagraphWrapper((XWPFParagraph) run.getParent());
             XWPFRun hyperLinkRun = paragraph.insertNewHyperLinkRun(run, ((HyperLinkTextRenderData) data).getUrl());
             StyleUtils.styleRun(hyperLinkRun, run);
-
             run.setText("", 0);
             return hyperLinkRun;
         }
