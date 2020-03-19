@@ -80,6 +80,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
+    protected DocPrIdenifierManager docPrIdenifierManager;
 
     public NiceXWPFDocument() {
         super();
@@ -88,6 +89,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     public NiceXWPFDocument(InputStream in) throws IOException {
         super(in);
         myDocumentRead();
+        docPrIdenifierManager = new DocPrIdenifierManager(this);
     }
     
     @Override
@@ -158,6 +160,10 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     public List<XWPFTable> getAllTables() {
         return Collections.unmodifiableList(allTables);
+    }
+
+    public DocPrIdenifierManager getDocPrIdenifierManager() {
+        return docPrIdenifierManager;
     }
 
     public BigInteger addNewNumbericId(Pair<Enum, String> numFmt) {

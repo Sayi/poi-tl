@@ -25,6 +25,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
+import com.deepoove.poi.xwpf.DocPrSupport;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
@@ -41,6 +42,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     @Override
     protected void afterRender(RenderContext<PictureRenderData> context) {
         clearPlaceholder(context, false);
+        // may be not unique id, Compatible not corrupt the document
+        DocPrSupport.updateDocPrId(context.getRun());
     }
 
     @Override

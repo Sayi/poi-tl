@@ -36,6 +36,7 @@ import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.DocPrSupport;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
@@ -131,7 +132,8 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 insertPostionCursor.toPrevSibling();
                 XmlObject object = insertPostionCursor.getObject();
                 XWPFParagraph copy = new XWPFParagraph((CTP) object, bodyContainer.getTarget());
-
+                // update docpr
+                DocPrSupport.updateDocPrId(copy);
                 // update numbering
                 context.getNumberingContinue().updateNumbering((XWPFParagraph) iBodyElement, copy);
 
@@ -150,6 +152,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 XmlObject object = insertPostionCursor.getObject();
 
                 XWPFTable copy = new XWPFTable((CTTbl) object, bodyContainer.getTarget());
+                DocPrSupport.updateDocPrId(copy);
                 copies.add(copy);
                 bodyContainer.updateBodyElements(insertNewTbl, copy);
                 bodyContainer.setTable(tablePos, copy);
@@ -162,4 +165,5 @@ public class IterableProcessor extends AbstractIterableProcessor {
         // render
         process(templates, model);
     }
+
 }
