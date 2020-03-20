@@ -495,7 +495,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_软件说明文档">8.1. 软件说明文档</a></li>
 <li><a href="#example-table">8.2. 付款通知书</a></li>
-<li><a href="#example-okr">8.3. OKR目标制定</a></li>
+<li><a href="#example-okr">8.3. 目标制定</a></li>
 <li><a href="#example-resume">8.4. 个人简历</a></li>
 <li><a href="#example-swagger">8.5. Swagger文档</a></li>
 </ul>
@@ -2727,7 +2727,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-okr"><a class="anchor" href="#example-okr"></a><a class="link" href="#example-okr">8.3. OKR目标制定</a></h3>
+<h3 id="example-okr"><a class="anchor" href="#example-okr"></a><a class="link" href="#example-okr">8.3. 目标制定</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -2854,11 +2854,16 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="content">
 <div class="paragraph">
 <div class="title">output</div>
-<p>这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型。点击<a href="example/example_swagger_output.png" target="_blank" rel="noopener">查看大图</a>，下载最终生成的文件<a href="example/swagger.docx">swagger.docx</a></p>
+<p>这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型，模型支持代码块高亮展示。下载最终生成的文件<a href="example/swagger.docx">swagger.docx</a></p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
 <img src="example/example_swagger_output.png" alt="example swagger output">
+</div>
+</div>
+<div class="imageblock" style="text-align: center">
+<div class="content">
+<img src="example/example_swagger_output2.png" alt="example swagger output2">
 </div>
 </div>
 </div>
@@ -2867,7 +2872,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="content">
 <div class="paragraph">
 <div class="title">template</div>
-<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表，表格使用 <code>HackLoopTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值和数据模型表格的渲染，使用Spring表达式来支持丰富的条件判断。</p>
+<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>HackLoopTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值和数据模型表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。</p>
 </div>
 <div class="imageblock" style="text-align: center">
 <div class="content">
