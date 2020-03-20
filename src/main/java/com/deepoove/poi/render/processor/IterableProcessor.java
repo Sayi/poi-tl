@@ -36,7 +36,6 @@ import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
-import com.deepoove.poi.xwpf.DocPrSupport;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 

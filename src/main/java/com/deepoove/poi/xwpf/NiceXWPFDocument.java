@@ -54,12 +54,17 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
@@ -80,16 +85,22 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
-    protected DocPrIdenifierManager docPrIdenifierManager;
+    protected IdenifierManagerWrapper idenifierManagerWrapper;
+    protected boolean adjustDoc = false;
 
     public NiceXWPFDocument() {
         super();
     }
 
     public NiceXWPFDocument(InputStream in) throws IOException {
+        this(in, false);
+    }
+    
+    public NiceXWPFDocument(InputStream in, boolean adjustDoc) throws IOException {
         super(in);
+        this.adjustDoc = adjustDoc;
+        idenifierManagerWrapper = new IdenifierManagerWrapper(this);
         myDocumentRead();
-        docPrIdenifierManager = new DocPrIdenifierManager(this);
     }
     
     @Override
@@ -136,7 +147,44 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private void readParagraphs(List<XWPFParagraph> paragraphs) {
         paragraphs.forEach(
-                paragraph -> paragraph.getRuns().forEach(run -> allPictures.addAll(run.getEmbeddedPictures())));
+                paragraph -> paragraph.getRuns().forEach(run -> readRun(run)));
+    }
+
+    private void readRun(XWPFRun run) {
+        allPictures.addAll(run.getEmbeddedPictures());
+        // compatible for unique identifier: issue#361 #225
+        // mc:AlternateContent/mc:Choice/w:drawing
+        if (!this.idenifierManagerWrapper.isValid()) return;
+        CTR r = run.getCTR();
+        XmlObject[] xmlObjects = r.selectPath(IdenifierManagerWrapper.XPATH_DRAWING);
+        if (null == xmlObjects || xmlObjects.length <= 0) return;
+        for (XmlObject xmlObject : xmlObjects) {
+            try {
+                CTDrawing ctDrawing = CTDrawing.Factory.parse(xmlObject.xmlText());
+                for (CTAnchor anchor : ctDrawing.getAnchorList()) {
+                    if (anchor.getDocPr() != null) {
+                        long id = anchor.getDocPr().getId();
+                        long reserve = this.idenifierManagerWrapper.reserve(id);
+                        if (adjustDoc && id != reserve) {
+                            anchor.getDocPr().setId(reserve);
+                            xmlObject.set(ctDrawing);
+                        }
+                    }
+                }
+                for (CTInline inline : ctDrawing.getInlineList()) {
+                    if (inline.getDocPr() != null) {
+                        long id = inline.getDocPr().getId();
+                        long reserve = this.idenifierManagerWrapper.reserve(id);
+                        if (adjustDoc && id != reserve) {
+                            inline.getDocPr().setId(reserve);
+                            xmlObject.set(ctDrawing);
+                        }
+                    }
+                }
+            } catch (XmlException e) {
+                // no-op
+            }
+        }
     }
 
     private void readTables(List<XWPFTable> tables) {
@@ -162,8 +210,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         return Collections.unmodifiableList(allTables);
     }
 
-    public DocPrIdenifierManager getDocPrIdenifierManager() {
-        return docPrIdenifierManager;
+    public IdenifierManagerWrapper getDocPrIdenifierManager() {
+        return idenifierManagerWrapper;
     }
 
     public BigInteger addNewNumbericId(Pair<Enum, String> numFmt) {
@@ -198,18 +246,18 @@ public class NiceXWPFDocument extends XWPFDocument {
         return numbering.addNum(abstractNumID);
     }
 
-    /**
-     * 生成一个新的流文档
-     * 
-     * @return
-     * @throws IOException
-     * @since 1.3.0
-     */
     public NiceXWPFDocument generate() throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         this.write(byteArrayOutputStream);
         this.close();
         return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+    }
+    
+    public NiceXWPFDocument generateWithAdjust() throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        this.write(byteArrayOutputStream);
+        this.close();
+        return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), true);
     }
 
     public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
@@ -246,7 +294,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
         
-        return generate();
+        return generateWithAdjust();
     }
 
     /**
@@ -315,6 +363,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                     .replaceAll("<w:rStyle\\sw:val=\"" + styleId + "\"",
                             "<w:rStyle w:val=\"" + styleIdsMap.get(styleId) + "\"");
         }
+        
         // 图片旧的id和新的id可能有交集
         Map<String, String> placeHolderblipIdsMap = new HashMap<String, String>();
         for (String relaId : blipIdsMap.keySet()) {
@@ -342,7 +391,6 @@ public class NiceXWPFDocument extends XWPFDocument {
             chartIdsMap.put(relaId, chartIdsMap.get(relaId) + "@PoiTL@");
         }
         for (String relaId : chartIdsMap.keySet()) {
-            // w:hyperlink r:id
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
                     "r:id=\"" + chartIdsMap.get(relaId) + "\"");
         }
