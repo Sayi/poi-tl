@@ -23,7 +23,7 @@ poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.7.2</version>
+  <version>1.7.3</version>
 </dependency>
 ```
 
