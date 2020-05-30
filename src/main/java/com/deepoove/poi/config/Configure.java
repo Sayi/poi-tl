@@ -296,7 +296,7 @@ public class Configure implements Cloneable {
         sb.append(" SpELFunction: ").append("\n");
 		spELFunction.forEach((str, method) -> {
 			sb.append("    ").append(str);
-			sb.append("->").append(method.getName()).append("\n");
+			sb.append("->").append(method.toString()).append("\n");
 		});
         return sb.toString();
     }
