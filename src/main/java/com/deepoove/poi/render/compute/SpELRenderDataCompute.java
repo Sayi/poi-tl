@@ -20,6 +20,9 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 /**
  * 基于Spring Expression Language的计算
  * 
@@ -28,15 +31,16 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  */
 public class SpELRenderDataCompute implements RenderDataCompute {
 
-    ExpressionParser parser;
-    EvaluationContext context;
+    private final ExpressionParser parser;
+    private final EvaluationContext context;
 
-    public SpELRenderDataCompute(Object root) {
+    public SpELRenderDataCompute(Object root, Map<String, Method> spELFunction) {
         parser = new SpelExpressionParser();
         context = new StandardEvaluationContext(root);
-    }
+		spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
+	}
 
-    @Override
+	@Override
     public Object compute(String el) {
         // mark: 无法计算或者读取表达式，会直接抛异常
         return parser.parseExpression(el).getValue(context);

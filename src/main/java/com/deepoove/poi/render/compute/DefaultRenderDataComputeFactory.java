@@ -16,9 +16,6 @@
 package com.deepoove.poi.render.compute;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.render.compute.ELObjectRenderDataCompute;
-import com.deepoove.poi.render.compute.RenderDataCompute;
-import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 
 /**
  * @author Sayi
@@ -37,7 +34,7 @@ public class DefaultRenderDataComputeFactory implements RenderDataComputeFactory
         RenderDataCompute render = null;
         switch (this.config.getElMode()) {
         case SPEL_MODE:
-            render = new SpELRenderDataCompute(model);
+            render = new SpELRenderDataCompute(model, config.getSpELFunction());
             break;
         case POI_TL_STICT_MODE:
             render = new ELObjectRenderDataCompute(model, true);

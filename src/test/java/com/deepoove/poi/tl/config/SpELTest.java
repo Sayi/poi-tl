@@ -3,6 +3,7 @@ package com.deepoove.poi.tl.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +30,11 @@ public class SpELTest {
 
     SpELRenderDataCompute spelForMap;
     SpELRenderDataCompute spelForBean;
+    SpELRenderDataCompute spelForFunction;
 
     SpELData data = new SpELData();
+
+	Map<String, Method> spELFunction = new HashMap<>();
 
     class SpELData {
         private String name = "poi-tl";
@@ -141,7 +146,8 @@ public class SpELTest {
 
     @SuppressWarnings("serial")
     @BeforeEach
-    public void init() throws ParseException {
+    public void init() throws ParseException, NoSuchMethodException {
+		Map<String, Method> emptySpELFunction = new HashMap<String, Method>();
         Map<String, Object> map = new HashMap<String, Object>() {
             {
                 put("name", "Sayi");
@@ -152,7 +158,7 @@ public class SpELTest {
                 });
             }
         };
-        spelForMap = new SpELRenderDataCompute(map);
+        spelForMap = new SpELRenderDataCompute(map, emptySpELFunction);
 
         List<Dog> dogs = new ArrayList<SpELTest.Dog>();
         dogs.add(new Dog("阿黄", 8));
@@ -163,7 +169,11 @@ public class SpELTest {
         data.setDogsArr(dogs.toArray(new Dog[] {}));
         data.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-05-20 22:14:10"));
 
-        spelForBean = new SpELRenderDataCompute(data);
+        spelForBean = new SpELRenderDataCompute(data, emptySpELFunction);
+
+		Method substringStaticMethod = StringUtils.class.getDeclaredMethod("substring", String.class, int.class);
+		spELFunction.put("substringStaticMethod", substringStaticMethod);
+		spelForFunction = new SpELRenderDataCompute(data, spELFunction);
     }
 
     @Test
@@ -202,11 +212,13 @@ public class SpELTest {
         // map
         assertEquals(spelForBean.compute("data['hello']"), "poi-tl");
 
+        //el function
+		assertEquals(spelForFunction.compute("#substringStaticMethod('spElFunction', 2)"), "ElFunction");
     }
 
     @Test
     public void testSpELTemplate() throws IOException {
-        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
+        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).setSpELFunction(spELFunction).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/config_spel.docx", config).render(data);
 
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
@@ -232,6 +244,8 @@ public class SpELTest {
         assertEquals(paragraph.getText(), "6");
         paragraph = document.getParagraphArray(10);
         assertEquals(paragraph.getText(), "阿蓝");
+		paragraph = document.getParagraphArray(11);
+		assertEquals(paragraph.getText(), "ElFunction");
 
         document.close();
 

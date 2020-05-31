@@ -25,6 +25,9 @@ import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
 import com.deepoove.poi.util.RegexUtils;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 public class ConfigureBuilder {
     private Configure config;
 
@@ -62,6 +65,11 @@ public class ConfigureBuilder {
         config.renderDataComputeFactory = renderDataComputeFactory;
         return this;
     }
+
+    public ConfigureBuilder setSpELFunction(Map<String, Method> spELFunction) {
+    	config.spELFunction = spELFunction;
+    	return this;
+	}
 
     public ConfigureBuilder setRunTemplateFactory(RunTemplateFactory<?> runTemplateFactory) {
         config.runTemplateFactory = runTemplateFactory;

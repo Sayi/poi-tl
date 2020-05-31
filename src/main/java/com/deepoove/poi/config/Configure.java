@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.config;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -110,6 +111,11 @@ public class Configure implements Cloneable {
      * the policy of process tag for valid render data error(null or illegal)
      */
     ValidErrorHandler handler = new ClearHandler();
+
+	/**
+	 * sp el custom static method
+	 */
+	Map<String, Method> spELFunction = new HashMap<String, Method>();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -259,7 +265,11 @@ public class Configure implements Cloneable {
         return iterable;
     }
 
-    @Override
+	public Map<String, Method> getSpELFunction() {
+		return spELFunction;
+	}
+
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Configure Info").append(":\n");
@@ -283,7 +293,11 @@ public class Configure implements Cloneable {
         REFERENCE_POLICIES.forEach(policy -> {
             sb.append("    ").append(policy.getClass().getSimpleName()).append("\n");
         });
-
+        sb.append(" SpELFunction: ").append("\n");
+		spELFunction.forEach((str, method) -> {
+			sb.append("    ").append(str);
+			sb.append("->").append(method.toString()).append("\n");
+		});
         return sb.toString();
     }
 
