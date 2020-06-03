@@ -101,7 +101,7 @@ public class PictureRenderData implements RenderData {
      * @param image
      */
     public PictureRenderData(int width, int height, String format, BufferedImage image) {
-        this(width, height, format, BytePictureUtils.getBufferByteArray(image));
+        this(width, height, format, BytePictureUtils.getBufferByteArray(image, format));
     }
 
     /**

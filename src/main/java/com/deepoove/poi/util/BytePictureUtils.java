@@ -26,6 +26,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,16 +79,29 @@ public final class BytePictureUtils {
     }
 
     /**
-     * 通过BufferedImage获取图片byte数组
+     * 通过BufferedImage获取图片byte数组，默认图片为png格式
      * 
      * @param image
      *            BufferedImage
      * @return
      */
     public static byte[] getBufferByteArray(BufferedImage image) {
+        return getBufferByteArray(image, null);
+    }
+
+    /**
+     * 通过BufferedImage获取图片byte数组
+     * 
+     * @param image
+     * @param format 图片格式
+     * @return
+     */
+    public static byte[] getBufferByteArray(BufferedImage image, String format) {
+        String formatName = (StringUtils.isNotEmpty(format) &&  format.charAt(0) == '.') ? format.substring(1) : format;
+        if (StringUtils.isEmpty(formatName)) formatName = "png";
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
-            ImageIO.write(image, "png", os);
+            ImageIO.write(image, formatName, os);
         } catch (IOException e) {
             logger.error("getBufferByteArray error", e);
         }
