@@ -69,6 +69,7 @@ public final class StyleUtils {
         Boolean underLine = style.isUnderLine();
         Enum highlightColor = style.getHighlightColor();
         int twips = style.getCharacterSpacing();
+        String vertAlign = style.getVertAlign();
         CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
         if (StringUtils.isNotBlank(color)) {
             // run.setColor(color);
@@ -106,6 +107,9 @@ public final class StyleUtils {
         }
         // in twentieths of a point
         if (0 != twips) run.setCharacterSpacing(20*twips);
+        if (StringUtils.isNotBlank(vertAlign)) {
+            run.setVerticalAlignment(vertAlign);
+        }
     }
 
     /**

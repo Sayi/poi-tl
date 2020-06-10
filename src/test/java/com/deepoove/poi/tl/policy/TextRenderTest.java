@@ -63,6 +63,19 @@ public class TextRenderTest {
                 in.read(buffer);
                 in.close();
                 put("newline_from_file", new String(buffer));
+
+                // 上标
+                TextRenderData superText = new TextRenderData("a+b");
+                style = new Style();
+                style.setVertAlign("superscript");
+                superText.setStyle(style);
+                put("super", superText);
+                // 下标
+                TextRenderData subText  = new TextRenderData("a-b");
+                style = new Style();
+                style.setVertAlign("subscript");
+                subText.setStyle(style);
+                put("sub", subText);
             }
         };
 

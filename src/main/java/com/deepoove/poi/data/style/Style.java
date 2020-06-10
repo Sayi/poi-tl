@@ -59,11 +59,16 @@ public class Style {
      * 文本背景突出显示颜色
      */
     private STHighlightColor.Enum highlightColor;
-    
+
     /**
      * 间距，单位pt
      */
     private int characterSpacing;
+
+    /**
+     * 基线(baseline)、上标(superscript)、下标(subscript)
+     */
+    private String vertAlign;
 
     public Style() {}
 
@@ -147,5 +152,13 @@ public class Style {
     public void setCharacterSpacing(int characterSpacing) {
         this.characterSpacing = characterSpacing;
     }
-    
+
+    public String getVertAlign() {
+        return vertAlign;
+    }
+
+    public void setVertAlign(String vertAlign) {
+        this.vertAlign = vertAlign;
+    }
+
 }
