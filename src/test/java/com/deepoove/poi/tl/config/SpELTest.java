@@ -181,6 +181,9 @@ public class SpELTest {
         // map
         assertEquals(spelForMap.compute("['name']"), "Sayi");
         assertEquals(spelForMap.compute("['data']['hello']"), "poi-tl");
+        // map accessor
+        assertEquals(spelForMap.compute("name"), "Sayi");
+        assertEquals(spelForMap.compute("data.hello"), "poi-tl");
 
         assertEquals(spelForBean.compute("name"), "poi-tl");
         assertEquals(spelForBean.compute("name == 'poi-tl'"), true);

@@ -15,13 +15,13 @@
  */
 package com.deepoove.poi.render.compute;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * 基于Spring Expression Language的计算
@@ -37,6 +37,7 @@ public class SpELRenderDataCompute implements RenderDataCompute {
     public SpELRenderDataCompute(Object root, Map<String, Method> spELFunction) {
         parser = new SpelExpressionParser();
         context = new StandardEvaluationContext(root);
+        ((StandardEvaluationContext)context).addPropertyAccessor(new ReadMapAccessor());
 		spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
 	}
 
