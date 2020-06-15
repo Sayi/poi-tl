@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -252,49 +254,12 @@ public class NiceXWPFDocument extends XWPFDocument {
         this.close();
         return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
-    
+
     public NiceXWPFDocument generateWithAdjust() throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         this.write(byteArrayOutputStream);
         this.close();
         return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()), true);
-    }
-
-    public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
-        if (null == iterator || !iterator.hasNext() || null == run) return this;
-        // XWPFParagraph paragraph = insertNewParagraph(run);
-        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
-        CTP ctp = paragraph.getCTP();
-        
-        CTBody body = this.getDocument().getBody();
-        String srcString = body.xmlText();
-        //hack for create document or single element document
-        if (!srcString.startsWith("<xml-fragment")) {
-            body.addNewSectPr();
-            srcString = body.xmlText();
-        }
-        String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
-        String sufix = srcString.substring(srcString.lastIndexOf("<"));
-
-        List<String> addParts = convertStr(iterator);
-        iterator = null;
-
-        CTP makeBody = CTP.Factory.parse(prefix + StringUtils.join(addParts, "") + sufix);
-        ctp.set(makeBody);
-        
-        String xmlText = body.xmlText();
-        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>").replaceAll("<w:p><w:p\\s", "<w:p ")
-                .replaceAll("<w:p><w:tbl>", "<w:tbl>").replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
-        
-        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
-                .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
-                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
-                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
-        
-        // System.out.println(xmlText);
-        body.set(CTBody.Factory.parse(xmlText));
-        
-        return generateWithAdjust();
     }
 
     /**
@@ -326,6 +291,45 @@ public class NiceXWPFDocument extends XWPFDocument {
         return merge(docMerges.iterator(), run);
     }
 
+
+    public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
+        if (null == iterator || !iterator.hasNext() || null == run) return this;
+        // XWPFParagraph paragraph = insertNewParagraph(run);
+        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
+        CTP ctp = paragraph.getCTP();
+        CTBody body = this.getDocument().getBody();
+
+        List<String> addParts = convertStr(iterator);
+        iterator = null;
+        
+        XmlOptions optionsInner = DefaultXmlOptions.OPTIONS_INNER;
+        String srcString = body.xmlText(optionsInner );
+        //hack for create document or single element document
+        if (!srcString.startsWith("<xml-fragment")) {
+            body.addNewSectPr();
+            srcString = body.xmlText(optionsInner);
+        }
+        String prefix = srcString.substring(0, srcString.indexOf(">") + 1);
+        String sufix = srcString.substring(srcString.lastIndexOf("<"));
+
+        CTP makeBody = CTP.Factory.parse(prefix + StringUtils.join(addParts, "") + sufix);
+        ctp.set(makeBody);
+        
+        String xmlText = body.xmlText(optionsInner);
+        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>").replaceAll("<w:p><w:p\\s", "<w:p ")
+                .replaceAll("<w:p><w:tbl>", "<w:tbl>").replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
+        
+        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
+                .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
+                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
+                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
+        
+        // System.out.println(xmlText);
+        body.set(CTBody.Factory.parse(xmlText));
+        
+        return generateWithAdjust();
+    }
+
     private List<String> convertStr(Iterator<NiceXWPFDocument> iterator)
             throws InvalidFormatException {
         List<String> strList = new ArrayList<String>();
@@ -333,12 +337,39 @@ public class NiceXWPFDocument extends XWPFDocument {
         // cache the merge doc style if docs have same style, or should merge style first
         NiceXWPFDocument next = iterator.next();
         Map<String, String> styleMapCache = mergeStyles(next);
+        mergeNamespaces(next);
         do {
             strList.add(extractMergePart(next, styleMapCache));
             if (iterator.hasNext()) next = iterator.next();
             else break;
         } while(true);
         return strList;
+    }
+
+    private void mergeNamespaces(NiceXWPFDocument docMerge) {
+        CTDocument1 document = this.getDocument();
+        XmlCursor newCursor = document.newCursor();
+        if (toStartCursor(newCursor)) {
+            CTDocument1 documentMerge = docMerge.getDocument();
+            XmlCursor mergeCursor = documentMerge.newCursor();
+            if (toStartCursor(mergeCursor)) {
+                Map<String, String> addToThis = new HashMap<>();
+                mergeCursor.getAllNamespaces(addToThis);
+                addToThis.forEach(newCursor::insertNamespace);
+            }
+            mergeCursor.dispose();
+        }
+        newCursor.dispose();
+    }
+
+    private boolean toStartCursor(XmlCursor newCursor) {
+        do {
+            if (newCursor.currentTokenType().isStart()) {
+                return true;
+            } else if (newCursor.hasNextToken()) { 
+                newCursor.toNextToken();
+            } else return false;
+        } while (true);
     }
 
     private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException {
@@ -349,9 +380,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         Map<String, String> hyperlinkMap = mergeHyperlink(docMerge);
         Map<String, String> chartIdsMap = mergeChart(docMerge);
 
-        XmlOptions optionsOuter = new XmlOptions();
-        optionsOuter.setSaveOuter();
-        String appendString = bodyMerge.xmlText(optionsOuter);
+        String appendString = bodyMerge.xmlText(DefaultXmlOptions.OPTIONS_OUTER);
         String addPart = ridSectPr(appendString);
 
         for (String styleId : styleIdsMap.keySet()) {
@@ -457,6 +486,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;
         Map<BigInteger, CTAbstractNum> cache = new HashMap<BigInteger, CTAbstractNum>();
+        Map<BigInteger, CTAbstractNum> ret = new HashMap<BigInteger, CTAbstractNum>();
         for (XWPFNum xwpfNum : nums) {
             BigInteger mergeNumId = xwpfNum.getCTNum().getNumId();
 
@@ -469,18 +499,21 @@ public class NiceXWPFDocument extends XWPFDocument {
                     continue;
                 }
                 cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
-                cTAbstractNum
-                        .setAbstractNumId(wrapper.getNextAbstractNumID());
+                // cTAbstractNum.setAbstractNumId(wrapper.getNextAbstractNumID());
                 if (cTAbstractNum.isSetNsid()) cTAbstractNum.unsetNsid();
                 if (cTAbstractNum.isSetTmpl()) cTAbstractNum.unsetTmpl();
                 cache.put(xwpfNum.getCTNum().getAbstractNumId().getVal(), cTAbstractNum);
             }
-
-            BigInteger numID = numbering
-                    .addNum(numbering.addAbstractNum(new XWPFAbstractNum(cTAbstractNum)));
-
-            numIdsMap.put(mergeNumId, numID);
+            ret.put(mergeNumId, cTAbstractNum);
         }
+        
+        new HashSet<CTAbstractNum>(ret.values()).forEach(abnum -> abnum.setAbstractNumId(wrapper.getNextAbstractNumID()));
+        final XWPFNumbering finalNumbering = numbering;
+        ret.forEach((mergeNumId, abnum) -> {
+            BigInteger numID = finalNumbering.addNum(finalNumbering.addAbstractNum(new XWPFAbstractNum(abnum)));
+            numIdsMap.put(mergeNumId, numID);
+        });
+
         return numIdsMap;
     }
 
