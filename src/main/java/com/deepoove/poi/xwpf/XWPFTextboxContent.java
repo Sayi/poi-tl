@@ -29,15 +29,17 @@ public class XWPFTextboxContent implements IBody {
 
     protected IBody part;
     private XWPFRun run;
+    private XmlObject xmlObject;
 
     /**
      * If a table cell does not include at least one block-level element, then
      * this document shall be considered corrupt
      */
-    public XWPFTextboxContent(CTTxbxContent ctTxbxContent, XWPFRun run, IBody part) {
+    public XWPFTextboxContent(CTTxbxContent ctTxbxContent, XWPFRun run, IBody part, XmlObject xmlObject) {
         this.ctTxbxContent = ctTxbxContent;
         this.part = part;
         this.run = run;
+        this.xmlObject = xmlObject;
 
         bodyElements = new ArrayList<>();
         paragraphs = new ArrayList<>();
@@ -60,11 +62,17 @@ public class XWPFTextboxContent implements IBody {
         return ctTxbxContent;
     }
 
+    @Internal
+    public XmlObject getXmlObject() {
+        return xmlObject;
+    }
+
     /**
      * get the to which the TableCell belongs
      *
      * @see org.apache.poi.xwpf.usermodel.IBody#getPart()
      */
+    @SuppressWarnings("deprecation")
     public POIXMLDocumentPart getPart() {
         return run.getParagraph().getPart();
     }
@@ -244,8 +252,7 @@ public class XWPFTextboxContent implements IBody {
      * @see org.apache.poi.xwpf.usermodel.IBody#insertTable(int,
      *      org.apache.poi.xwpf.usermodel.XWPFTable)
      */
-    public void insertTable(int pos, XWPFTable table) {
-    }
+    public void insertTable(int pos, XWPFTable table) {}
 
     public XWPFDocument getXWPFDocument() {
         return part.getXWPFDocument();

@@ -1,6 +1,8 @@
 package com.deepoove.poi.tl.xwpf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +31,16 @@ public class TextboxTest {
             }
         };
 
-        XWPFTemplate.compile("src/test/resources/template/template_textbox.docx").render(datas)
+        List<Map<String, Object>> mores = new ArrayList<Map<String, Object>>();
+        mores.add(datas);
+        mores.add(datas);
+        Map<String, Object> data = new HashMap<String, Object>() {
+            {
+                put("mores", mores);
+            }
+        };
+
+        XWPFTemplate.compile("src/test/resources/template/template_textbox.docx").render(data)
                 .writeToFile("out_template_textbox.docx");
 
     }

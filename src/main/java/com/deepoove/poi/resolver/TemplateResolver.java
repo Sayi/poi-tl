@@ -16,7 +16,6 @@
 package com.deepoove.poi.resolver;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -89,7 +88,7 @@ public class TemplateResolver extends AbstractResolver {
             if (element.getElementType() == BodyElementType.PARAGRAPH) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 RunningRunParagraph runningRun = new RunningRunParagraph(paragraph, templatePattern);
-                List<XWPFRun> refactorRuns = runningRun.refactorRun();
+                runningRun.refactorRun();
                 //if (null == refactorRuns) continue;
                 //Collections.reverse(refactorRuns);
                 resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
@@ -210,8 +209,8 @@ public class TemplateResolver extends AbstractResolver {
     }
 
     <T> RunTemplate parseTemplateFactory(String text, T obj) {
-        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
         if (templatePattern.matcher(text).matches()) {
+            logger.debug("Resolve where text: {}, and create ElementTemplate", text);
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {
                 return (RunTemplate) runTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);

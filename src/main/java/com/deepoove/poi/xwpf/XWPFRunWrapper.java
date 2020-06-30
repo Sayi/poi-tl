@@ -1,11 +1,8 @@
 package com.deepoove.poi.xwpf;
 
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTxbxContent;
 
@@ -20,40 +17,33 @@ public class XWPFRunWrapper {
     private XWPFTextboxContent wpstxbx;
     private XWPFTextboxContent vtextbox;
 
+    @SuppressWarnings("deprecation")
     public XWPFRunWrapper(XWPFRun run) {
         this.run = run;
 
         CTR r = run.getCTR();
-        XmlCursor cursor = r.newCursor();
-        cursor.selectPath(XPATH_TXBX_TXBXCONTENT);
-        while (cursor.toNextSelection()) {
-            XmlObject o = cursor.getObject();
-            if (o instanceof CTTxbxContent) {
-                wpstxbx = new XWPFTextboxContent((CTTxbxContent)o, run, run.getParagraph().getBody());
-                System.out.println(wpstxbx.getCTTxbxContent());
+        XmlObject[] xmlObjects = r.selectPath(XPATH_TXBX_TXBXCONTENT);
+        if (xmlObjects != null && xmlObjects.length >= 1) {
+            try {
+                CTTxbxContent ctTxbxContent = CTTxbxContent.Factory.parse(xmlObjects[0].xmlText());
+                wpstxbx = new XWPFTextboxContent(ctTxbxContent, run, run.getParagraph().getBody(), xmlObjects[0]);
+            } catch (XmlException e) {
+                // no-op
             }
         }
-        cursor.dispose();
-//        XmlObject[] xmlObjects = r.selectPath(XPATH_TXBX_TXBXCONTENT);
-//        if (xmlObjects != null && xmlObjects.length >= 1) {
-//            try {
-//                CTTxbxContent ctTxbxContent = CTTxbxContent.Factory.parse(xmlObjects[0].xmlText());
-//                wpstxbx = new XWPFTextboxContent(ctTxbxContent, run, run.getParagraph().getBody());
-//                xmlObjects[0].set(ctTxbxContent);
-//            } catch (XmlException e) {
-//                // no-op
-//            }
-//        }
-//        xmlObjects = r.selectPath(XPATH_TEXTBOX_TXBXCONTENT);
-//        if (xmlObjects != null && xmlObjects.length >= 1) {
-//            try {
-//                CTTxbxContent ctTxbxContent = CTTxbxContent.Factory.parse(xmlObjects[0].xmlText());
-//                vtextbox = new XWPFTextboxContent(ctTxbxContent, run, run.getParagraph().getBody());
-//                xmlObjects[0].set(ctTxbxContent);
-//            } catch (XmlException e) {
-//                // no-op
-//            }
-//        }
+        xmlObjects = r.selectPath(XPATH_TEXTBOX_TXBXCONTENT);
+        if (xmlObjects != null && xmlObjects.length >= 1) {
+            try {
+                CTTxbxContent ctTxbxContent = CTTxbxContent.Factory.parse(xmlObjects[0].xmlText());
+                vtextbox = new XWPFTextboxContent(ctTxbxContent, run, run.getParagraph().getBody(), xmlObjects[0]);
+            } catch (XmlException e) {
+                // no-op
+            }
+        }
+    }
+
+    public XWPFRun getRun() {
+        return run;
     }
 
     public XWPFTextboxContent getWpstxbx() {
