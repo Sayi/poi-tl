@@ -41,6 +41,7 @@ import com.deepoove.poi.template.BlockTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
  * Resolver
@@ -89,9 +90,9 @@ public class TemplateResolver extends AbstractResolver {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 RunningRunParagraph runningRun = new RunningRunParagraph(paragraph, templatePattern);
                 List<XWPFRun> refactorRuns = runningRun.refactorRun();
-                if (null == refactorRuns) continue;
-                Collections.reverse(refactorRuns);
-                resolveXWPFRuns(refactorRuns, metaTemplates, stack);
+                //if (null == refactorRuns) continue;
+                //Collections.reverse(refactorRuns);
+                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
                 List<XWPFTableRow> rows = table.getRows();
@@ -130,6 +131,16 @@ public class TemplateResolver extends AbstractResolver {
             final Deque<BlockTemplate> stack) {
         for (XWPFRun run : runs) {
             String text = null;
+            // textbox
+            List<MetaTemplate> visitBodyElements = resolveTextbox(run);
+            if (!visitBodyElements.isEmpty()) {
+                if (stack.isEmpty()) {
+                    metaTemplates.addAll(visitBodyElements);
+                } else {
+                    stack.peek().getTemplates().addAll(visitBodyElements);
+                }
+                continue;
+            }
             if (null == run || StringUtils.isBlank(text = run.getText(0))) continue;
             RunTemplate runTemplate = parseTemplateFactory(text, run);
             if (null == runTemplate) continue;
@@ -163,6 +174,12 @@ public class TemplateResolver extends AbstractResolver {
                 }
             }
         }
+    }
+
+    private List<MetaTemplate> resolveTextbox(XWPFRun run) {
+        XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
+        if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
+        return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {
