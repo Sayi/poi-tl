@@ -24,6 +24,7 @@ import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public abstract class DefaultTemplateProcessor implements Visitor {
@@ -56,6 +57,11 @@ public abstract class DefaultTemplateProcessor implements Visitor {
     @Override
     public void visit(RunTemplate runTemplate) {
         visitOther(runTemplate);
+    }
+
+    @Override
+    public void visit(PictureTemplate pictureTemplate) {
+        visitOther(pictureTemplate);
     }
 
     @Override

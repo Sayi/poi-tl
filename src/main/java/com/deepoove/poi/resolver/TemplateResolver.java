@@ -15,11 +15,15 @@
  */
 package com.deepoove.poi.resolver;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+
+import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
@@ -28,18 +32,28 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.SimpleValue;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
+import org.openxmlformats.schemas.drawingml.x2006.main.impl.CTNonVisualDrawingPropsImpl;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.exception.ReflectionException;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.template.BlockTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
@@ -89,9 +103,9 @@ public class TemplateResolver extends AbstractResolver {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 RunningRunParagraph runningRun = new RunningRunParagraph(paragraph, templatePattern);
                 List<XWPFRun> refactorRuns = runningRun.refactorRun();
-                if (null == refactorRuns) continue;
-                Collections.reverse(refactorRuns);
-                resolveXWPFRuns(refactorRuns, metaTemplates, stack);
+//                if (null == refactorRuns) continue;
+//                Collections.reverse(refactorRuns);
+                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
                 List<XWPFTableRow> rows = table.getRows();
@@ -130,7 +144,16 @@ public class TemplateResolver extends AbstractResolver {
             final Deque<BlockTemplate> stack) {
         for (XWPFRun run : runs) {
             String text = null;
-            if (null == run || StringUtils.isBlank(text = run.getText(0))) continue;
+            if (null == run || StringUtils.isBlank(text = run.getText(0))) {
+                List<XWPFPicture> embeddedPictures = run.getEmbeddedPictures();
+                List<PictureTemplate> pictureTemplates = resolveXWPFPictures(embeddedPictures);
+                if (stack.isEmpty()) {
+                    metaTemplates.addAll(pictureTemplates);
+                } else {
+                    stack.peek().getTemplates().addAll(pictureTemplates);
+                }
+                continue;
+            }
             RunTemplate runTemplate = parseTemplateFactory(text, run);
             if (null == runTemplate) continue;
             char charValue = runTemplate.getSign().charValue();
@@ -163,6 +186,63 @@ public class TemplateResolver extends AbstractResolver {
                 }
             }
         }
+    }
+
+    private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
+        List<PictureTemplate> metaTemplates = new ArrayList<>();
+        if (embeddedPictures == null) return metaTemplates;
+        
+        for (XWPFPicture pic : embeddedPictures) {
+                // it's array, to do in the future
+                CTDrawing ctDrawing = getCTDrawing(pic);
+                if (null == ctDrawing) continue;
+
+                CTNonVisualDrawingProps docPr = null;
+                if (ctDrawing.sizeOfAnchorArray() > 0) {
+                    CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
+                    docPr = anchorArray.getDocPr();
+
+                } else if (ctDrawing.sizeOfInlineArray() > 0) {
+                    CTInline inline = ctDrawing.getInlineArray(0);
+                    docPr = inline.getDocPr();
+                }
+
+                if (null != docPr) {
+                    String title = getTitle(docPr);
+                    String descr = docPr.getDescr();
+                    
+                    PictureTemplate pictureTemplate = parsePicTemplateFactory(title, pic);
+                    if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
+                }
+        }
+        return metaTemplates;
+    }
+    
+   
+
+    private String getTitle(CTNonVisualDrawingProps docPr) {
+        QName TITLE = new QName("", "title");
+        CTNonVisualDrawingPropsImpl docPrImpl = (CTNonVisualDrawingPropsImpl) docPr;
+        synchronized (docPrImpl.monitor()) {
+            // check_orphaned();
+            SimpleValue localSimpleValue = null;
+            localSimpleValue = (SimpleValue) docPrImpl.get_store().find_attribute_user(TITLE);
+            if (localSimpleValue == null) { return null; }
+            return localSimpleValue.getStringValue();
+        }
+    }
+
+    public CTDrawing getCTDrawing(XWPFPicture pic) throws RuntimeException {
+        XWPFRun run;
+        try {
+            Field field = XWPFPicture.class.getDeclaredField("run");
+            field.setAccessible(true);
+            run = (XWPFRun) field.get(pic);
+        } catch (Exception e) {
+            throw new ReflectionException("run", XWPFPicture.class, e);
+        }
+        CTR ctr = run.getCTR();
+        return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {
@@ -202,6 +282,17 @@ public class TemplateResolver extends AbstractResolver {
                 // return CellTemplate.create(symbol, tagName, (XWPFTableCell)
                 // obj);
                 return null;
+        }
+        return null;
+    }
+    
+    private PictureTemplate parsePicTemplateFactory(String text, XWPFPicture pic) {
+        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
+        if (templatePattern.matcher(text).matches()) {
+            String tag = gramerPattern.matcher(text).replaceAll("").trim();
+            if (pic.getClass() == XWPFPicture.class) {
+                return (PictureTemplate) runTemplateFactory.createPicureTemplate(tag, pic);
+            } 
         }
         return null;
     }

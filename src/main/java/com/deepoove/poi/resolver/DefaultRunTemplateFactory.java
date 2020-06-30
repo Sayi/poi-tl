@@ -18,9 +18,11 @@ package com.deepoove.poi.resolver;
 
 import java.util.Set;
 
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
@@ -53,6 +55,16 @@ public class DefaultRunTemplateFactory implements RunTemplateFactory<RunTemplate
         template.setTagName(symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1));
         template.setSign(symbol);
         template.setRun(run);
+        return template;
+    }
+
+    @Override
+    public PictureTemplate createPicureTemplate(String tag, XWPFPicture pic) {
+        PictureTemplate template = new PictureTemplate();
+        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setTagName(tag);
+        template.setSign(EMPTY_CHAR);
+        template.setPicture(pic);
         return template;
     }
 
