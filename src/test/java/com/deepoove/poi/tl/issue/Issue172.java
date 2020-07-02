@@ -1,6 +1,7 @@
 package com.deepoove.poi.tl.issue;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,10 +24,10 @@ public class Issue172 {
         XWPFTemplate doc = XWPFTemplate.compile("src/test/resources/issue/172.docx");
         doc.render(params);
 
-//        FileOutputStream fos = new FileOutputStream("out_issue_172.docx");
-//        doc.write(fos);
-//        fos.flush();
-//        fos.close();
+        FileOutputStream fos = new FileOutputStream("out_issue_172.docx");
+        doc.write(fos);
+        fos.flush();
+        fos.close();
 
     }
 

@@ -41,6 +41,7 @@ import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
+import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
@@ -58,6 +59,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTChartSpace;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
@@ -248,6 +250,25 @@ public class NiceXWPFDocument extends XWPFDocument {
         return numbering.addNum(abstractNumID);
     }
 
+    public RelationPart addChartData(XWPFChart chart) throws InvalidFormatException, IOException {
+        int chartNumber = getNextPartNumber(XWPFRelation.CHART, charts.size() + 1);
+
+        //create relationship in document for new chart
+        RelationPart rp = createRelationship(
+                XWPFRelation.CHART, new XWPFChartFactory(chart.getPackagePart()), chartNumber, false);
+
+        // initialize xwpfchart object
+        XWPFChart xwpfChart = rp.getDocumentPart();
+        xwpfChart.setChartIndex(chartNumber);
+        CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
+        ctChartSpace.unsetExternalData();
+        xwpfChart.setWorkbook(chart.getWorkbook());
+
+        //add chart object to chart list
+        charts.add(xwpfChart);
+        return rp;
+    }
+
     public NiceXWPFDocument generate() throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         this.write(byteArrayOutputStream);
@@ -331,7 +352,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     private List<String> convertStr(Iterator<NiceXWPFDocument> iterator)
-            throws InvalidFormatException {
+            throws InvalidFormatException, IOException {
         List<String> strList = new ArrayList<String>();
 
         // cache the merge doc style if docs have same style, or should merge style first
@@ -372,7 +393,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         } while (true);
     }
 
-    private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException {
+    private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException, IOException {
         CTBody bodyMerge = docMerge.getDocument().getBody();
         // Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
@@ -556,9 +577,15 @@ public class NiceXWPFDocument extends XWPFDocument {
         return map;
     }
     
-    private Map<String, String> mergeChart(NiceXWPFDocument docMerge) throws InvalidFormatException {
+    private Map<String, String> mergeChart(NiceXWPFDocument docMerge) throws InvalidFormatException, IOException {
         Map<String, String> map = new HashMap<String, String>();
         // TODO
+        List<XWPFChart> charts = docMerge.getCharts();
+        for (XWPFChart chart : charts) {
+            String relationId = docMerge.getRelationId(chart);
+            RelationPart addChartData = addChartData(chart);
+            map.put(relationId, addChartData.getRelationship().getId());
+        }
         return map;
     }
 
