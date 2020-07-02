@@ -30,15 +30,18 @@ import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
-import com.deepoove.poi.policy.PictureTemplateRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
+import com.deepoove.poi.policy.reference.ChartTemplateRenderPolicy;
+import com.deepoove.poi.policy.reference.PictureTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
+import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.RegexUtils;
 
@@ -61,10 +64,14 @@ public class Configure implements Cloneable {
     private final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
 
     /**
-     * template by plugin: Low priority
+     * template by xwpfrun: Low priority
      */
     private final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
-    private final Map<Class, RenderPolicy> TEMPLATE_POLICYS = new HashMap<Class, RenderPolicy>();
+
+    /**
+     * template by document object: Low priority
+     */
+    private final Map<Class<? extends MetaTemplate>, RenderPolicy> TEMPLATE_POLICYS = new HashMap<>();
 
     /**
      * template by reference
@@ -127,11 +134,12 @@ public class Configure implements Cloneable {
         plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
         plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
         plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
-        
+
         plugin(PictureTemplate.class, new PictureTemplateRenderPolicy());
+        plugin(ChartTemplate.class, new ChartTemplateRenderPolicy());
     }
 
-    private Configure plugin(Class<PictureTemplate> clazz, RenderPolicy policy) {
+    private Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
         TEMPLATE_POLICYS.put(clazz, policy);
         return this;
     }
@@ -217,7 +225,7 @@ public class Configure implements Cloneable {
     
     
 
-    public RenderPolicy getTemplatePolicy(Class clazz) {
+    public RenderPolicy getTemplatePolicy(Class<?> clazz) {
         return TEMPLATE_POLICYS.get(clazz);
     }
 

@@ -15,9 +15,11 @@
  */
 package com.deepoove.poi.resolver;
 
+import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -26,5 +28,7 @@ public interface RunTemplateFactory<T extends RunTemplate> {
     T createRunTemplate(String tag, XWPFRun run);
 
     PictureTemplate createPicureTemplate(String tag, XWPFPicture pic);
+
+    ChartTemplate createChartTemplate(String tag, XWPFChart chart, XWPFRun run);
 
 }

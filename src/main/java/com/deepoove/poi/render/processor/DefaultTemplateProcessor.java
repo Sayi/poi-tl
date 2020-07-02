@@ -23,6 +23,7 @@ import java.util.Set;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
@@ -77,6 +78,11 @@ public abstract class DefaultTemplateProcessor implements Visitor {
     @Override
     public void visit(PictureTemplate pictureTemplate) {
         visitOther(pictureTemplate);
+    }
+
+    @Override
+    public void visit(ChartTemplate chartTemplate) {
+        visitOther(chartTemplate);
     }
 
     @Override

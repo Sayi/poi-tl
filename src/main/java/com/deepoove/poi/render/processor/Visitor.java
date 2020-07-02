@@ -16,6 +16,7 @@
 
 package com.deepoove.poi.render.processor;
 
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.PictureTemplate;
@@ -30,5 +31,7 @@ public interface Visitor {
     void visit(InlineIterableTemplate iterableTemplate);
 
     void visit(PictureTemplate pictureTemplate);
+
+    void visit(ChartTemplate referenceTemplate);
 
 }
