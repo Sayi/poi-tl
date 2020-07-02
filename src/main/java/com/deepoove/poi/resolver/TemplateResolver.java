@@ -17,7 +17,6 @@ package com.deepoove.poi.resolver;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,6 +54,7 @@ import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
  * Resolver
@@ -102,9 +102,9 @@ public class TemplateResolver extends AbstractResolver {
             if (element.getElementType() == BodyElementType.PARAGRAPH) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
                 RunningRunParagraph runningRun = new RunningRunParagraph(paragraph, templatePattern);
-                List<XWPFRun> refactorRuns = runningRun.refactorRun();
-//                if (null == refactorRuns) continue;
-//                Collections.reverse(refactorRuns);
+                runningRun.refactorRun();
+                //if (null == refactorRuns) continue;
+                //Collections.reverse(refactorRuns);
                 resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
@@ -144,7 +144,18 @@ public class TemplateResolver extends AbstractResolver {
             final Deque<BlockTemplate> stack) {
         for (XWPFRun run : runs) {
             String text = null;
-            if (null == run || StringUtils.isBlank(text = run.getText(0))) {
+            if (StringUtils.isBlank(text = run.getText(0))) {
+                // textbox
+                List<MetaTemplate> visitBodyElements = resolveTextbox(run);
+                if (!visitBodyElements.isEmpty()) {
+                    if (stack.isEmpty()) {
+                        metaTemplates.addAll(visitBodyElements);
+                    } else {
+                        stack.peek().getTemplates().addAll(visitBodyElements);
+                    }
+                    continue;
+                }
+
                 List<XWPFPicture> embeddedPictures = run.getEmbeddedPictures();
                 List<PictureTemplate> pictureTemplates = resolveXWPFPictures(embeddedPictures);
                 if (stack.isEmpty()) {
@@ -154,6 +165,7 @@ public class TemplateResolver extends AbstractResolver {
                 }
                 continue;
             }
+            // if (null == run || StringUtils.isBlank(text = run.getText(0))) continue;
             RunTemplate runTemplate = parseTemplateFactory(text, run);
             if (null == runTemplate) continue;
             char charValue = runTemplate.getSign().charValue();
@@ -243,6 +255,10 @@ public class TemplateResolver extends AbstractResolver {
         }
         CTR ctr = run.getCTR();
         return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
+    private List<MetaTemplate> resolveTextbox(XWPFRun run) {
+        XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
+        if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
+        return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {
@@ -273,8 +289,8 @@ public class TemplateResolver extends AbstractResolver {
     }
 
     <T> RunTemplate parseTemplateFactory(String text, T obj) {
-        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
         if (templatePattern.matcher(text).matches()) {
+            logger.debug("Resolve where text: {}, and create ElementTemplate", text);
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {
                 return (RunTemplate) runTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);
