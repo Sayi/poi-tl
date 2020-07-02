@@ -15,18 +15,17 @@
  */
 package com.deepoove.poi.config;
 
+import java.lang.reflect.Method;
+import java.util.Map;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
 import com.deepoove.poi.util.RegexUtils;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 public class ConfigureBuilder {
     private Configure config;
@@ -87,11 +86,6 @@ public class ConfigureBuilder {
     @Deprecated
     public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
         config.customPolicy(tagName, policy);
-        return this;
-    }
-
-    public ConfigureBuilder referencePolicy(ReferenceRenderPolicy<?> policy) {
-        config.referencePolicy(policy);
         return this;
     }
 

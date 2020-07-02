@@ -17,7 +17,7 @@ import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
-public class PictureTemplateRenderPolicy extends AbstractTemplateRenderPolicy<PictureTemplate, PictureRenderData> {
+public class DefaultPictureTemplateRenderPolicy extends AbstractTemplateRenderPolicy<PictureTemplate, PictureRenderData> {
 
     @Override
     public void doRender(PictureTemplate pictureTemplate, PictureRenderData picdata, XWPFTemplate template)

@@ -16,10 +16,8 @@
 package com.deepoove.poi.config;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,9 +30,8 @@ import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
-import com.deepoove.poi.policy.reference.ChartTemplateRenderPolicy;
-import com.deepoove.poi.policy.reference.PictureTemplateRenderPolicy;
+import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
+import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
@@ -72,11 +69,6 @@ public class Configure implements Cloneable {
      * template by document object: Low priority
      */
     private final Map<Class<? extends MetaTemplate>, RenderPolicy> TEMPLATE_POLICYS = new HashMap<>();
-
-    /**
-     * template by reference
-     */
-    private final List<ReferenceRenderPolicy<?>> REFERENCE_POLICIES = new ArrayList<>();
 
     /**
      * if & for each
@@ -135,8 +127,8 @@ public class Configure implements Cloneable {
         plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
         plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
 
-        plugin(PictureTemplate.class, new PictureTemplateRenderPolicy());
-        plugin(ChartTemplate.class, new ChartTemplateRenderPolicy());
+        plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
+        plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
     }
 
     private Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
@@ -202,15 +194,6 @@ public class Configure implements Cloneable {
     }
 
     /**
-     * 新增引用渲染策略
-     * 
-     * @param policy
-     */
-    public void referencePolicy(ReferenceRenderPolicy<?> policy) {
-        REFERENCE_POLICIES.add(policy);
-    }
-
-    /**
      * 获取标签策略
      * 
      * @param tagName
@@ -227,10 +210,6 @@ public class Configure implements Cloneable {
 
     public RenderPolicy getTemplatePolicy(Class<?> clazz) {
         return TEMPLATE_POLICYS.get(clazz);
-    }
-
-    public List<ReferenceRenderPolicy<?>> getReferencePolicies() {
-        return REFERENCE_POLICIES;
     }
 
     private RenderPolicy getCustomPolicy(String tagName) {
@@ -312,10 +291,6 @@ public class Configure implements Cloneable {
         CUSTOM_POLICYS.forEach((str, policy) -> {
             sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
-        });
-        sb.append("  Reference Plugin: ").append("\n");
-        REFERENCE_POLICIES.forEach(policy -> {
-            sb.append("    ").append(policy.getClass().getSimpleName()).append("\n");
         });
         sb.append(" SpELFunction: ").append("\n");
 		spELFunction.forEach((str, method) -> {
