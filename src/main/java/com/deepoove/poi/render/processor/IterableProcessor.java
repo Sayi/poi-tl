@@ -132,7 +132,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 XmlObject object = insertPostionCursor.getObject();
                 XWPFParagraph copy = new XWPFParagraph((CTP) object, bodyContainer.getTarget());
                 // update docpr
-                DrawingSupport.updateDocPrId(copy);
+                DocPrSupport.updateDocPrId(copy);
                 // update numbering
                 context.getNumberingContinue().updateNumbering((XWPFParagraph) iBodyElement, copy);
 
@@ -151,7 +151,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
                 XmlObject object = insertPostionCursor.getObject();
 
                 XWPFTable copy = new XWPFTable((CTTbl) object, bodyContainer.getTarget());
-                DrawingSupport.updateDocPrId(copy);
+                DocPrSupport.updateDocPrId(copy);
                 copies.add(copy);
                 bodyContainer.updateBodyElements(insertNewTbl, copy);
                 bodyContainer.setTable(tablePos, copy);

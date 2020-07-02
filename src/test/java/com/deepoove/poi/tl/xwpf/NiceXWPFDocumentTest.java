@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.DisplayName;
@@ -55,19 +54,6 @@ public class NiceXWPFDocumentTest {
 
         source.close();
 
-    }
-    
-    @SuppressWarnings("resource")
-    @Test
-    public void testMergeWithChart() throws Exception {
-        NiceXWPFDocument source = new NiceXWPFDocument();
-        NiceXWPFDocument target1 = new NiceXWPFDocument(
-                new FileInputStream(new File("src/test/resources/template/reference_chart.docx")));
-
-        source = source.merge(target1);
-        source.write(new FileOutputStream("out_merge_chart.docx"));
-        source.close();
-        
     }
 
 }

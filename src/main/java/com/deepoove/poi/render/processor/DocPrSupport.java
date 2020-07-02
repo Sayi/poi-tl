@@ -1,23 +1,14 @@
 package com.deepoove.poi.render.processor;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTRelId;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
@@ -26,15 +17,15 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import com.deepoove.poi.xwpf.IdenifierManagerWrapper;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
-public class DrawingSupport {
+public class DocPrSupport {
 
     public static void updateDocPrId(XWPFTable table) {
         List<XWPFTableRow> rows = table.getRows();
         rows.forEach(row -> {
             List<XWPFTableCell> cells = row.getTableCells();
             cells.forEach(cell -> {
-                cell.getParagraphs().forEach(DrawingSupport::updateDocPrId);
-                cell.getTables().forEach(DrawingSupport::updateDocPrId);
+                cell.getParagraphs().forEach(DocPrSupport::updateDocPrId);
+                cell.getTables().forEach(DocPrSupport::updateDocPrId);
             });
         });
     }
@@ -45,7 +36,7 @@ public class DrawingSupport {
     }
 
     public static void updateDocPrId(List<XWPFRun> runs) {
-        runs.forEach(DrawingSupport::updateDocPrId);
+        runs.forEach(DocPrSupport::updateDocPrId);
     }
 
     public static void updateDocPrId(XWPFRun run) {
@@ -73,42 +64,11 @@ public class DrawingSupport {
             if (anchor.getDocPr() != null) {
                 anchor.getDocPr().setId(document.getDocPrIdenifierManager().reserveNew());
             }
-            processCTGraaphicalObject(document, anchor.getGraphic());
         }
         for (CTInline inline : ctDrawing.getInlineList()) {
             if (inline.getDocPr() != null) {
                 inline.getDocPr().setId(document.getDocPrIdenifierManager().reserveNew());
             }
-            processCTGraaphicalObject(document, inline.getGraphic());
-        }
-    }
-    
-    private static void processCTGraaphicalObject(NiceXWPFDocument document, CTGraphicalObject graphic) {
-        // read chart rid
-        CTGraphicalObjectData graphicData = graphic.getGraphicData();
-        XmlCursor newCursor = graphicData.newCursor();
-        try {
-            boolean child = newCursor.toChild(0);
-            if (!child) return;
-            XmlObject xmlObject = newCursor.getObject();
-            if (null == xmlObject || !(xmlObject instanceof CTRelId)) return;
-            CTRelId cchart = (CTRelId) xmlObject;
-            String rid = cchart.getId();
-            if (null == rid) return;
-            // replace rid
-            POIXMLDocumentPart documentPart = document.getRelationById(rid);
-            if (null == documentPart || !(documentPart instanceof XWPFChart)) return;
-            try {
-                XWPFChart xwpfChart = (XWPFChart) documentPart;
-                RelationPart relationPart = document.addChartData(xwpfChart);
-                String id = relationPart.getRelationship().getId();
-                cchart.setId(id);
-            } catch (InvalidFormatException | IOException e) {
-                e.printStackTrace();
-            } 
-        }
-        finally {
-            newCursor.dispose();
         }
     }
 

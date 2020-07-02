@@ -113,7 +113,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
             newCursor.toPrevSibling();
             XmlObject object = newCursor.getObject();
             XWPFRun copy = paragraphContext.createRun(object, (IRunBody) paragraphContext.getParagraph());
-            DrawingSupport.updateDocPrId(copy);
+            DocPrSupport.updateDocPrId(copy);
             copies.add(copy);
             paragraphContext.setAndUpdateRun(copy, replaceXwpfRun, insertPostionCursor);
         }
