@@ -255,6 +255,8 @@ public class TemplateResolver extends AbstractResolver {
         }
         CTR ctr = run.getCTR();
         return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
+    }
+
     private List<MetaTemplate> resolveTextbox(XWPFRun run) {
         XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
         if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
