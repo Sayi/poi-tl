@@ -1,7 +1,6 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.policy.ref;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,14 +41,8 @@ public class TemplateRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_picture_template.docx")
-                .render(datas);
-
-        FileOutputStream out = new FileOutputStream("out_render_picture_template.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        XWPFTemplate.compile("src/test/resources/template/render_picture_template.docx").render(datas)
+                .writeToFile("out_render_picture_template.docx");
     }
 
     @SuppressWarnings("serial")
@@ -79,14 +72,8 @@ public class TemplateRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_chart_template.docx")
-                .render(datas);
-
-        FileOutputStream out = new FileOutputStream("out_render_chart_template.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        XWPFTemplate.compile("src/test/resources/template/render_chart_template.docx").render(datas)
+                .writeToFile("out_render_chart_template.docx");
     }
 
 }
