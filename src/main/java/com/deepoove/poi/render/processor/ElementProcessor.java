@@ -26,7 +26,9 @@ import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public class ElementProcessor extends DefaultTemplateProcessor {
@@ -38,21 +40,30 @@ public class ElementProcessor extends DefaultTemplateProcessor {
     }
 
     @Override
+    public void visit(PictureTemplate pictureTemplate) {
+        visit((ElementTemplate) pictureTemplate);
+    }
+
+    @Override
+    public void visit(ChartTemplate chartTemplate) {
+        visit((ElementTemplate) chartTemplate);
+    }
+
+    @Override
     public void visit(RunTemplate runTemplate) {
-        RenderPolicy policy = runTemplate.findPolicy(template.getConfig());
+        visit((ElementTemplate) runTemplate);
+    }
+
+    void visit(ElementTemplate eleTemplate) {
+        RenderPolicy policy = eleTemplate.findPolicy(template.getConfig());
         if (null == policy) {
             throw new RenderException(
-                    "Cannot find render policy: [" + ((ElementTemplate) runTemplate).getTagName() + "]");
+                    "Cannot find render policy: [" + ((ElementTemplate) eleTemplate).getTagName() + "]");
         }
-        if (policy instanceof DocxRenderPolicy) {
-            return;
-        } else {
-            LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", runTemplate.getTagName(),
-                    runTemplate.getSign(), ClassUtils.getShortClassName(policy.getClass()));
-            policy.render(((ElementTemplate) runTemplate), renderDataCompute.compute(runTemplate.getTagName()),
-                    template);
-        }
-
+        if (policy instanceof DocxRenderPolicy) return;
+        LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", eleTemplate.getTagName(), eleTemplate.getSign(),
+                ClassUtils.getShortClassName(policy.getClass()));
+        policy.render(((ElementTemplate) eleTemplate), renderDataCompute.compute(eleTemplate.getTagName()), template);
     }
 
 }

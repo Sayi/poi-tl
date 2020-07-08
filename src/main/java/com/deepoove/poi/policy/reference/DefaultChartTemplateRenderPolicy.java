@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy.ref;
+package com.deepoove.poi.policy.reference;
 
-/**
- * @author Sayi
- * @version 1.6.0
- */
-public interface OptionalText {
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.template.ChartTemplate;
 
-    /**
-     * 可选文字，匹配标题或者说明
-     * 
-     * @return
-     */
-    String optionalText();
+public class DefaultChartTemplateRenderPolicy extends AbstractChartTemplateRenderPolicy<Object> {
+
+    @Override
+    public void doRender(ChartTemplate eleTemplate, Object data, XWPFTemplate template) throws Exception {
+        // no-op
+
+    }
 
 }

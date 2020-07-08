@@ -22,7 +22,20 @@ public final class XWPFChartFactory extends POIXMLFactory {
         return XWPFRelation.getInstance(relationshipType);
     }
 
+    // compatible 4.1.1+
     @Override
+    public POIXMLDocumentPart newDocumentPart(POIXMLRelation descriptor) {
+        Constructor<? extends POIXMLDocumentPart> constructor;
+        try {
+            constructor = XWPFChart.class.getDeclaredConstructor(PackagePart.class);
+            constructor.setAccessible(true);
+            return constructor.newInstance(new Object[] { part });
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // compatible 4.1.10
     protected POIXMLDocumentPart createDocumentPart(Class<? extends POIXMLDocumentPart> cls, Class<?>[] classes,
             Object[] values) throws SecurityException, NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
@@ -31,4 +44,5 @@ public final class XWPFChartFactory extends POIXMLFactory {
         constructor.setAccessible(true);
         return constructor.newInstance(new Object[] { part });
     }
+
 }

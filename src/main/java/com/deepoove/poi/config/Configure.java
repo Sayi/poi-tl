@@ -16,10 +16,8 @@
 package com.deepoove.poi.config;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,15 +28,17 @@ import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
 import com.deepoove.poi.policy.NumbericRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
-import com.deepoove.poi.policy.PictureTemplateRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
-import com.deepoove.poi.policy.ref.ReferenceRenderPolicy;
+import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
+import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
 import com.deepoove.poi.resolver.RunTemplateFactory;
+import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.RegexUtils;
 
@@ -61,15 +61,14 @@ public class Configure implements Cloneable {
     private final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
 
     /**
-     * template by plugin: Low priority
+     * template by xwpfRun: Low priority
      */
     private final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
-    private final Map<Class, RenderPolicy> TEMPLATE_POLICYS = new HashMap<Class, RenderPolicy>();
 
     /**
-     * template by reference
+     * template by document object(xwpfChart、xwpfPicture): Low priority
      */
-    private final List<ReferenceRenderPolicy<?>> REFERENCE_POLICIES = new ArrayList<>();
+    private final Map<Class<? extends MetaTemplate>, RenderPolicy> TEMPLATE_POLICYS = new HashMap<>();
 
     /**
      * if & for each
@@ -115,10 +114,10 @@ public class Configure implements Cloneable {
      */
     ValidErrorHandler handler = new ClearHandler();
 
-	/**
-	 * sp el custom static method
-	 */
-	Map<String, Method> spELFunction = new HashMap<String, Method>();
+    /**
+     * sp el custom static method
+     */
+    Map<String, Method> spELFunction = new HashMap<String, Method>();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -127,13 +126,9 @@ public class Configure implements Cloneable {
         plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
         plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
         plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
-        
-        plugin(PictureTemplate.class, new PictureTemplateRenderPolicy());
-    }
 
-    private Configure plugin(Class<PictureTemplate> clazz, RenderPolicy policy) {
-        TEMPLATE_POLICYS.put(clazz, policy);
-        return this;
+        plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
+        plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
     }
 
     /**
@@ -182,6 +177,20 @@ public class Configure implements Cloneable {
     }
 
     /**
+     * 新增或者变更对象模板插件
+     * 
+     * @param clazz
+     *            对象模板类型
+     * @param policy
+     *            策略
+     * @return
+     */
+    Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
+        TEMPLATE_POLICYS.put(clazz, policy);
+        return this;
+    }
+
+    /**
      * 自定义模板和策略
      * 
      * @param tagName
@@ -191,15 +200,6 @@ public class Configure implements Cloneable {
      */
     public void customPolicy(String tagName, RenderPolicy policy) {
         CUSTOM_POLICYS.put(tagName, policy);
-    }
-
-    /**
-     * 新增引用渲染策略
-     * 
-     * @param policy
-     */
-    public void referencePolicy(ReferenceRenderPolicy<?> policy) {
-        REFERENCE_POLICIES.add(policy);
     }
 
     /**
@@ -214,15 +214,9 @@ public class Configure implements Cloneable {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
     }
-    
-    
 
-    public RenderPolicy getTemplatePolicy(Class clazz) {
+    public RenderPolicy getTemplatePolicy(Class<?> clazz) {
         return TEMPLATE_POLICYS.get(clazz);
-    }
-
-    public List<ReferenceRenderPolicy<?>> getReferencePolicies() {
-        return REFERENCE_POLICIES;
     }
 
     private RenderPolicy getCustomPolicy(String tagName) {
@@ -281,11 +275,11 @@ public class Configure implements Cloneable {
         return iterable;
     }
 
-	public Map<String, Method> getSpELFunction() {
-		return spELFunction;
-	}
+    public Map<String, Method> getSpELFunction() {
+        return spELFunction;
+    }
 
-	@Override
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Configure Info").append(":\n");
@@ -305,15 +299,16 @@ public class Configure implements Cloneable {
             sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
-        sb.append("  Reference Plugin: ").append("\n");
-        REFERENCE_POLICIES.forEach(policy -> {
-            sb.append("    ").append(policy.getClass().getSimpleName()).append("\n");
+        sb.append("  Template Plugin: ").append("\n");
+        TEMPLATE_POLICYS.forEach((clazz, policy) -> {
+            sb.append("    ").append(clazz.getSimpleName());
+            sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
         sb.append(" SpELFunction: ").append("\n");
-		spELFunction.forEach((str, method) -> {
-			sb.append("    ").append(str);
-			sb.append("->").append(method.toString()).append("\n");
-		});
+        spELFunction.forEach((str, method) -> {
+            sb.append("    ").append(str);
+            sb.append("->").append(method.toString()).append("\n");
+        });
         return sb.toString();
     }
 

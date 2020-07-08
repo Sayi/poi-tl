@@ -13,19 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy.ref;
+package com.deepoove.poi.data;
 
 /**
+ * 图表系列
+ * 
  * @author Sayi
- * @version 1.6.0
+ * @version 1.8.0
  */
-public interface DocumentIndex {
+public class SeriesRenderData {
 
-    /**
-     * 指定引用对象在文档中的位置
-     * 
-     * @return 对象的位置下标
-     */
-    int index();
+    private String name;
+    private Number[] values;
+
+    public SeriesRenderData() {}
+
+    public SeriesRenderData(String name, Number[] data) {
+        this.name = name;
+        this.values = data;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Number[] getValues() {
+        return values;
+    }
+
+    public void setValues(Number[] data) {
+        this.values = data;
+    }
 
 }

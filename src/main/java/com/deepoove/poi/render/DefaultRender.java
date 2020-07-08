@@ -61,7 +61,6 @@ public class DefaultRender implements Render {
         try {
 
             watch.start();
-            renderReference(template);
             renderTemplate(template, renderDataCompute);
             renderInclude(template, renderDataCompute);
 
@@ -72,10 +71,6 @@ public class DefaultRender implements Render {
             watch.stop();
         }
         LOGGER.info("Successfully Render template in {} millis", TimeUnit.NANOSECONDS.toMillis(watch.getNanoTime()));
-    }
-
-    private void renderReference(XWPFTemplate template) {
-        template.getConfig().getReferencePolicies().forEach(policy -> policy.render(template));
     }
 
     private void renderTemplate(XWPFTemplate template, RenderDataCompute renderDataCompute) {

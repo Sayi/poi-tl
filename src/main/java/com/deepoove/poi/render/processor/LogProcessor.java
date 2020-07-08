@@ -21,6 +21,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
@@ -66,6 +67,11 @@ public class LogProcessor implements Visitor {
         log.info("{}{}", indentState, iterableTemplate.getStartMark());
         new LogProcessor(indentState + "  ").process(iterableTemplate.getTemplates());
         log.info("{}{}", indentState, iterableTemplate.getEndMark());
+    }
+
+    @Override
+    public void visit(ChartTemplate chartTemplate) {
+        log.info("{}{}", indentState, chartTemplate);
     }
 
 }

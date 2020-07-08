@@ -18,10 +18,12 @@ package com.deepoove.poi.resolver;
 
 import java.util.Set;
 
+import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -65,6 +67,17 @@ public class DefaultRunTemplateFactory implements RunTemplateFactory<RunTemplate
         template.setTagName(tag);
         template.setSign(EMPTY_CHAR);
         template.setPicture(pic);
+        return template;
+    }
+
+    @Override
+    public ChartTemplate createChartTemplate(String tag, XWPFChart chart, XWPFRun run) {
+        ChartTemplate template = new ChartTemplate();
+        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setTagName(tag);
+        template.setSign(EMPTY_CHAR);
+        template.setChart(chart);
+        template.setRun(run);
         return template;
     }
 

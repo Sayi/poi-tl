@@ -15,35 +15,46 @@
  */
 package com.deepoove.poi.template;
 
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
+import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.processor.Visitor;
 
 /**
- * Picture docx template element: XWPFPicture
+ * chart docx template element: XWPFPicture
  * 
  * @author Sayi
  * @version 1.8.0
  */
-public class PictureTemplate extends ElementTemplate {
+public class ChartTemplate extends ElementTemplate {
 
-    protected XWPFPicture picture;
+    protected XWPFChart chart;
+    protected XWPFRun run;
 
-    public PictureTemplate() {}
+    public ChartTemplate() {}
 
-    public PictureTemplate(String tagName, XWPFPicture picture) {
+    public ChartTemplate(String tagName, XWPFChart chart, XWPFRun run) {
         this.tagName = tagName;
-        this.picture = picture;
+        this.chart = chart;
+        this.run = run;
     }
 
-    public XWPFPicture getPicture() {
-        return picture;
+    public XWPFChart getChart() {
+        return chart;
     }
 
-    public void setPicture(XWPFPicture picture) {
-        this.picture = picture;
+    public void setChart(XWPFChart chart) {
+        this.chart = chart;
+    }
+
+    public XWPFRun getRun() {
+        return run;
+    }
+
+    public void setRun(XWPFRun run) {
+        this.run = run;
     }
 
     @Override
@@ -55,10 +66,10 @@ public class PictureTemplate extends ElementTemplate {
         RenderPolicy renderPolicy = config.getCustomPolicys().get(tagName);
         return null == renderPolicy ? config.getTemplatePolicy(this.getClass()) : renderPolicy;
     }
-
+    
     @Override
     public String toString() {
-        return "Pic::" + source;
+        return "Chart::" + source;
     }
 
 }

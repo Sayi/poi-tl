@@ -86,10 +86,9 @@ public class RunTemplate extends ElementTemplate {
         visitor.visit(this);
     }
 
+    @Override
     public RenderPolicy findPolicy(Configure config) {
         return config.getPolicy(getTagName(), getSign());
-//        if (null == policy) { throw new RenderException(
-//                "Cannot find render policy: [" + getTagName() + "]"); }
     }
 
 }

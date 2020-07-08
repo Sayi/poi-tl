@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -37,6 +39,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.SimpleValue;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTRelId;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
 import org.openxmlformats.schemas.drawingml.x2006.main.impl.CTNonVisualDrawingPropsImpl;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
@@ -50,6 +56,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ReflectionException;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.template.BlockTemplate;
+import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
@@ -101,10 +108,7 @@ public class TemplateResolver extends AbstractResolver {
             if (element == null) continue;
             if (element.getElementType() == BodyElementType.PARAGRAPH) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                RunningRunParagraph runningRun = new RunningRunParagraph(paragraph, templatePattern);
-                runningRun.refactorRun();
-                //if (null == refactorRuns) continue;
-                //Collections.reverse(refactorRuns);
+                new RunningRunParagraph(paragraph, templatePattern).refactorRun();
                 resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
@@ -156,16 +160,27 @@ public class TemplateResolver extends AbstractResolver {
                     continue;
                 }
 
-                List<XWPFPicture> embeddedPictures = run.getEmbeddedPictures();
-                List<PictureTemplate> pictureTemplates = resolveXWPFPictures(embeddedPictures);
-                if (stack.isEmpty()) {
-                    metaTemplates.addAll(pictureTemplates);
-                } else {
-                    stack.peek().getTemplates().addAll(pictureTemplates);
+                List<PictureTemplate> pictureTemplates = resolveXWPFPictures(run.getEmbeddedPictures());
+                if (!pictureTemplates.isEmpty()) {
+                    if (stack.isEmpty()) {
+                        metaTemplates.addAll(pictureTemplates);
+                    } else {
+                        stack.peek().getTemplates().addAll(pictureTemplates);
+                    }
+                    continue;
+                }
+
+                ChartTemplate chartTemplate = resolveXWPFChart(run);
+                if (null != chartTemplate) {
+                    if (stack.isEmpty()) {
+                        metaTemplates.add(chartTemplate);
+                    } else {
+                        stack.peek().getTemplates().add(chartTemplate);
+                    }
+                    continue;
                 }
                 continue;
             }
-            // if (null == run || StringUtils.isBlank(text = run.getText(0))) continue;
             RunTemplate runTemplate = parseTemplateFactory(text, run);
             if (null == runTemplate) continue;
             char charValue = runTemplate.getSign().charValue();
@@ -200,51 +215,62 @@ public class TemplateResolver extends AbstractResolver {
         }
     }
 
+    private ChartTemplate resolveXWPFChart(XWPFRun run) {
+        CTR ctr = run.getCTR();
+        CTDrawing ctDrawing = CollectionUtils.isNotEmpty(ctr.getDrawingList()) ? ctr.getDrawingArray(0) : null;
+        if (null == ctDrawing) return null;
+        String title = getTitle(ctDrawing);
+        if (null == title) return null;
+        String rid = getCharId(ctDrawing);
+        if (null == rid) return null;
+        POIXMLDocumentPart documentPart = run.getDocument().getRelationById(rid);
+        if (null == documentPart || !(documentPart instanceof XWPFChart)) return null;
+        return parseChartTemplateFactory(title, (XWPFChart) documentPart, run);
+    }
+
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
         List<PictureTemplate> metaTemplates = new ArrayList<>();
         if (embeddedPictures == null) return metaTemplates;
         
         for (XWPFPicture pic : embeddedPictures) {
-                // it's array, to do in the future
-                CTDrawing ctDrawing = getCTDrawing(pic);
-                if (null == ctDrawing) continue;
-
-                CTNonVisualDrawingProps docPr = null;
-                if (ctDrawing.sizeOfAnchorArray() > 0) {
-                    CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
-                    docPr = anchorArray.getDocPr();
-
-                } else if (ctDrawing.sizeOfInlineArray() > 0) {
-                    CTInline inline = ctDrawing.getInlineArray(0);
-                    docPr = inline.getDocPr();
-                }
-
-                if (null != docPr) {
-                    String title = getTitle(docPr);
-                    String descr = docPr.getDescr();
-                    
-                    PictureTemplate pictureTemplate = parsePicTemplateFactory(title, pic);
-                    if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
-                }
+            // it's array, to do in the future
+            CTDrawing ctDrawing = getCTDrawing(pic);
+            if (null == ctDrawing) continue;
+            String title = getTitle(ctDrawing);
+            if (null == title) continue;
+            PictureTemplate pictureTemplate = parsePicTemplateFactory(title, pic);
+            if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
         }
         return metaTemplates;
     }
-    
-   
 
-    private String getTitle(CTNonVisualDrawingProps docPr) {
-        QName TITLE = new QName("", "title");
-        CTNonVisualDrawingPropsImpl docPrImpl = (CTNonVisualDrawingPropsImpl) docPr;
-        synchronized (docPrImpl.monitor()) {
-            // check_orphaned();
-            SimpleValue localSimpleValue = null;
-            localSimpleValue = (SimpleValue) docPrImpl.get_store().find_attribute_user(TITLE);
-            if (localSimpleValue == null) { return null; }
-            return localSimpleValue.getStringValue();
+    private String getTitle(CTDrawing ctDrawing) {
+        CTNonVisualDrawingProps docPr = null;
+        if (ctDrawing.sizeOfAnchorArray() > 0) {
+            CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
+            docPr = anchorArray.getDocPr();
+
+        } else if (ctDrawing.sizeOfInlineArray() > 0) {
+            CTInline inline = ctDrawing.getInlineArray(0);
+            docPr = inline.getDocPr();
         }
+
+        if (null != docPr) {
+            QName TITLE = new QName("", "title");
+            CTNonVisualDrawingPropsImpl docPrImpl = (CTNonVisualDrawingPropsImpl) docPr;
+            synchronized (docPrImpl.monitor()) {
+                // check_orphaned();
+                SimpleValue localSimpleValue = null;
+                localSimpleValue = (SimpleValue) docPrImpl.get_store().find_attribute_user(TITLE);
+                if (localSimpleValue == null) { return null; }
+                return localSimpleValue.getStringValue();
+            }
+            // String descr = docPr.getDescr();
+        }
+        return null;
     }
 
-    public CTDrawing getCTDrawing(XWPFPicture pic) throws RuntimeException {
+    private CTDrawing getCTDrawing(XWPFPicture pic) throws RuntimeException {
         XWPFRun run;
         try {
             Field field = XWPFPicture.class.getDeclaredField("run");
@@ -257,10 +283,24 @@ public class TemplateResolver extends AbstractResolver {
         return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
     }
 
-    private List<MetaTemplate> resolveTextbox(XWPFRun run) {
-        XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
-        if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
-        return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
+    private String getCharId(CTDrawing ctDrawing) {
+        CTGraphicalObjectData graphicData = null;
+        if (ctDrawing.sizeOfAnchorArray() > 0) {
+            CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
+            graphicData = anchorArray.getGraphic().getGraphicData();
+
+        } else if (ctDrawing.sizeOfInlineArray() > 0) {
+            CTInline inline = ctDrawing.getInlineArray(0);
+            graphicData = inline.getGraphic().getGraphicData();
+        }
+        XmlCursor newCursor = graphicData.newCursor();
+        boolean child = newCursor.toChild(0);
+        if (!child) return null;
+        XmlObject xmlObject = newCursor.getObject();
+        if (null == xmlObject || !(xmlObject instanceof CTRelId)) return null;
+        CTRelId cchart = (CTRelId) xmlObject;
+        String rid = cchart.getId();
+        return rid;
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {
@@ -268,6 +308,12 @@ public class TemplateResolver extends AbstractResolver {
             throw new ResolverException(
                     "Mismatched start/end tags: No end iterable mark found for start mark " + stack.peek());
         }
+    }
+
+    private List<MetaTemplate> resolveTextbox(XWPFRun run) {
+        XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
+        if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
+        return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
     }
 
     List<MetaTemplate> resolveHeaders(List<XWPFHeader> headers) {
@@ -311,6 +357,15 @@ public class TemplateResolver extends AbstractResolver {
             if (pic.getClass() == XWPFPicture.class) {
                 return (PictureTemplate) runTemplateFactory.createPicureTemplate(tag, pic);
             } 
+        }
+        return null;
+    }
+
+    private ChartTemplate parseChartTemplateFactory(String text, XWPFChart chart, XWPFRun run) {
+        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
+        if (templatePattern.matcher(text).matches()) {
+            String tag = gramerPattern.matcher(text).replaceAll("").trim();
+            return (ChartTemplate) runTemplateFactory.createChartTemplate(tag, chart, run);
         }
         return null;
     }

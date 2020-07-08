@@ -15,6 +15,9 @@
  */
 package com.deepoove.poi.template;
 
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.policy.RenderPolicy;
+
 /**
  * sign + tagName == source
  * 
@@ -62,9 +65,12 @@ public abstract class ElementTemplate implements MetaTemplate {
     public String toString() {
         return source;
     }
-    
+
     @Override
     public String variable() {
         return source;
     }
+
+    public abstract RenderPolicy findPolicy(Configure config);
+
 }
