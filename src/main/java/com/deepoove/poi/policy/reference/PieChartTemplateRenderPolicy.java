@@ -45,7 +45,7 @@ public class PieChartTemplateRenderPolicy extends AbstractChartTemplateRenderPol
 
         updateCTTable(chart.getWorkbook().getSheetAt(0), Arrays.asList(seriesDatas));
 
-        chart.plot(pie);
+        plot(chart, pie);
         chart.setTitleText(data.getChartTitle());
         chart.setTitleOverlay(false);
     }

@@ -15,8 +15,10 @@
  */
 package com.deepoove.poi.policy.reference;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
+import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
@@ -28,6 +30,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.LineChartRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.util.ReflectionUtils;
 
 public class RedarChartTemplateRenderPolicy extends AbstractChartTemplateRenderPolicy<LineChartRenderData> {
 
@@ -35,6 +38,9 @@ public class RedarChartTemplateRenderPolicy extends AbstractChartTemplateRenderP
     public void doRender(ChartTemplate eleTemplate, LineChartRenderData data, XWPFTemplate template) throws Exception {
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData line = chart.getChartSeries().get(0);
+        Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
+        field.setAccessible(true);
+        field.set(chart, line.getSeries().size());
 
         List<Series> orignSeries = line.getSeries();
         int orignSize = orignSeries.size();
@@ -64,7 +70,7 @@ public class RedarChartTemplateRenderPolicy extends AbstractChartTemplateRenderP
         // clear extra series
         removeExtraSeries(line, sheet, data.getCategories().length, orignSeries, seriesSize);
 
-        chart.plot(line);
+        plot(chart, line);
         chart.setTitleText(data.getChartTitle());
         chart.setTitleOverlay(false);
     }

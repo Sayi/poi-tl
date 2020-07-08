@@ -15,11 +15,15 @@
  */
 package com.deepoove.poi.policy.reference;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFCategoryDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
@@ -64,14 +68,7 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         if (orignSize - seriesSize > 0) {
             Object intenalChart = ReflectionUtils.getValue("chart", chartData);
             for (int j = orignSize - 1; j >= seriesSize; j--) {
-                orignSeries.remove(j);
-                if (null != intenalChart) {
-                    if (intenalChart instanceof CTBarChart) {
-                        ((CTBarChart) intenalChart).removeSer(j);
-                    } else if (intenalChart instanceof CTLineChart) {
-                        ((CTLineChart) intenalChart).removeSer(j);
-                    }
-                }
+                chartData.removeSeries(j);
             }
             // clear extra sheet column
             for (int i = 0; i < numOfPoints + 1; i++) {
@@ -118,5 +115,18 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
         return sheet.getTables().get(0).getCTTable();
     }
+    
+    protected void plot(XWPFChart chart, XDDFChartData data) throws Exception {
+        XSSFSheet sheet = chart.getWorkbook().getSheetAt(0);
+        for (XDDFChartData.Series series : data.getSeries()) {
+            series.plot();
+            XDDFDataSource<?> categoryDS = series.getCategoryData();
+            XDDFNumericalDataSource<? extends Number> valuesDS = series.getValuesData();
+                Method method = XDDFChart.class.getDeclaredMethod("fillSheet", XSSFSheet.class, XDDFDataSource.class, XDDFNumericalDataSource.class);
+                method.setAccessible(true);
+                method.invoke(chart, sheet, categoryDS, valuesDS);
+        }
+    }
+
 
 }

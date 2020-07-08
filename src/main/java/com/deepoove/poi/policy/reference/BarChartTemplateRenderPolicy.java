@@ -15,9 +15,12 @@
  */
 package com.deepoove.poi.policy.reference;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
@@ -29,6 +32,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.BarChartRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.util.ReflectionUtils;
 
 /**
  * Bar chart
@@ -42,6 +46,9 @@ public class BarChartTemplateRenderPolicy extends AbstractChartTemplateRenderPol
     public void doRender(ChartTemplate eleTemplate, BarChartRenderData data, XWPFTemplate template) throws Exception {
         XWPFChart chart = eleTemplate.getChart();
         XDDFBarChartData bar = (XDDFBarChartData) chart.getChartSeries().get(0);
+        Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
+        field.setAccessible(true);
+        field.set(chart, bar.getSeries().size());
 
         List<Series> orignSeries = bar.getSeries();
         int orignSize = orignSeries.size();
@@ -71,9 +78,10 @@ public class BarChartTemplateRenderPolicy extends AbstractChartTemplateRenderPol
         // clear extra series
         removeExtraSeries(bar, sheet, data.getCategories().length, orignSeries, seriesSize);
 
-        chart.plot(bar);
+        plot(chart, bar);
         chart.setTitleText(data.getChartTitle());
         chart.setTitleOverlay(false);
     }
 
+    
 }

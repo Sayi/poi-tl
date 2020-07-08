@@ -28,7 +28,8 @@ public class ChartReferencePolicyTest {
                 .bind("VBarChart", new BarChartTemplateRenderPolicy())
                 .bind("pieChart", new PieChartTemplateRenderPolicy())
                 .bind("redarChart", new RedarChartTemplateRenderPolicy())
-                .bind("lineChart", new LineChartTemplateRenderPolicy()).build();
+                .bind("lineChart", new LineChartTemplateRenderPolicy())
+                .build();
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx", configure)
                 .render(new HashMap<String, Object>() {
