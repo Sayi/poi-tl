@@ -23,11 +23,6 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
-/**
- * 
- * @author Sayi
- * @version
- */
 public abstract class AbstractTemplateRenderPolicy<E, T> implements RenderPolicy {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());

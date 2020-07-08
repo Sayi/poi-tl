@@ -30,7 +30,7 @@ import com.deepoove.poi.render.processor.Visitor;
 public class PictureTemplate extends ElementTemplate {
 
     protected XWPFPicture picture;
-    
+
     public PictureTemplate() {}
 
     public PictureTemplate(String tagName, XWPFPicture picture) {
@@ -54,6 +54,11 @@ public class PictureTemplate extends ElementTemplate {
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy renderPolicy = config.getCustomPolicys().get(tagName);
         return null == renderPolicy ? config.getTemplatePolicy(this.getClass()) : renderPolicy;
+    }
+
+    @Override
+    public String toString() {
+        return "Pic::" + source;
     }
 
 }

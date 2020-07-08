@@ -66,5 +66,10 @@ public class ChartTemplate extends ElementTemplate {
         RenderPolicy renderPolicy = config.getCustomPolicys().get(tagName);
         return null == renderPolicy ? config.getTemplatePolicy(this.getClass()) : renderPolicy;
     }
+    
+    @Override
+    public String toString() {
+        return "Chart::" + source;
+    }
 
 }

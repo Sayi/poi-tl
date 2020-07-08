@@ -13,7 +13,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 
 @DisplayName("PictureTemplate Render test case")
-public class TemplateRenderTest {
+public class ElementTemplateRenderTest {
 
     @SuppressWarnings("serial")
     @Test

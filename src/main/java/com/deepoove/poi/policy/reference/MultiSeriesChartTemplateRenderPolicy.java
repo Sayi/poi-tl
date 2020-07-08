@@ -20,45 +20,53 @@ import java.util.List;
 
 import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.LineChartRenderData;
+import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 
-public class RedarChartTemplateRenderPolicy extends AbstractChartTemplateRenderPolicy<LineChartRenderData> {
+/**
+ * multi series chart
+ * 
+ * @author Sayi
+ * @version 1.8.0
+ */
+public class MultiSeriesChartTemplateRenderPolicy
+        extends AbstractChartTemplateRenderPolicy<ChartMultiSeriesRenderData> {
 
     @Override
-    public void doRender(ChartTemplate eleTemplate, LineChartRenderData data, XWPFTemplate template) throws Exception {
+    public void doRender(ChartTemplate eleTemplate, ChartMultiSeriesRenderData data, XWPFTemplate template)
+            throws Exception {
         XWPFChart chart = eleTemplate.getChart();
-        XDDFChartData line = chart.getChartSeries().get(0);
+        XDDFChartData chartData = chart.getChartSeries().get(0);
+
+        // hack for poi 4.1.1+: repair seriesCount value,
         Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
         field.setAccessible(true);
-        field.set(chart, line.getSeries().size());
+        field.set(chart, chartData.getSeriesCount());
 
-        List<Series> orignSeries = line.getSeries();
-        int orignSize = orignSeries.size();
+        int orignSize = chartData.getSeriesCount();
         List<SeriesRenderData> seriesDatas = data.getSeriesDatas();
         int seriesSize = seriesDatas.size();
 
         XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
         for (int i = 0; i < seriesSize; i++) {
             XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
-                    seriesDatas.get(i).getData(), i);
+                    seriesDatas.get(i).getValues(), i);
 
             XDDFChartData.Series currentSeries = null;
             if (i < orignSize) {
-                currentSeries = orignSeries.get(i);
+                currentSeries = chartData.getSeries(i);
                 currentSeries.replaceData(categoriesData, valuesData);
             } else {
                 // add series, should copy series with style
-                currentSeries = line.addSeries(categoriesData, valuesData);
+                currentSeries = chartData.addSeries(categoriesData, valuesData);
             }
             String name = seriesDatas.get(i).getName();
             currentSeries.setTitle(name, chart.setSheetTitle(name, i + VALUE_START_COL));
@@ -68,9 +76,9 @@ public class RedarChartTemplateRenderPolicy extends AbstractChartTemplateRenderP
         updateCTTable(sheet, seriesDatas);
 
         // clear extra series
-        removeExtraSeries(line, sheet, data.getCategories().length, orignSeries, seriesSize);
+        removeExtraSeries(chartData, sheet, data.getCategories().length, orignSize, seriesSize);
 
-        plot(chart, line);
+        plot(chart, chartData);
         chart.setTitleText(data.getChartTitle());
         chart.setTitleOverlay(false);
     }

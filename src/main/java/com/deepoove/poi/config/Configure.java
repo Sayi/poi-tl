@@ -61,12 +61,12 @@ public class Configure implements Cloneable {
     private final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
 
     /**
-     * template by xwpfrun: Low priority
+     * template by xwpfRun: Low priority
      */
     private final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
 
     /**
-     * template by document object: Low priority
+     * template by document object(xwpfChart、xwpfPicture): Low priority
      */
     private final Map<Class<? extends MetaTemplate>, RenderPolicy> TEMPLATE_POLICYS = new HashMap<>();
 
@@ -114,10 +114,10 @@ public class Configure implements Cloneable {
      */
     ValidErrorHandler handler = new ClearHandler();
 
-	/**
-	 * sp el custom static method
-	 */
-	Map<String, Method> spELFunction = new HashMap<String, Method>();
+    /**
+     * sp el custom static method
+     */
+    Map<String, Method> spELFunction = new HashMap<String, Method>();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -129,11 +129,6 @@ public class Configure implements Cloneable {
 
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
         plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
-    }
-
-    private Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
-        TEMPLATE_POLICYS.put(clazz, policy);
-        return this;
     }
 
     /**
@@ -182,6 +177,20 @@ public class Configure implements Cloneable {
     }
 
     /**
+     * 新增或者变更对象模板插件
+     * 
+     * @param clazz
+     *            对象模板类型
+     * @param policy
+     *            策略
+     * @return
+     */
+    Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
+        TEMPLATE_POLICYS.put(clazz, policy);
+        return this;
+    }
+
+    /**
      * 自定义模板和策略
      * 
      * @param tagName
@@ -205,8 +214,6 @@ public class Configure implements Cloneable {
         RenderPolicy policy = getCustomPolicy(tagName);
         return null == policy ? getDefaultPolicy(sign) : policy;
     }
-    
-    
 
     public RenderPolicy getTemplatePolicy(Class<?> clazz) {
         return TEMPLATE_POLICYS.get(clazz);
@@ -268,11 +275,11 @@ public class Configure implements Cloneable {
         return iterable;
     }
 
-	public Map<String, Method> getSpELFunction() {
-		return spELFunction;
-	}
+    public Map<String, Method> getSpELFunction() {
+        return spELFunction;
+    }
 
-	@Override
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Configure Info").append(":\n");
@@ -292,11 +299,16 @@ public class Configure implements Cloneable {
             sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
+        sb.append("  Template Plugin: ").append("\n");
+        TEMPLATE_POLICYS.forEach((clazz, policy) -> {
+            sb.append("    ").append(clazz.getSimpleName());
+            sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
+        });
         sb.append(" SpELFunction: ").append("\n");
-		spELFunction.forEach((str, method) -> {
-			sb.append("    ").append(str);
-			sb.append("->").append(method.toString()).append("\n");
-		});
+        spELFunction.forEach((str, method) -> {
+            sb.append("    ").append(str);
+            sb.append("->").append(method.toString()).append("\n");
+        });
         return sb.toString();
     }
 

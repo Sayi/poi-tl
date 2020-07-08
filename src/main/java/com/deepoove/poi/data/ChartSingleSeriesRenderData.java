@@ -16,37 +16,39 @@
 package com.deepoove.poi.data;
 
 /**
- * 图表系列
+ * 单系列图表：环形图、饼图
  * 
  * @author Sayi
  * @version 1.8.0
  */
-public class SeriesRenderData {
+public class ChartSingleSeriesRenderData implements RenderData {
 
-    private String name;
-    private Number[] values;
+    private String chartTitle;
+    private String[] categories;
+    private SeriesRenderData seriesData;
 
-    public SeriesRenderData() {}
-
-    public SeriesRenderData(String name, Number[] data) {
-        this.name = name;
-        this.values = data;
+    public String getChartTitle() {
+        return chartTitle;
     }
 
-    public String getName() {
-        return name;
+    public void setChartTitle(String chartTitle) {
+        this.chartTitle = chartTitle;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String[] getCategories() {
+        return categories;
     }
 
-    public Number[] getValues() {
-        return values;
+    public void setCategories(String[] categories) {
+        this.categories = categories;
     }
 
-    public void setValues(Number[] data) {
-        this.values = data;
+    public SeriesRenderData getSeriesData() {
+        return seriesData;
+    }
+
+    public void setSeriesData(SeriesRenderData seriesData) {
+        this.seriesData = seriesData;
     }
 
 }

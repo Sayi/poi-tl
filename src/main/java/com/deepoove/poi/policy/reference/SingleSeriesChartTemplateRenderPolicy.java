@@ -23,26 +23,32 @@ import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.PieChartRenderData;
+import com.deepoove.poi.data.ChartSingleSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
 
-public class PieChartTemplateRenderPolicy extends AbstractChartTemplateRenderPolicy<PieChartRenderData> {
+/**
+ * single series chart
+ * 
+ * @author Sayi
+ * @version 1.8.0
+ */
+public class SingleSeriesChartTemplateRenderPolicy
+        extends AbstractChartTemplateRenderPolicy<ChartSingleSeriesRenderData> {
 
     @Override
-    public void doRender(ChartTemplate eleTemplate, PieChartRenderData data, XWPFTemplate template) throws Exception {
+    public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
+            throws Exception {
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = chart.getChartSeries().get(0);
-
         SeriesRenderData seriesDatas = data.getSeriesData();
 
         XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
-        XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart, seriesDatas.getData(), 0);
+        XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart, seriesDatas.getValues(), 0);
 
-        XDDFChartData.Series currentSeries = pie.getSeries().get(0);
+        XDDFChartData.Series currentSeries = pie.getSeries(0);
         currentSeries.replaceData(categoriesData, valuesData);
         currentSeries.setTitle(seriesDatas.getName(), chart.setSheetTitle(seriesDatas.getName(), VALUE_START_COL));
-
         updateCTTable(chart.getWorkbook().getSheetAt(0), Arrays.asList(seriesDatas));
 
         plot(chart, pie);

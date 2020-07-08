@@ -28,14 +28,12 @@ import com.deepoove.poi.template.run.RunTemplate;
 public class DocumentProcessor extends DefaultTemplateProcessor {
 
     private ElementProcessor elementProcessor;
-    private ReferenceProcessor referenceProcessor;
     private IterableProcessor iterableProcessor;
     private InlineIterableProcessor inlineIterableProcessor;
 
     public DocumentProcessor(XWPFTemplate template, final Resolver resolver, final RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
         elementProcessor = new ElementProcessor(template, resolver, renderDataCompute);
-        referenceProcessor = new ReferenceProcessor(template, resolver, renderDataCompute);
         iterableProcessor = new IterableProcessor(template, resolver, renderDataCompute);
         inlineIterableProcessor = new InlineIterableProcessor(template, resolver, renderDataCompute);
     }
@@ -57,12 +55,12 @@ public class DocumentProcessor extends DefaultTemplateProcessor {
    
     @Override
     public void visit(PictureTemplate pictureTemplate) {
-        pictureTemplate.accept(referenceProcessor);
+        pictureTemplate.accept(elementProcessor);
     }
     
     @Override
     public void visit(ChartTemplate chartTemplate) {
-        chartTemplate.accept(referenceProcessor);
+        chartTemplate.accept(elementProcessor);
     }
 
 }

@@ -19,12 +19,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFCategoryDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -32,21 +30,24 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarChart;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTLineChart;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
 
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
-import com.deepoove.poi.util.ReflectionUtils;
 
 public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTemplateRenderPolicy<ChartTemplate, T> {
 
     protected final int FIRST_ROW = 1;
     protected final int CATEGORY_COL = 0;
     protected final int VALUE_START_COL = 1;
+
+    protected XDDFCategoryDataSource createCategoryDataSource(XWPFChart chart, String[] categories) {
+        return XDDFDataSourcesFactory.fromArray(categories,
+                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
+                CATEGORY_COL);
+    }
 
     protected <N extends Number> XDDFNumericalDataSource<Number> createValueDataSource(XWPFChart chart, N[] data,
             int index) {
@@ -56,17 +57,10 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
                 index + VALUE_START_COL);
     }
 
-    protected XDDFCategoryDataSource createCategoryDataSource(XWPFChart chart, String[] categories) {
-        return XDDFDataSourcesFactory.fromArray(categories,
-                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
-                CATEGORY_COL);
-    }
-
     protected void removeExtraSeries(final XDDFChartData chartData, XSSFSheet sheet, final int numOfPoints,
-            final List<Series> orignSeries, final int seriesSize) {
-        final int orignSize = orignSeries.size();
+            final int orignSize, final int seriesSize) {
         if (orignSize - seriesSize > 0) {
-            Object intenalChart = ReflectionUtils.getValue("chart", chartData);
+            // clear extra series
             for (int j = orignSize - 1; j >= seriesSize; j--) {
                 chartData.removeSeries(j);
             }
@@ -84,7 +78,8 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
 
     protected void updateCTTable(XSSFSheet sheet, List<SeriesRenderData> seriesDatas) {
         final int seriesSize = seriesDatas.size();
-        final int numOfPoints = seriesDatas.get(0).getData().length;
+        final int numOfPoints = seriesDatas.get(0).getValues().length;
+
         CTTable ctTable = getSheetTable(sheet);
         ctTable.setRef("A1:" + (char) ('A' + seriesSize) + (numOfPoints + 1));
         CTTableColumns tableColumns = ctTable.getTableColumns();
@@ -115,18 +110,17 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
         return sheet.getTables().get(0).getCTTable();
     }
-    
+
+    @SuppressWarnings("deprecation")
     protected void plot(XWPFChart chart, XDDFChartData data) throws Exception {
         XSSFSheet sheet = chart.getWorkbook().getSheetAt(0);
+        Method method = XDDFChart.class.getDeclaredMethod("fillSheet", XSSFSheet.class, XDDFDataSource.class,
+                XDDFNumericalDataSource.class);
+        method.setAccessible(true);
         for (XDDFChartData.Series series : data.getSeries()) {
             series.plot();
-            XDDFDataSource<?> categoryDS = series.getCategoryData();
-            XDDFNumericalDataSource<? extends Number> valuesDS = series.getValuesData();
-                Method method = XDDFChart.class.getDeclaredMethod("fillSheet", XSSFSheet.class, XDDFDataSource.class, XDDFNumericalDataSource.class);
-                method.setAccessible(true);
-                method.invoke(chart, sheet, categoryDS, valuesDS);
+            method.invoke(chart, sheet, series.getCategoryData(), series.getValuesData());
         }
     }
-
 
 }
