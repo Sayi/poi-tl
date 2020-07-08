@@ -51,6 +51,6 @@ public abstract class AbstractTemplateRenderPolicy<E, T> implements RenderPolicy
 
     }
 
-    public abstract void doRender(E eleTemplate, T t, XWPFTemplate template) throws Exception;
+    public abstract void doRender(E eleTemplate, T data, XWPFTemplate template) throws Exception;
 
 }
