@@ -15,7 +15,6 @@
  */
 package com.deepoove.poi.resolver;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -53,14 +52,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.exception.ReflectionException;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.template.BlockTemplate;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
@@ -73,15 +73,15 @@ public class TemplateResolver extends AbstractResolver {
 
     private static Logger logger = LoggerFactory.getLogger(TemplateResolver.class);
 
-    private RunTemplateFactory<?> runTemplateFactory;
+    private ElementTemplateFactory elementTemplateFactory;
 
     public TemplateResolver(Configure config) {
-        this(config, config.getRunTemplateFactory());
+        this(config, config.getElementTemplateFactory());
     }
 
-    private TemplateResolver(Configure config, RunTemplateFactory<?> runTemplateFactory) {
+    private TemplateResolver(Configure config, ElementTemplateFactory elementTemplateFactory) {
         super(config);
-        this.runTemplateFactory = runTemplateFactory;
+        this.elementTemplateFactory = elementTemplateFactory;
     }
 
     @Override
@@ -119,11 +119,7 @@ public class TemplateResolver extends AbstractResolver {
                     if (null == cells) continue;
                     cells.forEach(cell -> {
                         List<MetaTemplate> visitBodyElements = resolveBodyElements(cell.getBodyElements());
-                        if (stack.isEmpty()) {
-                            metaTemplates.addAll(visitBodyElements);
-                        } else {
-                            stack.peek().getTemplates().addAll(visitBodyElements);
-                        }
+                        addNewMeta(metaTemplates, stack, visitBodyElements);
                     });
                 }
             }
@@ -152,36 +148,24 @@ public class TemplateResolver extends AbstractResolver {
                 // textbox
                 List<MetaTemplate> visitBodyElements = resolveTextbox(run);
                 if (!visitBodyElements.isEmpty()) {
-                    if (stack.isEmpty()) {
-                        metaTemplates.addAll(visitBodyElements);
-                    } else {
-                        stack.peek().getTemplates().addAll(visitBodyElements);
-                    }
+                    addNewMeta(metaTemplates, stack, visitBodyElements);
                     continue;
                 }
 
                 List<PictureTemplate> pictureTemplates = resolveXWPFPictures(run.getEmbeddedPictures());
                 if (!pictureTemplates.isEmpty()) {
-                    if (stack.isEmpty()) {
-                        metaTemplates.addAll(pictureTemplates);
-                    } else {
-                        stack.peek().getTemplates().addAll(pictureTemplates);
-                    }
+                    addNewMeta(metaTemplates, stack, pictureTemplates);
                     continue;
                 }
 
                 ChartTemplate chartTemplate = resolveXWPFChart(run);
                 if (null != chartTemplate) {
-                    if (stack.isEmpty()) {
-                        metaTemplates.add(chartTemplate);
-                    } else {
-                        stack.peek().getTemplates().add(chartTemplate);
-                    }
+                    addNewMeta(metaTemplates, stack, chartTemplate);
                     continue;
                 }
                 continue;
             }
-            RunTemplate runTemplate = parseTemplateFactory(text, run);
+            RunTemplate runTemplate = (RunTemplate)parseTemplateFactory(text, run, run);
             if (null == runTemplate) continue;
             char charValue = runTemplate.getSign().charValue();
             if (charValue == config.getIterable().getLeft()) {
@@ -200,17 +184,9 @@ public class TemplateResolver extends AbstractResolver {
                 if (latestIterableTemplate instanceof IterableTemplate) {
                     latestIterableTemplate = ((IterableTemplate) latestIterableTemplate).buildIfInline();
                 }
-                if (stack.isEmpty()) {
-                    metaTemplates.add(latestIterableTemplate);
-                } else {
-                    stack.peek().getTemplates().add(latestIterableTemplate);
-                }
+                addNewMeta(metaTemplates, stack, latestIterableTemplate);
             } else {
-                if (stack.isEmpty()) {
-                    metaTemplates.add(runTemplate);
-                } else {
-                    stack.peek().getTemplates().add(runTemplate);
-                }
+                addNewMeta(metaTemplates, stack, runTemplate);
             }
         }
     }
@@ -225,20 +201,20 @@ public class TemplateResolver extends AbstractResolver {
         if (null == rid) return null;
         POIXMLDocumentPart documentPart = run.getDocument().getRelationById(rid);
         if (null == documentPart || !(documentPart instanceof XWPFChart)) return null;
-        return parseChartTemplateFactory(title, (XWPFChart) documentPart, run);
+        return (ChartTemplate)parseTemplateFactory(title, (XWPFChart) documentPart, run);
     }
 
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
         List<PictureTemplate> metaTemplates = new ArrayList<>();
         if (embeddedPictures == null) return metaTemplates;
-        
+
         for (XWPFPicture pic : embeddedPictures) {
             // it's array, to do in the future
             CTDrawing ctDrawing = getCTDrawing(pic);
             if (null == ctDrawing) continue;
             String title = getTitle(ctDrawing);
             if (null == title) continue;
-            PictureTemplate pictureTemplate = parsePicTemplateFactory(title, pic);
+            PictureTemplate pictureTemplate = (PictureTemplate)parseTemplateFactory(title, pic, null);
             if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
         }
         return metaTemplates;
@@ -271,14 +247,7 @@ public class TemplateResolver extends AbstractResolver {
     }
 
     private CTDrawing getCTDrawing(XWPFPicture pic) throws RuntimeException {
-        XWPFRun run;
-        try {
-            Field field = XWPFPicture.class.getDeclaredField("run");
-            field.setAccessible(true);
-            run = (XWPFRun) field.get(pic);
-        } catch (Exception e) {
-            throw new ReflectionException("run", XWPFPicture.class, e);
-        }
+        XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", pic);
         CTR ctr = run.getCTR();
         return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
     }
@@ -294,13 +263,35 @@ public class TemplateResolver extends AbstractResolver {
             graphicData = inline.getGraphic().getGraphicData();
         }
         XmlCursor newCursor = graphicData.newCursor();
-        boolean child = newCursor.toChild(0);
-        if (!child) return null;
-        XmlObject xmlObject = newCursor.getObject();
-        if (null == xmlObject || !(xmlObject instanceof CTRelId)) return null;
-        CTRelId cchart = (CTRelId) xmlObject;
-        String rid = cchart.getId();
-        return rid;
+        try {
+            boolean child = newCursor.toChild(0);
+            if (!child) return null;
+            XmlObject xmlObject = newCursor.getObject();
+            if (null == xmlObject || !(xmlObject instanceof CTRelId)) return null;
+            CTRelId cchart = (CTRelId) xmlObject;
+            return cchart.getId();
+        }
+        finally {
+            newCursor.dispose();
+        }
+    }
+
+    private void addNewMeta(final List<MetaTemplate> metaTemplates, final Deque<BlockTemplate> stack,
+            List<? extends MetaTemplate> newMeta) {
+        if (stack.isEmpty()) {
+            metaTemplates.addAll(newMeta);
+        } else {
+            stack.peek().getTemplates().addAll(newMeta);
+        }
+    }
+
+    private <T extends MetaTemplate> void addNewMeta(final List<MetaTemplate> metaTemplates,
+            final Deque<BlockTemplate> stack, T newMeta) {
+        if (stack.isEmpty()) {
+            metaTemplates.add(newMeta);
+        } else {
+            stack.peek().getTemplates().add(newMeta);
+        }
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {
@@ -336,36 +327,17 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
-    <T> RunTemplate parseTemplateFactory(String text, T obj) {
+    ElementTemplate parseTemplateFactory(String text, Object obj, XWPFRun run) {
         if (templatePattern.matcher(text).matches()) {
-            logger.debug("Resolve where text: {}, and create ElementTemplate", text);
+            logger.debug("Resolve where text: {}, and create ElementTemplate for {}", text, obj.getClass());
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {
-                return (RunTemplate) runTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);
-            } else if (obj.getClass() == XWPFTableCell.class)
-                // return CellTemplate.create(symbol, tagName, (XWPFTableCell)
-                // obj);
-                return null;
-        }
-        return null;
-    }
-    
-    private PictureTemplate parsePicTemplateFactory(String text, XWPFPicture pic) {
-        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
-        if (templatePattern.matcher(text).matches()) {
-            String tag = gramerPattern.matcher(text).replaceAll("").trim();
-            if (pic.getClass() == XWPFPicture.class) {
-                return (PictureTemplate) runTemplateFactory.createPicureTemplate(tag, pic);
-            } 
-        }
-        return null;
-    }
-
-    private ChartTemplate parseChartTemplateFactory(String text, XWPFChart chart, XWPFRun run) {
-        logger.debug("Resolve where text: {}, and create ElementTemplate", text);
-        if (templatePattern.matcher(text).matches()) {
-            String tag = gramerPattern.matcher(text).replaceAll("").trim();
-            return (ChartTemplate) runTemplateFactory.createChartTemplate(tag, chart, run);
+                return (RunTemplate) elementTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);
+            } else if (obj.getClass() == XWPFPicture.class) {
+                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(tag, (XWPFPicture)obj);
+            } else if (obj.getClass() == XWPFChart.class) {
+                return (ChartTemplate) elementTemplateFactory.createChartTemplate(tag, (XWPFChart)obj, run);
+            }
         }
         return null;
     }

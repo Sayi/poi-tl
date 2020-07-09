@@ -24,7 +24,7 @@ import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
-import com.deepoove.poi.resolver.RunTemplateFactory;
+import com.deepoove.poi.resolver.ElementTemplateFactory;
 import com.deepoove.poi.util.RegexUtils;
 
 public class ConfigureBuilder {
@@ -70,8 +70,8 @@ public class ConfigureBuilder {
     	return this;
 	}
 
-    public ConfigureBuilder setRunTemplateFactory(RunTemplateFactory<?> runTemplateFactory) {
-        config.runTemplateFactory = runTemplateFactory;
+    public ConfigureBuilder setElementTemplateFactory(ElementTemplateFactory elementTemplateFactory) {
+        config.elementTemplateFactory = elementTemplateFactory;
         return this;
     }
 

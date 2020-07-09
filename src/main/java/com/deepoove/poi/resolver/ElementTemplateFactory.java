@@ -23,9 +23,9 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
-public interface RunTemplateFactory<T extends RunTemplate> {
+public interface ElementTemplateFactory {
 
-    T createRunTemplate(String tag, XWPFRun run);
+    RunTemplate createRunTemplate(String tag, XWPFRun run);
 
     PictureTemplate createPicureTemplate(String tag, XWPFPicture pic);
 

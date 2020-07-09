@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
+import com.deepoove.poi.resolver.DefaultElementTemplateFactory;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -23,7 +23,7 @@ public class DefaultRunTemplateFactoryTest {
         Pattern templatePattern = resolver.getTemplatePattern();
         Pattern gramerPattern = resolver.getGramerPattern();
 
-        DefaultRunTemplateFactory runTemplateFactory = new DefaultRunTemplateFactory(config);
+        DefaultElementTemplateFactory runTemplateFactory = new DefaultElementTemplateFactory(config);
 
         String tag = "";
         RunTemplate template = null;

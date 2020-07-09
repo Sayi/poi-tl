@@ -30,12 +30,12 @@ import com.deepoove.poi.template.run.RunTemplate;
 /**
  * @author Sayi
  */
-public class DefaultRunTemplateFactory implements RunTemplateFactory<RunTemplate> {
+public class DefaultElementTemplateFactory implements ElementTemplateFactory {
 
     public static final char EMPTY_CHAR = '\0';
     private final Configure config;
 
-    public DefaultRunTemplateFactory(Configure config) {
+    public DefaultElementTemplateFactory(Configure config) {
         this.config = config;
     }
 

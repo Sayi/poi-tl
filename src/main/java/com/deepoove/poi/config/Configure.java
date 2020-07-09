@@ -35,8 +35,8 @@ import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
-import com.deepoove.poi.resolver.DefaultRunTemplateFactory;
-import com.deepoove.poi.resolver.RunTemplateFactory;
+import com.deepoove.poi.resolver.DefaultElementTemplateFactory;
+import com.deepoove.poi.resolver.ElementTemplateFactory;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
@@ -107,7 +107,7 @@ public class Configure implements Cloneable {
     /**
      * the factory of resovler run template
      */
-    RunTemplateFactory<?> runTemplateFactory = new DefaultRunTemplateFactory(this);
+    ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory(this);
 
     /**
      * the policy of process tag for valid render data error(null or illegal)
@@ -267,8 +267,8 @@ public class Configure implements Cloneable {
         return renderDataComputeFactory;
     }
 
-    public RunTemplateFactory<?> getRunTemplateFactory() {
-        return runTemplateFactory;
+    public ElementTemplateFactory getElementTemplateFactory() {
+        return elementTemplateFactory;
     }
 
     public Pair<Character, Character> getIterable() {
