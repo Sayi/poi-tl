@@ -8,12 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.ChartSingleSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
-import com.deepoove.poi.policy.reference.MultiSeriesChartTemplateRenderPolicy;
-import com.deepoove.poi.policy.reference.SingleSeriesChartTemplateRenderPolicy;
 
 @DisplayName("Chart test case")
 public class ChartReferencePolicyTest {
@@ -22,15 +19,7 @@ public class ChartReferencePolicyTest {
     @Test
     public void testChart() throws Exception {
 
-        Configure configure = Configure.newBuilder().bind("barChart", new MultiSeriesChartTemplateRenderPolicy())
-                .bind("VBarChart", new MultiSeriesChartTemplateRenderPolicy())
-                .bind("3dBarChart", new MultiSeriesChartTemplateRenderPolicy())
-                .bind("pieChart", new SingleSeriesChartTemplateRenderPolicy())
-                .bind("redarChart", new MultiSeriesChartTemplateRenderPolicy())
-                .bind("areaChart", new MultiSeriesChartTemplateRenderPolicy())
-                .bind("lineChart", new MultiSeriesChartTemplateRenderPolicy()).build();
-
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx", configure)
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx")
                 .render(new HashMap<String, Object>() {
                     {
                         ChartMultiSeriesRenderData chart = new ChartMultiSeriesRenderData();

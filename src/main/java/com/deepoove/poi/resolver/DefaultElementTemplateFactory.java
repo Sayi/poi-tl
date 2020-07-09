@@ -72,12 +72,9 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
 
     @Override
     public ChartTemplate createChartTemplate(String tag, XWPFChart chart, XWPFRun run) {
-        ChartTemplate template = new ChartTemplate();
+        ChartTemplate template = new ChartTemplate(tag, chart, run);
         template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
-        template.setTagName(tag);
         template.setSign(EMPTY_CHAR);
-        template.setChart(chart);
-        template.setRun(run);
         return template;
     }
 

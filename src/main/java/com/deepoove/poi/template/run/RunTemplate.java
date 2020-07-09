@@ -88,7 +88,9 @@ public class RunTemplate extends ElementTemplate {
 
     @Override
     public RenderPolicy findPolicy(Configure config) {
-        return config.getPolicy(getTagName(), getSign());
+        RenderPolicy policy = config.getCustomPolicy(tagName);
+        if (null == policy) policy = config.getDefaultPolicy(sign);
+        return null == policy ? config.getTemplatePolicy(this.getClass()) : policy;
     }
 
 }

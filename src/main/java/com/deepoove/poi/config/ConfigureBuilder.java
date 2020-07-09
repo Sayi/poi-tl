@@ -19,12 +19,14 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.xddf.usermodel.chart.ChartTypes;
 
 import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.ElementTemplateFactory;
+import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.RegexUtils;
 
 public class ConfigureBuilder {
@@ -66,9 +68,9 @@ public class ConfigureBuilder {
     }
 
     public ConfigureBuilder setSpELFunction(Map<String, Method> spELFunction) {
-    	config.spELFunction = spELFunction;
-    	return this;
-	}
+        config.spELFunction = spELFunction;
+        return this;
+    }
 
     public ConfigureBuilder setElementTemplateFactory(ElementTemplateFactory elementTemplateFactory) {
         config.elementTemplateFactory = elementTemplateFactory;
@@ -77,6 +79,16 @@ public class ConfigureBuilder {
 
     public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
         config.plugin(c, policy);
+        return this;
+    }
+
+    public ConfigureBuilder addPlugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
+        config.plugin(clazz, policy);
+        return this;
+    }
+
+    public ConfigureBuilder addPlugin(ChartTypes chartType, RenderPolicy policy) {
+        config.plugin(chartType, policy);
         return this;
     }
 
