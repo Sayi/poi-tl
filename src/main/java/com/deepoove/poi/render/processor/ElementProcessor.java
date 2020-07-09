@@ -33,7 +33,7 @@ import com.deepoove.poi.template.run.RunTemplate;
 
 public class ElementProcessor extends DefaultTemplateProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ElementProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(ElementProcessor.class);
 
     public ElementProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
@@ -57,13 +57,12 @@ public class ElementProcessor extends DefaultTemplateProcessor {
     void visit(ElementTemplate eleTemplate) {
         RenderPolicy policy = eleTemplate.findPolicy(template.getConfig());
         if (null == policy) {
-            throw new RenderException(
-                    "Cannot find render policy: [" + ((ElementTemplate) eleTemplate).getTagName() + "]");
+            throw new RenderException("Cannot find render policy: [" + eleTemplate.getTagName() + "]");
         }
         if (policy instanceof DocxRenderPolicy) return;
-        LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", eleTemplate.getTagName(), eleTemplate.getSign(),
+        logger.info("Start render Template {}, Sign:{}, policy:{}", eleTemplate, eleTemplate.getSign(),
                 ClassUtils.getShortClassName(policy.getClass()));
-        policy.render(((ElementTemplate) eleTemplate), renderDataCompute.compute(eleTemplate.getTagName()), template);
+        policy.render(eleTemplate, renderDataCompute.compute(eleTemplate.getTagName()), template);
     }
 
 }

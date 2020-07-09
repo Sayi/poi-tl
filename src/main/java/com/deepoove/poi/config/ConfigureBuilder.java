@@ -92,15 +92,6 @@ public class ConfigureBuilder {
         return this;
     }
 
-    /**
-     * @deprecated use {@link ConfigureBuilder#bind()} instead
-     */
-    @Deprecated
-    public ConfigureBuilder customPolicy(String tagName, RenderPolicy policy) {
-        config.customPolicy(tagName, policy);
-        return this;
-    }
-
     public ConfigureBuilder bind(String tagName, RenderPolicy policy) {
         config.customPolicy(tagName, policy);
         return this;

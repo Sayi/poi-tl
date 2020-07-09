@@ -331,12 +331,17 @@ public class Configure implements Cloneable {
             sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
+        sb.append("  Chart Plugin: ").append("\n");
+        DEFAULT_CHART_POLICYS.forEach((type, policy) -> {
+            sb.append("    ").append(type);
+            sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
+        });
         sb.append("  Template Plugin: ").append("\n");
         DEFAULT_TEMPLATE_POLICYS.forEach((clazz, policy) -> {
             sb.append("    ").append(clazz.getSimpleName());
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
-        sb.append(" SpELFunction: ").append("\n");
+        sb.append("  SpELFunction: ").append("\n");
         spELFunction.forEach((str, method) -> {
             sb.append("    ").append(str);
             sb.append("->").append(method.toString()).append("\n");

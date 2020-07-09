@@ -15,17 +15,12 @@
  */
 package com.deepoove.poi.policy.reference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
 public abstract class AbstractTemplateRenderPolicy<E, T> implements RenderPolicy {
-
-    protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("unchecked")
     @Override
@@ -35,13 +30,14 @@ public abstract class AbstractTemplateRenderPolicy<E, T> implements RenderPolicy
         try {
             model = (T) data;
         } catch (ClassCastException e) {
-            throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
+            throw new RenderException("Error Render Data format for template: " + eleTemplate, e);
         }
 
         try {
             doRender((E) eleTemplate, model, template);
         } catch (Exception e) {
-            throw new RenderException("TemplateRenderPolicy render error", e);
+            if (e instanceof RenderException) throw (RenderException)e;
+            else throw new RenderException("TemplateRenderPolicy render error", e);
         }
 
     }
