@@ -20,8 +20,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
@@ -37,15 +35,6 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.SimpleValue;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTRelId;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
-import org.openxmlformats.schemas.drawingml.x2006.main.impl.CTNonVisualDrawingPropsImpl;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
@@ -61,6 +50,7 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
+import com.deepoove.poi.xwpf.CTDrawingWrapper;
 import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
@@ -118,8 +108,7 @@ public class TemplateResolver extends AbstractResolver {
                     List<XWPFTableCell> cells = row.getTableCells();
                     if (null == cells) continue;
                     cells.forEach(cell -> {
-                        List<MetaTemplate> visitBodyElements = resolveBodyElements(cell.getBodyElements());
-                        addNewMeta(metaTemplates, stack, visitBodyElements);
+                        addNewMeta(metaTemplates, stack, resolveBodyElements(cell.getBodyElements()));
                     });
                 }
             }
@@ -165,7 +154,7 @@ public class TemplateResolver extends AbstractResolver {
                 }
                 continue;
             }
-            RunTemplate runTemplate = (RunTemplate)parseTemplateFactory(text, run, run);
+            RunTemplate runTemplate = (RunTemplate) parseTemplateFactory(text, run, run);
             if (null == runTemplate) continue;
             char charValue = runTemplate.getSign().charValue();
             if (charValue == config.getIterable().getLeft()) {
@@ -192,16 +181,16 @@ public class TemplateResolver extends AbstractResolver {
     }
 
     private ChartTemplate resolveXWPFChart(XWPFRun run) {
-        CTR ctr = run.getCTR();
-        CTDrawing ctDrawing = CollectionUtils.isNotEmpty(ctr.getDrawingList()) ? ctr.getDrawingArray(0) : null;
+        CTDrawing ctDrawing = getCTDrawing(run);
         if (null == ctDrawing) return null;
-        String title = getTitle(ctDrawing);
+        CTDrawingWrapper wrapper = new CTDrawingWrapper(ctDrawing);
+        String title = wrapper.getTitle();
         if (null == title) return null;
-        String rid = getCharId(ctDrawing);
+        String rid = wrapper.getCharId();
         if (null == rid) return null;
         POIXMLDocumentPart documentPart = run.getDocument().getRelationById(rid);
         if (null == documentPart || !(documentPart instanceof XWPFChart)) return null;
-        return (ChartTemplate)parseTemplateFactory(title, (XWPFChart) documentPart, run);
+        return (ChartTemplate) parseTemplateFactory(title, (XWPFChart) documentPart, run);
     }
 
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
@@ -212,68 +201,24 @@ public class TemplateResolver extends AbstractResolver {
             // it's array, to do in the future
             CTDrawing ctDrawing = getCTDrawing(pic);
             if (null == ctDrawing) continue;
-            String title = getTitle(ctDrawing);
+            CTDrawingWrapper wrapper = new CTDrawingWrapper(ctDrawing);
+            String title = wrapper.getTitle();
             if (null == title) continue;
-            PictureTemplate pictureTemplate = (PictureTemplate)parseTemplateFactory(title, pic, null);
+            PictureTemplate pictureTemplate = (PictureTemplate) parseTemplateFactory(title, pic, null);
             if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
         }
         return metaTemplates;
     }
 
-    private String getTitle(CTDrawing ctDrawing) {
-        CTNonVisualDrawingProps docPr = null;
-        if (ctDrawing.sizeOfAnchorArray() > 0) {
-            CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
-            docPr = anchorArray.getDocPr();
-
-        } else if (ctDrawing.sizeOfInlineArray() > 0) {
-            CTInline inline = ctDrawing.getInlineArray(0);
-            docPr = inline.getDocPr();
-        }
-
-        if (null != docPr) {
-            QName TITLE = new QName("", "title");
-            CTNonVisualDrawingPropsImpl docPrImpl = (CTNonVisualDrawingPropsImpl) docPr;
-            synchronized (docPrImpl.monitor()) {
-                // check_orphaned();
-                SimpleValue localSimpleValue = null;
-                localSimpleValue = (SimpleValue) docPrImpl.get_store().find_attribute_user(TITLE);
-                if (localSimpleValue == null) { return null; }
-                return localSimpleValue.getStringValue();
-            }
-            // String descr = docPr.getDescr();
-        }
-        return null;
-    }
-
     private CTDrawing getCTDrawing(XWPFPicture pic) throws RuntimeException {
         XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", pic);
-        CTR ctr = run.getCTR();
-        return ctr.getDrawingList() != null ? ctr.getDrawingArray(0) : null;
+        return getCTDrawing(run);
     }
 
-    private String getCharId(CTDrawing ctDrawing) {
-        CTGraphicalObjectData graphicData = null;
-        if (ctDrawing.sizeOfAnchorArray() > 0) {
-            CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
-            graphicData = anchorArray.getGraphic().getGraphicData();
-
-        } else if (ctDrawing.sizeOfInlineArray() > 0) {
-            CTInline inline = ctDrawing.getInlineArray(0);
-            graphicData = inline.getGraphic().getGraphicData();
-        }
-        XmlCursor newCursor = graphicData.newCursor();
-        try {
-            boolean child = newCursor.toChild(0);
-            if (!child) return null;
-            XmlObject xmlObject = newCursor.getObject();
-            if (null == xmlObject || !(xmlObject instanceof CTRelId)) return null;
-            CTRelId cchart = (CTRelId) xmlObject;
-            return cchart.getId();
-        }
-        finally {
-            newCursor.dispose();
-        }
+    private CTDrawing getCTDrawing(XWPFRun run) {
+        CTR ctr = run.getCTR();
+        CTDrawing ctDrawing = CollectionUtils.isNotEmpty(ctr.getDrawingList()) ? ctr.getDrawingArray(0) : null;
+        return ctDrawing;
     }
 
     private void addNewMeta(final List<MetaTemplate> metaTemplates, final Deque<BlockTemplate> stack,
@@ -334,9 +279,9 @@ public class TemplateResolver extends AbstractResolver {
             if (obj.getClass() == XWPFRun.class) {
                 return (RunTemplate) elementTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);
             } else if (obj.getClass() == XWPFPicture.class) {
-                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(tag, (XWPFPicture)obj);
+                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(tag, (XWPFPicture) obj);
             } else if (obj.getClass() == XWPFChart.class) {
-                return (ChartTemplate) elementTemplateFactory.createChartTemplate(tag, (XWPFChart)obj, run);
+                return (ChartTemplate) elementTemplateFactory.createChartTemplate(tag, (XWPFChart) obj, run);
             }
         }
         return null;
