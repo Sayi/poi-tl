@@ -37,6 +37,7 @@ public class DefaultPictureTemplateRenderPolicy
     @Override
     public void doRender(PictureTemplate pictureTemplate, PictureRenderData picdata, XWPFTemplate template)
             throws Exception {
+        if (null == picdata) return;
         XWPFPicture t = pictureTemplate.getPicture();
         NiceXWPFDocument doc = template.getXWPFDocument();
         int format = Helper.suggestFileType(picdata.getPath());
