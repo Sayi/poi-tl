@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 
-@DisplayName("PictureTemplate Render test case")
+@DisplayName("Template Render test case")
 public class ElementTemplateRenderTest {
 
     @SuppressWarnings("serial")
@@ -45,20 +45,35 @@ public class ElementTemplateRenderTest {
                 .writeToFile("out_render_picture_template.docx");
     }
 
+    @Test
+    public void testReplacePictureByOptionalText() throws Exception {
+
+        @SuppressWarnings("serial")
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_picture_template1.docx")
+                .render(new HashMap<String, Object>() {
+                    {
+                        put("img", new PictureRenderData(100, 120, ".png",
+                                new FileInputStream("src/test/resources/sayi.png")));
+                    }
+                });
+
+        template.writeToFile("out_render_picture_template1.docx");
+    }
+
     @SuppressWarnings("serial")
     @Test
     public void testChartRender() throws Exception {
         Map<String, Object> data = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
-                put("chart", 10);
+                put("chart", null);
             }
         };
 
         Map<String, Object> data1 = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl2");
-                put("chart", 20);
+                put("chart", null);
             }
         };
 

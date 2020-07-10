@@ -39,6 +39,7 @@ public class SingleSeriesChartTemplateRenderPolicy
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
             throws Exception {
+        if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = chart.getChartSeries().get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();

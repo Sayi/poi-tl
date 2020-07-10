@@ -8,8 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.ChartSingleSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
@@ -20,8 +18,6 @@ public class ChartReferencePolicyTest {
     @SuppressWarnings("serial")
     @Test
     public void testChart() throws Exception {
-        
-        System.out.println(Configure.newBuilder().build());
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx")
                 .render(new HashMap<String, Object>() {

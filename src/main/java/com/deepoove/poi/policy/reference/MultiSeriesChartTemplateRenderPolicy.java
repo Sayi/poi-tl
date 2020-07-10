@@ -43,6 +43,7 @@ public class MultiSeriesChartTemplateRenderPolicy
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartMultiSeriesRenderData data, XWPFTemplate template)
             throws Exception {
+        if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData chartData = chart.getChartSeries().get(0);
 
