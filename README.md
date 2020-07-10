@@ -5,15 +5,15 @@
 Word 模板引擎，基于Apache POI - the Java API for Microsoft Documents。
 
 ## What is poi-tl
-常见的模板引擎(如FreeMarker、Velocity)基于文本模板和数据生成新的HTML页面、配置文件等，poi-tl是Word模板引擎，基于**Microsoft Word模板**和数据生成**新的文档**。
+FreeMarker、Velocity基于文本模板和数据生成新的HTML页面、配置文件等，poi-tl是Word模板引擎，基于**Microsoft Word模板**和数据生成**新的文档**。
+
+Word模板拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，还可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
 
 poi-tl是一种 *"logic-less"* 模板引擎，没有复杂的控制结构和变量赋值，只有**标签**，一些标签可以被替换为文本、图片、表格等，一些标签会隐藏某些文档内容，而另一些标签则会将一系列文档内容循环渲染。
 
 > "Powerful" constructs like variable assignment or conditional statements make it easy to modify the look of an application within the template system exclusively... however, at the cost of separation, turning the templates themselves into part of the application logic.
 > 
 > [《Google CTemplate》](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)
-
-Word模板拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，还可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
 
 poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何位置执行，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
 
@@ -23,7 +23,7 @@ poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.7.3</version>
+  <version>1.8.0</version>
 </dependency>
 ```
 
@@ -345,7 +345,8 @@ Address: Shanghai,China
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
-* [循环示例：OKR目标制定](http://deepoove.com/poi-tl/#example-okr)
+* [循环和图表示例：野生动物现状](http://deepoove.com/poi-tl/#example-animal)
+* [文本框示例：证书奖状](http://deepoove.com/poi-tl/#example-certificate)
 * [Example：个人简历创作](http://deepoove.com/poi-tl/#example-resume)
 * [Example：Swagger文档](http://deepoove.com/poi-tl/#example-swagger)
 

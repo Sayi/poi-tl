@@ -20,7 +20,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
-public abstract class AbstractTemplateRenderPolicy<E, T> implements RenderPolicy {
+public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T> implements RenderPolicy {
 
     @SuppressWarnings("unchecked")
     @Override
