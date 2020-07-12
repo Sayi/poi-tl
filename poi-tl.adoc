@@ -23,6 +23,7 @@ ____
 ____
 
 == Why poi-tl
+[options="header", stripes=none]
 |===
 | 方案 | 移植性 |  功能性  | 易用性
 | **Poi-tl** | Java跨平台 | Word模板引擎 | 基于Apache POI
@@ -30,14 +31,12 @@ ____
 | Freemarker | XML跨平台 | 仅支持文本，很大的局限性 | 复杂，需要维护XML结构，代码不可维护
 | OpenOffice | 部署OpenOffice软件，移植性较差 | - | 复杂，需要了解OpenOffice的API
 | HTML浏览器导出 | 依赖浏览器的实现，移植性较差 | HTML不能很好的兼容Word的格式 | -
-| Jacob、winlib | Windows平台 | - | 复杂，不推荐使用
+| Jacob、winlib | Windows平台 | - | 复杂，完全不推荐使用
 |===
 
-Apache POI不仅在文档上层封装了易用的API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作文档XML结构，**poi-tl**正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。
+Apache POI不仅在上层封装了易用的文档API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作文档XML结构，**poi-tl**正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。
 
-[frame=none]
-[grid=rows]
-[cols=",", options="header", stripes=none]
+[cols=",", options="header"]
 |===
 |引擎功能 |描述
 |icon:check-circle[role="green"]文本 |将标签渲染为文本
@@ -103,9 +102,10 @@ compile group: 'com.deepoove', name: 'poi-tl', version: '1.8.0'
 --
 [source, java]
 ----
-XWPFTemplate template = XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{ <1> <2>
-    put("title", "poi-tl Word模板引擎");
-}});
+XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
+  new HashMap<String, Object>(){{
+    put("title", "Hi, poi-tl Word模板引擎");
+}}); <1> <2>
 FileOutputStream out = new FileOutputStream("output.docx");
 template.write(out); <3>
 out.flush();
@@ -122,19 +122,17 @@ template.close();
 [example]
 --
 .output.docx
-poi-tl Word模板引擎
+Hi, poi-tl Word模板引擎
 --
 
 === Template：模板
 > 模板就要所见即所得。
 
-模板是docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。
+模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。
 
-poi-tl遵循**“所见即所得”**的设计，模板的样式会被完全保留，标签的样式也会应用在替换后的文本上。
+所有的标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等等。poi-tl遵循**“所见即所得”**的设计，模板的样式会被完全保留，模板标签的样式也会应用在替换后的文本上。
 
-poi-tl是一种 "logic-less" 模板引擎，没有复杂的控制结构和变量赋值，只有标签。所有的标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等等。
-
-表格布局可以设计出很多优秀专业的文档，模板推荐使用表格布局。
+TIP: 表格布局可以设计出很多优秀专业的文档，模板推荐使用表格布局。
 
 === Data-model：数据
 
@@ -168,26 +166,15 @@ FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径�
 [source, html]
 <img src="{{path}}" width="{{width}}" height="{{height}}">
 
-但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口 `RenderData` ：
-
-* 文本数据TextRenderData、HyperLinkTextRenderData
-* 图片数据PictureRenderData
-* 表格数据MiniTableRenderData
-* 列表数据NumbericRenderData
-* 多系列图表数据ChartMultiSeriesRenderData
-* 单系列图表数据ChartSingleSeriesRenderData
-* 嵌套数据DocxRenderData
+但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口 `RenderData` ，比如图片数据模型 `PictureRenderData` 包含图片路径、宽、高三个属性。
 
 === Output：输出
-模板引擎以流的方式进行输出：
+以流的方式进行输出：
 
 [source, java]
 ----
 // 输出流
 template.write(OutputStream stream)
-
-// 输出到文件
-template.writeToFile(String path)
 ----
 
 可以写到任意输出流中，比如文件流FileOutputStream或网络流ServletOutputStream：
@@ -207,7 +194,7 @@ out.close();
 **最后不要忘记关闭这些流。**
 
 == 标签
-标签由前后两个大括号组成， `{{title}}` 是标签， `{{?title}}` 也是标签， `title` 是这个标签的名称， `?` 标识了标签类型，接下来我们来看看有哪些默认标签类型(用户可以创建新的标签类型，这属于更高级的话题)。
+poi-tl是一种 "logic-less" 模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成， `{{title}}` 是标签， `{{?title}}` 也是标签， `title` 是这个标签的名称， `?` 标识了标签类型，接下来我们来看看有哪些默认标签类型(用户可以创建新的标签类型，这属于更高级的话题)。
 
 === 文本
 [example]
@@ -238,7 +225,7 @@ put("anchor",
 ----
 --
 
-标签的样式会应用到替换后的文本上，也可以通过代码设定文本的样式。
+所见即所得，标签的样式会应用到替换后的文本上，也可以通过代码设定文本的样式。
 
 [sidebar]
 .`TextRenderData` 的结构体
@@ -290,7 +277,7 @@ put("local", new PictureRenderData(80, 100, "./sayi.png"));
 // 图片流
 put("localbyte", new PictureRenderData(80, 100, ".png", new FileInputStream("./logo.png")));
 
-// 网络图片 
+// 网络图片(注意网络耗时对系统可能的性能影响) 
 put("urlpicture", new PictureRenderData(50, 50, ".png", BytePictureUtils.getUrlBufferedImage("http://deepoove.com/images/icecream.png")));
 
 // java 图片
@@ -410,7 +397,7 @@ put("table", new MiniTableRenderData(header, Arrays.asList(row0, row1)));
 
 === 列表
 [example]
-列表标签对应Word的符号列表或者编号列表，以*开始：{{*var}}
+列表标签以*开始：{{*var}}
 
 `NumbericRenderData` 数据模型。
 [sidebar]
@@ -538,7 +525,7 @@ IMPORTANT: 区块对中标签的作用域为当前区块对，当且仅当区块
   "songs": [
     { "name": "Memories" },
     { "name": "Sugar" },
-    { "name": "Last Dance(伍佰)" }
+    { "name": "Last Dance" }
   ]
 }
 ----
@@ -562,7 +549,7 @@ Memories
 
 Sugar
 
-Last Dance(伍佰)
+Last Dance
 --
 
 [sidebar]
@@ -598,7 +585,7 @@ application/xml
 
 === 嵌套
 [example]
-嵌套是又称为导入、包含或者合并，以+标识：{{+var}}
+嵌套又称为导入、包含或者合并，以+标识：{{+var}}
 
 `DocxRenderData` 数据模型。
 [sidebar]
@@ -624,7 +611,7 @@ put("docx_word", new DocxRenderData(new File("~/segment.docx"), subData)); <1> <
 --
 
 == 引用标签
-引用标签是一种特殊位置的标签，提供了直接引用文档中的元素句柄的能力，**这个重要的特性在我们只想改变文档中某个元素极小一部分样式和属性的时候特别有用，因为其余样式和属性都可以在模板中预置好，真正的所见即所得**。
+引用标签是一种特殊位置的特殊标签，提供了直接引用文档中的元素句柄的能力，**这个重要的特性在我们只想改变文档中某个元素极小一部分样式和属性的时候特别有用，因为其余样式和属性都可以在模板中预置好，真正的所见即所得**。
 
 [[ref-policy-section]]
 === 图片
@@ -653,14 +640,14 @@ put("img", new PictureRenderData(0, 0, ".png", new
 
 image::./chartref.png[align='center']
 
-ChartMultiSeriesRenderData 数据模型。
+`ChartMultiSeriesRenderData` 数据模型。
 [sidebar]
 .代码示例
 --
 [source, java]
 ----
 ChartMultiSeriesRenderData chart = new ChartMultiSeriesRenderData();
-chart.setChartTitle("ChartTitle");
+chart.setChartTitle("MyChart");
 chart.setCategories(new String[] { "中文", "English" });
 List<SeriesRenderData> seriesRenderData = new ArrayList<>();
 seriesRenderData.add(new SeriesRenderData("countries", new Double[] { 15.0, 6.0 }));
@@ -671,7 +658,7 @@ put("barChart", chart);
 ----
 --
 
-新的图表系列数据会完全替换原有数据，而原有图表的样式都会被保留。
+新的图表系列数据会完全替换原有图表数据，而原有图表的样式都会被保留。
 
 [sidebar]
 .`ChartMultiSeriesRenderData` 的结构体
@@ -679,7 +666,7 @@ put("barChart", chart);
 [source, json]
 ----
 {
-  "chartTitle": "ChartTitle", <1>
+  "chartTitle": "MyChart", <1>
   "categories": [ <2>
     "中文",
     "English"
@@ -717,7 +704,7 @@ put("barChart", chart);
 
 image::./piechartref.png[align='center']
 
-ChartSingleSeriesRenderData 数据模型。
+`ChartSingleSeriesRenderData` 数据模型。
 [sidebar]
 .代码示例
 --
@@ -1010,7 +997,6 @@ public interface RenderPolicy {
 <2> data是数据模型
 <3> XWPFTemplate代表整个模板
 
-==== Hello, world
 按照行业习俗，我们写一个将标签替换为Hello, world的插件：
 [example]
 --
@@ -1032,32 +1018,7 @@ public class HelloWorldRenderPolicy implements RenderPolicy {
 <2> 渲染文本hello, world
 --
 
-==== AbstractRenderPolicy
-poi-tl提供了抽象模板类 `AbstractRenderPolicy` ，它定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，使用泛型约束数据类型，让插件开发起来更简单，我们再来看看Hello, world插件的写法：
-[example]
---
-[source, java]
-----
-public class HelloWorldRenderPolicy extends AbstractRenderPolicy<String> {
-
-  @Override
-  public void doRender(RenderContext<String> context) throws Exception {
-    // anywhere delegate <1>
-    WhereDelegate where = context.getWhereDelegate();
-    // any thing
-    //String thing = context.getThing();
-    String thing = "Hello, world";
-    // do
-    where.renderText(thing);
-  }
-
-}
-----
-<1> WhereDelegate对当前位置的委托，封装了操作当前位置的一些便捷方法
---
-
-==== CustomTableRenderPolicy
-接下来我们再写一个更复杂的插件，在模板标签位置完完全全使用代码创建一个表格，这样我们就可以随心所欲的操作表格：
+poi-tl提供了抽象模板类 `AbstractRenderPolicy` ，它定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，使用泛型约束数据类型，让插件开发起来更简单，接下来我们再写一个更复杂的插件，在模板标签位置完完全全使用代码创建一个表格，这样我们就可以随心所欲的操作表格：
 [example]
 --
 [source, java]
@@ -1123,7 +1084,7 @@ builder.addPlugin('%', new HelloWorldRenderPolicy());
 
 此时，`{{%var}}` 将成为一种新的标签类型，它的执行函数是 `HelloWorldRenderPolicy`。
 
-NOTE: 针对引用图表标签提供了 `builder.addPlugin(ChartTypes, RenderPolicy)` 方法来根据图表类型注册执行函数。
+NOTE: 针对引用图表标签提供了 `builder.addPlugin(ChartTypes, RenderPolicy)` 方法来根据图表类型注册插件。
 
 === Plugin Example
 我想用一个完整的代码示例向你展示 _Do Anything Anywhere_ 的想法，它不使用任何poi-tl的默认插件，完全使用匿名类创建新插件完成。
@@ -1181,7 +1142,7 @@ Configure config = Configure.newBuilder().bind("sea", new AbstractRenderPolicy<S
 // 初始化where的数据
 HashMap<String, Object> args = new HashMap<String, Object>();
 args.put("sea", "Hello, world!");
-args.put("sea_img", "src/test/resources/sea.jpg");
+args.put("sea_img", "sea.jpg");
 args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
 args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
 
@@ -1548,7 +1509,7 @@ Apache License 2.0
 link:https://github.com/Sayi/poi-tl[GitHub]
 
 == 打赏个小费
-poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，如果你觉得它节省了你的时间，给你带来了方便和灵感，或者认同这个开源项目，可以为我的付出打赏点小费哦。
+poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎，如果你觉得它节省了你的时间，给你带来了方便和灵感，或者认同这个开源项目，可以为我的付出打赏点小费哦。
 
 image::./pay.jpeg[width=256, height=280]
 
