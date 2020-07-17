@@ -15,7 +15,7 @@
  */
 package com.deepoove.poi.data;
 
-import com.deepoove.poi.data.builder.StyleBuilder;
+import com.deepoove.poi.data.style.StyleBuilder;
 
 /**
  * 超链接
