@@ -188,6 +188,8 @@ OutputStream out = response.getOutputStream();
 BufferedOutputStream bos = new BufferedOutputStream(out);
 template.write(bos);
 template.close();
+bos.flush();
+bos.close();
 out.flush();
 out.close();
 ----
