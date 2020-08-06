@@ -184,13 +184,13 @@ public class TemplateResolver extends AbstractResolver {
         CTDrawing ctDrawing = getCTDrawing(run);
         if (null == ctDrawing) return null;
         CTDrawingWrapper wrapper = new CTDrawingWrapper(ctDrawing);
-        String title = wrapper.getTitle();
-        if (null == title) return null;
         String rid = wrapper.getCharId();
         if (null == rid) return null;
         POIXMLDocumentPart documentPart = run.getDocument().getRelationById(rid);
         if (null == documentPart || !(documentPart instanceof XWPFChart)) return null;
-        return (ChartTemplate) parseTemplateFactory(title, (XWPFChart) documentPart, run);
+        ElementTemplate template = parseTemplateFactory(wrapper.getTitle(), (XWPFChart) documentPart, run);
+        return null == template ? (ChartTemplate) parseTemplateFactory(wrapper.getDesc(), (XWPFChart) documentPart, run)
+                : (ChartTemplate) template;
     }
 
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
@@ -202,10 +202,13 @@ public class TemplateResolver extends AbstractResolver {
             CTDrawing ctDrawing = getCTDrawing(pic);
             if (null == ctDrawing) continue;
             CTDrawingWrapper wrapper = new CTDrawingWrapper(ctDrawing);
-            String title = wrapper.getTitle();
-            if (null == title) continue;
-            PictureTemplate pictureTemplate = (PictureTemplate) parseTemplateFactory(title, pic, null);
-            if (null != pictureTemplate) metaTemplates.add(pictureTemplate);
+            PictureTemplate pictureTemplate = (PictureTemplate) parseTemplateFactory(wrapper.getTitle(), pic, null);
+            if (null == pictureTemplate) {
+                pictureTemplate = (PictureTemplate) parseTemplateFactory(wrapper.getDesc(), pic, null);
+            }
+            if (null != pictureTemplate) {
+                metaTemplates.add(pictureTemplate);
+            }
         }
         return metaTemplates;
     }
@@ -273,6 +276,7 @@ public class TemplateResolver extends AbstractResolver {
     }
 
     ElementTemplate parseTemplateFactory(String text, Object obj, XWPFRun run) {
+        if (null == text) return null;
         if (templatePattern.matcher(text).matches()) {
             logger.debug("Resolve where text: {}, and create ElementTemplate for {}", text, obj.getClass());
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
