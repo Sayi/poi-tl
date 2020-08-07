@@ -20,6 +20,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
@@ -55,7 +57,8 @@ public abstract class DefaultTemplateProcessor implements Visitor {
         Set<XWPFTextboxContent> textboxs = new HashSet<>();
         templates.forEach(template -> {
             if (template instanceof RunTemplate) {
-                if (((RunTemplate) template).getRun().getParagraph().getBody() instanceof XWPFTextboxContent) {
+                if (((RunTemplate) template).getRun().getParent() instanceof XWPFParagraph
+                        && ((RunTemplate) template).getRun().getParagraph().getBody() instanceof XWPFTextboxContent) {
                     textboxs.add((XWPFTextboxContent) ((RunTemplate) template).getRun().getParagraph().getBody());
                 }
             }

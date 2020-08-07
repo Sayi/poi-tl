@@ -61,7 +61,7 @@ public class RunningRunParagraph {
         this.runs = paragraph.getRuns();
         if (null == runs || runs.isEmpty()) return;
 
-        Matcher matcher = pattern.matcher(paragraph.getText());
+        Matcher matcher = pattern.matcher(paragraph.getParagraphText());
         if (matcher.find()) {
             refactorParagraph();
         }
@@ -176,7 +176,7 @@ public class RunningRunParagraph {
     }
 
     private void buildRunEdge(Pattern pattern) {
-        Matcher matcher = pattern.matcher(paragraph.getText());
+        Matcher matcher = pattern.matcher(paragraph.getParagraphText());
         while (matcher.find()) {
             pairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
                     new RunEdge(matcher.end(), matcher.group())));

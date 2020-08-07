@@ -85,7 +85,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     protected void postValidError(RenderContext<T> context) {
         ValidErrorHandler errorHandler = context.getConfig().getValidErrorHandler();
-        logger.error("The data [{}] of the template {} is illegal, will apply error handler [{}]", context.getData(),
+        logger.info("The data [{}] of the template {} is illegal, will apply error handler [{}]", context.getData(),
                 context.getTagSource(), ClassUtils.getSimpleName(errorHandler.getClass()));
         errorHandler.handler(context);
     }
