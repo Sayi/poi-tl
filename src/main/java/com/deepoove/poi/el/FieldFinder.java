@@ -54,7 +54,7 @@ class FieldFinder {
             } catch (NoSuchFieldException e) {
                 // do nothing, go to super class
             } catch (Exception e) {
-                logger.error("Error read the property:" + key + " from " + objClass);
+                logger.warn("Error read the property:" + key + " from " + objClass);
             }
             clazz = clazz.getSuperclass();
         }
