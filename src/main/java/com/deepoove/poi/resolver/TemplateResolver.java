@@ -24,11 +24,10 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -80,8 +79,10 @@ public class TemplateResolver extends AbstractResolver {
         if (null == doc) return metaTemplates;
         logger.info("Resolve the document start...");
         metaTemplates.addAll(resolveBodyElements(doc.getBodyElements()));
-        metaTemplates.addAll(resolveHeaders(doc.getHeaderList()));
-        metaTemplates.addAll(resolveFooters(doc.getFooterList()));
+        metaTemplates.addAll(resolveBodys(doc.getHeaderList()));
+        metaTemplates.addAll(resolveBodys(doc.getFooterList()));
+        metaTemplates.addAll(resolveBodys(doc.getFootnotes()));
+        metaTemplates.addAll(resolveBodys(doc.getEndnotes()));
         logger.info("Resolve the document end, resolve and create {} MetaTemplates.", metaTemplates.size());
         return metaTemplates;
     }
@@ -255,22 +256,13 @@ public class TemplateResolver extends AbstractResolver {
         return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
     }
 
-    List<MetaTemplate> resolveHeaders(List<XWPFHeader> headers) {
+    <T extends IBody> List<MetaTemplate> resolveBodys(List<T> bodys) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
-        if (null == headers) return metaTemplates;
+        if (null == bodys)
+            return metaTemplates;
 
-        headers.forEach(header -> {
-            metaTemplates.addAll(resolveBodyElements(header.getBodyElements()));
-        });
-        return metaTemplates;
-    }
-
-    List<MetaTemplate> resolveFooters(List<XWPFFooter> footers) {
-        List<MetaTemplate> metaTemplates = new ArrayList<>();
-        if (null == footers) return metaTemplates;
-
-        footers.forEach(footer -> {
-            metaTemplates.addAll(resolveBodyElements(footer.getBodyElements()));
+        bodys.forEach(body -> {
+            metaTemplates.addAll(resolveBodyElements(body.getBodyElements()));
         });
         return metaTemplates;
     }
