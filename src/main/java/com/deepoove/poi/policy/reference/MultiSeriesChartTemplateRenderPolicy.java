@@ -45,12 +45,13 @@ public class MultiSeriesChartTemplateRenderPolicy
             throws Exception {
         if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
-        XDDFChartData chartData = chart.getChartSeries().get(0);
+        List<XDDFChartData> chartSeries = chart.getChartSeries();
+        XDDFChartData chartData = chartSeries.get(0);
 
         // hack for poi 4.1.1+: repair seriesCount value,
         Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
         field.setAccessible(true);
-        field.set(chart, chartData.getSeriesCount());
+        field.set(chart, chartSeries.stream().mapToInt(XDDFChartData::getSeriesCount).sum());
 
         int orignSize = chartData.getSeriesCount();
         List<SeriesRenderData> seriesDatas = data.getSeriesDatas();
