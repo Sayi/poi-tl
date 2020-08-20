@@ -57,20 +57,27 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
                 index + VALUE_START_COL);
     }
 
-    protected void removeExtraSeries(final XDDFChartData chartData, XSSFSheet sheet, final int numOfPoints,
-            final int orignSize, final int seriesSize) {
+    protected void removeExtraSeries(final XDDFChartData chartData, final int orignSize, final int seriesSize) {
         if (orignSize - seriesSize > 0) {
             // clear extra series
             for (int j = orignSize - 1; j >= seriesSize; j--) {
                 chartData.removeSeries(j);
             }
+        }
+    }
+
+    protected void removeExtraSheetCell(XSSFSheet sheet, final int numOfPoints, final int orignSize,
+            final int seriesSize) {
+        if (orignSize - seriesSize > 0) {
             // clear extra sheet column
             for (int i = 0; i < numOfPoints + 1; i++) {
                 for (int j = orignSize; j > seriesSize; j--) {
                     XSSFRow row = sheet.getRow(i);
-                    if (null == row) continue;
+                    if (null == row)
+                        continue;
                     XSSFCell cell = row.getCell(j);
-                    if (null != cell) row.removeCell(cell);
+                    if (null != cell)
+                        row.removeCell(cell);
                 }
             }
         }

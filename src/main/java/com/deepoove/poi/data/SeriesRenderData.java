@@ -26,7 +26,17 @@ public class SeriesRenderData {
     private String name;
     private Number[] values;
 
-    public SeriesRenderData() {}
+    /**
+     * 仅在组合图表中指定系列属于的类型
+     */
+    private ComboType comboType;
+
+    public SeriesRenderData() {
+    }
+
+    public enum ComboType {
+        BAR, LINE, AREA;
+    }
 
     public SeriesRenderData(String name, Number[] data) {
         this.name = name;
@@ -47,6 +57,14 @@ public class SeriesRenderData {
 
     public void setValues(Number[] data) {
         this.values = data;
+    }
+
+    public ComboType getComboType() {
+        return comboType;
+    }
+
+    public void setComboType(ComboType comboType) {
+        this.comboType = comboType;
     }
 
 }

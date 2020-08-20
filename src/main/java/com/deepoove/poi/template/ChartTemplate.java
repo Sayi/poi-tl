@@ -24,6 +24,7 @@ import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFBar3DChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFDoughnutChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFLine3DChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFPie3DChartData;
@@ -87,6 +88,8 @@ public class ChartTemplate extends ElementTemplate {
             chartType = ChartTypes.SURFACE;
         } else if (chartData.getClass() == XDDFSurface3DChartData.class) {
             chartType = ChartTypes.SURFACE3D;
+        } else if (chartData.getClass() == XDDFDoughnutChartData.class) {
+            chartType = ChartTypes.DOUGHNUT;
         }
         return chartType;
     }

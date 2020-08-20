@@ -20,3 +20,4 @@ merge_all
 
 #private
 complex.docx
+~$*.docx

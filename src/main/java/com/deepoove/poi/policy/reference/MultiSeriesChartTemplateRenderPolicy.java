@@ -16,11 +16,18 @@
 package com.deepoove.poi.policy.reference;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
@@ -28,6 +35,8 @@ import org.apache.poi.xwpf.usermodel.XWPFChart;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
+import com.deepoove.poi.data.SeriesRenderData.ComboType;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 
@@ -46,43 +55,82 @@ public class MultiSeriesChartTemplateRenderPolicy
         if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
         List<XDDFChartData> chartSeries = chart.getChartSeries();
-        XDDFChartData chartData = chartSeries.get(0);
+        // validate combo
+        if (chartSeries.size() >= 2) {
+            long nullCount = data.getSeriesDatas().stream().filter(d -> null == d.getComboType()).count();
+            if (nullCount > 0) throw new RenderException("Combo chart must set comboType field of series!");
+        }
 
         // hack for poi 4.1.1+: repair seriesCount value,
+        int totalSeriesCount = chartSeries.stream().mapToInt(XDDFChartData::getSeriesCount).sum();
         Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
         field.setAccessible(true);
-        field.set(chart, chartSeries.stream().mapToInt(XDDFChartData::getSeriesCount).sum());
+        field.set(chart, totalSeriesCount);
 
-        int orignSize = chartData.getSeriesCount();
-        List<SeriesRenderData> seriesDatas = data.getSeriesDatas();
-        int seriesSize = seriesDatas.size();
-
-        XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
-        for (int i = 0; i < seriesSize; i++) {
-            XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
-                    seriesDatas.get(i).getValues(), i);
-
-            XDDFChartData.Series currentSeries = null;
-            if (i < orignSize) {
-                currentSeries = chartData.getSeries(i);
-                currentSeries.replaceData(categoriesData, valuesData);
+        int valueCol = 0;
+        List<SeriesRenderData> usedSeriesDatas = new ArrayList<>();
+        for (XDDFChartData chartData : chartSeries) {
+            int orignSize = chartData.getSeriesCount();
+            List<SeriesRenderData> seriesDatas = null;
+            if (chartSeries.size() <= 1) {
+                // ignore combo type
+                seriesDatas = data.getSeriesDatas();
             } else {
-                // add series, should copy series with style
-                currentSeries = chartData.addSeries(categoriesData, valuesData);
+                seriesDatas = obtainSeriesData(chartData.getClass(), data.getSeriesDatas());
             }
-            String name = seriesDatas.get(i).getName();
-            currentSeries.setTitle(name, chart.setSheetTitle(name, i + VALUE_START_COL));
+            usedSeriesDatas.addAll(seriesDatas);
+            int seriesSize = seriesDatas.size();
+
+            XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
+            for (int i = 0; i < seriesSize; i++) {
+                XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
+                        seriesDatas.get(i).getValues(), valueCol);
+
+                XDDFChartData.Series currentSeries = null;
+                if (i < orignSize) {
+                    currentSeries = chartData.getSeries(i);
+                    currentSeries.replaceData(categoriesData, valuesData);
+                } else {
+                    // add series, should copy series with style
+                    currentSeries = chartData.addSeries(categoriesData, valuesData);
+                    processNewSeries(chartData, currentSeries);
+                }
+                String name = seriesDatas.get(i).getName();
+                currentSeries.setTitle(name, chart.setSheetTitle(name, valueCol + VALUE_START_COL));
+                valueCol++;
+            }
+            // clear extra series
+            removeExtraSeries(chartData, orignSize, seriesSize);
         }
 
         XSSFSheet sheet = chart.getWorkbook().getSheetAt(0);
-        updateCTTable(sheet, seriesDatas);
+        updateCTTable(sheet, usedSeriesDatas);
 
-        // clear extra series
-        removeExtraSeries(chartData, sheet, data.getCategories().length, orignSize, seriesSize);
+        removeExtraSheetCell(sheet, data.getCategories().length, totalSeriesCount, usedSeriesDatas.size());
 
-        plot(chart, chartData);
+        for (XDDFChartData chartData : chartSeries) {
+            plot(chart, chartData);
+        }
         chart.setTitleText(data.getChartTitle());
         chart.setTitleOverlay(false);
+    }
+
+    protected void processNewSeries(XDDFChartData chartData, Series addSeries) {
+    }
+
+    private List<SeriesRenderData> obtainSeriesData(Class<? extends XDDFChartData> clazz,
+            List<SeriesRenderData> seriesDatas) {
+        Predicate<SeriesRenderData> predicate = data -> {
+            return false;
+        };
+        if (clazz.equals(XDDFBarChartData.class)) {
+            predicate = data -> ComboType.BAR == data.getComboType();
+        } else if (clazz.equals(XDDFAreaChartData.class)) {
+            predicate = data -> ComboType.AREA == data.getComboType();
+        } else if (clazz.equals(XDDFLineChartData.class)) {
+            predicate = data -> ComboType.LINE == data.getComboType();
+        }
+        return seriesDatas.stream().filter(predicate).collect(Collectors.toList());
     }
 
 }
