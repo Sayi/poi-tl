@@ -99,10 +99,13 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
 
             run.setText("", 0);
             table.removeRow(templateRowIndex);
-
+            afterloop(table, data);
         } catch (Exception e) {
             throw new RenderException("HackLoopTable for " + eleTemplate + "error: " + e.getMessage(), e);
         }
+    }
+    
+    protected void afterloop(XWPFTable table, Object data) {
     }
 
     @SuppressWarnings("unchecked")
