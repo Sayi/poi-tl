@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -50,16 +51,14 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     }
 
     public static class Helper {
-        public static final int EMU = 9525;
 
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
             int suggestFileType = suggestFileType(picture.getPath());
 
-            try (InputStream ins = null == picture.getData()
-                    ? new FileInputStream(picture.getPath())
+            try (InputStream ins = null == picture.getData() ? new FileInputStream(picture.getPath())
                     : new ByteArrayInputStream(picture.getData())) {
-                run.addPicture(ins, suggestFileType, "Generated", picture.getWidth() * EMU,
-                        picture.getHeight() * EMU);
+                run.addPicture(ins, suggestFileType, "Generated", Units.pixelToEMU(picture.getWidth()),
+                        Units.pixelToEMU(picture.getHeight()));
             }
         }
 

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.MiniTableRenderData;
@@ -65,8 +66,7 @@ public class WhereDelegate {
 
     public void addPicture(InputStream inputStream, int type, int width, int height)
             throws InvalidFormatException, IOException {
-        run.addPicture(inputStream, type, "Generated", width * PictureRenderPolicy.Helper.EMU,
-                height * PictureRenderPolicy.Helper.EMU);
+        run.addPicture(inputStream, type, "Generated", Units.pixelToEMU(width), Units.pixelToEMU(height));
     }
 
 }
