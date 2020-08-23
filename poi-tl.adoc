@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.8.1 
+v1.8.2 
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -62,7 +62,7 @@ Apache POI不仅在上层封装了易用的文档API(文本、图片、表格、
 **poi-tl**是一个免费开源的Java类库，你可以非常方便的加入到你的Java项目中。
 
 == 软件要求
-* Apache POI 4.1.1+
+* Apache POI 4.1.2+
 * JDK 1.8+
 
 == 历史版本
@@ -79,13 +79,13 @@ Apache POI不仅在上层封装了易用的文档API(文本、图片、表格、
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.8.1</version>
+  <version>1.8.2</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.8.1'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.8.2'
 
 === 2min快速入门
 新建Word模板template.docx，包含标签 `{{title}}`
@@ -128,13 +128,13 @@ Hi, poi-tl Word模板引擎
 
 模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。
 
-所有的标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等等。poi-tl遵循**“所见即所得”**的设计，模板的样式会被完全保留，模板标签的样式也会应用在替换后的文本上。
+所有的标签都是以 `{{` 开头，以 `}}` 结尾，模板标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等等。poi-tl遵循**“所见即所得”**的设计，模板的样式会被完全保留，标签的样式也会应用在替换后的文本上。
 
 TIP: 表格布局可以设计出很多优秀专业的文档，模板推荐使用表格布局。
 
 === Data-model：数据
 
-> 数据模型类似于哈希或字典。
+> 数据模型类似于哈希、字典。
 
 数据可以是Map（key是标签名称）：
 [source, java]
@@ -144,14 +144,11 @@ data.put("name", "Sayi");
 data.put("start_time", "2019-08-04");
 ----
 
-数据可以是JavaBean（field名称是标签名称，可以通过注解 `@Name` 设置别名）：
+数据可以是对象（属性名是标签名称）：
 [source, java]
 ----
-public class MyDataModel {
-  // 模板标签{{name}}
+public class Data {
   private String name;
-  // 模板标签{{start_time}}
-  @Name("start_time")
   private String startTime;
   // {{author.XXX}}
   private Author author;
@@ -697,7 +694,7 @@ put("barChart", chart);
 --
 
 === 单系列图表
-单系列图表指的是饼图（3D饼图）等。
+单系列图表指的是饼图（3D饼图）、圆环图等。
 
 [example]
 单系列图表的标签是一个文本：{{var}}，标签位置在：图表区格式--可选文字--标题（高版本office标签位置在：编辑替换文字-替换文字）。
@@ -748,6 +745,55 @@ put("pieChart", pie);
 <3> 单系列
 <4> 单系列名称
 <5> 单系列对应每个种类的值
+--
+
+=== 组合图表
+组合图表指的是由多系列图表(柱形图、折线图、面积图)组合而成的图表。
+
+[example]
+组合图表的标签是一个文本：{{var}}，标签位置在：图表区格式--可选文字--标题（高版本office标签位置在：编辑替换文字-替换文字）。
+
+image::./chart_combo.jpeg[align='center']
+
+同多系列图表 `ChartMultiSeriesRenderData` 数据模型，系列数据需要通过 `setComboType(ComboType)` 设置所属的图表类型。
+
+[sidebar]
+.`ChartMultiSeriesRenderData` 的结构体
+--
+[source, json]
+----
+{
+  "chartTitle": "MyChart", <1>
+  "categories": [ <2>
+    "中文",
+    "English"
+  ],
+  "seriesDatas": [ <3>
+    {
+      "name": "countries", <4>
+      "comboType": "BAR", <5>
+      "values": [ <6>
+        15,
+        6
+      ]
+    },
+    {
+      "name": "speakers",
+      "comboType": "LINE",
+      "values": [
+        223,
+        119
+      ]
+    }
+  ]
+}
+----
+<1> 图表标题
+<2> 种类
+<3> 所有系列
+<4> 当前系列名称
+<5> 当前系列的图表类型：柱形图BAR、折线图LINE、面积图AREA
+<6> 当前系列对应每个种类的值
 --
 
 == 配置
