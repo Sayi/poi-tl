@@ -42,7 +42,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
 
     @Override
     protected boolean validate(NumbericRenderData data) {
-        return (null != data && CollectionUtils.isNotEmpty(data.getNumbers()));
+        return (null != data && CollectionUtils.isNotEmpty(data.getItems()));
     }
 
     @Override
@@ -60,10 +60,10 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
         public static void renderNumberic(XWPFRun run, NumbericRenderData numbericData)
                 throws Exception {
             NiceXWPFDocument doc = (NiceXWPFDocument) run.getParent().getDocument();
-            List<? extends RenderData> datas = numbericData.getNumbers();
-            Style style = numbericData.getFmtStyle();
+            List<? extends RenderData> datas = numbericData.getItems();
+            Style style = numbericData.getStyle();
 
-            BigInteger numID = doc.addNewNumbericId(numbericData.getNumFmt());
+            BigInteger numID = doc.addNewNumbericId(numbericData.getFormat());
 
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
             XWPFRun newRun;

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2020 Sayi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi.data;
 
 import com.deepoove.poi.data.style.Style;
@@ -38,7 +53,23 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
 
     public Texts link(String url) {
         this.url = url;
+        // 链接默认蓝色加下划线
+        if (null == this.style) {
+            this.style = StyleBuilder.newBuilder().buildColor("0000FF").buildUnderLine().build();
+        }
         return this;
+    }
+
+    public Texts mailto(String address, String subject) {
+        StringBuilder sb = new StringBuilder(128);
+        sb.append("mailto:").append(address).append("?subject=").append(subject);
+        return link(sb.toString());
+    }
+
+    public Texts anchor(String anchorName) {
+        StringBuilder sb = new StringBuilder(32);
+        sb.append("anchor:").append(anchorName);
+        return link(sb.toString());
     }
 
     @Override

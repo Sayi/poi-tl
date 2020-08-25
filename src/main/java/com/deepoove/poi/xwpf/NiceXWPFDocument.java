@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
@@ -75,6 +74,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.deepoove.poi.data.NumberingFormat;
 
 /**
  * 对原生poi的扩展
@@ -218,7 +219,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         return idenifierManagerWrapper;
     }
 
-    public BigInteger addNewNumbericId(Pair<Enum, String> numFmt) {
+    public BigInteger addNewNumbericId(NumberingFormat numFmt) {
         XWPFNumbering numbering = this.getNumbering();
         if (null == numbering) {
             numbering = this.createNumbering();
@@ -231,8 +232,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         cTAbstractNum
                 .setAbstractNumId(numberingWrapper.getNextAbstractNumID());
 
-        Enum fmt = numFmt.getLeft();
-        String val = numFmt.getRight();
+        Enum fmt = numFmt.getNumFmt();
+        String val = numFmt.getLvlText();
         CTLvl cTLvl = cTAbstractNum.addNewLvl();
         cTLvl.addNewNumFmt().setVal(fmt);
         cTLvl.addNewLvlText().setVal(val);

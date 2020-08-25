@@ -15,9 +15,9 @@
  */
 package com.deepoove.poi.data;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
@@ -34,109 +34,108 @@ public class NumbericRenderData implements RenderData {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 1. 2. 3.
+     * 编号格式
      */
-    public static final Pair<Enum, String> FMT_DECIMAL = Pair.of(STNumberFormat.DECIMAL, "%1.");
+    private NumberingFormat format;
     /**
-     * 1) 2) 3)
+     * 文本、超链接、图片等
      */
-    public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL, "%1)");
-    /**
-     * ● ● ●
-     */
-    public static final Pair<Enum, String> FMT_BULLET = Pair.of(STNumberFormat.BULLET, "●");
-    /**
-     * a. b. c.
-     */
-    public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER, "%1.");
-    /**
-     * i ⅱ ⅲ
-     */
-    public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN, "%1.");
-    /**
-     * A. B. C.
-     */
-    public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER, "%1.");
-    /**
-     * Ⅰ Ⅱ Ⅲ
-     */
-    public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN, "%1.");
-    // /**
-    // * 一、 二、 三、
-    // */
-    // public static final Pair<Enum, String> FMT_CHINESE_COUNTING_THOUSAND =
-    // Pair
-    // .of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "%1、");
-    // /**
-    // * (一) (二) (三)
-    // */
-    // public static final Pair<Enum, String>
-    // FMT_CHINESE_COUNTING_THOUSAND_PARENTHESES = Pair
-    // .of(STNumberFormat.CHINESE_COUNTING_THOUSAND, "(%1)");
+    private List<? extends RenderData> items;
 
     /**
-     * 文本、超链接、图片，暂不支持表格等
+     * 编号文本样式
      */
-    private List<? extends RenderData> numbers;
+    private Style style;
 
-    private Pair<Enum, String> numFmt;
-
-    private Style fmtStyle;
-
-    public NumbericRenderData(Pair<Enum, String> numFmt, List<? extends RenderData> numbers) {
-        this(numFmt, null, numbers);
+    public NumbericRenderData(NumberingFormat format, List<? extends RenderData> items) {
+        this(format, null, items);
     }
 
-    /**
-     * @param numFmt   编号字符
-     * @param fmtStyle 编号样式
-     * @param numbers  列表内容
-     */
-    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle, List<? extends RenderData> numbers) {
-        this.numFmt = numFmt;
-        this.numbers = numbers;
-        this.fmtStyle = fmtStyle;
+    public NumbericRenderData(NumberingFormat format, Style style, List<? extends RenderData> items) {
+        this.format = format;
+        this.items = items;
+        this.style = style;
     }
 
-    public NumbericRenderData(List<? extends RenderData> numbers) {
-        this(FMT_BULLET, numbers);
+    public NumbericRenderData(List<? extends RenderData> items) {
+        this(NumberingFormat.BULLET, items);
     }
 
     public static NumbericRenderData build(String... text) {
         if (null == text) return null;
-        List<TextRenderData> numbers = new ArrayList<TextRenderData>();
-        for (String txt : text) {
-            numbers.add(new TextRenderData(txt));
-        }
-        return new NumbericRenderData(numbers);
+        return new NumbericRenderData(Arrays.stream(text).map(TextRenderData::new).collect(Collectors.toList()));
     }
 
-    public static NumbericRenderData build(RenderData... data) {
-        return new NumbericRenderData(null == data ? null : Arrays.asList(data));
+    @Deprecated
+    public NumbericRenderData(Pair<Enum, String> numFmt, List<? extends RenderData> numbers) {
+        this(numFmt, null, numbers);
     }
 
-    public List<? extends RenderData> getNumbers() {
-        return numbers;
+    @Deprecated
+    public NumbericRenderData(Pair<Enum, String> numFmt, Style style, List<? extends RenderData> numbers) {
+        this.format = new NumberingFormat(numFmt.getLeft(), numFmt.getRight());
+        this.items = numbers;
+        this.style = style;
     }
 
-    public void setNumbers(List<? extends RenderData> numbers) {
-        this.numbers = numbers;
+    /**
+     * 1. 2. 3.
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_DECIMAL = Pair.of(STNumberFormat.DECIMAL, "%1.");
+    /**
+     * 1) 2) 3)
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL, "%1)");
+    /**
+     * ● ● ●
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_BULLET = Pair.of(STNumberFormat.BULLET, "●");
+    /**
+     * a. b. c.
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER, "%1.");
+    /**
+     * i ⅱ ⅲ
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN, "%1.");
+    /**
+     * A. B. C.
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER, "%1.");
+    /**
+     * Ⅰ Ⅱ Ⅲ
+     */
+    @Deprecated
+    public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN, "%1.");
+
+    public List<? extends RenderData> getItems() {
+        return items;
     }
 
-    public Pair<Enum, String> getNumFmt() {
-        return numFmt;
+    public void setItems(List<? extends RenderData> items) {
+        this.items = items;
     }
 
-    public void setNumFmt(Pair<Enum, String> numFmt) {
-        this.numFmt = numFmt;
+    public NumberingFormat getFormat() {
+        return format;
     }
 
-    public Style getFmtStyle() {
-        return fmtStyle;
+    public void setFormat(NumberingFormat format) {
+        this.format = format;
     }
 
-    public void setFmtStyle(Style fmtStyle) {
-        this.fmtStyle = fmtStyle;
+    public Style getStyle() {
+        return style;
+    }
+
+    public void setStyle(Style fmtStyle) {
+        this.style = fmtStyle;
     }
 
 }

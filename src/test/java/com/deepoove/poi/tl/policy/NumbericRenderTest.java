@@ -1,27 +1,18 @@
 package com.deepoove.poi.tl.policy;
 
-import static com.deepoove.poi.data.NumbericRenderData.FMT_BULLET;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_DECIMAL;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_DECIMAL_PARENTHESES;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_LOWER_LETTER;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_LOWER_ROMAN;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_UPPER_LETTER;
-import static com.deepoove.poi.data.NumbericRenderData.FMT_UPPER_ROMAN;
-
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -36,31 +27,31 @@ public class NumbericRenderTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 // 1. 2. 3.
-                put("number123", getData(FMT_DECIMAL));
-                put("number123_dulplicate", getData(FMT_DECIMAL));
+                put("number123", getData(NumberingFormat.DECIMAL));
+                put("number123_dulplicate", getData(NumberingFormat.DECIMAL));
                 // 1) 2) 3)
-                put("number123_kuohao", getData(FMT_DECIMAL_PARENTHESES));
+                put("number123_kuohao", getData(NumberingFormat.DECIMAL_PARENTHESES));
                 // 无序
-                put("bullet", getData(FMT_BULLET));
+                put("bullet", getData(NumberingFormat.BULLET));
                 // A B C
-                put("ABC", getData(FMT_UPPER_LETTER));
+                put("ABC", getData(NumberingFormat.UPPER_LETTER));
                 // a b c
-                put("abc", getData(FMT_LOWER_LETTER));
+                put("abc", getData(NumberingFormat.LOWER_LETTER));
                 // ⅰ ⅱ ⅲ
-                put("iiiiii", getData(FMT_LOWER_ROMAN));
+                put("iiiiii", getData(NumberingFormat.LOWER_ROMAN));
                 // Ⅰ Ⅱ Ⅲ
-                put("IIIII", getData(FMT_UPPER_ROMAN));
+                put("IIIII", getData(NumberingFormat.UPPER_ROMAN));
                 // 自定义有序列表显示 (one) (two) (three)
-                put("custom_number", getData(Pair.of(STNumberFormat.CARDINAL_TEXT, "(%1)")));
+                put("custom_number", getData(new NumberingFormat(STNumberFormat.CARDINAL_TEXT, "(%1)")));
                 // 自定义无序列表显示：定义无序符号
-                put("custom_bullet", getData(Pair.of(STNumberFormat.BULLET, "♬")));
+                put("custom_bullet", getData(new NumberingFormat(STNumberFormat.BULLET, "♬")));
                 // 自定义编号样式
                 Style fmtStyle = new Style("f44336");
                 fmtStyle.setBold(true);
                 fmtStyle.setItalic(true);
                 fmtStyle.setStrike(true);
                 fmtStyle.setFontSize(24);
-                put("custom_style", new NumbericRenderData(FMT_LOWER_ROMAN, fmtStyle, new ArrayList<TextRenderData>() {
+                put("custom_style", new NumbericRenderData(NumberingFormat.LOWER_ROMAN, fmtStyle, new ArrayList<TextRenderData>() {
                     {
                         add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
                         add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
@@ -82,8 +73,8 @@ public class NumbericRenderTest {
     }
 
     @SuppressWarnings("serial")
-    private NumbericRenderData getData(Pair<Enum, String> pair) {
-        return new NumbericRenderData(pair, new ArrayList<TextRenderData>() {
+    private NumbericRenderData getData(NumberingFormat format) {
+        return new NumbericRenderData(format, new ArrayList<TextRenderData>() {
             {
                 add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
                 add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
@@ -97,7 +88,7 @@ public class NumbericRenderTest {
         final HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData("Deepoove website.",
                 "http://www.deepoove.com");
         hyperLinkTextRenderData.getStyle().setBold(true);
-        return new NumbericRenderData(FMT_DECIMAL_PARENTHESES, new ArrayList<RenderData>() {
+        return new NumbericRenderData(NumberingFormat.DECIMAL_PARENTHESES, new ArrayList<RenderData>() {
             {
                 add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 add(hyperLinkTextRenderData);
@@ -106,7 +97,7 @@ public class NumbericRenderTest {
                 add(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 add(new TextRenderData("df2d4f", "Deeply in love with the things you love,\n just deepoove."));
                 add(hyperLinkTextRenderData);
-                // add(getData(FMT_UPPER_LETTER));
+                // add(getData(NumberingFormat.UPPER_LETTER));
             }
         });
     }

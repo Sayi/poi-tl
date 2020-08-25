@@ -24,6 +24,7 @@ import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
@@ -126,20 +127,20 @@ public class SerializableTest {
 
     @Test
     void testNumbericRenderData() throws Exception {
-        ArrayList<TextRenderData> arrayList = new ArrayList<TextRenderData>();
-        arrayList.add(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."));
-        arrayList.add(new TextRenderData("Deeply in love with the things you love, just deepoove."));
-        arrayList.add(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."));
-        NumbericRenderData data = new NumbericRenderData(arrayList);
         Style fmtStyle = StyleBuilder.newBuilder().buildColor("00FF00").build();
-        data.setFmtStyle(fmtStyle);
+        NumbericRenderData data = Numberings.ofBullet()
+                .addItem(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."))
+                .addItem(new TextRenderData("Deeply in love with the things you love, just deepoove."))
+                .addItem(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."))
+                .style(fmtStyle).create();
+
         NumbericRenderData result = write(data).getResult(NumbericRenderData.class);
 
-        assertEquals(result.getNumFmt(), data.getNumFmt());
-        assertEquals(result.getFmtStyle().getColor(), data.getFmtStyle().getColor());
+        assertEquals(result.getFormat(), data.getFormat());
+        assertEquals(result.getStyle().getColor(), data.getStyle().getColor());
         for (int i = 0; i < 3; i++) {
-            TextRenderData dataTxt = (TextRenderData) data.getNumbers().get(i);
-            TextRenderData resultTxt = (TextRenderData) result.getNumbers().get(i);
+            TextRenderData dataTxt = (TextRenderData) data.getItems().get(i);
+            TextRenderData resultTxt = (TextRenderData) result.getItems().get(i);
             assertEquals(resultTxt.getText(), dataTxt.getText());
         }
     }
