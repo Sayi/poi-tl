@@ -29,13 +29,12 @@ import com.deepoove.poi.util.ByteUtils;
  */
 public class DocxRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * stream流无法重用，使用字节数组表示待合并文档
      */
-    private transient byte[] mergeBytes;
-    
-    @SuppressWarnings("unused")
-    private File file;
+    private byte[] mergeDoc;
 
     /**
      * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
@@ -43,8 +42,7 @@ public class DocxRenderData implements RenderData {
     private List<?> dataModels;
 
     /**
-     * @param docx
-     *            子文档
+     * @param docx 子文档
      */
     public DocxRenderData(File docx) {
         this(docx, null);
@@ -53,19 +51,15 @@ public class DocxRenderData implements RenderData {
     /**
      * 构造子文档和渲染数据源
      * 
-     * @param docx
-     *            子文档
-     * @param renderDatas
-     *            渲染数据列表，列表的大小表示循环的次数
+     * @param docx        子文档
+     * @param renderDatas 渲染数据列表，列表的大小表示循环的次数
      */
     public DocxRenderData(File docx, List<?> renderDatas) {
         this(ByteUtils.getLocalByteArray(docx), renderDatas);
-        this.file = docx;
     }
 
     /**
-     * @param inputStream
-     *            子文档流
+     * @param inputStream 子文档流
      */
     public DocxRenderData(InputStream inputStream) {
         this(inputStream, null);
@@ -80,17 +74,16 @@ public class DocxRenderData implements RenderData {
     }
 
     /**
-     * @param input
-     *            子文档字节数组
+     * @param input       子文档字节数组
      * @param renderDatas
      */
     public DocxRenderData(byte[] input, List<?> renderDatas) {
         this.dataModels = renderDatas;
-        this.mergeBytes = input;
+        this.mergeDoc = input;
     }
 
     public byte[] getDocx() {
-        return mergeBytes;
+        return mergeDoc;
     }
 
     public List<?> getDataModels() {
@@ -100,7 +93,7 @@ public class DocxRenderData implements RenderData {
     public void setDataModels(List<?> renderDatas) {
         this.dataModels = renderDatas;
     }
-    
+
     public void setRenderDatas(List<?> renderDatas) {
         this.dataModels = renderDatas;
     }

@@ -40,7 +40,7 @@ public class DefaultPictureTemplateRenderPolicy
         XWPFPicture t = pictureTemplate.getPicture();
         NiceXWPFDocument doc = template.getXWPFDocument();
         int format = picdata.getPictureType().type();
-        byte[] data = picdata.getData();
+        byte[] data = picdata.getImage();
         XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", t);
         if (run.getParent().getPart() instanceof XWPFHeader) {
             XWPFHeaderFooter headerFooter = (XWPFHeaderFooter) run.getParent().getPart();

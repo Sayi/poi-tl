@@ -31,13 +31,15 @@ import com.deepoove.poi.util.ByteUtils;
  */
 public class PictureRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     private int width;
     private int height;
 
     /**
-     * 图片二进制数据
+     * 二进制数据
      */
-    private byte[] data;
+    private byte[] image;
 
     /**
      * 当图片不存在时，显示的文字
@@ -45,7 +47,7 @@ public class PictureRenderData implements RenderData {
     private String altMeta = "";
 
     /**
-     * 图片类型
+     * 类型
      */
     private PictureType pictureType;
 
@@ -110,7 +112,7 @@ public class PictureRenderData implements RenderData {
         this.width = width;
         this.height = height;
         this.pictureType = pictureType;
-        this.data = data;
+        this.image = data;
     }
 
     @Deprecated
@@ -136,7 +138,7 @@ public class PictureRenderData implements RenderData {
         this.width = width;
         this.height = height;
         this.pictureType = PictureType.suggestFileType(format);
-        this.data = data;
+        this.image = data;
     }
 
     public int getWidth() {
@@ -155,12 +157,12 @@ public class PictureRenderData implements RenderData {
         this.height = height;
     }
 
-    public byte[] getData() {
-        return data;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public String getAltMeta() {

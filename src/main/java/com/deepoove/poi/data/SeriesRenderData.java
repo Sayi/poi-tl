@@ -15,13 +15,17 @@
  */
 package com.deepoove.poi.data;
 
+import java.io.Serializable;
+
 /**
  * 图表系列
  * 
  * @author Sayi
  * @version 1.8.0
  */
-public class SeriesRenderData {
+public class SeriesRenderData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private Number[] values;

@@ -29,6 +29,8 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class RowRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     private List<CellRenderData> cells;
 
     /**

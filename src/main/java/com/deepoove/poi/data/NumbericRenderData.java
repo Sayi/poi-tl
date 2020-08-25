@@ -31,6 +31,8 @@ import com.deepoove.poi.data.style.Style;
  */
 public class NumbericRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 1. 2. 3.
      */
@@ -38,8 +40,7 @@ public class NumbericRenderData implements RenderData {
     /**
      * 1) 2) 3)
      */
-    public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL,
-            "%1)");
+    public static final Pair<Enum, String> FMT_DECIMAL_PARENTHESES = Pair.of(STNumberFormat.DECIMAL, "%1)");
     /**
      * ● ● ●
      */
@@ -47,23 +48,19 @@ public class NumbericRenderData implements RenderData {
     /**
      * a. b. c.
      */
-    public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER,
-            "%1.");
+    public static final Pair<Enum, String> FMT_LOWER_LETTER = Pair.of(STNumberFormat.LOWER_LETTER, "%1.");
     /**
      * i ⅱ ⅲ
      */
-    public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN,
-            "%1.");
+    public static final Pair<Enum, String> FMT_LOWER_ROMAN = Pair.of(STNumberFormat.LOWER_ROMAN, "%1.");
     /**
      * A. B. C.
      */
-    public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER,
-            "%1.");
+    public static final Pair<Enum, String> FMT_UPPER_LETTER = Pair.of(STNumberFormat.UPPER_LETTER, "%1.");
     /**
      * Ⅰ Ⅱ Ⅲ
      */
-    public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN,
-            "%1.");
+    public static final Pair<Enum, String> FMT_UPPER_ROMAN = Pair.of(STNumberFormat.UPPER_ROMAN, "%1.");
     // /**
     // * 一、 二、 三、
     // */
@@ -91,15 +88,11 @@ public class NumbericRenderData implements RenderData {
     }
 
     /**
-     * @param numFmt
-     *            编号字符
-     * @param fmtStyle
-     *            编号样式
-     * @param numbers
-     *            列表内容
+     * @param numFmt   编号字符
+     * @param fmtStyle 编号样式
+     * @param numbers  列表内容
      */
-    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle,
-            List<? extends RenderData> numbers) {
+    public NumbericRenderData(Pair<Enum, String> numFmt, Style fmtStyle, List<? extends RenderData> numbers) {
         this.numFmt = numFmt;
         this.numbers = numbers;
         this.fmtStyle = fmtStyle;

@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data;
 
+import java.io.Serializable;
+
 import com.deepoove.poi.data.style.TableStyle;
 
 /**
@@ -23,7 +25,9 @@ import com.deepoove.poi.data.style.TableStyle;
  * @author Sayi
  * @version 1.5.0
  */
-public class CellRenderData {
+public class CellRenderData implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     protected TextRenderData cellText;
 

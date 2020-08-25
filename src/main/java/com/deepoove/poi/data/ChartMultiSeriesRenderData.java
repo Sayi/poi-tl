@@ -25,11 +25,14 @@ import java.util.List;
  */
 public class ChartMultiSeriesRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     private String chartTitle;
     private String[] categories;
     private List<SeriesRenderData> seriesDatas;
 
-    public ChartMultiSeriesRenderData() {}
+    public ChartMultiSeriesRenderData() {
+    }
 
     public String getChartTitle() {
         return chartTitle;

@@ -27,6 +27,8 @@ import com.deepoove.poi.data.style.TableStyle;
  */
 public class MiniTableRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 通用边距的表格宽度：A4(20.99*29.6),页边距为3.17*2.54
      */

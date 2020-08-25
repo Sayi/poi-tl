@@ -55,10 +55,10 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            if (null == picture.getData()) {
+            if (null == picture.getImage()) {
                 throw new IOException("Can't get input data from picture!");
             }
-            try (InputStream ins = new ByteArrayInputStream(picture.getData())) {
+            try (InputStream ins = new ByteArrayInputStream(picture.getImage())) {
                 run.addPicture(ins, picture.getPictureType().type(), "Generated", Units.pixelToEMU(picture.getWidth()),
                         Units.pixelToEMU(picture.getHeight()));
             }

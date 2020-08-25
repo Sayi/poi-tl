@@ -15,4 +15,7 @@
  */
 package com.deepoove.poi.data;
 
-public interface RenderData {}
+import java.io.Serializable;
+
+public interface RenderData extends Serializable {
+}

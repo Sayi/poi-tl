@@ -23,6 +23,8 @@ package com.deepoove.poi.data;
  */
 public class ChartSingleSeriesRenderData implements RenderData {
 
+    private static final long serialVersionUID = 1L;
+
     private String chartTitle;
     private String[] categories;
     private SeriesRenderData seriesData;

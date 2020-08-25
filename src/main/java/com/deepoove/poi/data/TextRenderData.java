@@ -26,6 +26,9 @@ import com.deepoove.poi.data.style.StyleBuilder;
  *
  */
 public class TextRenderData implements RenderData {
+
+    private static final long serialVersionUID = 1L;
+
     protected Style style;
 
     /**
@@ -33,7 +36,8 @@ public class TextRenderData implements RenderData {
      */
     protected String text;
 
-    public TextRenderData() {}
+    public TextRenderData() {
+    }
 
     public TextRenderData(String text) {
         this.text = text;
@@ -64,7 +68,7 @@ public class TextRenderData implements RenderData {
     public void setText(String text) {
         this.text = text;
     }
-    
+
     @Override
     public String toString() {
         return text;

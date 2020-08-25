@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data.style;
 
+import java.io.Serializable;
+
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 /**
@@ -23,7 +25,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
  * @author Sayi
  *
  */
-public class TableStyle {
+public class TableStyle implements Serializable{
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 背景色

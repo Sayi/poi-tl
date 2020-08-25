@@ -25,6 +25,8 @@ import com.deepoove.poi.data.style.StyleBuilder;
  */
 public class HyperLinkTextRenderData extends TextRenderData {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * 超链接: http://deepoove.com <br/>
      * 发送邮件链接:mailto:adasai90@gmail.com?subject=poi-tl <br/>

@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data.style;
 
+import java.io.Serializable;
+
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
 /**
@@ -24,27 +26,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
  * @version 0.0.3
  *
  */
-public class Style {
+public class Style implements Serializable {
 
-    /**
-     * 文字颜色
-     */
+    private static final long serialVersionUID = 1L;
+
     private String color;
-    /**
-     * 字体
-     */
     private String fontFamily;
-    /**
-     * 字体大小
-     */
     private int fontSize;
-    /**
-     * 粗体
-     */
     private Boolean isBold;
-    /**
-     * 斜体
-     */
     private Boolean isItalic;
     /**
      * 删除线
@@ -70,7 +59,8 @@ public class Style {
      */
     private String vertAlign;
 
-    public Style() {}
+    public Style() {
+    }
 
     public Style(String color) {
         this.color = color;
