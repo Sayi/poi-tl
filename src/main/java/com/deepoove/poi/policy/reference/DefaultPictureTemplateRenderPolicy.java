@@ -26,7 +26,6 @@ import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.policy.PictureRenderPolicy.Helper;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
@@ -40,7 +39,7 @@ public class DefaultPictureTemplateRenderPolicy
         if (null == picdata) return;
         XWPFPicture t = pictureTemplate.getPicture();
         NiceXWPFDocument doc = template.getXWPFDocument();
-        int format = Helper.suggestFileType(picdata.getPath());
+        int format = picdata.getPictureType().type();
         byte[] data = picdata.getData();
         XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", t);
         if (run.getParent().getPart() instanceof XWPFHeader) {

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.util.BytePictureUtils;
 
 @DisplayName("Picture Render test case")
@@ -42,15 +43,15 @@ public class PictureRenderTest {
                 put("localPicture", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
 
                 // 图片流文件
-                put("localBytePicture",
-                        new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/logo.png")));
+                put("localBytePicture", new PictureRenderData(100, 120, PictureType.PNG,
+                        new FileInputStream("src/test/resources/logo.png")));
 
                 // 网络图片
-                put("urlPicture", new PictureRenderData(100, 100, ".png",
+                put("urlPicture", new PictureRenderData(100, 100, PictureType.PNG,
                         BytePictureUtils.getUrlBufferedImage("http://deepoove.com/images/icecream.png")));
 
                 // java 图片
-                put("bufferImagePicture", new PictureRenderData(100, 120, ".png", bufferImage));
+                put("bufferImagePicture", new PictureRenderData(100, 120, PictureType.PNG, bufferImage));
 
                 // 不存在图片使用alt文字代替
                 PictureRenderData pictureRenderData = new PictureRenderData(120, 120, "src/test/resources/sayi11.png");

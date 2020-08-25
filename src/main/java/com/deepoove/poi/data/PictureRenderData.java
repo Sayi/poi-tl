@@ -31,14 +31,9 @@ import com.deepoove.poi.util.ByteUtils;
  */
 public class PictureRenderData implements RenderData {
 
-    /**
-     * 图片宽度
-     */
     private int width;
-    /**
-     * 图片高度
-     */
     private int height;
+
     /**
      * 图片路径
      */
@@ -55,19 +50,25 @@ public class PictureRenderData implements RenderData {
     private String altMeta = "";
 
     /**
+     * 图片类型
+     */
+    private PictureType pictureType;
+    
+    PictureRenderData() {
+    }
+
+    /**
      * 根据本地路径构建图片数据源
      * 
-     * @param width
-     *            宽度
-     * @param height
-     *            高度
-     * @param path
-     *            本地图片路径
+     * @param width  宽度
+     * @param height 高度
+     * @param path   本地图片路径
      */
     public PictureRenderData(int width, int height, String path) {
         this.width = width;
         this.height = height;
         this.path = path;
+        this.pictureType = PictureType.suggestFileType(path);
     }
 
     /**
@@ -78,7 +79,7 @@ public class PictureRenderData implements RenderData {
      * @param picture
      */
     public PictureRenderData(int width, int height, File picture) {
-        this(width, height, picture.getPath(), ByteUtils.getLocalByteArray(picture));
+        this(width, height, PictureType.suggestFileType(picture.getPath()), ByteUtils.getLocalByteArray(picture));
     }
 
     /**
@@ -86,10 +87,11 @@ public class PictureRenderData implements RenderData {
      * 
      * @param width
      * @param height
-     * @param picture
+     * @param pictureType
+     * @param inputStream
      */
-    public PictureRenderData(int width, int height, String format, InputStream input) {
-        this(width, height, format, ByteUtils.toByteArray(input));
+    public PictureRenderData(int width, int height, PictureType pictureType, InputStream inputStream) {
+        this(width, height, pictureType, ByteUtils.toByteArray(inputStream));
     }
 
     /**
@@ -97,9 +99,34 @@ public class PictureRenderData implements RenderData {
      * 
      * @param width
      * @param height
-     * @param format
+     * @param pictureType
      * @param image
      */
+    public PictureRenderData(int width, int height, PictureType pictureType, BufferedImage image) {
+        this(width, height, pictureType, BytePictureUtils.getBufferByteArray(image, pictureType.format()));
+    }
+
+    /**
+     * create picture by picture type and byte[]
+     * 
+     * @param width
+     * @param height
+     * @param pictureType
+     * @param data        {@link BytePictureUtils}
+     */
+    public PictureRenderData(int width, int height, PictureType pictureType, byte[] data) {
+        this.width = width;
+        this.height = height;
+        this.pictureType = pictureType;
+        this.data = data;
+    }
+
+    @Deprecated
+    public PictureRenderData(int width, int height, String format, InputStream input) {
+        this(width, height, format, ByteUtils.toByteArray(input));
+    }
+
+    @Deprecated
     public PictureRenderData(int width, int height, String format, BufferedImage image) {
         this(width, height, format, BytePictureUtils.getBufferByteArray(image, format));
     }
@@ -107,19 +134,17 @@ public class PictureRenderData implements RenderData {
     /**
      * 根据字节数组构建图片数据源
      * 
-     * @param width
-     *            宽度
-     * @param height
-     *            高度
-     * @param format
-     *            标识图片后缀，如.png、.jpg等
-     * @param data
-     *            图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
+     * @param width  宽度
+     * @param height 高度
+     * @param format 标识图片后缀，如.png、.jpg等
+     * @param data   图片byte[]数据，可以通过工具类{@link BytePictureUtils}生成
      */
+    @Deprecated
     public PictureRenderData(int width, int height, String format, byte[] data) {
         this.width = width;
         this.height = height;
         this.path = format;
+        this.pictureType = PictureType.suggestFileType(format);
         this.data = data;
     }
 
@@ -161,6 +186,14 @@ public class PictureRenderData implements RenderData {
 
     public void setAltMeta(String altMeta) {
         this.altMeta = altMeta;
+    }
+
+    public PictureType getPictureType() {
+        return pictureType;
+    }
+
+    public void setPictureType(PictureType pictureType) {
+        this.pictureType = pictureType;
     }
 
 }
