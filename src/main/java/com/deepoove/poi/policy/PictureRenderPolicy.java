@@ -16,20 +16,25 @@
 package com.deepoove.poi.policy;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
     @Override
     protected boolean validate(PictureRenderData data) {
-        return (null != data && (null != data.getData() || null != data.getPath()));
+        if (null == data) return false;
+        if (null == data.getPictureType()) {
+            throw new RenderException("PictureRenderData must set picture type!");
+        }
+        return true;
     }
 
     @Override
@@ -50,8 +55,10 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            try (InputStream ins = null == picture.getData() ? new FileInputStream(picture.getPath())
-                    : new ByteArrayInputStream(picture.getData())) {
+            if (null == picture.getData()) {
+                throw new IOException("Can't get input data from picture!");
+            }
+            try (InputStream ins = new ByteArrayInputStream(picture.getData())) {
                 run.addPicture(ins, picture.getPictureType().type(), "Generated", Units.pixelToEMU(picture.getWidth()),
                         Units.pixelToEMU(picture.getHeight()));
             }

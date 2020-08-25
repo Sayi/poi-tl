@@ -35,14 +35,9 @@ public class PictureRenderData implements RenderData {
     private int height;
 
     /**
-     * 图片路径
-     */
-    private String path;
-
-    /**
      * 图片二进制数据
      */
-    private transient byte[] data;
+    private byte[] data;
 
     /**
      * 当图片不存在时，显示的文字
@@ -53,7 +48,7 @@ public class PictureRenderData implements RenderData {
      * 图片类型
      */
     private PictureType pictureType;
-    
+
     PictureRenderData() {
     }
 
@@ -65,10 +60,7 @@ public class PictureRenderData implements RenderData {
      * @param path   本地图片路径
      */
     public PictureRenderData(int width, int height, String path) {
-        this.width = width;
-        this.height = height;
-        this.path = path;
-        this.pictureType = PictureType.suggestFileType(path);
+        this(width, height, new File(path));
     }
 
     /**
@@ -143,7 +135,6 @@ public class PictureRenderData implements RenderData {
     public PictureRenderData(int width, int height, String format, byte[] data) {
         this.width = width;
         this.height = height;
-        this.path = format;
         this.pictureType = PictureType.suggestFileType(format);
         this.data = data;
     }
@@ -162,14 +153,6 @@ public class PictureRenderData implements RenderData {
 
     public void setHeight(int height) {
         this.height = height;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public byte[] getData() {

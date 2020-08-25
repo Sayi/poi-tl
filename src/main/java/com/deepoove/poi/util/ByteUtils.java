@@ -16,11 +16,11 @@
 package com.deepoove.poi.util;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
@@ -54,10 +54,11 @@ public final class ByteUtils {
      * @return
      */
     public static byte[] getLocalByteArray(File res) {
+        Path path = res.toPath();
         try {
-            return toByteArray(new FileInputStream(res));
-        } catch (FileNotFoundException e) {
-            logger.error("FileNotFound", e);
+            return Files.readAllBytes(path);
+        } catch (IOException e) {
+            logger.error("readAllBytes error", e);
         }
         return null;
     }

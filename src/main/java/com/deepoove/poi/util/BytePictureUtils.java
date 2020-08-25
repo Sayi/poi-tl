@@ -97,13 +97,15 @@ public final class BytePictureUtils {
      * @return
      */
     public static byte[] getBufferByteArray(BufferedImage image, String format) {
+        if (null == image) return null;
         String formatName = (StringUtils.isNotEmpty(format) &&  format.charAt(0) == '.') ? format.substring(1) : format;
         if (StringUtils.isEmpty(formatName)) formatName = "png";
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, formatName, os);
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("getBufferByteArray error", e);
+            return null;
         }
         return os.toByteArray();
     }
