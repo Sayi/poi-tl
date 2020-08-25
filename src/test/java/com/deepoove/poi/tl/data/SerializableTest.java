@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
+import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
@@ -79,16 +80,10 @@ public class SerializableTest {
 
     @Test
     void testChartRenderData() throws Exception {
-        ChartMultiSeriesRenderData data = new ChartMultiSeriesRenderData();
-        data.setChartTitle("ComboChartTitle");
-        data.setCategories(new String[] { "中文", "English", "日本語", "português" });
-        List<SeriesRenderData> series = new ArrayList<>();
-        SeriesRenderData b0 = new SeriesRenderData();
-        b0.setName("countries");
-        b0.setComboType(ComboType.BAR);
-        b0.setValues(new Double[] { 15.0, 6.0, 18.0, 231.0 });
-        series.add(b0);
-        data.setSeriesDatas(series);
+        ChartMultiSeriesRenderData data = Charts
+                .ofComboSeries("ComboChartTitle", new String[] { "中文", "English", "日本語", "português" })
+                .addBarSeries("countries", new Double[] { 15.0, 6.0, 18.0, 231.0 }).create();
+
         ChartMultiSeriesRenderData result = write(data).getResult(ChartMultiSeriesRenderData.class);
 
         assertEquals(result.getChartTitle(), data.getChartTitle());
