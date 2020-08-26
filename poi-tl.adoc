@@ -1286,7 +1286,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 image::example/example_looptable_output.png[align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/java/com/deepoove/poi/policy/HackLoopTableRenderPolicyTest.java[JUnit HackLoopTableRenderPolicyTest]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/policy/HackLoopTableRenderPolicyTest.java[JUnit HackLoopTableRenderPolicyTest]
 
 == 示例
 接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。
