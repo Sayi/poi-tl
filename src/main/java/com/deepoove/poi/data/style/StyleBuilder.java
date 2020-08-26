@@ -68,6 +68,16 @@ public class StyleBuilder {
         return this;
     }
 
+    public StyleBuilder buildSuper() {
+        style.setVertAlign("superscript");
+        return this;
+    }
+
+    public StyleBuilder buildSub() {
+        style.setVertAlign("subscript");
+        return this;
+    }
+
     public Style build() {
         return style;
     }

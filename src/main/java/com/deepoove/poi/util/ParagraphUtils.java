@@ -16,7 +16,10 @@
 
 package com.deepoove.poi.util;
 
+import java.util.List;
+
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 public final class ParagraphUtils {
 
@@ -33,6 +36,17 @@ public final class ParagraphUtils {
             len--;
         }
         return (st > 0 || len < value.length()) ? value.substring(st, len) : value;
+    }
+
+    public static Integer getRunPos(XWPFRun run) {
+        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
+        List<XWPFRun> runs = paragraph.getRuns();
+        for (int i = 0; i < runs.size(); i++) {
+            if (run == runs.get(i)) {
+                return i;
+            }
+        }
+        return null;
     }
 
 }

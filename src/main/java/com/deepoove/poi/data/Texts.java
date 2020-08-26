@@ -51,6 +51,24 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         return this;
     }
 
+    public Texts bold() {
+        if (null != this.style) {
+            style.setBold(true);
+        } else {
+            this.style = StyleBuilder.newBuilder().buildBold().build();
+        }
+        return this;
+    }
+
+    public Texts sup() {
+        if (null != this.style) {
+            style.setVertAlign("superscript");;
+        } else {
+            this.style = StyleBuilder.newBuilder().buildSuper().build();
+        }
+        return this;
+    }
+
     public Texts link(String url) {
         this.url = url;
         // 链接默认蓝色加下划线

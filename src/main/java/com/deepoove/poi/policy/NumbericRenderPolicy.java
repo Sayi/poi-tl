@@ -83,7 +83,7 @@ public class NumbericRenderPolicy extends AbstractRenderPolicy<NumbericRenderDat
         private static XWPFRun createRunLine(XWPFRun run, BodyContainer bodyContainer, Style style,
                 BigInteger numID) {
             XWPFParagraph paragraph = bodyContainer.insertNewParagraph(run);
-            StyleUtils.styleParagraph(paragraph, style);
+            StyleUtils.styleParaRpr(paragraph, style);
             paragraph.setNumID(numID);
             return paragraph.createRun();
         }
