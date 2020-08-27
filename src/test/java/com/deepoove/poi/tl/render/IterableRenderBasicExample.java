@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -53,14 +53,9 @@ public class IterableRenderBasicExample {
 
                 put("solution_compare", new MiniTableRenderData(header, tableDatas, MiniTableRenderData.WIDTH_A4_FULL));
 
-                put("feature", new NumbericRenderData(new ArrayList<TextRenderData>() {
-                    {
-                        add(new TextRenderData("Plug-in grammar, add new grammar by yourself"));
-                        add(new TextRenderData(
-                                "Supports word text, local pictures, web pictures, table, list, header, footer..."));
-                        add(new TextRenderData("Templates, not just templates, but also style templates"));
-                    }
-                }));
+                put("feature", Numberings.ofBullet().addItem("Plug-in grammar, add new grammar by yourself")
+                        .addItem("Supports word text, local pictures, web pictures, table, list, header, footer...")
+                        .addItem("Templates, not just templates, but also style templates").create());
             }
         };
 

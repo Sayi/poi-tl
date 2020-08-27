@@ -1,13 +1,13 @@
 package com.deepoove.poi.tl.example;
 
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 
 public class ExperienceData {
     private String company;
     private String department;
     private String time;
     private String position;
-    private NumbericRenderData responsibility;
+    private NumberingRenderData responsibility;
 
     public String getCompany() {
         return company;
@@ -41,11 +41,11 @@ public class ExperienceData {
         this.position = position;
     }
 
-    public NumbericRenderData getResponsibility() {
+    public NumberingRenderData getResponsibility() {
         return responsibility;
     }
 
-    public void setResponsibility(NumbericRenderData responsibility) {
+    public void setResponsibility(NumberingRenderData responsibility) {
         this.responsibility = responsibility;
     }
 

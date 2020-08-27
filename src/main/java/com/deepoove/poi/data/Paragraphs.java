@@ -19,47 +19,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.Style;
 
 /**
  * @author Sayi
  *
  */
-public class ParagraphRenderData implements RenderData {
-
-    private static final long serialVersionUID = 1L;
+public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
 
     private List<RenderData> contents = new ArrayList<>();
     private ParagraphStyle paragraphStyle;
 
-    public ParagraphRenderData addText(TextRenderData text) {
+    private Paragraphs() {
+    }
+
+    public static Paragraphs of() {
+        Paragraphs inst = new Paragraphs();
+        return inst;
+    }
+
+    public Paragraphs addText(TextRenderData text) {
         contents.add(text);
         return this;
     }
 
-    public ParagraphRenderData addText(String text) {
+    public Paragraphs addText(String text) {
         contents.add(Texts.of(text).create());
         return this;
     }
 
-    public ParagraphRenderData addPicture(PictureRenderData picture) {
+    public Paragraphs addPicture(PictureRenderData picture) {
         contents.add(picture);
         return this;
     }
 
-    public List<RenderData> getContents() {
-        return contents;
-    }
-
-    public void setContents(List<RenderData> contents) {
-        this.contents = contents;
-    }
-
-    public ParagraphStyle getParagraphStyle() {
-        return paragraphStyle;
-    }
-
-    public void setParagraphStyle(ParagraphStyle style) {
+    public Paragraphs paraStyle(ParagraphStyle style) {
         this.paragraphStyle = style;
+        return this;
+    }
+
+    public Paragraphs glyphStyle(Style style) {
+        if (null == this.paragraphStyle) {
+            this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
+        } else {
+            this.paragraphStyle.setGlyphStyle(style);
+        }
+        return this;
+    }
+
+    @Override
+    public ParagraphRenderData create() {
+        ParagraphRenderData data = new ParagraphRenderData();
+        data.setContents(contents);
+        data.setParagraphStyle(paragraphStyle);
+        return data;
     }
 
 }

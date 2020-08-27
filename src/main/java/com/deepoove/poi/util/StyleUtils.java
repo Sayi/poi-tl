@@ -239,7 +239,7 @@ public final class StyleUtils {
     public static void styleParagraph(XWPFParagraph paragraph, ParagraphStyle paragraphStyle) {
         if (null == paragraph || null == paragraphStyle) return;
         stylePpr(paragraph, paragraphStyle);
-        styleParaRpr(paragraph, paragraphStyle.getGlobalTextStyle());
+        styleParaRpr(paragraph, paragraphStyle.getGlyphStyle());
     }
 
     public static void stylePpr(XWPFParagraph paragraph, ParagraphStyle style) {

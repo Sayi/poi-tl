@@ -1,7 +1,6 @@
 package com.deepoove.poi.tl.issue;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -38,7 +37,6 @@ public class Issue183 {
         tableDatas = Arrays.asList(row0, row1, row2, row3, row4);
     }
 
-    @SuppressWarnings("serial")
     @Test
     public void testNullMerge() throws Exception {
 
@@ -48,14 +46,10 @@ public class Issue183 {
         params.put("table",
                 new MiniTableRenderData(header, tableDatas, MiniTableRenderData.WIDTH_A4_FULL));
 
-        params.put("list", new NumbericRenderData(new ArrayList<TextRenderData>() {
-            {
-                add(new TextRenderData("Plug-in grammar, add new grammar by yourself"));
-                add(new TextRenderData(
-                        "Supports word text, local pictures, web pictures, table, list, header, footer..."));
-                add(new TextRenderData("Templates, not just templates, but also style templates"));
-            }
-        }));
+        params.put("list",
+                NumberingRenderData.build(new TextRenderData("Plug-in grammar, add new grammar by yourself"),
+                        new TextRenderData("Supports word text, local pictures, web pictures, table, list, header, footer..."),
+                        new TextRenderData("Templates, not just templates, but also style templates")));
 
         params.put("docx",
                 new DocxRenderData(new File("src/test/resources/issue/157_MERGE.docx")));

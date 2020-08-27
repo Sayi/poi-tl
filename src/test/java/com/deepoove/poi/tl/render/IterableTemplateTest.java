@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingFormat;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -187,8 +188,8 @@ public class IterableTemplateTest {
             {
                 put("name", "Sayi");
                 put("addrs", addrs);
-                put("list", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL,
-                        Arrays.asList(textRenderData, textRenderData)));
+                put("list", new NumberingRenderData(NumberingFormat.DECIMAL,
+                        textRenderData, textRenderData));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 put("table", new MiniTableRenderData(Arrays.asList(row0, row1, row2)));
 
@@ -197,8 +198,8 @@ public class IterableTemplateTest {
         users.add(new HashMap<String, Object>() {
             {
                 put("name", "Deepoove");
-                put("list", new NumbericRenderData(NumbericRenderData.FMT_DECIMAL,
-                        Arrays.asList(textRenderData, textRenderData)));
+                put("list", new NumberingRenderData(NumberingFormat.DECIMAL,
+                        textRenderData, textRenderData));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
 
             }

@@ -28,7 +28,7 @@ import org.apache.poi.xddf.usermodel.chart.ChartTypes;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.MiniTableRenderPolicy;
-import com.deepoove.poi.policy.NumbericRenderPolicy;
+import com.deepoove.poi.policy.NumberingRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
@@ -134,7 +134,7 @@ public class Configure implements Cloneable {
         plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
         plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
         plugin(GramerSymbol.TABLE, new MiniTableRenderPolicy());
-        plugin(GramerSymbol.NUMBERIC, new NumbericRenderPolicy());
+        plugin(GramerSymbol.NUMBERING, new NumberingRenderPolicy());
         plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
 
         RenderPolicy multiSeriesRenderPolicy = new MultiSeriesChartTemplateRenderPolicy();

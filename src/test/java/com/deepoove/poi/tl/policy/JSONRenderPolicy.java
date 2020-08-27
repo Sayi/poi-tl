@@ -20,14 +20,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
-import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.policy.ParagraphRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.util.StyleUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
@@ -66,12 +65,11 @@ public class JSONRenderPolicy extends AbstractRenderPolicy<String> {
         JsonNode jsonNode = objectMapper.readTree(data);
         List<TextRenderData> codes = convert(jsonNode, 1);
 
-        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
+        ParagraphRenderData paragraphRenderData = new ParagraphRenderData();
         codes.forEach(code -> {
-            XWPFRun span = paragraph.createRun();
-            StyleUtils.styleRun(span, run);
-            TextRenderPolicy.Helper.renderTextRun(span, code);
+            paragraphRenderData.addText(code);
         });
+        ParagraphRenderPolicy.Helper.renderParagraph(run, paragraphRenderData);
 
     }
 

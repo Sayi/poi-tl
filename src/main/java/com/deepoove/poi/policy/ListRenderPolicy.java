@@ -20,7 +20,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
@@ -47,8 +47,8 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
                 TextRenderPolicy.Helper.renderTextRun(createRun, data);
             } else if (data instanceof MiniTableRenderData) {
                 MiniTableRenderPolicy.Helper.renderMiniTable(run, (MiniTableRenderData) data);
-            } else if (data instanceof NumbericRenderData) {
-                NumbericRenderPolicy.Helper.renderNumberic(run, (NumbericRenderData) data);
+            } else if (data instanceof NumberingRenderData) {
+                NumberingRenderPolicy.Helper.renderNumbering(run, (NumberingRenderData) data);
             } else if (data instanceof PictureRenderData) {
                 PictureRenderPolicy.Helper.renderPicture(bodyContainer.insertNewParagraph(run).createRun(),
                         (PictureRenderData) data);

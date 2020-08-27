@@ -1,7 +1,7 @@
 package com.deepoove.poi.tl.source;
 
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.el.Name;
 
@@ -10,7 +10,7 @@ public class MyDataModel extends DataSourceBaseTest {
     private String word;
     private String time;
     private String what;
-    private NumbericRenderData feature;
+    private NumberingRenderData feature;
     @Name("solution_compare")
     private MiniTableRenderData solutionCompare;
     private PictureRenderData portrait;
@@ -26,11 +26,11 @@ public class MyDataModel extends DataSourceBaseTest {
         return this.what;
     }
 
-    public void setFeature(NumbericRenderData feature) {
+    public void setFeature(NumberingRenderData feature) {
         this.feature = feature;
     }
 
-    public NumbericRenderData getFeature() {
+    public NumberingRenderData getFeature() {
         return this.feature;
     }
 

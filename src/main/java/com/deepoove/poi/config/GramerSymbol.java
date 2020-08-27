@@ -45,7 +45,7 @@ public enum GramerSymbol {
     /**
      * 列表
      */
-    NUMBERIC('*'),
+    NUMBERING('*'),
 
     /**
      * 引用

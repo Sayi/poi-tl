@@ -17,7 +17,7 @@ public class ParagraphStyle implements Serializable {
      */
     private double spacing;
 
-    private Style globalTextStyle;
+    private Style glyphStyle;
 
     public ParagraphStyle() {
     }
@@ -28,7 +28,7 @@ public class ParagraphStyle implements Serializable {
         this.indentHangingChars = builder.indentHangingChars;
         this.align = builder.align;
         this.spacing = builder.spacing;
-        this.globalTextStyle = builder.globalTextStyle;
+        this.glyphStyle = builder.glyphStyle;
     }
 
     public double getIndentLeftChars() {
@@ -71,12 +71,12 @@ public class ParagraphStyle implements Serializable {
         this.spacing = spacing;
     }
 
-    public Style getGlobalTextStyle() {
-        return globalTextStyle;
+    public Style getGlyphStyle() {
+        return glyphStyle;
     }
 
-    public void setGlobalTextStyle(Style globalTextStyle) {
-        this.globalTextStyle = globalTextStyle;
+    public void setGlyphStyle(Style glyphStyle) {
+        this.glyphStyle = glyphStyle;
     }
 
     /**
@@ -97,7 +97,7 @@ public class ParagraphStyle implements Serializable {
         private double indentHangingChars;
         private ParagraphAlignment align;
         private double spacing;
-        private Style globalTextStyle;
+        private Style glyphStyle;
 
         private Builder() {
         }
@@ -127,8 +127,8 @@ public class ParagraphStyle implements Serializable {
             return this;
         }
 
-        public Builder withGlobalTextStyle(Style globalTextStyle) {
-            this.globalTextStyle = globalTextStyle;
+        public Builder withGlyphStyle(Style glyphStyle) {
+            this.glyphStyle = glyphStyle;
             return this;
         }
 

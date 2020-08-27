@@ -10,9 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,14 +22,13 @@ import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.SeriesRenderData;
-import com.deepoove.poi.data.SeriesRenderData.ComboType;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
@@ -121,23 +118,25 @@ public class SerializableTest {
     }
 
     @Test
-    void testNumbericRenderData() throws Exception {
+    void testNumberingRenderData() throws Exception {
         Style fmtStyle = StyleBuilder.newBuilder().buildColor("00FF00").build();
-        NumbericRenderData data = Numberings.ofBullet()
+        NumberingRenderData data = Numberings.ofBullet()
                 .addItem(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."))
-                .addItem(new TextRenderData("Deeply in love with the things you love, just deepoove."))
+                .addItem(Paragraphs.of().addText("Deeply in love with the things you love, just deepoove.")
+                        .glyphStyle(fmtStyle).create())
                 .addItem(new TextRenderData("5285c5", "Deeply in love with the things you love, just deepoove."))
-                .style(fmtStyle).create();
+                .create();
 
-        NumbericRenderData result = write(data).getResult(NumbericRenderData.class);
+        NumberingRenderData result = write(data).getResult(NumberingRenderData.class);
 
         assertEquals(result.getFormat(), data.getFormat());
-        assertEquals(result.getStyle().getColor(), data.getStyle().getColor());
         for (int i = 0; i < 3; i++) {
-            TextRenderData dataTxt = (TextRenderData) data.getItems().get(i);
-            TextRenderData resultTxt = (TextRenderData) result.getItems().get(i);
+            TextRenderData dataTxt = (TextRenderData) data.getItems().get(i).getContents().get(0);
+            TextRenderData resultTxt = (TextRenderData) data.getItems().get(i).getContents().get(0);
             assertEquals(resultTxt.getText(), dataTxt.getText());
         }
+        assertEquals(result.getItems().get(1).getParagraphStyle().getGlyphStyle().getColor(),
+                data.getItems().get(1).getParagraphStyle().getGlyphStyle().getColor());
     }
 
     private SerializableTest write(Object data) throws IOException {

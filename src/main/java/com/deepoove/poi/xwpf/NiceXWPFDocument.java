@@ -219,7 +219,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         return idenifierManagerWrapper;
     }
 
-    public BigInteger addNewNumbericId(NumberingFormat numFmt) {
+    public BigInteger addNewNumberingId(NumberingFormat numFmt) {
         XWPFNumbering numbering = this.getNumbering();
         if (null == numbering) {
             numbering = this.createNumbering();

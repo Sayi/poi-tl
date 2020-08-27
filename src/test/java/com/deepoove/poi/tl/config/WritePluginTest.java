@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.NumbericRenderData;
+import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.WhereDelegate;
@@ -67,7 +67,7 @@ public class WritePluginTest {
                 // anything
                 List<String> thing = context.getThing();
                 // do 列表
-                where.renderNumberic(NumbericRenderData.build(thing.toArray(new String[] {})));
+                where.renderNumbering(NumberingRenderData.build(thing.toArray(new String[] {})));
                 // clear
                 clearPlaceholder(context, true);
             }

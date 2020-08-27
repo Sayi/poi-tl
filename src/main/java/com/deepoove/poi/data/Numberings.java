@@ -16,13 +16,10 @@
 package com.deepoove.poi.data;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.deepoove.poi.data.style.Style;
+public class Numberings implements RenderDataBuilder<NumberingRenderData> {
 
-public class Numberings implements RenderDataBuilder<NumbericRenderData> {
-
-    private NumbericRenderData data;
+    private NumberingRenderData data;
 
     public static Numberings ofBullet() {
         return of(NumberingFormat.BULLET);
@@ -38,19 +35,22 @@ public class Numberings implements RenderDataBuilder<NumbericRenderData> {
 
     public static Numberings of(NumberingFormat format) {
         Numberings inst = new Numberings();
-        inst.data = new NumbericRenderData(format, new ArrayList<RenderData>());
+        inst.data = new NumberingRenderData(format, new ArrayList<>());
         return inst;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Numberings addItem(TextRenderData item) {
-        ((List) data.getItems()).add(item);
+    public Numberings addItem(ParagraphRenderData item) {
+        data.getItems().add(item);
         return this;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Numberings addItem(TextRenderData item) {
+        data.getItems().add(Paragraphs.of().addText(item).create());
+        return this;
+    }
+
     public Numberings addItem(PictureRenderData item) {
-        ((List) data.getItems()).add(item);
+        data.getItems().add(Paragraphs.of().addPicture(item).create());
         return this;
     }
 
@@ -59,13 +59,8 @@ public class Numberings implements RenderDataBuilder<NumbericRenderData> {
         return this;
     }
 
-    public Numberings style(Style fmtStyle) {
-        data.setStyle(fmtStyle);
-        return this;
-    }
-
     @Override
-    public NumbericRenderData create() {
+    public NumberingRenderData create() {
         return data;
     }
 
