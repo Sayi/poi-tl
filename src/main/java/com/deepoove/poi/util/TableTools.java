@@ -21,6 +21,7 @@ import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -33,6 +34,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableStyle;
 
 /**
@@ -53,14 +55,10 @@ public final class TableTools {
     /**
      * 合并行单元格
      * 
-     * @param table
-     *            表格对象
-     * @param row
-     *            行 从0开始
-     * @param fromCol
-     *            起始列
-     * @param toCol
-     *            结束列
+     * @param table   表格对象
+     * @param row     行 从0开始
+     * @param fromCol 起始列
+     * @param toCol   结束列
      */
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol, int toCol) {
         if (toCol <= fromCol) return;
@@ -79,14 +77,10 @@ public final class TableTools {
     /**
      * 合并列单元格
      * 
-     * @param table
-     *            表格对象
-     * @param col
-     *            列 从0开始
-     * @param fromRow
-     *            起始行
-     * @param toRow
-     *            结束行
+     * @param table   表格对象
+     * @param col     列 从0开始
+     * @param fromRow 起始行
+     * @param toRow   结束行
      */
     public static void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
         if (toRow <= fromRow) return;
@@ -107,17 +101,15 @@ public final class TableTools {
     /**
      * 设置表格每列的宽度
      * 
-     * @param table
-     *            表格对象
-     * @param widths
-     *            每列的宽度，单位CM
+     * @param table  表格对象
+     * @param widths 每列的宽度，单位CM
      */
     public static void widthTable(XWPFTable table, float[] colWidths) {
         float widthCM = 0;
         for (float w : colWidths) {
             widthCM += w;
         }
-        long width = (int) (widthCM / 2.54 * 1440);
+        int width = UnitUtils.cm2Twips(widthCM);
         CTTblPr tblPr = getTblPr(table);
         CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
         tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
@@ -131,11 +123,11 @@ public final class TableTools {
 
             for (float w : colWidths) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf((long) (w / 2.54 * 1440)));
+                addNewGridCol.setW(BigInteger.valueOf(UnitUtils.cm2Twips(w)));
             }
         }
     }
-    
+
     /**
      * 表格设置宽度，每列平均分布
      * 
@@ -144,7 +136,7 @@ public final class TableTools {
      * @param cols
      */
     public static void widthTable(XWPFTable table, float widthCM, int cols) {
-        int width = (int)(widthCM/2.54*1440);
+        int width = UnitUtils.cm2Twips(widthCM);
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         if (null == tblPr) {
             tblPr = table.getCTTbl().addNewTblPr();
@@ -195,6 +187,7 @@ public final class TableTools {
 
     /**
      * 构建基础表格
+     * 
      * @param table
      * @param col
      * @param width
@@ -206,13 +199,31 @@ public final class TableTools {
         borderTable(table, defaultBorderSize);
         styleTable(table, style);
     }
-    
+
     public static boolean isInsideTable(XWPFRun run) {
-        return ((XWPFParagraph)run.getParent()).getPartType() == BodyType.TABLECELL;
+        return ((XWPFParagraph) run.getParent()).getPartType() == BodyType.TABLECELL;
     }
 
+    @SuppressWarnings("deprecation")
     public static void styleTable(XWPFTable table, TableStyle style) {
         StyleUtils.styleTable(table, style);
+    }
+
+    public static void setBorder(FourthConsumer<XWPFBorderType, Integer, Integer, String> consumer,
+            BorderStyle border) {
+        if (null != border) consumer.accept(border.getType(), border.getSize(), 0, border.getColor());
+    }
+
+    public static int obtainColumnSize(XWPFTable table) {
+        return table.getRows().get(0).getTableCells().size();
+    }
+
+    public static CTTblGrid getTblGrid(XWPFTable table) {
+        CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
+        if (null == tblGrid) {
+            tblGrid = table.getCTTbl().addNewTblGrid();
+        }
+        return tblGrid;
     }
 
     private static CTTblPr getTblPr(XWPFTable table) {
@@ -224,8 +235,7 @@ public final class TableTools {
     }
 
     private static CTTcPr getTcPr(XWPFTableCell cell) {
-        CTTcPr tcPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr()
-                : cell.getCTTc().addNewTcPr();
+        CTTcPr tcPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr() : cell.getCTTc().addNewTcPr();
         return tcPr;
     }
 

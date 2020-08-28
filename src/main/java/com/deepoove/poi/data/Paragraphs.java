@@ -18,6 +18,8 @@ package com.deepoove.poi.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
 
@@ -63,6 +65,24 @@ public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
             this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
         } else {
             this.paragraphStyle.setGlyphStyle(style);
+        }
+        return this;
+    }
+
+    public Paragraphs left() {
+        if (null == this.paragraphStyle) {
+            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.LEFT).build();
+        } else {
+            this.paragraphStyle.setAlign(ParagraphAlignment.LEFT);
+        }
+        return this;
+    }
+
+    public Paragraphs center() {
+        if (null == this.paragraphStyle) {
+            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
+        } else {
+            this.paragraphStyle.setAlign(ParagraphAlignment.CENTER);
         }
         return this;
     }

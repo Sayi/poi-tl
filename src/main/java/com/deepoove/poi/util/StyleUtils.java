@@ -16,15 +16,20 @@
 package com.deepoove.poi.util;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
+import org.apache.poi.xwpf.usermodel.TableWidthType;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
@@ -33,32 +38,37 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
+import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.data.style.TableV2Style;
 
 /**
- * 样式工具类
+ * set style for run, paragraph, table...
  * 
  * @author Sayi
- * @version
  */
 public final class StyleUtils {
 
     /**
-     * 设置run的样式
+     * set run style by style
      * 
      * @param run
      * @param style
@@ -66,15 +76,6 @@ public final class StyleUtils {
     public static void styleRun(XWPFRun run, Style style) {
         if (null == run || null == style) return;
         String color = style.getColor();
-        String fontFamily = style.getFontFamily();
-        int fontSize = style.getFontSize();
-        Boolean bold = style.isBold();
-        Boolean italic = style.isItalic();
-        Boolean strike = style.isStrike();
-        Boolean underLine = style.isUnderLine();
-        Enum highlightColor = style.getHighlightColor();
-        int twips = style.getCharacterSpacing();
-        String vertAlign = style.getVertAlign();
         CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
         if (StringUtils.isNotBlank(color)) {
             // run.setColor(color);
@@ -83,7 +84,9 @@ public final class StyleUtils {
             ctColor.setVal(color);
             if (ctColor.isSetThemeColor()) ctColor.unsetThemeColor();
         }
+        int fontSize = style.getFontSize();
         if (0 != fontSize) run.setFontSize(fontSize);
+        String fontFamily = style.getFontFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
             run.setFontFamily(fontFamily);
             CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
@@ -92,6 +95,7 @@ public final class StyleUtils {
             fonts.setCs(fontFamily);
             fonts.setEastAsia(fontFamily);
         }
+        Enum highlightColor = style.getHighlightColor();
         if (null != highlightColor) {
             CTHighlight highlight = pr.isSetHighlight() ? pr.getHighlight() : pr.addNewHighlight();
             STHighlightColor hColor = highlight.xgetVal();
@@ -104,54 +108,141 @@ public final class StyleUtils {
                 highlight.xsetVal(hColor);
             }
         }
+        Boolean bold = style.isBold();
         if (null != bold) run.setBold(bold);
+        Boolean italic = style.isItalic();
         if (null != italic) run.setItalic(italic);
+        Boolean strike = style.isStrike();
         if (null != strike) run.setStrikeThrough(strike);
+        Boolean underLine = style.isUnderLine();
         if (Boolean.TRUE.equals(underLine)) {
             run.setUnderline(UnderlinePatterns.SINGLE);
         }
+        int twips = style.getCharacterSpacing();
         // in twentieths of a point
         if (0 != twips) run.setCharacterSpacing(20 * twips);
+        String vertAlign = style.getVertAlign();
         if (StringUtils.isNotBlank(vertAlign)) {
             run.setVerticalAlignment(vertAlign);
         }
     }
 
     /**
-     * 重复样式
+     * set run style by other run
      * 
-     * @param destRun 新建的run
-     * @param srcRun  原始run
+     * @param dest
+     * @param src
      */
-    public static void styleRun(XWPFRun destRun, XWPFRun srcRun) {
-        if (null == destRun || null == srcRun) return;
-        CTR ctr = srcRun.getCTR();
-        if (ctr.isSetRPr() && ctr.getRPr().isSetRStyle()) {
-            String val = ctr.getRPr().getRStyle().getVal();
-            if (StringUtils.isNotBlank(val)) {
-                CTRPr pr = destRun.getCTR().isSetRPr() ? destRun.getCTR().getRPr() : destRun.getCTR().addNewRPr();
-                CTString rStyle = pr.isSetRStyle() ? pr.getRStyle() : pr.addNewRStyle();
-                rStyle.setVal(val);
-            }
-        }
-        if (Boolean.TRUE.equals(srcRun.isBold())) destRun.setBold(srcRun.isBold());
-        destRun.setColor(srcRun.getColor());
-        // destRun.setCharacterSpacing(srcRun.getCharacterSpacing());
-        if (StringUtils.isNotBlank(srcRun.getFontFamily())) destRun.setFontFamily(srcRun.getFontFamily());
-        int fontSize = srcRun.getFontSize();
-        if (-1 != fontSize) destRun.setFontSize(fontSize);
-        if (Boolean.TRUE.equals(srcRun.isItalic())) destRun.setItalic(srcRun.isItalic());
-        if (Boolean.TRUE.equals(srcRun.isStrikeThrough())) destRun.setStrikeThrough(srcRun.isStrikeThrough());
-        destRun.setUnderline(srcRun.getUnderline());
+    public static void styleRun(XWPFRun dest, XWPFRun src) {
+        if (null == dest || null == src) return;
+        if (StringUtils.isNotEmpty(src.getStyle())) dest.setStyle(src.getStyle());
+        if (Boolean.TRUE.equals(src.isBold())) dest.setBold(src.isBold());
+        dest.setColor(src.getColor());
+        if (0 != src.getCharacterSpacing()) dest.setCharacterSpacing(src.getCharacterSpacing());
+        if (StringUtils.isNotBlank(src.getFontFamily())) dest.setFontFamily(src.getFontFamily());
+        int fontSize = src.getFontSize();
+        if (-1 != fontSize) dest.setFontSize(fontSize);
+        if (Boolean.TRUE.equals(src.isItalic())) dest.setItalic(src.isItalic());
+        if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
+        dest.setUnderline(src.getUnderline());
     }
 
     /**
-     * 设置w:rPr的样式
+     * set paragraph style
+     * 
+     * @param paragraph
+     * @param style
+     */
+    public static void styleParagraph(XWPFParagraph paragraph, ParagraphStyle style) {
+        if (null == paragraph || null == style) return;
+        stylePpr(paragraph, style);
+        styleParaRpr(paragraph, style.getGlyphStyle());
+    }
+
+    /**
+     * set table style
+     * 
+     * @param table
+     * @param tableStyle
+     */
+    public static void styleTable(XWPFTable table, TableV2Style tableStyle) {
+        if (null == table || null == tableStyle) return;
+        String width = tableStyle.getWidth();
+        table.setWidth(width);
+
+        int[] colWidths = tableStyle.getColWidths();
+        if (null == colWidths && table.getWidthType() == TableWidthType.DXA) {
+            colWidths = UnitUtils.average(Integer.valueOf(width), TableTools.obtainColumnSize(table));
+            // TODO support calc col width of pct and auto for Apple Pages!
+        }
+        if (null != colWidths) {
+            CTTblGrid tblGrid = TableTools.getTblGrid(table);
+            for (int index = 0; index < colWidths.length; index++) {
+                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));
+
+                List<XWPFTableRow> rows = table.getRows();
+                for (XWPFTableRow row : rows) {
+                    row.getCell(index).setWidth(colWidths[index] + "");
+                }
+            }
+        }
+
+        TableTools.setBorder(table::setLeftBorder, tableStyle.getLeftBorder());
+        TableTools.setBorder(table::setRightBorder, tableStyle.getRightBorder());
+        TableTools.setBorder(table::setTopBorder, tableStyle.getTopBorder());
+        TableTools.setBorder(table::setBottomBorder, tableStyle.getBottomBorder());
+        TableTools.setBorder(table::setInsideHBorder, tableStyle.getInsideHBorder());
+        TableTools.setBorder(table::setInsideVBorder, tableStyle.getInsideVBorder());
+
+        if (null != tableStyle.getAlign()) {
+            table.setTableAlignment(tableStyle.getAlign());
+        }
+
+    }
+
+    /**
+     * set row style
+     * 
+     * @param row
+     * @param rowStyle
+     */
+    public static void styleTableRow(XWPFTableRow row, RowStyle rowStyle) {
+        if (null == row || null == rowStyle) return;
+        int height = rowStyle.getHeight();
+        if (0 != height) {
+            row.setHeight(height);
+            CTRow ctRow = row.getCtRow();
+            CTTrPr properties = (ctRow.isSetTrPr()) ? ctRow.getTrPr() : ctRow.addNewTrPr();
+            CTHeight h = properties.sizeOfTrHeightArray() == 0 ? properties.addNewTrHeight()
+                    : properties.getTrHeightArray(0);
+            h.setHRule(STHeightRule.AT_LEAST);
+        }
+    }
+
+    /**
+     * set cell style
+     * 
+     * @param cell
+     * @param cellStyle
+     */
+    public static void styleTableCell(XWPFTableCell cell, CellStyle cellStyle) {
+        if (null == cell || null == cellStyle) return;
+        if (null != cellStyle.getAlign()) {
+            cell.setVerticalAlignment(cellStyle.getAlign());
+        }
+        if (null != cellStyle.getBackgroundColor()) {
+            cell.setColor(cellStyle.getBackgroundColor());
+        }
+    }
+
+    /**
+     * set w:rPr style
      * 
      * @param pr
      * @param style
      */
-    public static void styleParaRpr(CTParaRPr pr, Style style) {
+    private static void styleParaRpr(CTParaRPr pr, Style style) {
         if (null == pr || null == style) return;
         if (StringUtils.isNotBlank(style.getColor())) {
             CTColor color = pr.isSetColor() ? pr.getColor() : pr.addNewColor();
@@ -200,6 +291,7 @@ public final class StyleUtils {
         }
     }
 
+    @Deprecated
     public static void styleTable(XWPFTable table, TableStyle style) {
         if (null == table || null == style) return;
         CTTblPr tblPr = table.getCTTbl().getTblPr();
@@ -218,6 +310,7 @@ public final class StyleUtils {
         }
     }
 
+    @Deprecated
     public static void styleTableParagraph(XWPFParagraph par, TableStyle style) {
         if (null != par && null != style && null != style.getAlign()) {
             CTP ctp = par.getCTP();
@@ -228,7 +321,7 @@ public final class StyleUtils {
 
     }
 
-    public static void styleParaRpr(XWPFParagraph paragraph, Style style) {
+    private static void styleParaRpr(XWPFParagraph paragraph, Style style) {
         if (null == paragraph || null == style) return;
         CTP ctp = paragraph.getCTP();
         CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
@@ -236,13 +329,7 @@ public final class StyleUtils {
         StyleUtils.styleParaRpr(pr, style);
     }
 
-    public static void styleParagraph(XWPFParagraph paragraph, ParagraphStyle paragraphStyle) {
-        if (null == paragraph || null == paragraphStyle) return;
-        stylePpr(paragraph, paragraphStyle);
-        styleParaRpr(paragraph, paragraphStyle.getGlyphStyle());
-    }
-
-    public static void stylePpr(XWPFParagraph paragraph, ParagraphStyle style) {
+    private static void stylePpr(XWPFParagraph paragraph, ParagraphStyle style) {
         if (null == paragraph || null == style) return;
         if (null != style.getAlign()) {
             paragraph.setAlignment(style.getAlign());

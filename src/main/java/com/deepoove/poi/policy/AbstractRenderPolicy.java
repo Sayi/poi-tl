@@ -49,15 +49,15 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
             throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
         }
 
-        // validate
         RenderContext<T> context = new RenderContext<T>(eleTemplate, model, template);
-        if (!validate(model)) {
-            postValidError(context);
-            return;
-        }
-
-        // do render
         try {
+            // validate
+            if (!validate(model)) {
+                postValidError(context);
+                return;
+            }
+
+            // do render
             beforeRender(context);
             doRender(context);
             afterRender(context);
