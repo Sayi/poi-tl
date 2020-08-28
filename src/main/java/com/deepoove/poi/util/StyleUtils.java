@@ -228,8 +228,8 @@ public final class StyleUtils {
      */
     public static void styleTableCell(XWPFTableCell cell, CellStyle cellStyle) {
         if (null == cell || null == cellStyle) return;
-        if (null != cellStyle.getAlign()) {
-            cell.setVerticalAlignment(cellStyle.getAlign());
+        if (null != cellStyle.getVertAlign()) {
+            cell.setVerticalAlignment(cellStyle.getVertAlign());
         }
         if (null != cellStyle.getBackgroundColor()) {
             cell.setColor(cellStyle.getBackgroundColor());

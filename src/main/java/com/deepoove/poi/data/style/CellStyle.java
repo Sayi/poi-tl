@@ -24,7 +24,7 @@ public class CellStyle {
     /**
      * vertical align in cell
      */
-    private XWPFVertAlign align;
+    private XWPFVertAlign vertAlign;
     /**
      * default horizontal align in paragraph of cell
      */
@@ -38,12 +38,12 @@ public class CellStyle {
         this.backgroundColor = backgroundColor;
     }
 
-    public XWPFVertAlign getAlign() {
-        return align;
+    public XWPFVertAlign getVertAlign() {
+        return vertAlign;
     }
 
-    public void setAlign(XWPFVertAlign align) {
-        this.align = align;
+    public void setVertAlign(XWPFVertAlign align) {
+        this.vertAlign = align;
     }
 
     public ParagraphAlignment getDefaultParagraphAlign() {

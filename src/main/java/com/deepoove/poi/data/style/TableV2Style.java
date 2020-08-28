@@ -108,6 +108,9 @@ public class TableV2Style implements Serializable {
         return width;
     }
 
+    /**
+     * @param width auto, xx% or xx in twips
+     */
     public void setWidth(String width) {
         this.width = width;
     }
@@ -116,6 +119,9 @@ public class TableV2Style implements Serializable {
         return colWidths;
     }
 
+    /**
+     * @param colWidths in twips #{@link UnitUtils#cm2Twips()}
+     */
     public void setColWidths(int[] colWidths) {
         this.colWidths = colWidths;
     }

@@ -34,6 +34,11 @@ public class CellV2RenderData implements RenderData {
         this.paragraphs = paragraphs;
     }
 
+    public CellV2RenderData addParagraph(ParagraphRenderData para) {
+        this.paragraphs.add(para);
+        return this;
+    }
+
     public CellStyle getCellStyle() {
         return cellStyle;
     }

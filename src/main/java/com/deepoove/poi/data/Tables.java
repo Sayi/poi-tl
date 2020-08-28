@@ -32,20 +32,17 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     private Tables() {
     }
 
-    public static Tables ofWidth(double cm) {
-        Tables inst = new Tables();
-        inst.data = new TableRenderData();
-        TableV2Style style = new TableV2Style();
-        style.setWidth(UnitUtils.cm2Twips(cm) + "");
-        inst.data.setTableStyle(style);
+    public static Tables of(RowV2RenderData... row) {
+        // default A4
+        Tables inst = Tables.ofA4Width();
+        if (null != row) {
+            Arrays.stream(row).forEach(inst::addRow);
+        }
         return inst;
     }
 
-    public static Tables ofWidth(double cmWidth, double[] colCmWidths) {
-        Tables inst = ofWidth(cmWidth);
-        int[] colWidths = Arrays.stream(colCmWidths).mapToInt(UnitUtils::cm2Twips).toArray();
-        inst.data.getTableStyle().setColWidths(colWidths);
-        return inst;
+    public static Tables ofWidth(double cm) {
+        return ofWidth(cm, null);
     }
 
     public static Tables ofA4Width() {
@@ -64,6 +61,13 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
         return ofWidth(10.83f);
     }
 
+    public static Tables ofWidth(double cmWidth, double[] colCmWidths) {
+        Tables inst = new Tables();
+        inst.data = new TableRenderData();
+        inst.width(cmWidth, colCmWidths);
+        return inst;
+    }
+
     public static Tables ofPercentWidth(String percent) {
         Tables inst = new Tables();
         inst.data = new TableRenderData();
@@ -75,6 +79,20 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
 
     public static Tables ofAutoWidth() {
         return ofPercentWidth("auto");
+    }
+
+    public Tables width(double cmWidth, double[] colCmWidths) {
+        TableV2Style style = data.getTableStyle();
+        if (null == style) {
+            style = new TableV2Style();
+            data.setTableStyle(style);
+        }
+        style.setWidth(UnitUtils.cm2Twips(cmWidth) + "");
+        if (null != colCmWidths) {
+            int[] colWidths = Arrays.stream(colCmWidths).mapToInt(UnitUtils::cm2Twips).toArray();
+            style.setColWidths(colWidths);
+        }
+        return this;
     }
 
     public Tables border(BorderStyle border) {
@@ -94,7 +112,6 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
 
     @Override
     public TableRenderData create() {
-
         return data;
     }
 

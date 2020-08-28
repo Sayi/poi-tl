@@ -82,7 +82,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             List<XWPFTableRow> rows = table.getRows();
             int size = rows.size();
             for (int i = 0; i < size; i++) {
-                renderRow(rows.get(i), data.getRows().get(i++));
+                renderRow(rows.get(i), data.getRows().get(i));
             }
         }
 

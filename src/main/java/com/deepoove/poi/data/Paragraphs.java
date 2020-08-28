@@ -40,6 +40,18 @@ public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
         return inst;
     }
 
+    public static Paragraphs of(String text) {
+        Paragraphs inst = Paragraphs.of();
+        inst.addText(text);
+        return inst;
+    }
+    
+    public static Paragraphs of(TextRenderData text) {
+        Paragraphs inst = Paragraphs.of();
+        inst.addText(text);
+        return inst;
+    }
+
     public Paragraphs addText(TextRenderData text) {
         contents.add(text);
         return this;
