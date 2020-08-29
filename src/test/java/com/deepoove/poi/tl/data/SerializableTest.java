@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
+import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
+import com.deepoove.poi.data.Cells;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.DocxRenderData;
@@ -24,21 +26,31 @@ import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
+import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SerializableTest {
 
     ByteArrayOutputStream byteArrayOutputStream;
     ObjectOutputStream oos;
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jsonStr = "";
 
     @BeforeEach
     void before() throws Exception {
@@ -55,7 +67,7 @@ public class SerializableTest {
     @Test
     void testTextRenderData() throws Exception {
         TextRenderData data = Texts.of("poi-tl").color("00FF00").link("http://deepoove.com").create();
-        TextRenderData result = write(data).getResult(TextRenderData.class);
+        TextRenderData result = write(data).getResult(HyperLinkTextRenderData.class);
 
         assertEquals(result.getText(), data.getText());
         assertEquals(((HyperLinkTextRenderData) result).getUrl(), ((HyperLinkTextRenderData) data).getUrl());
@@ -96,7 +108,7 @@ public class SerializableTest {
                 new File("src/test/resources/template/render_include_merge_template.docx"));
         DocxRenderData result = write(data).getResult(DocxRenderData.class);
 
-        assertArrayEquals(result.getDocx(), data.getDocx());
+        assertArrayEquals(result.getMergedDoc(), data.getMergedDoc());
     }
 
     @Test
@@ -106,7 +118,7 @@ public class SerializableTest {
         data.setNoDatadesc("NO DESC");
         data.setWidth(10.01f);
         TableStyle style = new TableStyle();
-        style.setAlign(STJc.CENTER);
+        style.setAlign(TableRowAlign.CENTER);
         data.setStyle(style);
         MiniTableRenderData result = write(data).getResult(MiniTableRenderData.class);
 
@@ -115,6 +127,47 @@ public class SerializableTest {
         assertEquals(result.getStyle().getAlign(), data.getStyle().getAlign());
         assertEquals(result.getRows().get(0).getCells().get(0).getCellText().getText(),
                 data.getRows().get(0).getCells().get(0).getCellText().getText());
+    }
+
+    @Test
+    void testTableRenderData() throws Exception {
+        RowV2RenderData row = Rows.of(Cells.of("lisi").create(), Cells.of("lisi").create()).create();
+        TableRenderData data = Tables.of(row).width(10.01f, null).center().create();
+
+        TableRenderData result = write(data).getResult(TableRenderData.class);
+
+        assertEquals(result.getTableStyle().getWidth(), data.getTableStyle().getWidth());
+        assertEquals(result.getTableStyle().getAlign(), data.getTableStyle().getAlign());
+        checkParagraph(result.getRows().get(0).getCells().get(0).getParagraphs().get(0),
+                data.getRows().get(0).getCells().get(0).getParagraphs().get(0));
+
+    }
+
+    @Test
+    void testParagraphRenderData() throws Exception {
+        ParagraphRenderData data = Paragraphs.of("boshi").addPicture(Pictures.ofLocal("sayi.png").create()).create();
+
+        ParagraphRenderData result = write(data).getResult(ParagraphRenderData.class);
+        checkParagraph(result, data);
+
+    }
+
+    private void checkParagraph(ParagraphRenderData result, ParagraphRenderData data) {
+        List<RenderData> contents = data.getContents();
+        List<RenderData> contents2 = result.getContents();
+        assertEquals(contents2.size(), contents.size());
+        for (int i = 0; i < contents2.size(); i++) {
+            RenderData renderData2 = contents2.get(i);
+            RenderData renderData = contents.get(i);
+            assertEquals(renderData2.getClass(), renderData.getClass());
+            if (renderData instanceof TextRenderData) {
+                assertEquals(((TextRenderData) renderData2).getText(), ((TextRenderData) renderData).getText());
+            }
+            if (renderData instanceof PictureRenderData) {
+                assertEquals(((PictureRenderData) renderData2).getImage(), ((PictureRenderData) renderData).getImage());
+            }
+        }
+
     }
 
     @Test
@@ -142,6 +195,9 @@ public class SerializableTest {
     private SerializableTest write(Object data) throws IOException {
         oos.writeObject(data);
         return this;
+
+//        jsonStr =  objectMapper.writeValueAsString(data);
+//        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -154,6 +210,7 @@ public class SerializableTest {
             in.close();
             byteArrayInputStream.close();
         }
+//        return  objectMapper.readValue(jsonStr, clazz);
     }
 
 }

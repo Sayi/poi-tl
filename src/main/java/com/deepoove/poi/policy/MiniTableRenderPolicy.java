@@ -48,7 +48,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
     @Override
     protected boolean validate(MiniTableRenderData data) {
-        return (null != data && (data.isSetBody() || data.isSetHeader()));
+        return (null != data && (data.hasBody() || data.hasHeader()));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
     public static class Helper {
 
         public static void renderMiniTable(XWPFRun run, MiniTableRenderData data) {
-            if (data.isSetBody()) {
+            if (data.hasBody()) {
                 renderTable(run, data);
             } else {
                 renderNoDataTable(run, data);
@@ -74,7 +74,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
         public static void renderTable(XWPFRun run, MiniTableRenderData tableData) {
             // 1.计算行和列
             int row = tableData.getRows().size(), col = 0;
-            if (!tableData.isSetHeader()) {
+            if (!tableData.hasHeader()) {
                 col = getMaxColumFromData(tableData.getRows());
             } else {
                 row++;
@@ -88,7 +88,7 @@ public class MiniTableRenderPolicy extends AbstractRenderPolicy<MiniTableRenderD
 
             // 3.渲染数据
             int startRow = 0;
-            if (tableData.isSetHeader()) Helper.renderRow(table, startRow++, tableData.getHeader());
+            if (tableData.hasHeader()) Helper.renderRow(table, startRow++, tableData.getHeader());
             for (RowRenderData data : tableData.getRows()) {
                 Helper.renderRow(table, startRow++, data);
             }

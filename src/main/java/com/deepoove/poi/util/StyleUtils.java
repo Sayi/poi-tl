@@ -48,6 +48,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
@@ -299,8 +300,7 @@ public final class StyleUtils {
             tblPr = table.getCTTbl().addNewTblPr();
         }
         if (null != style.getAlign()) {
-            CTJc jc = tblPr.isSetJc() ? tblPr.getJc() : tblPr.addNewJc();
-            jc.setVal(style.getAlign());
+            table.setTableAlignment(style.getAlign());
         }
         if (StringUtils.isNotBlank(style.getBackgroundColor())) {
             CTShd ctshd = tblPr.isSetShd() ? tblPr.getShd() : tblPr.addNewShd();
@@ -316,7 +316,7 @@ public final class StyleUtils {
             CTP ctp = par.getCTP();
             CTPPr CTPpr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
             CTJc jc = CTPpr.isSetJc() ? CTPpr.getJc() : CTPpr.addNewJc();
-            jc.setVal(style.getAlign());
+            jc.setVal(STJc.Enum.forInt(style.getAlign().getValue()));
         }
 
     }

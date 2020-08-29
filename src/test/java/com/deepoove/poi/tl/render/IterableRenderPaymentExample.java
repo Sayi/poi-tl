@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -39,10 +39,10 @@ public class IterableRenderPaymentExample {
         headTextStyle.setColor("7F7F7F");
 
         headStyle.setBackgroundColor("F2F2F2");
-        headStyle.setAlign(STJc.CENTER);
+        headStyle.setAlign(TableRowAlign.CENTER);
 
         rowStyle = new TableStyle();
-        rowStyle.setAlign(STJc.CENTER);
+        rowStyle.setAlign(TableRowAlign.CENTER);
 
         datas.setNO("KB.6890451");
         datas.setID("ZHANG_SAN_091");

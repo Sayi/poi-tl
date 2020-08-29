@@ -69,6 +69,9 @@ public class MiniTableRenderData implements RenderData {
      * 最大宽度为：页面宽度-页边距宽度*2 单位：cm
      */
     private float width;
+    
+    MiniTableRenderData() {
+    }
 
     /**
      * 基础表格：行数据填充
@@ -125,11 +128,11 @@ public class MiniTableRenderData implements RenderData {
         this.width = width;
     }
 
-    public boolean isSetHeader() {
+    public boolean hasHeader() {
         return null != header && header.size() > 0;
     }
 
-    public boolean isSetBody() {
+    public boolean hasBody() {
         return null != rows && rows.size() > 0;
     }
 

@@ -34,6 +34,9 @@ public class HyperLinkTextRenderData extends TextRenderData {
      */
     private String url;
 
+    HyperLinkTextRenderData() {
+    }
+
     public HyperLinkTextRenderData(String text, String url) {
         super(text);
         this.url = url;

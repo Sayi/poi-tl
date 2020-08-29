@@ -232,7 +232,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         cTAbstractNum
                 .setAbstractNumId(numberingWrapper.getNextAbstractNumID());
 
-        Enum fmt = numFmt.getNumFmt();
+        Enum fmt =  STNumberFormat.Enum.forInt(numFmt.getNumFmt());
         String val = numFmt.getLvlText();
         CTLvl cTLvl = cTAbstractNum.addNewLvl();
         cTLvl.addNewNumFmt().setVal(fmt);

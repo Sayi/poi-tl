@@ -16,6 +16,7 @@ import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.xwpf.NumFormat;
 
 @DisplayName("Numbering Render test case")
 public class NumberingRenderTest {
@@ -26,24 +27,24 @@ public class NumberingRenderTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 // 1. 2. 3.
-//                put("number123", getData(NumberingFormat.DECIMAL));
-//                put("number123_dulplicate", getData(NumberingFormat.DECIMAL));
-//                // 1) 2) 3)
-//                put("number123_kuohao", getData(NumberingFormat.DECIMAL_PARENTHESES));
-//                // 无序
-//                put("bullet", getData(NumberingFormat.BULLET));
-//                // A B C
-//                put("ABC", getData(NumberingFormat.UPPER_LETTER));
-//                // a b c
-//                put("abc", getData(NumberingFormat.LOWER_LETTER));
-//                // ⅰ ⅱ ⅲ
-//                put("iiiiii", getData(NumberingFormat.LOWER_ROMAN));
-//                // Ⅰ Ⅱ Ⅲ
-//                put("IIIII", getData(NumberingFormat.UPPER_ROMAN));
-//                // 自定义有序列表显示 (one) (two) (three)
-//                put("custom_number", getData(new NumberingFormat(STNumberFormat.CARDINAL_TEXT, "(%1)")));
-//                // 自定义无序列表显示：定义无序符号
-//                put("custom_bullet", getData(new NumberingFormat(STNumberFormat.BULLET, "♬")));
+                put("number123", getData(NumberingFormat.DECIMAL));
+                put("number123_dulplicate", getData(NumberingFormat.DECIMAL));
+                // 1) 2) 3)
+                put("number123_kuohao", getData(NumberingFormat.DECIMAL_PARENTHESES));
+                // 无序
+                put("bullet", getData(NumberingFormat.BULLET));
+                // A B C
+                put("ABC", getData(NumberingFormat.UPPER_LETTER));
+                // a b c
+                put("abc", getData(NumberingFormat.LOWER_LETTER));
+                // ⅰ ⅱ ⅲ
+                put("iiiiii", getData(NumberingFormat.LOWER_ROMAN));
+                // Ⅰ Ⅱ Ⅲ
+                put("IIIII", getData(NumberingFormat.UPPER_ROMAN));
+                // 自定义有序列表显示 (one) (two) (three)
+                put("custom_number", getData(new NumberingFormat(NumFormat.CARDINAL_TEXT, "(%1)")));
+                // 自定义无序列表显示：定义无序符号
+                put("custom_bullet", getData(new NumberingFormat(NumFormat.BULLET, "♬")));
                 // 自定义编号样式
                 Style fmtStyle = new Style("f44336");
                 fmtStyle.setBold(true);
@@ -57,7 +58,7 @@ public class NumberingRenderTest {
                         .create());
                         
                 // 图片、超链接、文本
-//                put("picture_hyper_text", getPictureData());
+                put("picture_hyper_text", getPictureData());
             }
         };
 

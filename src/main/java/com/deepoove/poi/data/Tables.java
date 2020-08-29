@@ -17,6 +17,8 @@ package com.deepoove.poi.data;
 
 import java.util.Arrays;
 
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
+
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableV2Style;
 import com.deepoove.poi.util.UnitUtils;
@@ -82,16 +84,27 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     }
 
     public Tables width(double cmWidth, double[] colCmWidths) {
-        TableV2Style style = data.getTableStyle();
-        if (null == style) {
-            style = new TableV2Style();
-            data.setTableStyle(style);
-        }
+        TableV2Style style = getTableStyle();
         style.setWidth(UnitUtils.cm2Twips(cmWidth) + "");
         if (null != colCmWidths) {
             int[] colWidths = Arrays.stream(colCmWidths).mapToInt(UnitUtils::cm2Twips).toArray();
             style.setColWidths(colWidths);
         }
+        return this;
+    }
+
+    private TableV2Style getTableStyle() {
+        TableV2Style style = data.getTableStyle();
+        if (null == style) {
+            style = new TableV2Style();
+            data.setTableStyle(style);
+        }
+        return style;
+    }
+
+    public Tables center() {
+        TableV2Style style = getTableStyle();
+        style.setAlign(TableRowAlign.CENTER);
         return this;
     }
 

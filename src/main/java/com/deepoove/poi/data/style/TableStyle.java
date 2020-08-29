@@ -17,7 +17,7 @@ package com.deepoove.poi.data.style;
 
 import java.io.Serializable;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
 /**
  * 表格样式
@@ -35,9 +35,9 @@ public class TableStyle implements Serializable{
     private String backgroundColor;
 
     /**
-     * 对齐方式 STJc.LEFT 左对齐 STJc.CENTER 居中对齐 STJc.RIGHT 右对齐
+     * 对齐方式
      */
-    private STJc.Enum align;
+    private TableRowAlign align;
 
     public String getBackgroundColor() {
         return backgroundColor;
@@ -47,11 +47,11 @@ public class TableStyle implements Serializable{
         this.backgroundColor = backgroundColor;
     }
 
-    public STJc.Enum getAlign() {
+    public TableRowAlign getAlign() {
         return align;
     }
 
-    public void setAlign(STJc.Enum align) {
+    public void setAlign(TableRowAlign align) {
         this.align = align;
     }
 

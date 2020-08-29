@@ -34,6 +34,9 @@ public class NumberingRenderData implements RenderData {
      * each item in numbering
      */
     private List<ParagraphRenderData> items;
+    
+    NumberingRenderData() {
+    }
 
     public NumberingRenderData(NumberingFormat format, List<ParagraphRenderData> items) {
         this.format = format;

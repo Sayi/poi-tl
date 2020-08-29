@@ -41,7 +41,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
     @Override
     protected boolean validate(DocxRenderData data) {
-        return null != data && null != data.getDocx();
+        return null != data && null != data.getMergedDoc();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
         int cursor = 0;
 
         XWPFDocumentIterator(DocxRenderData data, Configure config) {
-            this.docx = data.getDocx();
+            this.docx = data.getMergedDoc();
             this.datas = data.getDataModels();
             this.config = config;
         }

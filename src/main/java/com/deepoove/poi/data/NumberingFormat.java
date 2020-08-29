@@ -17,8 +17,7 @@ package com.deepoove.poi.data;
 
 import java.io.Serializable;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
+import com.deepoove.poi.xwpf.NumFormat;
 
 public class NumberingFormat implements Serializable {
 
@@ -27,41 +26,49 @@ public class NumberingFormat implements Serializable {
     /**
      * 1. 2. 3.
      */
-    public static final NumberingFormat DECIMAL = new NumberingFormat(STNumberFormat.DECIMAL, "%1.");
+    public static final NumberingFormat DECIMAL = new NumberingFormat(NumFormat.DECIMAL, "%1.");
     /**
      * 1) 2) 3)
      */
-    public static final NumberingFormat DECIMAL_PARENTHESES = new NumberingFormat(STNumberFormat.DECIMAL, "%1)");
+    public static final NumberingFormat DECIMAL_PARENTHESES = new NumberingFormat(NumFormat.DECIMAL, "%1)");
     /**
      * ● ● ●
      */
-    public static final NumberingFormat BULLET = new NumberingFormat(STNumberFormat.BULLET, "●");
+    public static final NumberingFormat BULLET = new NumberingFormat(NumFormat.BULLET, "●");
     /**
      * a. b. c.
      */
-    public static final NumberingFormat LOWER_LETTER = new NumberingFormat(STNumberFormat.LOWER_LETTER, "%1.");
+    public static final NumberingFormat LOWER_LETTER = new NumberingFormat(NumFormat.LOWER_LETTER, "%1.");
     /**
      * i ⅱ ⅲ
      */
-    public static final NumberingFormat LOWER_ROMAN = new NumberingFormat(STNumberFormat.LOWER_ROMAN, "%1.");
+    public static final NumberingFormat LOWER_ROMAN = new NumberingFormat(NumFormat.LOWER_ROMAN, "%1.");
     /**
      * A. B. C.
      */
-    public static final NumberingFormat UPPER_LETTER = new NumberingFormat(STNumberFormat.UPPER_LETTER, "%1.");
+    public static final NumberingFormat UPPER_LETTER = new NumberingFormat(NumFormat.UPPER_LETTER, "%1.");
     /**
      * Ⅰ Ⅱ Ⅲ
      */
-    public static final NumberingFormat UPPER_ROMAN = new NumberingFormat(STNumberFormat.UPPER_ROMAN, "%1.");
+    public static final NumberingFormat UPPER_ROMAN = new NumberingFormat(NumFormat.UPPER_ROMAN, "%1.");
 
-    private Enum numFmt;
+    private int numFmt;
     private String lvlText;
 
-    public NumberingFormat(Enum numFmt, String lvlText) {
+    NumberingFormat() {
+    }
+
+    public NumberingFormat(NumFormat numFmt, String lvlText) {
+        this.numFmt = numFmt.getValue();
+        this.lvlText = lvlText;
+    }
+
+    public NumberingFormat(int numFmt, String lvlText) {
         this.numFmt = numFmt;
         this.lvlText = lvlText;
     }
 
-    public Enum getNumFmt() {
+    public int getNumFmt() {
         return numFmt;
     }
 
@@ -74,7 +81,7 @@ public class NumberingFormat implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((lvlText == null) ? 0 : lvlText.hashCode());
-        result = prime * result + ((numFmt == null) ? 0 : numFmt.hashCode());
+        result = prime * result + numFmt;
         return result;
     }
 
@@ -87,9 +94,7 @@ public class NumberingFormat implements Serializable {
         if (lvlText == null) {
             if (other.lvlText != null) return false;
         } else if (!lvlText.equals(other.lvlText)) return false;
-        if (numFmt == null) {
-            if (other.numFmt != null) return false;
-        } else if (!numFmt.equals(other.numFmt)) return false;
+        if (numFmt != other.numFmt) return false;
         return true;
     }
 

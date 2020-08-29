@@ -34,12 +34,15 @@ public class DocxRenderData implements RenderData {
     /**
      * stream流无法重用，使用字节数组表示待合并文档
      */
-    private byte[] mergeDoc;
+    private byte[] mergedDoc;
 
     /**
      * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
      */
     private List<?> dataModels;
+
+    DocxRenderData() {
+    }
 
     /**
      * @param docx 子文档
@@ -79,11 +82,11 @@ public class DocxRenderData implements RenderData {
      */
     public DocxRenderData(byte[] input, List<?> renderDatas) {
         this.dataModels = renderDatas;
-        this.mergeDoc = input;
+        this.mergedDoc = input;
     }
 
-    public byte[] getDocx() {
-        return mergeDoc;
+    public byte[] getMergedDoc() {
+        return mergedDoc;
     }
 
     public List<?> getDataModels() {
