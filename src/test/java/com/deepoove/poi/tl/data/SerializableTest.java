@@ -29,7 +29,7 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.RenderData;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
@@ -108,7 +108,7 @@ public class SerializableTest {
 
     @Test
     void testTableRenderData() throws Exception {
-        RowV2RenderData row = Rows.of(Cells.of("lisi").create(), Cells.of("lisi").create()).create();
+        RowRenderData row = Rows.of(Cells.of("lisi").create(), Cells.of("lisi").create()).create();
         TableRenderData data = Tables.of(row).width(10.01f, null).center().create();
 
         TableRenderData result = write(data).getResult(TableRenderData.class);

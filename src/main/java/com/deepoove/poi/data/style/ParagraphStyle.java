@@ -18,6 +18,7 @@ package com.deepoove.poi.data.style;
 import java.io.Serializable;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import javax.annotation.Generated;
 
 public class ParagraphStyle implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -34,9 +35,9 @@ public class ParagraphStyle implements Serializable {
 
     private Style glyphStyle;
 
-    public ParagraphStyle() {
-    }
+    private Style defaultTextStyle;
 
+    @Generated("SparkTools")
     private ParagraphStyle(Builder builder) {
         this.indentLeftChars = builder.indentLeftChars;
         this.indentRightChars = builder.indentRightChars;
@@ -44,6 +45,10 @@ public class ParagraphStyle implements Serializable {
         this.align = builder.align;
         this.spacing = builder.spacing;
         this.glyphStyle = builder.glyphStyle;
+        this.defaultTextStyle = builder.defaultTextStyle;
+    }
+
+    public ParagraphStyle() {
     }
 
     public double getIndentLeftChars() {
@@ -94,11 +99,20 @@ public class ParagraphStyle implements Serializable {
         this.glyphStyle = glyphStyle;
     }
 
+    public Style getDefaultTextStyle() {
+        return defaultTextStyle;
+    }
+
+    public void setDefaultTextStyle(Style defaultTextStyle) {
+        this.defaultTextStyle = defaultTextStyle;
+    }
+
     /**
      * Creates builder to build {@link ParagraphStyle}.
      * 
      * @return created builder
      */
+    @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
     }
@@ -106,6 +120,7 @@ public class ParagraphStyle implements Serializable {
     /**
      * Builder to build {@link ParagraphStyle}.
      */
+    @Generated("SparkTools")
     public static final class Builder {
         private double indentLeftChars;
         private double indentRightChars;
@@ -113,6 +128,7 @@ public class ParagraphStyle implements Serializable {
         private ParagraphAlignment align;
         private double spacing;
         private Style glyphStyle;
+        private Style defaultTextStyle;
 
         private Builder() {
         }
@@ -144,6 +160,11 @@ public class ParagraphStyle implements Serializable {
 
         public Builder withGlyphStyle(Style glyphStyle) {
             this.glyphStyle = glyphStyle;
+            return this;
+        }
+
+        public Builder withDefaultTextStyle(Style defaultTextStyle) {
+            this.defaultTextStyle = defaultTextStyle;
             return this;
         }
 

@@ -12,22 +12,23 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.CellV2RenderData;
+import com.deepoove.poi.data.CellRenderData;
 import com.deepoove.poi.data.Cells;
 import com.deepoove.poi.data.MergeCellRule;
 import com.deepoove.poi.data.MergeCellRule.Grid;
 import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.Pictures;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
+import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
-import com.deepoove.poi.data.style.TableV2Style;
+import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.util.UnitUtils;
 
@@ -37,53 +38,53 @@ public class TableRenderTest {
     @SuppressWarnings("serial")
     @Test
     public void testTable() throws Exception {
-        RowV2RenderData row0, row1, row2;
-        CellV2RenderData cell, cell1, cell2;
+        RowRenderData row0, row1, row2;
+        CellRenderData cell, cell1, cell2;
 
-        cell = new CellV2RenderData();
+        cell = new CellRenderData();
         List<ParagraphRenderData> paragraphs = new ArrayList<>();
         paragraphs.add(Paragraphs.of().addText(Texts.of("Hello").color("ffffff").create()).create());
         paragraphs.add(Paragraphs.of().addText(Texts.of("World").color("ffffff").bold().create()).left().create());
         cell.setParagraphs(paragraphs);
 
-        cell1 = new CellV2RenderData();
+        cell1 = new CellRenderData();
         paragraphs = new ArrayList<>();
         paragraphs.add(Paragraphs.of().addText("document").create());
         cell1.setParagraphs(paragraphs);
 
-        cell2 = new CellV2RenderData();
+        cell2 = new CellRenderData();
         paragraphs = new ArrayList<>();
         paragraphs.add(Paragraphs.of().addPicture(Pictures.ofLocal("src/test/resources/sayi.png").size(40, 40).create())
                 .create());
         paragraphs.add(Paragraphs.of().addText("Sayi").create());
         CellStyle cellStyle = new CellStyle();
         cellStyle.setVertAlign(XWPFVertAlign.CENTER);
-        cellStyle.setDefaultParagraphAlign(ParagraphAlignment.CENTER);
+        cellStyle.setDefaultParagraphStyle(ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build());
         cell2.setCellStyle(cellStyle);
         cell2.setParagraphs(paragraphs);
 
-        row0 = new RowV2RenderData();
+        row0 = new RowRenderData();
         RowStyle rowStyle = new RowStyle();
         CellStyle defaultCellStyle = new CellStyle();
         defaultCellStyle.setBackgroundColor("f58d71");
         defaultCellStyle.setVertAlign(XWPFVertAlign.CENTER);
-        defaultCellStyle.setDefaultParagraphAlign(ParagraphAlignment.CENTER);
+        defaultCellStyle.setDefaultParagraphStyle(ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build());
         rowStyle.setDefaultCellStyle(defaultCellStyle);
         rowStyle.setHeight(UnitUtils.cm2Twips(2.54f));
 
         row0.setRowStyle(rowStyle);
         row0.addCell(cell).addCell(cell).addCell(cell).addCell(cell);
 
-        row1 = new RowV2RenderData();
+        row1 = new RowRenderData();
         row1.addCell(cell2).addCell(cell1).addCell(cell1).addCell(cell1);
 
-        row2 = new RowV2RenderData();
+        row2 = new RowRenderData();
         row2.addCell(cell2).addCell(cell1).addCell(cell1).addCell(cell1);
 
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 TableRenderData table = new TableRenderData();
-                TableV2Style tableStyle = new TableV2Style();
+                TableStyle tableStyle = new TableStyle();
 //                tableStyle.setWidth("100%");
 //                tableStyle.setWidth("auto");
                 tableStyle.setWidth(UnitUtils.cm2Twips(14.63f) + "");
@@ -112,8 +113,8 @@ public class TableRenderTest {
     @SuppressWarnings("serial")
     @Test
     public void testTableByBuilder() throws Exception {
-        RowV2RenderData row0, row1, row2;
-        CellV2RenderData cell, cell1, cell2;
+        RowRenderData row0, row1, row2;
+        CellRenderData cell, cell1, cell2;
 
         cell = Cells.of(Texts.of("Hello").color("ffffff").create())
                 .addParagraph(Paragraphs.of(Texts.of("World").color("ffffff").bold().create()).left().create())
@@ -129,8 +130,8 @@ public class TableRenderTest {
         TableRenderData table = Tables.of(row0, row1, row2).width(14.63f, new double[] { 5.63f, 3.0f, 3.0f, 3.0f })
                 .border(BorderStyle.DEFAULT).create();
 
-        RowV2RenderData rowNoData = Rows.of("没有数据", null, null, null).create();
-        RowV2RenderData header = Rows.of("列0", "列1", "列2", "列3").horizontalCenter().bgColor("f58d71").create();
+        RowRenderData rowNoData = Rows.of("没有数据", null, null, null).create();
+        RowRenderData header = Rows.of("列0", "列1", "列2", "列3").horizontalCenter().bgColor("f58d71").create();
         TableRenderData table1 = Tables.of(header, rowNoData).border(BorderStyle.DEFAULT).create();
         MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 3)).build();
         table1.setMergeRule(rule);

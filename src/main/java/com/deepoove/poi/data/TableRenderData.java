@@ -18,7 +18,7 @@ package com.deepoove.poi.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.deepoove.poi.data.style.TableV2Style;
+import com.deepoove.poi.data.style.TableStyle;
 
 /**
  * Data for table template
@@ -29,24 +29,24 @@ public class TableRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
 
-    private List<RowV2RenderData> rows = new ArrayList<>();
-    private TableV2Style tableStyle;
+    private List<RowRenderData> rows = new ArrayList<>();
+    private TableStyle tableStyle;
 
     MergeCellRule mergeRule;
 
-    public List<RowV2RenderData> getRows() {
+    public List<RowRenderData> getRows() {
         return rows;
     }
 
-    public void setRows(List<RowV2RenderData> rows) {
+    public void setRows(List<RowRenderData> rows) {
         this.rows = rows;
     }
 
-    public TableV2Style getTableStyle() {
+    public TableStyle getTableStyle() {
         return tableStyle;
     }
 
-    public void setTableStyle(TableV2Style tableStyle) {
+    public void setTableStyle(TableStyle tableStyle) {
         this.tableStyle = tableStyle;
     }
 
@@ -58,15 +58,15 @@ public class TableRenderData implements RenderData {
         this.mergeRule = mergeRule;
     }
 
-    public TableRenderData addRow(RowV2RenderData row) {
+    public TableRenderData addRow(RowRenderData row) {
         rows.add(row);
         return this;
     }
 
     public int obtainColSize() {
         if (null == rows || rows.isEmpty()) return 0;
-        RowV2RenderData row = rows.get(0);
-        List<CellV2RenderData> cells = row.getCells();
+        RowRenderData row = rows.get(0);
+        List<CellRenderData> cells = row.getCells();
         if (null == cells || cells.isEmpty()) return 0;
         return cells.size();
     }

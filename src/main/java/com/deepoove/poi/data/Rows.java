@@ -6,23 +6,25 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
 import com.deepoove.poi.data.style.CellStyle;
+import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.util.UnitUtils;
 
-public class Rows implements RenderDataBuilder<RowV2RenderData> {
+public class Rows implements RenderDataBuilder<RowRenderData> {
 
-    private RowV2RenderData data;
+    private RowRenderData data;
 
     private Rows() {
     }
 
     public static Rows of() {
         Rows inst = new Rows();
-        inst.data = new RowV2RenderData();
+        inst.data = new RowRenderData();
         return inst;
     }
 
-    public static Rows of(CellV2RenderData... cell) {
+    public static Rows of(CellRenderData... cell) {
         Rows inst = Rows.of();
         if (null != cell) {
             Arrays.stream(cell).forEach(inst::addCell);
@@ -30,20 +32,20 @@ public class Rows implements RenderDataBuilder<RowV2RenderData> {
         return inst;
     }
 
-    public static Rows of(String... cellText) {
+    public static Rows of(String... cell) {
         Rows inst = Rows.of();
-        if (null != cellText) {
-            Arrays.stream(cellText).map(text -> {
+        if (null != cell) {
+            Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
             }).forEach(inst::addCell);
         }
         return inst;
     }
 
-    public static Rows of(TextRenderData... cellText) {
+    public static Rows of(TextRenderData... cell) {
         Rows inst = Rows.of();
-        if (null != cellText) {
-            Arrays.stream(cellText).map(text -> {
+        if (null != cell) {
+            Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
             }).forEach(inst::addCell);
         }
@@ -69,8 +71,8 @@ public class Rows implements RenderDataBuilder<RowV2RenderData> {
     }
 
     public Rows horizontalCenter() {
-        CellStyle defaultCellStyle = getDefaultCellStyle();
-        defaultCellStyle.setDefaultParagraphAlign(ParagraphAlignment.CENTER);
+        ParagraphStyle defaultParaStyle = getDefaultParagraphStyle();
+        defaultParaStyle.setAlign(ParagraphAlignment.CENTER);
         return this;
     }
 
@@ -90,6 +92,26 @@ public class Rows implements RenderDataBuilder<RowV2RenderData> {
         return defaultCellStyle;
     }
 
+    private Style getDefaultTextStyle() {
+        ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
+        Style defaultTextStyle = defaultParagraphStyle.getDefaultTextStyle();
+        if (null == defaultTextStyle) {
+            defaultTextStyle = Style.builder().build();
+            defaultParagraphStyle.setDefaultTextStyle(defaultTextStyle);
+        }
+        return defaultTextStyle;
+    }
+
+    private ParagraphStyle getDefaultParagraphStyle() {
+        CellStyle cellStyle = getDefaultCellStyle();
+        ParagraphStyle defaultParagraphStyle = cellStyle.getDefaultParagraphStyle();
+        if (null == defaultParagraphStyle) {
+            defaultParagraphStyle = ParagraphStyle.builder().build();
+            cellStyle.setDefaultParagraphStyle(defaultParagraphStyle);
+        }
+        return defaultParagraphStyle;
+    }
+
     private RowStyle getRowStyle() {
         RowStyle rowStyle = data.getRowStyle();
         if (null == rowStyle) {
@@ -99,13 +121,19 @@ public class Rows implements RenderDataBuilder<RowV2RenderData> {
         return rowStyle;
     }
 
-    public Rows addCell(CellV2RenderData cell) {
+    public Rows addCell(CellRenderData cell) {
         data.addCell(cell);
         return this;
     }
 
+    public Rows textColor(String color) {
+        Style style = getDefaultTextStyle();
+        style.setColor(color);
+        return this;
+    }
+
     @Override
-    public RowV2RenderData create() {
+    public RowRenderData create() {
         return data;
     }
 

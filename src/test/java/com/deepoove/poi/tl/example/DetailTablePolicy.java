@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.policy.DynamicTableRenderPolicy;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.util.TableTools;
@@ -29,7 +29,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
         if (null == data) return;
         DetailData detailData = (DetailData) data;
 
-        List<RowV2RenderData> labors = detailData.getLabors();
+        List<RowRenderData> labors = detailData.getLabors();
         if (null != labors) {
             table.removeRow(laborsStartRow);
             // 循环插入行
@@ -43,7 +43,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
             }
         }
 
-        List<RowV2RenderData> goods = detailData.getGoods();
+        List<RowRenderData> goods = detailData.getGoods();
         if (null != goods) {
             table.removeRow(goodsStartRow);
             for (int i = 0; i < goods.size(); i++) {

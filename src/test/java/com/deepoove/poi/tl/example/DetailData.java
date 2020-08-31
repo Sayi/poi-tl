@@ -2,29 +2,29 @@ package com.deepoove.poi.tl.example;
 
 import java.util.List;
 
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 
 public class DetailData {
     
     // 货品数据
-    private List<RowV2RenderData> goods;
+    private List<RowRenderData> goods;
     
     // 人工费数据
-    private List<RowV2RenderData> labors;
+    private List<RowRenderData> labors;
 
-    public List<RowV2RenderData> getGoods() {
+    public List<RowRenderData> getGoods() {
         return goods;
     }
 
-    public void setGoods(List<RowV2RenderData> goods) {
+    public void setGoods(List<RowRenderData> goods) {
         this.goods = goods;
     }
 
-    public List<RowV2RenderData> getLabors() {
+    public List<RowRenderData> getLabors() {
         return labors;
     }
 
-    public void setLabors(List<RowV2RenderData> labors) {
+    public void setLabors(List<RowRenderData> labors) {
         this.labors = labors;
     }
 }

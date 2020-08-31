@@ -21,7 +21,7 @@ import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
 import com.deepoove.poi.util.UnitUtils;
 
-public class TableV2Style implements Serializable {
+public class TableStyle implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

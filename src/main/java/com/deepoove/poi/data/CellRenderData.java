@@ -18,38 +18,33 @@ package com.deepoove.poi.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.deepoove.poi.data.style.RowStyle;
+import com.deepoove.poi.data.style.CellStyle;
 
-public class RowV2RenderData implements RenderData {
+public class CellRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
-    private List<CellV2RenderData> cells = new ArrayList<>();
-    private RowStyle rowStyle;
+    private List<ParagraphRenderData> paragraphs = new ArrayList<>();
+    private CellStyle cellStyle;
 
-    public List<CellV2RenderData> getCells() {
-        return cells;
+    public List<ParagraphRenderData> getParagraphs() {
+        return paragraphs;
     }
 
-    public void setCells(List<CellV2RenderData> cells) {
-        this.cells = cells;
+    public void setParagraphs(List<ParagraphRenderData> paragraphs) {
+        this.paragraphs = paragraphs;
     }
 
-    public RowStyle getRowStyle() {
-        return rowStyle;
-    }
-
-    public void setRowStyle(RowStyle rowStyle) {
-        this.rowStyle = rowStyle;
-    }
-
-    public RowV2RenderData addCell(CellV2RenderData cell) {
-        cells.add(cell);
+    public CellRenderData addParagraph(ParagraphRenderData para) {
+        this.paragraphs.add(para);
         return this;
     }
-    
-    public int obtainColSize() {
-        if (null == cells || cells.isEmpty()) return 0;
-        return cells.size();
+
+    public CellStyle getCellStyle() {
+        return cellStyle;
+    }
+
+    public void setCellStyle(CellStyle cellStyle) {
+        this.cellStyle = cellStyle;
     }
 
 }

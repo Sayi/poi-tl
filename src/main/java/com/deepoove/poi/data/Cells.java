@@ -4,17 +4,18 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
 import com.deepoove.poi.data.style.CellStyle;
+import com.deepoove.poi.data.style.ParagraphStyle;
 
-public class Cells implements RenderDataBuilder<CellV2RenderData> {
+public class Cells implements RenderDataBuilder<CellRenderData> {
 
-    private CellV2RenderData data;
+    private CellRenderData data;
 
     private Cells() {
     }
 
     public static Cells of() {
         Cells inst = new Cells();
-        inst.data = new CellV2RenderData();
+        inst.data = new CellRenderData();
         return inst;
     }
 
@@ -71,6 +72,16 @@ public class Cells implements RenderDataBuilder<CellV2RenderData> {
         return cellStyle;
     }
 
+    private ParagraphStyle getDefaultParagraphStyle() {
+        CellStyle cellStyle = getCellStyle();
+        ParagraphStyle defaultParagraphStyle = cellStyle.getDefaultParagraphStyle();
+        if (null == defaultParagraphStyle) {
+            defaultParagraphStyle = ParagraphStyle.builder().build();
+            cellStyle.setDefaultParagraphStyle(defaultParagraphStyle);
+        }
+        return defaultParagraphStyle;
+    }
+
     public Cells center() {
         verticalCenter();
         horizontalCenter();
@@ -84,13 +95,13 @@ public class Cells implements RenderDataBuilder<CellV2RenderData> {
     }
 
     public Cells horizontalCenter() {
-        CellStyle defaultCellStyle = getCellStyle();
-        defaultCellStyle.setDefaultParagraphAlign(ParagraphAlignment.CENTER);
+        ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
+        defaultParagraphStyle.setAlign(ParagraphAlignment.CENTER);
         return this;
     }
 
     @Override
-    public CellV2RenderData create() {
+    public CellRenderData create() {
         return data;
     }
 

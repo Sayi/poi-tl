@@ -24,6 +24,8 @@ import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.ParagraphUtils;
 import com.deepoove.poi.util.StyleUtils;
@@ -49,20 +51,38 @@ public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderD
 
     public static class Helper {
         public static void renderParagraph(XWPFRun run, ParagraphRenderData data) throws Exception {
+            renderParagraph(run, data, null);
+        }
+
+        public static void renderParagraph(XWPFRun run, ParagraphRenderData data,
+                List<ParagraphStyle> defaultControlStyles) throws Exception {
             List<RenderData> contents = data.getContents();
             XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
+            if (null != defaultControlStyles) {
+                defaultControlStyles.stream().forEach(style -> StyleUtils.styleParagraph(paragraph, style));
+            }
             StyleUtils.styleParagraph(paragraph, data.getParagraphStyle());
+            Style defaultTextStyle = null == data.getParagraphStyle() ? null
+                    : data.getParagraphStyle().getDefaultTextStyle();
             XWPFParagraphWrapper parentContext = new XWPFParagraphWrapper(paragraph);
             for (RenderData content : contents) {
                 XWPFRun fragment = parentContext.insertNewRun(ParagraphUtils.getRunPos(run));
                 StyleUtils.styleRun(fragment, run);
-
                 if (content instanceof TextRenderData) {
+                    if (null != defaultControlStyles) {
+                        defaultControlStyles.stream().forEach(style -> {
+                            if (null != style) {
+                                StyleUtils.styleRun(fragment, style.getDefaultTextStyle());
+                            }
+                        });
+                    }
+                    StyleUtils.styleRun(fragment, defaultTextStyle);
                     TextRenderPolicy.Helper.renderTextRun(fragment, content);
                 } else if (content instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(fragment, (PictureRenderData) content);
                 }
             }
+
         }
     }
 

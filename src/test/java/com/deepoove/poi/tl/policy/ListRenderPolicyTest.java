@@ -16,7 +16,7 @@ import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
@@ -25,7 +25,7 @@ import com.deepoove.poi.policy.ListRenderPolicy;
 @DisplayName("List Render test case")
 public class ListRenderPolicyTest {
 
-    RowV2RenderData header, row0, row1, row2;
+    RowRenderData header, row0, row1, row2;
 
     @BeforeEach
     public void init() {

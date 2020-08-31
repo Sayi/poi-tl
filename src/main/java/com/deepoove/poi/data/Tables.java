@@ -20,7 +20,7 @@ import java.util.Arrays;
 import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
 import com.deepoove.poi.data.style.BorderStyle;
-import com.deepoove.poi.data.style.TableV2Style;
+import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
@@ -34,7 +34,7 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     private Tables() {
     }
 
-    public static Tables of(RowV2RenderData... row) {
+    public static Tables of(RowRenderData... row) {
         // default A4
         Tables inst = Tables.ofA4Width();
         if (null != row) {
@@ -85,7 +85,7 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     public static Tables ofPercentWidth(String percent) {
         Tables inst = new Tables();
         inst.data = new TableRenderData();
-        TableV2Style style = new TableV2Style();
+        TableStyle style = new TableStyle();
         style.setWidth(percent);
         inst.data.setTableStyle(style);
         return inst;
@@ -96,7 +96,7 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     }
 
     public Tables width(double cmWidth, double[] colCmWidths) {
-        TableV2Style style = getTableStyle();
+        TableStyle style = getTableStyle();
         style.setWidth(UnitUtils.cm2Twips(cmWidth) + "");
         if (null != colCmWidths) {
             int[] colWidths = Arrays.stream(colCmWidths).mapToInt(UnitUtils::cm2Twips).toArray();
@@ -105,17 +105,17 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
         return this;
     }
 
-    private TableV2Style getTableStyle() {
-        TableV2Style style = data.getTableStyle();
+    private TableStyle getTableStyle() {
+        TableStyle style = data.getTableStyle();
         if (null == style) {
-            style = new TableV2Style();
+            style = new TableStyle();
             data.setTableStyle(style);
         }
         return style;
     }
 
     public Tables center() {
-        TableV2Style style = getTableStyle();
+        TableStyle style = getTableStyle();
         style.setAlign(TableRowAlign.CENTER);
         return this;
     }
@@ -130,7 +130,7 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
         return this;
     }
 
-    public Tables addRow(RowV2RenderData row) {
+    public Tables addRow(RowRenderData row) {
         data.addRow(row);
         return this;
     }

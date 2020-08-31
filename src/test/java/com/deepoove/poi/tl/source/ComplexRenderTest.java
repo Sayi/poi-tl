@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
@@ -105,7 +105,7 @@ public class ComplexRenderTest {
 
                 put("m_key", "5");
 
-                RowV2RenderData headers = Rows.of(new TextRenderData("d0d0d0", "过户主体"),
+                RowRenderData headers = Rows.of(new TextRenderData("d0d0d0", "过户主体"),
                         new TextRenderData("d0d0d0", "过户时间"), new TextRenderData("d0d0d0", "过户方式")).create();
                 put("table",
                         Tables.of(headers,

@@ -15,7 +15,6 @@
  */
 package com.deepoove.poi.data.style;
 
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
 public class CellStyle {
@@ -28,7 +27,7 @@ public class CellStyle {
     /**
      * default horizontal align in paragraph of cell
      */
-    private ParagraphAlignment defaultParagraphAlign;
+    private ParagraphStyle defaultParagraphStyle;
 
     public String getBackgroundColor() {
         return backgroundColor;
@@ -46,12 +45,12 @@ public class CellStyle {
         this.vertAlign = align;
     }
 
-    public ParagraphAlignment getDefaultParagraphAlign() {
-        return defaultParagraphAlign;
+    public ParagraphStyle getDefaultParagraphStyle() {
+        return defaultParagraphStyle;
     }
 
-    public void setDefaultParagraphAlign(ParagraphAlignment defaultParagraphAlign) {
-        this.defaultParagraphAlign = defaultParagraphAlign;
+    public void setDefaultParagraphStyle(ParagraphStyle defaultParagraphStyle) {
+        this.defaultParagraphStyle = defaultParagraphStyle;
     }
 
 }

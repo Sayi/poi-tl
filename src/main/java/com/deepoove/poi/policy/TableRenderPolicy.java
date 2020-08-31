@@ -15,26 +15,26 @@
  */
 package com.deepoove.poi.policy;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
-import com.deepoove.poi.data.CellV2RenderData;
+import com.deepoove.poi.data.CellRenderData;
 import com.deepoove.poi.data.MergeCellRule;
 import com.deepoove.poi.data.MergeCellRule.Grid;
 import com.deepoove.poi.data.ParagraphRenderData;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
-import com.deepoove.poi.data.style.TableV2Style;
+import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.util.TableTools;
@@ -50,14 +50,14 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
     @Override
     protected boolean validate(TableRenderData data) {
         if (null == data || 0 == data.obtainColSize()) return false;
-        List<RowV2RenderData> rows = data.getRows();
+        List<RowRenderData> rows = data.getRows();
         final int col = data.obtainColSize();
-        for (RowV2RenderData row : rows) {
+        for (RowRenderData row : rows) {
             if (col != row.obtainColSize()) {
                 throw new IllegalArgumentException("Number of cells in each row should be the same!");
             }
         }
-        TableV2Style tableStyle = data.getTableStyle();
+        TableStyle tableStyle = data.getTableStyle();
         if (null != tableStyle) {
             int[] colWidths = tableStyle.getColWidths();
             if (null != colWidths && colWidths.length != col) {
@@ -134,7 +134,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
         }
 
-        public static void renderRow(XWPFTableRow row, RowV2RenderData data) throws Exception {
+        public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
             int size = row.getTableCells().size();
             if (size != data.obtainColSize()) {
                 throw new IllegalArgumentException("Number of cells and render data should be the same!");
@@ -148,14 +148,18 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
         }
 
-        public static void renderCell(XWPFTableCell cell, CellV2RenderData data, CellStyle defaultCellStyle)
+        public static void renderCell(XWPFTableCell cell, CellRenderData data, CellStyle defaultCellStyle)
                 throws Exception {
             if (null == data) return;
             StyleUtils.styleTableCell(cell, defaultCellStyle);
             StyleUtils.styleTableCell(cell, data.getCellStyle());
-            ParagraphAlignment defaultParaAlign = null == data.getCellStyle()
-                    ? (null == defaultCellStyle ? null : defaultCellStyle.getDefaultParagraphAlign())
-                    : data.getCellStyle().getDefaultParagraphAlign();
+
+            List<ParagraphStyle> defaultParaStyles = new ArrayList<>();
+            if (null != defaultCellStyle) {
+                defaultParaStyles.add(defaultCellStyle.getDefaultParagraphStyle());
+            } else if (null != data.getCellStyle()) {
+                defaultParaStyles.add(data.getCellStyle().getDefaultParagraphStyle());
+            }
 
             List<ParagraphRenderData> cellParagraphDatas = data.getParagraphs();
             if (null != cellParagraphDatas && !cellParagraphDatas.isEmpty()) {
@@ -163,11 +167,9 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
                 XWPFParagraph placeHolder = cell.getParagraphArray(0);
                 if (null == placeHolder) placeHolder = cell.addParagraph();
 
-                ParagraphStyle defaultParaStyle = ParagraphStyle.builder().withAlign(defaultParaAlign).build();
                 for (ParagraphRenderData item : cellParagraphDatas) {
                     XWPFParagraph paragraph = bodyContainer.insertNewParagraph(placeHolder.getCTP().newCursor());
-                    StyleUtils.styleParagraph(paragraph, defaultParaStyle);
-                    ParagraphRenderPolicy.Helper.renderParagraph(paragraph.createRun(), item);
+                    ParagraphRenderPolicy.Helper.renderParagraph(paragraph.createRun(), item, defaultParaStyles);
                 }
 
                 List<XWPFParagraph> paragraphs = cell.getParagraphs();

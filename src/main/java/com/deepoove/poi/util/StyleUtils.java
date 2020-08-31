@@ -56,7 +56,7 @@ import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.StyleBuilder;
-import com.deepoove.poi.data.style.TableV2Style;
+import com.deepoove.poi.data.style.TableStyle;
 
 /**
  * set style for run, paragraph, table...
@@ -83,7 +83,7 @@ public final class StyleUtils {
             if (ctColor.isSetThemeColor()) ctColor.unsetThemeColor();
         }
         int fontSize = style.getFontSize();
-        if (0 != fontSize) run.setFontSize(fontSize);
+        if (0 != fontSize && -1 != fontSize) run.setFontSize(fontSize);
         String fontFamily = style.getFontFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
             run.setFontFamily(fontFamily);
@@ -118,7 +118,7 @@ public final class StyleUtils {
         }
         int twips = style.getCharacterSpacing();
         // in twentieths of a point
-        if (0 != twips) run.setCharacterSpacing(20 * twips);
+        if (0 != twips && -1 != twips) run.setCharacterSpacing(20 * twips);
         String vertAlign = style.getVertAlign();
         if (StringUtils.isNotBlank(vertAlign)) {
             run.setVerticalAlignment(vertAlign);
@@ -163,7 +163,7 @@ public final class StyleUtils {
      * @param table
      * @param tableStyle
      */
-    public static void styleTable(XWPFTable table, TableV2Style tableStyle) {
+    public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
         String width = tableStyle.getWidth();
         ensureTblW(table);
@@ -264,7 +264,7 @@ public final class StyleUtils {
             bold.setVal(style.isBold() ? STOnOff.TRUE : STOnOff.FALSE);
         }
 
-        if (0 != style.getFontSize()) {
+        if (0 != style.getFontSize() && -1 != style.getFontSize()) {
             BigInteger bint = new BigInteger("" + style.getFontSize());
             CTHpsMeasure ctSize = pr.isSetSz() ? pr.getSz() : pr.addNewSz();
             ctSize.setVal(bint.multiply(new BigInteger("2")));

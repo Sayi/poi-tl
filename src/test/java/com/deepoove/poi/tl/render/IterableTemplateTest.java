@@ -14,7 +14,7 @@ import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
@@ -157,12 +157,12 @@ public class IterableTemplateTest {
     @Test
     @DisplayName("using all gramer together")
     public void testTogether() throws Exception {
-        RowV2RenderData row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
+        RowRenderData row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
                 new TextRenderData("1E915D", "研究生")).create();
 
-        RowV2RenderData row1 = Rows.of("李四", "博士").create();
+        RowRenderData row1 = Rows.of("李四", "博士").create();
 
-        RowV2RenderData row2 = Rows.of("王五", "博士后").create();
+        RowRenderData row2 = Rows.of("王五", "博士后").create();
 
         final TextRenderData textRenderData = new TextRenderData("负责生产BUG，然后修复BUG，同时有效实施招聘行为");
         Style style = new Style();

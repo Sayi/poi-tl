@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
@@ -40,11 +40,11 @@ public class Issue313 {
     public void excelRender(String temppath) throws Exception {
         TextRenderData[] arr = new TextRenderData[10];
         arr[1] = new TextRenderData("FFFFFF", "姓名");
-        RowV2RenderData header = Rows.of(new TextRenderData("FFFFFF", "姓名"),
+        RowRenderData header = Rows.of(new TextRenderData("FFFFFF", "姓名"),
                 new TextRenderData("FFFFFF", "学历"), new TextRenderData("FFFFFF", "aaf")).bgColor("80C687").create();// 表头
-        RowV2RenderData row0 = Rows.of("张三", "研究生", "").create();// 每列的数据
-        RowV2RenderData row1 = Rows.of("李四", "博士", "aa").create();
-        RowV2RenderData row2 = Rows.of("王五", "博士后", "").create();
+        RowRenderData row0 = Rows.of("张三", "研究生", "").create();// 每列的数据
+        RowRenderData row1 = Rows.of("李四", "博士", "aa").create();
+        RowRenderData row2 = Rows.of("王五", "博士后", "").create();
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("excel_first", Tables.of(header, row0, row1).create());
         map.put("excel_second", Tables.of(header, row2).create());
