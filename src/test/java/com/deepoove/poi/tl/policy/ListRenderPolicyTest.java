@@ -47,7 +47,7 @@ public class ListRenderPolicyTest {
                 add(new TextRenderData("9d55b8", "Deeply in love with the things you love, just deepoove."));
                 add(new TextRenderData("ver 0.0.4"));
                 add(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
-                add(getData(NumberingFormat.LOWER_LETTER));
+                add(getData(NumberingFormat.DECIMAL_PARENTHESES));
                 add(Tables.of(header, row0, row1, row2));
             }
         };

@@ -44,7 +44,7 @@ public class TextRenderData implements RenderData {
     }
 
     public TextRenderData(String color, String text) {
-        this.style = StyleBuilder.newBuilder().buildColor(color).build();
+        this.style = Style.builder().buildColor(color).build();
         this.text = text;
     }
 

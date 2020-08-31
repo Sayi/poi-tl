@@ -149,7 +149,7 @@ public class SerializableTest {
 
     @Test
     void testNumberingRenderData() throws Exception {
-        Style fmtStyle = StyleBuilder.newBuilder().buildColor("00FF00").build();
+        Style fmtStyle = Style.builder().buildColor("00FF00").build();
         NumberingRenderData data = Numberings.ofBullet()
                 .addItem(new TextRenderData("df2d4f", "Deeply in love with the things you love, just deepoove."))
                 .addItem(Paragraphs.of().addText("Deeply in love with the things you love, just deepoove.")

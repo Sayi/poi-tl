@@ -62,6 +62,7 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderD
                 paragraph = bodyContainer.insertNewParagraph(run);
                 paragraph.setNumID(numID);
                 XWPFRun createRun = paragraph.createRun();
+                StyleUtils.styleParaRpr(paragraph, StyleUtils.retriveStyle(run));
                 StyleUtils.styleRun(createRun, run);
                 ParagraphRenderPolicy.Helper.renderParagraph(createRun, item);
             }

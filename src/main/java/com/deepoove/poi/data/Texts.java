@@ -46,7 +46,7 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         if (null != this.style) {
             style.setColor(color);
         } else {
-            this.style = StyleBuilder.newBuilder().buildColor(color).build();
+            this.style = Style.builder().buildColor(color).build();
         }
         return this;
     }
@@ -55,7 +55,7 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         if (null != this.style) {
             style.setBold(true);
         } else {
-            this.style = StyleBuilder.newBuilder().buildBold().build();
+            this.style = Style.builder().buildBold().build();
         }
         return this;
     }
@@ -64,7 +64,7 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         if (null != this.style) {
             style.setVertAlign("superscript");;
         } else {
-            this.style = StyleBuilder.newBuilder().buildSuper().build();
+            this.style = Style.builder().buildSuper().build();
         }
         return this;
     }
@@ -73,7 +73,7 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         this.url = url;
         // 链接默认蓝色加下划线
         if (null == this.style) {
-            this.style = StyleBuilder.newBuilder().buildColor("0000FF").buildUnderLine().build();
+            this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
         }
         return this;
     }

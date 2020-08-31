@@ -55,6 +55,7 @@ import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.data.style.StyleBuilder;
 import com.deepoove.poi.data.style.TableV2Style;
 
 /**
@@ -295,7 +296,7 @@ public final class StyleUtils {
         }
     }
 
-    private static void styleParaRpr(XWPFParagraph paragraph, Style style) {
+    public static void styleParaRpr(XWPFParagraph paragraph, Style style) {
         if (null == paragraph || null == style) return;
         CTP ctp = paragraph.getCTP();
         CTPPr pPr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
@@ -303,7 +304,7 @@ public final class StyleUtils {
         StyleUtils.styleParaRpr(pr, style);
     }
 
-    private static void stylePpr(XWPFParagraph paragraph, ParagraphStyle style) {
+    public static void stylePpr(XWPFParagraph paragraph, ParagraphStyle style) {
         if (null == paragraph || null == style) return;
         if (null != style.getAlign()) {
             paragraph.setAlignment(style.getAlign());
@@ -331,6 +332,16 @@ public final class StyleUtils {
             indent.setHangingChars(bi);
             if (indent.isSetHanging()) indent.unsetHanging();
         }
+    }
+
+    public static Style retriveStyle(XWPFRun run) {
+        if (null == run) return null;
+        StyleBuilder builder = Style.builder().buildColor(run.getColor()).buildFontFamily(run.getFontFamily())
+                .buildFontSize(run.getFontSize());
+        if (run.isBold()) builder.buildBold();
+        if (run.isItalic()) builder.buildItalic();
+        if (run.isStrikeThrough()) builder.buildStrike();
+        return builder.build();
     }
 
 }

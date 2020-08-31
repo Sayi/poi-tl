@@ -25,12 +25,8 @@ public class StyleBuilder {
 
     Style style;
 
-    private StyleBuilder() {
+    StyleBuilder() {
         style = new Style();
-    }
-
-    public static StyleBuilder newBuilder() {
-        return new StyleBuilder();
     }
 
     public StyleBuilder buildColor(String color) {

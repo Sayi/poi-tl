@@ -62,6 +62,10 @@ public class Style implements Serializable {
     public Style() {
     }
 
+    public static StyleBuilder builder() {
+        return new StyleBuilder();
+    }
+
     public Style(String color) {
         this.color = color;
     }

@@ -15,7 +15,7 @@
  */
 package com.deepoove.poi.data;
 
-import com.deepoove.poi.data.style.StyleBuilder;
+import com.deepoove.poi.data.style.Style;
 
 /**
  * 超链接
@@ -41,7 +41,7 @@ public class HyperLinkTextRenderData extends TextRenderData {
         super(text);
         this.url = url;
         // 链接默认蓝色加下划线
-        this.style = StyleBuilder.newBuilder().buildColor("0000FF").buildUnderLine().build();
+        this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
     }
 
     public String getUrl() {
