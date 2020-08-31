@@ -29,10 +29,16 @@ import com.deepoove.poi.resolver.ElementTemplateFactory;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.RegexUtils;
 
+/**
+ * Builder to build {@link Configure}
+ * 
+ * @author Sayi
+ *
+ */
 public class ConfigureBuilder {
     private Configure config;
 
-    public ConfigureBuilder() {
+    ConfigureBuilder() {
         config = new Configure();
     }
 

@@ -32,7 +32,7 @@ public class TableRenderData implements RenderData {
     private List<RowRenderData> rows = new ArrayList<>();
     private TableStyle tableStyle;
 
-    MergeCellRule mergeRule;
+    private MergeCellRule mergeRule;
 
     public List<RowRenderData> getRows() {
         return rows;
@@ -65,10 +65,7 @@ public class TableRenderData implements RenderData {
 
     public int obtainColSize() {
         if (null == rows || rows.isEmpty()) return 0;
-        RowRenderData row = rows.get(0);
-        List<CellRenderData> cells = row.getCells();
-        if (null == cells || cells.isEmpty()) return 0;
-        return cells.size();
+        return rows.get(0).obtainColSize();
     }
 
     public int obtainRowSize() {

@@ -20,6 +20,7 @@ import com.deepoove.poi.template.ElementTemplate;
 
 /**
  * Do Anything Anywhere
+ * 
  * @author Sayi
  * @version 0.0.1
  */
@@ -27,12 +28,9 @@ import com.deepoove.poi.template.ElementTemplate;
 public interface RenderPolicy {
 
     /**
-     * @param eleTemplate
-     *            标签位置
-     * @param data
-     *            数据
-     * @param template
-     *            模板文档
+     * @param eleTemplate template tag
+     * @param data        render data
+     * @param template    XWPFTemplate instance
      */
     void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
 

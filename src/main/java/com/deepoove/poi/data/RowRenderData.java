@@ -46,7 +46,7 @@ public class RowRenderData implements RenderData {
         cells.add(cell);
         return this;
     }
-    
+
     public int obtainColSize() {
         if (null == cells || cells.isEmpty()) return 0;
         return cells.size();

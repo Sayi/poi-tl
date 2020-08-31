@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
@@ -48,7 +48,7 @@ public class IterableRenderBasicExample {
                 put("what",
                         "Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
                 put("author", new TextRenderData("000000", "Sayi卅一"));
-                put("introduce", new HyperLinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
+                put("introduce", new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
 
                 put("solution_compare", table);

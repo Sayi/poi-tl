@@ -15,8 +15,8 @@
  */
 package com.deepoove.poi.render.compute;
 
-import com.deepoove.poi.el.ELObject;
 import com.deepoove.poi.exception.ExpressionEvalException;
+import com.deepoove.poi.expression.DefaultEL;
 
 /**
  * 基于ELObject的计算
@@ -26,11 +26,11 @@ import com.deepoove.poi.exception.ExpressionEvalException;
  */
 public class ELObjectRenderDataCompute implements RenderDataCompute {
 
-    private ELObject elObject;
+    private DefaultEL elObject;
     private boolean isStrict;
 
     public ELObjectRenderDataCompute(Object root, boolean isStrict) {
-        elObject = ELObject.create(root);
+        elObject = DefaultEL.create(root);
         this.isStrict = isStrict;
     }
 

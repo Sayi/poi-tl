@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.el;
+package com.deepoove.poi.expression;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.deepoove.poi.exception.ExpressionEvalException;
 
 /**
- * 点缀对象
+ * dot expression
  * 
  * @author Sayi
  *
@@ -40,12 +40,13 @@ public class Dot {
     private Dot target;
     private String key;
 
-    // EL通用正则
     final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\.]+)*$");
 
     public Dot(String el) {
         Objects.requireNonNull(el, "EL cannot be null.");
-        if (!EL_PATTERN.matcher(el).matches()) { throw new ExpressionEvalException("Error EL fomart: " + el); }
+        if (!EL_PATTERN.matcher(el).matches()) {
+            throw new ExpressionEvalException("Error EL fomart: " + el);
+        }
 
         this.el = el;
         int dotIndex = el.lastIndexOf(".");
@@ -57,7 +58,7 @@ public class Dot {
         }
     }
 
-    public Object eval(ELObject elObject) {
+    public Object eval(DefaultEL elObject) {
         if (elObject.cache.containsKey(el)) return elObject.cache.get(el);
         Object result = null != target ? result = evalKey(target.eval(elObject)) : evalKey(elObject.model);
         if (null != result) elObject.cache.put(el, result);
@@ -75,7 +76,9 @@ public class Dot {
                     "Error eval " + key + ", the type of " + target + "must be Hash, but is " + objClass);
         }
 
-        if (obj instanceof Map) { return ((Map<?, ?>) obj).get(key); }
+        if (obj instanceof Map) {
+            return ((Map<?, ?>) obj).get(key);
+        }
 
         // introspector
         Method readMethod = ReadMethodFinder.find(objClass, key);

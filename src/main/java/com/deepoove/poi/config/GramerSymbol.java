@@ -16,49 +16,50 @@
 package com.deepoove.poi.config;
 
 /**
- * 默认模板语法
+ * Built-in template syntax
  * 
  * @author Sayi
  */
 public enum GramerSymbol {
 
     /**
-     * 图片
+     * Picture in the template
      */
     IMAGE('@'),
 
     /**
-     * 文本
+     * Text in the template
      */
     TEXT('\0'),
 
     /**
-     * 文本别名，兼容#this写法不与现有的表格写法冲突：{{=#this}}
+     * Text in the template, Text alias, compatible with #this, and not conflicting
+     * with existing table writing: {{=#this}}
      */
     TEXT_ALIAS('='),
 
     /**
-     * 表格
+     * Table in the template
      */
     TABLE('#'),
 
     /**
-     * 列表
+     * Numbering in the template
      */
     NUMBERING('*'),
 
     /**
-     * 引用
+     * Nested/Merge/Include/Reference in the template
      */
     DOCX_TEMPLATE('+'),
 
     /**
-     * 循环(if & for each)语法块起始
+     * Block(if & for each) start
      */
     ITERABLE_START('?'),
 
     /**
-     * 语法块结束
+     * Block end
      */
     BLOCK_END('/');
 

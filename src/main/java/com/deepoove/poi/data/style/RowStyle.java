@@ -19,6 +19,10 @@ import java.io.Serializable;
 
 import com.deepoove.poi.util.UnitUtils;
 
+/**
+ * @author Sayi
+ *
+ */
 public class RowStyle implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -28,6 +32,10 @@ public class RowStyle implements Serializable {
      * @see #{@link UnitUtils#cm2Twips()}
      */
     private int height;
+
+    /**
+     * default cell style for all cells in the current row
+     */
     private CellStyle defaultCellStyle;
 
     public int getHeight() {

@@ -18,20 +18,25 @@ package com.deepoove.poi.data;
 import java.io.Serializable;
 
 /**
- * 图表系列
+ * One Series data
  * 
  * @author Sayi
- * @version 1.8.0
  */
 public class SeriesRenderData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * series name
+     */
     private String name;
+    /**
+     * value must be mapped one to one with category
+     */
     private Number[] values;
 
     /**
-     * 仅在组合图表中指定系列属于的类型
+     * Only specify the type of series in the combination chart
      */
     private ComboType comboType;
 

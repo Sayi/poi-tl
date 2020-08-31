@@ -19,11 +19,13 @@ import java.util.Arrays;
 
 import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
-import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
+ * Builder to build {@link TableRenderData}
+ * 
  * @author Sayi
  *
  */
@@ -121,12 +123,12 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
     }
 
     public Tables border(BorderStyle border) {
-        data.getTableStyle().setLeftBorder(border);
-        data.getTableStyle().setRightBorder(border);
-        data.getTableStyle().setTopBorder(border);
-        data.getTableStyle().setBottomBorder(border);
-        data.getTableStyle().setInsideHBorder(border);
-        data.getTableStyle().setInsideVBorder(border);
+        getTableStyle().setLeftBorder(border);
+        getTableStyle().setRightBorder(border);
+        getTableStyle().setTopBorder(border);
+        getTableStyle().setBottomBorder(border);
+        getTableStyle().setInsideHBorder(border);
+        getTableStyle().setInsideVBorder(border);
         return this;
     }
 

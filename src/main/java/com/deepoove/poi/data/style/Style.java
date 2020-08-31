@@ -20,10 +20,9 @@ import java.io.Serializable;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
 /**
- * 样式
+ * Text Style
  * 
  * @author Sayi
- * @version 0.0.3
  *
  */
 public class Style implements Serializable {
@@ -35,27 +34,21 @@ public class Style implements Serializable {
     private int fontSize;
     private Boolean isBold;
     private Boolean isItalic;
-    /**
-     * 删除线
-     */
     private Boolean isStrike;
-    /**
-     * 下划线
-     */
     private Boolean isUnderLine;
 
     /**
-     * 文本背景突出显示颜色
+     * text background highlight color
      */
     private STHighlightColor.Enum highlightColor;
 
     /**
-     * 间距，单位pt
+     * point unit(pt)
      */
     private int characterSpacing;
 
     /**
-     * 基线(baseline)、上标(superscript)、下标(subscript)
+     * baseline, superscript, subscript
      */
     private String vertAlign;
 
@@ -153,6 +146,65 @@ public class Style implements Serializable {
 
     public void setVertAlign(String vertAlign) {
         this.vertAlign = vertAlign;
+    }
+
+    public static final class StyleBuilder {
+
+        private Style style;
+
+        private StyleBuilder() {
+            style = new Style();
+        }
+
+        public StyleBuilder buildColor(String color) {
+            style.setColor(color);
+            return this;
+        }
+
+        public StyleBuilder buildFontFamily(String fontFamily) {
+            style.setFontFamily(fontFamily);
+            return this;
+        }
+
+        public StyleBuilder buildFontSize(int fontSize) {
+            style.setFontSize(fontSize);
+            return this;
+        }
+
+        public StyleBuilder buildBold() {
+            style.setBold(true);
+            return this;
+        }
+
+        public StyleBuilder buildItalic() {
+            style.setItalic(true);
+            return this;
+        }
+
+        public StyleBuilder buildStrike() {
+            style.setStrike(true);
+            return this;
+        }
+
+        public StyleBuilder buildUnderLine() {
+            style.setUnderLine(true);
+            return this;
+        }
+
+        public StyleBuilder buildSuper() {
+            style.setVertAlign("superscript");
+            return this;
+        }
+
+        public StyleBuilder buildSub() {
+            style.setVertAlign("subscript");
+            return this;
+        }
+
+        public Style build() {
+            return style;
+        }
+
     }
 
 }

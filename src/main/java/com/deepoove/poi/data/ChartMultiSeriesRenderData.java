@@ -18,10 +18,9 @@ package com.deepoove.poi.data;
 import java.util.List;
 
 /**
- * 多系列图表：条形图、柱形图、折线图、雷达图
+ * multi series chart: Bar(3D), Line(3D), Radar， Area(3D)
  * 
  * @author Sayi
- * @version 1.8.0
  */
 public class ChartMultiSeriesRenderData implements RenderData {
 

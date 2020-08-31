@@ -25,7 +25,7 @@ public class CellStyle {
      */
     private XWPFVertAlign vertAlign;
     /**
-     * default horizontal align in paragraph of cell
+     * default paragraph style for all paragraphs in the current cell
      */
     private ParagraphStyle defaultParagraphStyle;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.el;
+package com.deepoove.poi.expression;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,10 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * calculate expression
  * 
  * @author Sayi
- * @since 1.4.0
  *
  */
-public class ELObject {
+public class DefaultEL {
 
     final Object model;
 
@@ -35,16 +34,18 @@ public class ELObject {
     // Same variable reference with SpEL
     private static final String THIS = "#this";
 
-    public ELObject(Object model) {
+    public DefaultEL(Object model) {
         this.model = model;
     }
 
-    public static ELObject create(Object model) {
-        return new ELObject(model);
+    public static DefaultEL create(Object model) {
+        return new DefaultEL(model);
     }
 
     public Object eval(String el) {
-        if (THIS.equals(el)) { return model; }
+        if (THIS.equals(el)) {
+            return model;
+        }
         Dot dot = new Dot(el);
         return dot.eval(this);
     }

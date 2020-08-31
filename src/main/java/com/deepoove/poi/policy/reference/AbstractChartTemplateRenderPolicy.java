@@ -73,11 +73,9 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             for (int i = 0; i < numOfPoints + 1; i++) {
                 for (int j = orignSize; j > seriesSize; j--) {
                     XSSFRow row = sheet.getRow(i);
-                    if (null == row)
-                        continue;
+                    if (null == row) continue;
                     XSSFCell cell = row.getCell(j);
-                    if (null != cell)
-                        row.removeCell(cell);
+                    if (null != cell) row.removeCell(cell);
                 }
             }
         }

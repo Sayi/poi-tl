@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
@@ -32,16 +31,12 @@ public class TextRenderTest {
                 put("text", new TextRenderData("28a745", "我是\n绿色且换行的文字"));
 
                 // 超链接
-                HyperLinkTextRenderData hyperLinkTextRenderData = new HyperLinkTextRenderData("Deepoove website.",
-                        "http://www.deepoove.com");
-                hyperLinkTextRenderData.getStyle().setBold(true);
-                put("link", hyperLinkTextRenderData);
-                put("maillink", new HyperLinkTextRenderData("发邮件给作者", "mailto:adasai90@gmail.com?subject=poi-tl"));
+                put("link", Texts.of("Deepoove website.").link("http://www.deepoove.com").bold().create());
+                // 邮箱超链接
+                put("maillink", Texts.of("发邮件给作者").mailto("sayi@apache.org", "poi-tl").create());
 
                 // 指定文本样式
-                TextRenderData textRenderData = new TextRenderData("just deepoove.");
                 Style style = new Style("FF5722");
-                textRenderData.setStyle(style);
                 style.setBold(true);
                 style.setFontSize(48);
                 style.setItalic(true);
@@ -50,7 +45,7 @@ public class TextRenderTest {
                 style.setFontFamily("微软雅黑");
                 style.setCharacterSpacing(20);
                 style.setHighlightColor(STHighlightColor.DARK_GREEN);
-                put("word", textRenderData);
+                put("word", Texts.of("just deepoove.").style(style).create());
 
                 // 换行
                 put("newline", "hi\n\n\n\n\nhello");
@@ -65,27 +60,14 @@ public class TextRenderTest {
                 put("newline_from_file", new String(buffer));
 
                 // 上标
-                TextRenderData superText = new TextRenderData("a+b");
-                style = new Style();
-                style.setVertAlign("superscript");
-                superText.setStyle(style);
-                put("super", superText);
+                put("super", Texts.of("a+b").sup().create());
                 // 下标
-                TextRenderData subText  = new TextRenderData("a-b");
-                style = new Style();
-                style.setVertAlign("subscript");
-                subText.setStyle(style);
-                put("sub", subText);
+                put("sub", Texts.of("a+b").sub().create());
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_text.docx").render(datas);
-
-        FileOutputStream out = new FileOutputStream("out_render_text.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        XWPFTemplate.compile("src/test/resources/template/render_text.docx").render(datas)
+                .writeToFile("out_render_text.docx");
 
     }
 

@@ -22,22 +22,22 @@ import java.util.List;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
- * 待合并子文档和数据集合
+ * Nested/Merge/Include/Reference docx
  * 
  * @author Sayi
- * @version 1.3.0
  */
 public class DocxRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * stream流无法重用，使用字节数组表示待合并文档
+     * docx byte array to be merged
      */
     private byte[] mergedDoc;
 
     /**
-     * 渲染待合并文档模板的数据集合，若合并文档不是个模板，可为空
+     * Render data for the docx template to be merged. If the merged document is not
+     * a template, it can be empty
      */
     private List<?> dataModels;
 
@@ -45,39 +45,40 @@ public class DocxRenderData implements RenderData {
     }
 
     /**
-     * @param docx 子文档
+     * @param docx file to be merged
      */
     public DocxRenderData(File docx) {
         this(docx, null);
     }
 
     /**
-     * 构造子文档和渲染数据源
      * 
-     * @param docx        子文档
-     * @param renderDatas 渲染数据列表，列表的大小表示循环的次数
+     * @param docx        file to be merged
+     * @param renderDatas Render data for the docx template, the size of the list
+     *                    indicates the number of cycles
      */
     public DocxRenderData(File docx, List<?> renderDatas) {
         this(ByteUtils.getLocalByteArray(docx), renderDatas);
     }
 
     /**
-     * @param inputStream 子文档流
+     * @param inputStream stream to be merged
      */
     public DocxRenderData(InputStream inputStream) {
         this(inputStream, null);
     }
 
     /**
-     * @param inputStream
-     * @param renderDatas
+     * @param inputStream stream to be merged
+     * @param renderDatas Render data for the stream template, the size of the list
+     *                    indicates the number of cycles
      */
     public DocxRenderData(InputStream inputStream, List<?> renderDatas) {
         this(ByteUtils.toByteArray(inputStream), renderDatas);
     }
 
     /**
-     * @param input       子文档字节数组
+     * @param input       byte array to be merged
      * @param renderDatas
      */
     public DocxRenderData(byte[] input, List<?> renderDatas) {

@@ -25,7 +25,6 @@ import com.deepoove.poi.template.run.RunTemplate;
  * self render
  * 
  * @author Sayi
- * @version 0.0.3
  */
 public class SelfRenderPolicy implements RenderPolicy {
 

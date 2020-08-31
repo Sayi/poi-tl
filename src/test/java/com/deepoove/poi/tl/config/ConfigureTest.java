@@ -17,7 +17,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.AbortHandler;
 import com.deepoove.poi.config.Configure.DiscardHandler;
 import com.deepoove.poi.config.ConfigureBuilder;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.PictureRenderPolicy;
@@ -135,7 +135,7 @@ public class ConfigureTest {
                 put("作者姓名", "Sayi");
                 put("作者别名", "卅一");
                 put("头像", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
-                put("详情网址", new HyperLinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
+                put("详情网址", new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("详情", new HashMap<String, Object>() {
                     {
                         put("描述", new HashMap<String, String>() {

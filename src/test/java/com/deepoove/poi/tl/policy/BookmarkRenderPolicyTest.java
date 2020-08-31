@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.BookmarkRenderPolicy;
 
@@ -21,8 +21,8 @@ public class BookmarkRenderPolicyTest {
 
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
-                put("anchor1", new HyperLinkTextRenderData("poi-tl", "anchor:poi-tl"));
-                put("anchor2", new HyperLinkTextRenderData("文字", "anchor:我是绿色且换行的文字"));
+                put("anchor1", new HyperlinkTextRenderData("poi-tl", "anchor:poi-tl"));
+                put("anchor2", new HyperlinkTextRenderData("文字", "anchor:我是绿色且换行的文字"));
                 put("title", "poi-tl");
                 put("text", new TextRenderData("28a745", "我是绿色且换行的文字"));
 
@@ -34,8 +34,6 @@ public class BookmarkRenderPolicyTest {
                 .build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_bookmark.docx", config)
                 .render(datas);
-
-        System.out.println(template.getXWPFDocument().getDocument().toString());
 
         template.writeToFile("out_render_bookmark.docx");
 

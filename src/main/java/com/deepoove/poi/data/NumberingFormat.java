@@ -19,6 +19,10 @@ import java.io.Serializable;
 
 import com.deepoove.poi.xwpf.NumFormat;
 
+/**
+ * @author Sayi
+ *
+ */
 public class NumberingFormat implements Serializable {
 
     private static final long serialVersionUID = 1L;

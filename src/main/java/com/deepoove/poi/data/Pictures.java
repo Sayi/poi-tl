@@ -16,13 +16,14 @@
 package com.deepoove.poi.data;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 
 import com.deepoove.poi.util.BytePictureUtils;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
- * Factory methods for the builder of {@link PictureRenderData} instances.
+ * Builder to build {@link PictureRenderData} instances.
  * 
  * @author Sayi
  *
@@ -35,9 +36,7 @@ public class Pictures implements RenderDataBuilder<PictureRenderData> {
     }
 
     public static Pictures ofLocal(String src) {
-        Pictures inst = new Pictures();
-        inst.data = new PictureRenderData(0, 0, src);
-        return inst;
+        return Pictures.ofBytes(ByteUtils.getLocalByteArray(new File(src)), PictureType.suggestFileType(src));
     }
 
     public static Pictures ofUrl(String url, PictureType pictureType) {

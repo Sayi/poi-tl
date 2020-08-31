@@ -1,6 +1,5 @@
 package com.deepoove.poi.tl.policy.ref;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Pictures;
 
 @DisplayName("Template Render test case")
 public class ElementTemplateRenderTest {
@@ -18,16 +18,19 @@ public class ElementTemplateRenderTest {
     @SuppressWarnings("serial")
     @Test
     public void testPictureRender() throws Exception {
+        PictureRenderData image = Pictures.ofLocal("src/test/resources/sayi.png").size(100, 120).create();
+        PictureRenderData image2 = Pictures.ofLocal("src/test/resources/logo.png").size(100, 120).create();
         Map<String, Object> data = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
-                put("pic", new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/sayi.png")));
+
+                put("pic", image);
             }
         };
         Map<String, Object> data1 = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl2");
-                put("pic", new PictureRenderData(100, 120, ".png", new FileInputStream("src/test/resources/logo.png")));
+                put("pic", image2);
             }
         };
 
@@ -52,8 +55,7 @@ public class ElementTemplateRenderTest {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_picture_template1.docx")
                 .render(new HashMap<String, Object>() {
                     {
-                        put("img", new PictureRenderData(100, 120, ".png",
-                                new FileInputStream("src/test/resources/sayi.png")));
+                        put("img", Pictures.ofLocal("src/test/resources/sayi.png").size(100, 120).create());
                     }
                 });
 

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
@@ -137,7 +137,7 @@ public class IterableTemplateTest {
         });
         users.add(new HashMap<String, Object>() {
             {
-                put("name", new HyperLinkTextRenderData("Deepoove website.", "http://www.google.com"));
+                put("name", new HyperlinkTextRenderData("Deepoove website.", "http://www.google.com"));
 
             }
         });
@@ -157,7 +157,7 @@ public class IterableTemplateTest {
     @Test
     @DisplayName("using all gramer together")
     public void testTogether() throws Exception {
-        RowRenderData row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
+        RowRenderData row0 = Rows.of(new HyperlinkTextRenderData("张三", "http://deepoove.com"),
                 new TextRenderData("1E915D", "研究生")).create();
 
         RowRenderData row1 = Rows.of("李四", "博士").create();

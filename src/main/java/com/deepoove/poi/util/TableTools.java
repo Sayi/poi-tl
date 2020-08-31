@@ -35,8 +35,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
-import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 
 /**
  * XWPFTable 增强工具类 <br/>

@@ -50,6 +50,7 @@ public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderD
     }
 
     public static class Helper {
+
         public static void renderParagraph(XWPFRun run, ParagraphRenderData data) throws Exception {
             renderParagraph(run, data, null);
         }

@@ -20,8 +20,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
+/**
+ * Define the matrix to be merged and the matrix cannot overlap.
+ * <p>
+ * TODO add boolean value for if merge cells and merge contents at the same time
+ * </p>
+ * 
+ * @author Sayi
+ *
+ */
 public class MergeCellRule implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +48,11 @@ public class MergeCellRule implements Serializable {
         return new MergeCellRuleBuilder();
     }
 
+    /**
+     * iterator the merged matrix
+     * 
+     * @return
+     */
     public Iterator<Entry<Grid, Grid>> mappingIterator() {
         return mapping.entrySet().iterator();
     }
@@ -81,7 +94,7 @@ public class MergeCellRule implements Serializable {
 
         @Override
         public String toString() {
-            return i + ", " + j;
+            return i + "-" + j;
         }
 
         @Override
@@ -124,8 +137,7 @@ public class MergeCellRule implements Serializable {
             if (from.equals(to)) {
                 throw new IllegalArgumentException("The merged grid of from and to cannot be same!");
             }
-            Set<Entry<Grid, Grid>> entrySet = map.entrySet();
-            Iterator<Entry<Grid, Grid>> iterator = entrySet.iterator();
+            Iterator<Entry<Grid, Grid>> iterator = map.entrySet().iterator();
             while (iterator.hasNext()) {
                 Entry<Grid, Grid> next = iterator.next();
                 Grid key = next.getKey();

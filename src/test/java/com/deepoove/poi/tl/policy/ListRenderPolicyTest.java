@@ -11,29 +11,32 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.policy.ListRenderPolicy;
 
 @DisplayName("List Render test case")
 public class ListRenderPolicyTest {
 
-    RowRenderData header, row0, row1, row2;
+    private TableRenderData table;
 
     @BeforeEach
     public void init() {
-        header = Rows.of(new TextRenderData("FF00FF", "姓名"), new TextRenderData("FF00FF", "学历")).create();
-        row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
-                new TextRenderData("1E915D", "研究生")).create();
+        RowRenderData header, row0, row1, row2;
+        header = Rows.of("姓名", "学历").textColor("FF00FF").create();
+        row0 = Rows.of(Texts.of("张三").link("http://deepoove.com").create(), Texts.of("研究生").color("1E915D").create())
+                .create();
         row1 = Rows.of("李四", "博士").create();
         row2 = Rows.of("王五", "博士后").create();
+        table = Tables.of(header, row0, row1, row2).create();
     }
 
     @SuppressWarnings("serial")
@@ -48,7 +51,7 @@ public class ListRenderPolicyTest {
                 add(new TextRenderData("ver 0.0.4"));
                 add(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
                 add(getData(NumberingFormat.DECIMAL_PARENTHESES));
-                add(Tables.of(header, row0, row1, row2));
+                add(table);
             }
         };
 

@@ -18,6 +18,8 @@ package com.deepoove.poi.data;
 import com.deepoove.poi.data.style.Style;
 
 /**
+ * builder to build {@link TextRenderData}
+ * 
  * @author Sayi
  *
  */
@@ -59,18 +61,54 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
         return this;
     }
 
+    public Texts italic() {
+        if (null != this.style) {
+            style.setItalic(true);
+        } else {
+            this.style = Style.builder().buildItalic().build();
+        }
+        return this;
+    }
+
     public Texts sup() {
         if (null != this.style) {
-            style.setVertAlign("superscript");;
+            style.setVertAlign("superscript");
         } else {
             this.style = Style.builder().buildSuper().build();
         }
         return this;
     }
 
+    public Texts sub() {
+        if (null != this.style) {
+            style.setVertAlign("subscript");
+        } else {
+            this.style = Style.builder().buildSub().build();
+        }
+        return this;
+    }
+
+    public Texts fontSize(int fontSize) {
+        if (null != this.style) {
+            style.setFontSize(fontSize);
+        } else {
+            this.style = Style.builder().buildFontSize(fontSize).build();
+        }
+        return this;
+    }
+
+    public Texts fontFamily(String fontFamily) {
+        if (null != this.style) {
+            style.setFontFamily(fontFamily);
+        } else {
+            this.style = Style.builder().buildFontFamily(fontFamily).build();
+        }
+        return this;
+    }
+
     public Texts link(String url) {
         this.url = url;
-        // 链接默认蓝色加下划线
+        // default blue color and underline
         if (null == this.style) {
             this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
         }
@@ -93,7 +131,7 @@ public class Texts implements RenderDataBuilder<TextRenderData> {
     public TextRenderData create() {
         TextRenderData data = null;
         if (null != url) {
-            data = new HyperLinkTextRenderData(text, url);
+            data = new HyperlinkTextRenderData(text, url);
             data.setStyle(style);
         } else {
             data = new TextRenderData(text, style);

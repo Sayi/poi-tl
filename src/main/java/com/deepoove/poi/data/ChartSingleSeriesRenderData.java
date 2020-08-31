@@ -16,10 +16,9 @@
 package com.deepoove.poi.data;
 
 /**
- * 单系列图表：环形图、饼图
+ * single series chart:doughnut, pie(3D)
  * 
  * @author Sayi
- * @version 1.8.0
  */
 public class ChartSingleSeriesRenderData implements RenderData {
 

@@ -2,7 +2,6 @@ package com.deepoove.poi.tl.policy;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.data.Includes;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.tl.source.DataTest;
 
@@ -45,23 +44,25 @@ public class DocxRenderTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testDocxTemplateRender() throws Exception {
+    public void testIncludeRender() throws Exception {
 
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "Hello, poi tl.");
 
-                // 循环合并模板render_include_merge_template.docx
-                put("docx_template", new DocxRenderData(
-                        new File("src/test/resources/template/render_include_merge_template.docx"), dataList));
+                put("docx_template", Includes.ofLocal("src/test/resources/template/render_include_merge_template.docx")
+                        .setRenderModel(dataList).create());
 
-                // 合并文档render_include_picture.docx
-                put("docx_template2", new DocxRenderData(new File("src/test/resources/template/render_include_picture.docx")));
+                put("docx_template2",
+                        Includes.ofLocal("src/test/resources/template/render_include_picture.docx").create());
 
-                put("docx_template3", new DocxRenderData(new File("src/test/resources/template/render_include_table.docx")));
+                put("docx_template3",
+                        Includes.ofLocal("src/test/resources/template/render_include_table.docx").create());
 
-                put("docx_template4", new DocxRenderData(
-                        new FileInputStream(new File("src/test/resources/template/render_include_all.docx"))));
+                put("docx_template4",
+                        Includes.ofStream(
+                                new FileInputStream(new File("src/test/resources/template/render_include_all.docx")))
+                                .create());
 
                 put("newline", "Why poi-tl?");
 
@@ -69,12 +70,7 @@ public class DocxRenderTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx").render(datas);
-
-        FileOutputStream out = new FileOutputStream("out_render_include.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        template.writeToFile("out_render_include.docx");
 
     }
 

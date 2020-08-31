@@ -20,7 +20,7 @@ import com.deepoove.poi.data.Cells;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.DocxRenderData;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.ParagraphRenderData;
@@ -36,7 +36,6 @@ import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.StyleBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SerializableTest {
@@ -62,10 +61,10 @@ public class SerializableTest {
     @Test
     void testTextRenderData() throws Exception {
         TextRenderData data = Texts.of("poi-tl").color("00FF00").link("http://deepoove.com").create();
-        TextRenderData result = write(data).getResult(HyperLinkTextRenderData.class);
+        TextRenderData result = write(data).getResult(HyperlinkTextRenderData.class);
 
         assertEquals(result.getText(), data.getText());
-        assertEquals(((HyperLinkTextRenderData) result).getUrl(), ((HyperLinkTextRenderData) data).getUrl());
+        assertEquals(((HyperlinkTextRenderData) result).getUrl(), ((HyperlinkTextRenderData) data).getUrl());
         assertEquals(result.getStyle().getColor(), data.getStyle().getColor());
     }
 

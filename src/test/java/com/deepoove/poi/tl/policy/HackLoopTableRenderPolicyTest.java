@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
-import com.deepoove.poi.util.BytePictureUtils;
 
 @DisplayName("Example for Hack Table")
 public class HackLoopTableRenderPolicyTest {
@@ -41,7 +41,7 @@ public class HackLoopTableRenderPolicyTest {
         good.setPrice(400);
         good.setTax(new Random().nextInt(10) + 20);
         good.setTotalPrice(1600);
-        good.setPicture(new PictureRenderData(24, 24, ".png", BytePictureUtils.getUrlBufferedImage("http://deepoove.com/images/icecream.png")));
+        good.setPicture(Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).size(24,  24).create());
         goods.add(good);
         goods.add(good);
         goods.add(good);

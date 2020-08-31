@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ELMode;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
@@ -58,7 +58,7 @@ public class ELModeTest {
         detail.setDiff(table);
         Desc desc = new Desc();
         desc.setDate("2018-10-01");
-        desc.setWebsite(new HyperLinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
+        desc.setWebsite(new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
         detail.setDesc(desc);
         model.setDetail(detail);
     }

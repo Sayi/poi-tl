@@ -18,29 +18,27 @@ package com.deepoove.poi.data;
 import com.deepoove.poi.data.style.Style;
 
 /**
- * 超链接
+ * hyper link text
  * 
  * @author Sayi
- * @version 1.4.0
  */
-public class HyperLinkTextRenderData extends TextRenderData {
+public class HyperlinkTextRenderData extends TextRenderData {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 超链接: http://deepoove.com <br/>
-     * 发送邮件链接:mailto:adasai90@gmail.com?subject=poi-tl <br/>
-     * 锚点：anchor:AnchorName
+     * link format: http://deepoove.com <br/>
+     * mail format:mailto:sayi@xx.xx?subject=poi-tl <br/>
+     * anchor format：anchor:AnchorName
      */
     private String url;
 
-    HyperLinkTextRenderData() {
+    HyperlinkTextRenderData() {
     }
 
-    public HyperLinkTextRenderData(String text, String url) {
+    public HyperlinkTextRenderData(String text, String url) {
         super(text);
         this.url = url;
-        // 链接默认蓝色加下划线
         this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
     }
 
@@ -50,6 +48,13 @@ public class HyperLinkTextRenderData extends TextRenderData {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(text).append("](").append(url).append(")");
+        return sb.toString();
     }
 
 }

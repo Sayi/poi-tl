@@ -11,8 +11,8 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.deepoove.poi.el.ELObject;
 import com.deepoove.poi.exception.ExpressionEvalException;
+import com.deepoove.poi.expression.DefaultEL;
 
 @DisplayName("Poitl EL test case")
 public class PoitlELTest {
@@ -105,10 +105,10 @@ public class PoitlELTest {
         user.setAlias(asList);
         person.setUser(user);
 
-        ELObject elObject = new ELObject(person);
+        DefaultEL elObject = new DefaultEL(person);
         testEL(user, asList, elObject);
 
-        ELObject elMap = new ELObject(new HashMap<String, User>() {
+        DefaultEL elMap = new DefaultEL(new HashMap<String, User>() {
             {
                 put("user", user);
             }
@@ -131,14 +131,14 @@ public class PoitlELTest {
                 put("author", new Object());
             }
         };
-        ELObject elObject = ELObject.create(datas);
+        DefaultEL elObject = DefaultEL.create(datas);
         assertEquals(elObject.eval("header"), "Deeply love what you love.");
         assertEquals(elObject.eval("name"), "Poi-tl");
         assertEquals(elObject.eval("word"), "模板引擎");
         assertEquals(elObject.eval("time"), "2019-05-31");
     }
 
-    private void testEL(final User user, List<String> asList, ELObject elObject) {
+    private void testEL(final User user, List<String> asList, DefaultEL elObject) {
         assertEquals(user, elObject.eval("user"));
         assertEquals(18, elObject.eval("user.age"));
         assertEquals("Sayi", elObject.eval("user.name"));

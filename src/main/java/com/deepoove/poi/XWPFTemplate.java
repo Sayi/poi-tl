@@ -174,7 +174,7 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * write to file
+     * write to file, this method will close all the stream
      * 
      * @param path
      * @throws IOException

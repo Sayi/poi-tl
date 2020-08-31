@@ -18,8 +18,10 @@ package com.deepoove.poi.data.style;
 import java.io.Serializable;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import javax.annotation.Generated;
 
+/**
+ * @author Sayi
+ */
 public class ParagraphStyle implements Serializable {
     private static final long serialVersionUID = 1L;
     private double indentLeftChars;
@@ -37,7 +39,6 @@ public class ParagraphStyle implements Serializable {
 
     private Style defaultTextStyle;
 
-    @Generated("SparkTools")
     private ParagraphStyle(Builder builder) {
         this.indentLeftChars = builder.indentLeftChars;
         this.indentRightChars = builder.indentRightChars;
@@ -112,7 +113,6 @@ public class ParagraphStyle implements Serializable {
      * 
      * @return created builder
      */
-    @Generated("SparkTools")
     public static Builder builder() {
         return new Builder();
     }
@@ -120,7 +120,6 @@ public class ParagraphStyle implements Serializable {
     /**
      * Builder to build {@link ParagraphStyle}.
      */
-    @Generated("SparkTools")
     public static final class Builder {
         private double indentLeftChars;
         private double indentRightChars;

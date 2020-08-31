@@ -8,7 +8,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
@@ -26,7 +26,7 @@ public class TextboxTest {
                 put("word", "模板引擎");
                 put("time", "2019-05-31");
                 put("author", new TextRenderData("000000", "Sayi卅一"));
-                put("introduce", new HyperLinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
+                put("introduce", new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
             }
         };

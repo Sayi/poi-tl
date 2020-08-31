@@ -1,11 +1,11 @@
 package com.deepoove.poi.tl.config;
 
-import com.deepoove.poi.data.HyperLinkTextRenderData;
+import com.deepoove.poi.data.HyperlinkTextRenderData;
 
 public class Desc {
 
     private String date;
-    private HyperLinkTextRenderData website;
+    private HyperlinkTextRenderData website;
 
     public String getDate() {
         return date;
@@ -15,11 +15,11 @@ public class Desc {
         this.date = date;
     }
 
-    public HyperLinkTextRenderData getWebsite() {
+    public HyperlinkTextRenderData getWebsite() {
         return website;
     }
 
-    public void setWebsite(HyperLinkTextRenderData website) {
+    public void setWebsite(HyperlinkTextRenderData website) {
         this.website = website;
     }
 

@@ -42,6 +42,7 @@ import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
+ * table render
  * 
  * @author Sayi
  */
@@ -61,7 +62,8 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
         if (null != tableStyle) {
             int[] colWidths = tableStyle.getColWidths();
             if (null != colWidths && colWidths.length != col) {
-                throw new IllegalArgumentException("Number of cells in each row should be the same!");
+                throw new IllegalArgumentException(
+                        "The length of Colwidth array and number of columns must be the same!");
             }
         }
         return true;
@@ -91,47 +93,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
 
             // merge cells by rule
-            MergeCellRule mergeRule = data.getMergeRule();
-            mergeCells(table, mergeRule);
-        }
-
-        private static void mergeCells(XWPFTable table, MergeCellRule mergeRule) {
-            if (null == mergeRule) return;
-            int[][] markRemovedCell = new int[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
-            Iterator<Entry<Grid, Grid>> iterator = mergeRule.mappingIterator();
-            while (iterator.hasNext()) {
-                Entry<Grid, Grid> next = iterator.next();
-                Grid key = next.getKey();
-                Grid value = next.getValue();
-                int startI = key.getI() > value.getI() ? value.getI() : key.getI();
-                int startJ = key.getJ() > value.getJ() ? value.getJ() : key.getJ();
-                int endI = key.getI() > value.getI() ? key.getI() : value.getI();
-                int endJ = key.getJ() > value.getJ() ? key.getJ() : value.getJ();
-                // merge(VMerge mark) vertical
-                if (startI != endI) {
-                    for (int j = startJ; j <= endJ; j++) {
-                        TableTools.mergeCellsVertically(table, j, startI, endI);
-                    }
-                }
-                // merge horizontal cells without remove cells
-                if (startJ != endJ) {
-                    for (int i = startI; i <= endI; i++) {
-                        TableTools.mergeCellsHorizontalWithoutRemove(table, i, startJ, endJ);
-                        for (int removedCol = startJ + 1; removedCol <= endJ; removedCol++) {
-                            markRemovedCell[i][removedCol] = 1;
-                        }
-                    }
-                }
-            }
-            // remove marked cell
-            for (int i = 0; i < markRemovedCell.length; i++) {
-                for (int j = markRemovedCell[i].length - 1; j >= 0; j--) {
-                    if (markRemovedCell[i][j] >= 1) {
-                        table.getRow(i).removeCell(j);
-                        table.getRow(i).getCtRow().removeTc(j);
-                    }
-                }
-            }
+            mergeCells(table, data.getMergeRule());
         }
 
         public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
@@ -175,6 +137,45 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
                 List<XWPFParagraph> paragraphs = cell.getParagraphs();
                 int pos = paragraphs.indexOf(placeHolder);
                 if (-1 != pos) cell.removeParagraph(pos);
+            }
+        }
+
+        private static void mergeCells(XWPFTable table, MergeCellRule mergeRule) {
+            if (null == mergeRule) return;
+            int[][] markRemovedCell = new int[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
+            Iterator<Entry<Grid, Grid>> iterator = mergeRule.mappingIterator();
+            while (iterator.hasNext()) {
+                Entry<Grid, Grid> next = iterator.next();
+                Grid key = next.getKey();
+                Grid value = next.getValue();
+                int startI = key.getI() > value.getI() ? value.getI() : key.getI();
+                int startJ = key.getJ() > value.getJ() ? value.getJ() : key.getJ();
+                int endI = key.getI() > value.getI() ? key.getI() : value.getI();
+                int endJ = key.getJ() > value.getJ() ? key.getJ() : value.getJ();
+                // merge(VMerge mark) vertical
+                if (startI != endI) {
+                    for (int j = startJ; j <= endJ; j++) {
+                        TableTools.mergeCellsVertically(table, j, startI, endI);
+                    }
+                }
+                // merge horizontal cells without remove cells
+                if (startJ != endJ) {
+                    for (int i = startI; i <= endI; i++) {
+                        TableTools.mergeCellsHorizontalWithoutRemove(table, i, startJ, endJ);
+                        for (int removedCol = startJ + 1; removedCol <= endJ; removedCol++) {
+                            markRemovedCell[i][removedCol] = 1;
+                        }
+                    }
+                }
+            }
+            // remove marked cell safely
+            for (int i = 0; i < markRemovedCell.length; i++) {
+                for (int j = markRemovedCell[i].length - 1; j >= 0; j--) {
+                    if (markRemovedCell[i][j] >= 1) {
+                        table.getRow(i).removeCell(j);
+                        table.getRow(i).getCtRow().removeTc(j);
+                    }
+                }
             }
         }
 

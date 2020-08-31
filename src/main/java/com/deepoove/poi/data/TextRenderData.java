@@ -18,10 +18,9 @@ package com.deepoove.poi.data;
 import com.deepoove.poi.data.style.Style;
 
 /**
- * 文本数据
+ * Basic text template
  * 
  * @author Sayi
- * @version 0.0.3
  *
  */
 public class TextRenderData implements RenderData {
@@ -31,7 +30,7 @@ public class TextRenderData implements RenderData {
     protected Style style;
 
     /**
-     * \n 表示换行
+     * \n means line break
      */
     protected String text;
 

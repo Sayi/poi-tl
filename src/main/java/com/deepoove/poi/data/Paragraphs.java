@@ -24,6 +24,8 @@ import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
 
 /**
+ * Builder to build {@link ParagraphRenderData}
+ * 
  * @author Sayi
  *
  */
@@ -41,15 +43,15 @@ public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
     }
 
     public static Paragraphs of(String text) {
-        Paragraphs inst = Paragraphs.of();
-        inst.addText(text);
-        return inst;
+        return Paragraphs.of().addText(text);
     }
-    
+
     public static Paragraphs of(TextRenderData text) {
-        Paragraphs inst = Paragraphs.of();
-        inst.addText(text);
-        return inst;
+        return Paragraphs.of().addText(text);
+    }
+
+    public static Paragraphs of(PictureRenderData picture) {
+        return Paragraphs.of().addPicture(picture);
     }
 
     public Paragraphs addText(TextRenderData text) {
@@ -95,6 +97,15 @@ public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
             this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
         } else {
             this.paragraphStyle.setAlign(ParagraphAlignment.CENTER);
+        }
+        return this;
+    }
+
+    public Paragraphs right() {
+        if (null == this.paragraphStyle) {
+            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.RIGHT).build();
+        } else {
+            this.paragraphStyle.setAlign(ParagraphAlignment.RIGHT);
         }
         return this;
     }

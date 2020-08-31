@@ -34,8 +34,12 @@ public class NumberingRenderData implements RenderData {
      * each item in numbering
      */
     private List<ParagraphRenderData> items;
-    
+
     NumberingRenderData() {
+    }
+
+    public NumberingRenderData(List<ParagraphRenderData> items) {
+        this(NumberingFormat.BULLET, items);
     }
 
     public NumberingRenderData(NumberingFormat format, List<ParagraphRenderData> items) {
@@ -43,28 +47,26 @@ public class NumberingRenderData implements RenderData {
         this.items = items;
     }
 
-    public NumberingRenderData(List<ParagraphRenderData> items) {
-        this(NumberingFormat.BULLET, items);
+    public NumberingRenderData(TextRenderData... text) {
+        this(NumberingFormat.BULLET, text);
     }
 
     public NumberingRenderData(NumberingFormat format, TextRenderData... text) {
         this.format = format;
         if (null != text) {
             this.items = Arrays.stream(text).map(data -> {
-                return Paragraphs.of().addText(data).create();
+                return Paragraphs.of(data).create();
             }).collect(Collectors.toList());
         }
     }
 
-    public NumberingRenderData(TextRenderData... text) {
-        this(NumberingFormat.BULLET, text);
-    }
-
     public static NumberingRenderData build(String... text) {
-        if (null == text) return null;
-        return new NumberingRenderData(Arrays.stream(text).map(TextRenderData::new).map(data -> {
-            return Paragraphs.of().addText(data).create();
-        }).collect(Collectors.toList()));
+        if (null != text) {
+            return new NumberingRenderData(Arrays.stream(text).map(TextRenderData::new).map(data -> {
+                return Paragraphs.of(data).create();
+            }).collect(Collectors.toList()));
+        }
+        return new NumberingRenderData(NumberingFormat.BULLET, (TextRenderData) null);
     }
 
     public static NumberingRenderData build(TextRenderData... text) {

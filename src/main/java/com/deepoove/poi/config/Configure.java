@@ -50,7 +50,6 @@ import com.deepoove.poi.util.RegexUtils;
  * The config of template
  * 
  * @author Sayi
- * @version 1.0.0
  */
 public class Configure implements Cloneable {
 
@@ -156,86 +155,59 @@ public class Configure implements Cloneable {
     }
 
     /**
-     * 创建默认配置
+     * create default config
      * 
      * @return
      */
     public static Configure createDefault() {
-        return newBuilder().build();
+        return builder().build();
     }
 
     /**
-     * 构建器
+     * Builder to build {@link Configure}
      * 
      * @return
      */
+    @Deprecated
     public static ConfigureBuilder newBuilder() {
         return new ConfigureBuilder();
     }
 
     /**
-     * 新增或变更语法插件
+     * Builder to build {@link Configure}
      * 
-     * @param c
-     *            语法
-     * @param policy
-     *            策略
+     * @return
+     */
+    public static ConfigureBuilder builder() {
+        return new ConfigureBuilder();
+    }
+
+    /**
+     * add grammar plugin
+     * 
+     * @param c      grammar char
+     * @param policy render function
      */
     public Configure plugin(char c, RenderPolicy policy) {
         DEFAULT_POLICYS.put(Character.valueOf(c), policy);
         return this;
     }
 
-    /**
-     * 新增或变更语法插件
-     * 
-     * @param symbol
-     *            语法
-     * @param policy
-     *            策略
-     * @return
-     */
     Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
         DEFAULT_POLICYS.put(symbol.getSymbol(), policy);
         return this;
     }
 
-    /**
-     * 新增或者变更对象模板插件
-     * 
-     * @param clazz
-     *            对象模板类型
-     * @param policy
-     *            策略
-     * @return
-     */
     Configure plugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
         DEFAULT_TEMPLATE_POLICYS.put(clazz, policy);
         return this;
     }
 
-    /**
-     * 新增或者变更图表插件
-     * 
-     * @param chartType
-     *            图表类型
-     * @param policy
-     *            策略
-     * @return
-     */
     Configure plugin(ChartTypes chartType, RenderPolicy policy) {
         DEFAULT_CHART_POLICYS.put(chartType, policy);
         return this;
     }
 
-    /**
-     * 自定义模板和策略
-     * 
-     * @param tagName
-     *            模板名称
-     * @param policy
-     *            策略
-     */
     public void customPolicy(String tagName, RenderPolicy policy) {
         CUSTOM_POLICYS.put(tagName, policy);
     }
@@ -369,15 +341,17 @@ public class Configure implements Cloneable {
     public enum ELMode {
 
         /**
-         * 标准模式：无法计算表达式时，RenderData默认为null值
+         * Standard mode: When the expression cannot be calculated, renderData defaults
+         * to a null value
          */
         POI_TL_STANDARD_MODE,
         /**
-         * 严格模式：无法计算表达式直接抛出异常
+         * Strict mode: When the expression cannot be calculated directly throw an
+         * exception
          */
         POI_TL_STICT_MODE,
         /**
-         * Spring EL模式
+         * Spring EL
          */
         SPEL_MODE;
 

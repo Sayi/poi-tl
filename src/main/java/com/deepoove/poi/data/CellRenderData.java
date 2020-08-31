@@ -20,6 +20,10 @@ import java.util.List;
 
 import com.deepoove.poi.data.style.CellStyle;
 
+/**
+ * @author Sayi
+ *
+ */
 public class CellRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;

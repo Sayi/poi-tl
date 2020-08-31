@@ -55,7 +55,7 @@ import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.StyleBuilder;
+import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
 
 /**

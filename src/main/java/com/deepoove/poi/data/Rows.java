@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2020 Sayi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi.data;
 
 import java.util.Arrays;
@@ -11,6 +26,10 @@ import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.util.UnitUtils;
 
+/**
+ * @author Sayi
+ *
+ */
 public class Rows implements RenderDataBuilder<RowRenderData> {
 
     private RowRenderData data;
@@ -82,6 +101,29 @@ public class Rows implements RenderDataBuilder<RowRenderData> {
         return this;
     }
 
+    public Rows addCell(CellRenderData cell) {
+        data.addCell(cell);
+        return this;
+    }
+
+    public Rows textColor(String color) {
+        Style style = getDefaultTextStyle();
+        style.setColor(color);
+        return this;
+    }
+
+    public Rows textBold() {
+        Style style = getDefaultTextStyle();
+        style.setBold(true);
+        return this;
+    }
+
+    public Rows textFontSize(int fontSize) {
+        Style style = getDefaultTextStyle();
+        style.setFontSize(fontSize);
+        return this;
+    }
+
     private CellStyle getDefaultCellStyle() {
         RowStyle rowStyle = getRowStyle();
         CellStyle defaultCellStyle = rowStyle.getDefaultCellStyle();
@@ -119,17 +161,6 @@ public class Rows implements RenderDataBuilder<RowRenderData> {
             data.setRowStyle(rowStyle);
         }
         return rowStyle;
-    }
-
-    public Rows addCell(CellRenderData cell) {
-        data.addCell(cell);
-        return this;
-    }
-
-    public Rows textColor(String color) {
-        Style style = getDefaultTextStyle();
-        style.setColor(color);
-        return this;
     }
 
     @Override

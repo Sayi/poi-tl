@@ -16,10 +16,20 @@
 package com.deepoove.poi.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+/**
+ * Builder to build {@link NumberingRenderData}
+ * 
+ * @author Sayi
+ *
+ */
 public class Numberings implements RenderDataBuilder<NumberingRenderData> {
 
     private NumberingRenderData data;
+
+    private Numberings() {
+    }
 
     public static Numberings ofBullet() {
         return of(NumberingFormat.BULLET);
@@ -39,18 +49,34 @@ public class Numberings implements RenderDataBuilder<NumberingRenderData> {
         return inst;
     }
 
+    public static Numberings of(TextRenderData... text) {
+        Numberings inst = ofBullet();
+        if (null != text) {
+            Arrays.stream(text).forEach(inst::addItem);
+        }
+        return inst;
+    }
+
+    public static Numberings of(String... text) {
+        Numberings inst = ofBullet();
+        if (null != text) {
+            Arrays.stream(text).forEach(inst::addItem);
+        }
+        return inst;
+    }
+
     public Numberings addItem(ParagraphRenderData item) {
         data.getItems().add(item);
         return this;
     }
 
     public Numberings addItem(TextRenderData item) {
-        data.getItems().add(Paragraphs.of().addText(item).create());
+        data.getItems().add(Paragraphs.of(item).create());
         return this;
     }
 
     public Numberings addItem(PictureRenderData item) {
-        data.getItems().add(Paragraphs.of().addPicture(item).create());
+        data.getItems().add(Paragraphs.of(item).create());
         return this;
     }
 

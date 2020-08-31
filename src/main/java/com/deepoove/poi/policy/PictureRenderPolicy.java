@@ -26,6 +26,10 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 
+/**
+ * @author Sayi
+ *
+ */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
     @Override
@@ -58,9 +62,9 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
             if (null == picture.getImage()) {
                 throw new IOException("Can't get input data from picture!");
             }
-            try (InputStream ins = new ByteArrayInputStream(picture.getImage())) {
-                run.addPicture(ins, picture.getPictureType().type(), "Generated", Units.pixelToEMU(picture.getWidth()),
-                        Units.pixelToEMU(picture.getHeight()));
+            try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
+                run.addPicture(stream, picture.getPictureType().type(), "Generated",
+                        Units.pixelToEMU(picture.getWidth()), Units.pixelToEMU(picture.getHeight()));
             }
         }
     }

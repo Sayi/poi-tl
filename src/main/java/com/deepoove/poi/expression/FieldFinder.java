@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.el;
+package com.deepoove.poi.expression;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 寻找合适的属性，支持@Name注解
+ * Find field based on field name or annotation @Name
  * 
  * @author Sayi
  *
@@ -30,15 +30,15 @@ import org.slf4j.LoggerFactory;
 class FieldFinder {
     private static Logger logger = LoggerFactory.getLogger(FieldFinder.class);
 
-    private static LinkedHashMap<Class<?>, Field[]> cache = new LinkedHashMap<Class<?>, Field[]>(32,
-            0.75f, true) {
+    private static LinkedHashMap<Class<?>, Field[]> cache = new LinkedHashMap<Class<?>, Field[]>(32, 0.75f, true) {
 
         private static final long serialVersionUID = -4306886008010847817L;
 
         @Override
-        protected boolean removeEldestEntry(
-                java.util.Map.Entry<java.lang.Class<?>, Field[]> eldest) {
-            // TO DO 最大数可以被调整，如果是一个导出大量实体的业务，这个值应该增加来优化性能
+        protected boolean removeEldestEntry(java.util.Map.Entry<java.lang.Class<?>, Field[]> eldest) {
+            // TODO The maximum number can be adjusted. If it is a business originating from
+            // a large number of entities, this value should be increased to optimize
+            // performance
             return size() > 20;
         };
     };
@@ -67,7 +67,8 @@ class FieldFinder {
         try {
             field = clazz.getDeclaredField(key);
             return field;
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         Field[] fields = cache.get(clazz);
         if (null == fields) {

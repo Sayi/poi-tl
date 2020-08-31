@@ -21,7 +21,7 @@ import java.util.List;
 import com.deepoove.poi.data.SeriesRenderData.ComboType;
 
 /**
- * factory of chart builder
+ * factory to create chart builder
  * 
  * @author Sayi
  *
@@ -84,7 +84,7 @@ public class Charts {
         protected String chartTitle;
         protected String[] categories;
 
-        public ChartBuilder(String chartTitle, String[] categories) {
+        protected ChartBuilder(String chartTitle, String[] categories) {
             this.chartTitle = chartTitle;
             this.categories = categories;
         }
@@ -99,13 +99,13 @@ public class Charts {
 
     /**
      * 
-     * builder for multi series chart
+     * builder to build multi series chart
      *
      */
     public static class ChartMultis extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
-        ChartMultis(String chartTitle, String[] categories) {
+        private ChartMultis(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
@@ -126,13 +126,13 @@ public class Charts {
     }
 
     /**
-     * builder for combo series chart
+     * builder to build combo series chart
      *
      */
     public static class ChartCombos extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
-        ChartCombos(String chartTitle, String[] categories) {
+        private ChartCombos(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
@@ -169,13 +169,13 @@ public class Charts {
     }
 
     /**
-     * builder for single series chart
+     * builder to build single series chart
      *
      */
     public static class ChartSingles extends ChartBuilder implements RenderDataBuilder<ChartSingleSeriesRenderData> {
         private SeriesRenderData series;
 
-        ChartSingles(String chartTitle, String[] categories) {
+        private ChartSingles(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
