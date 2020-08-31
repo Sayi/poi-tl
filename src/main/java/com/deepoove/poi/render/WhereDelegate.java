@@ -22,12 +22,12 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.policy.MiniTableRenderPolicy;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.policy.NumberingRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
+import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
 /**
@@ -60,8 +60,8 @@ public class WhereDelegate {
         PictureRenderPolicy.Helper.renderPicture(run, data);
     }
 
-    public void renderMiniTable(MiniTableRenderData data) {
-        MiniTableRenderPolicy.Helper.renderMiniTable(run, data);
+    public void renderTable(TableRenderData data) throws Exception {
+        TableRenderPolicy.Helper.renderTable(run, data);
     }
 
     public void addPicture(InputStream inputStream, int type, int width, int height)

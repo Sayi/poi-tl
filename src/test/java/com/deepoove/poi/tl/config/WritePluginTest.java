@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
@@ -84,7 +83,7 @@ public class WritePluginTest {
                 int row = thing.size() + 1, col = 2;
                 BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(where);
                 XWPFTable table = bodyContainer.insertNewTable(where, row, col);
-                TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
+                TableTools.widthTable(table, 14.65f, col);
                 TableTools.borderTable(table, 4);
 
                 table.getRow(0).getCell(0).setText("编号");

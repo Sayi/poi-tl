@@ -1,10 +1,10 @@
 package com.deepoove.poi.tl.example;
 
-import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.el.Name;
 
 public class PaymentData {
-    private MiniTableRenderData order;
+    private TableRenderData order;
     private String NO;
     private String ID;
     private String taitou;
@@ -18,11 +18,11 @@ public class PaymentData {
     private String unpay;
     private String total;
 
-    public void setOrder(MiniTableRenderData order) {
+    public void setOrder(TableRenderData order) {
         this.order = order;
     }
 
-    public MiniTableRenderData getOrder() {
+    public TableRenderData getOrder() {
         return this.order;
     }
 

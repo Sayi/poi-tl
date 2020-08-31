@@ -3,7 +3,6 @@ package com.deepoove.poi.tl.source;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.TableTools;
@@ -40,7 +39,7 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         XWPFTable table = bodyContainer.insertNewTable(run, row, col);
 
         // 定义表格宽度、边框和样式
-        TableTools.widthTable(table, MiniTableRenderData.WIDTH_A4_FULL, col);
+        TableTools.widthTable(table, 14.63f, col);
         TableTools.borderTable(table, 4);
 
         // TODO 调用XWPFTable API操作表格：data对象可以包含任意你想要的数据，包括图片文本等

@@ -1,8 +1,8 @@
 package com.deepoove.poi.tl.source;
 
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.el.Name;
 
 public class MyDataModel extends DataSourceBaseTest {
@@ -12,7 +12,7 @@ public class MyDataModel extends DataSourceBaseTest {
     private String what;
     private NumberingRenderData feature;
     @Name("solution_compare")
-    private MiniTableRenderData solutionCompare;
+    private TableRenderData solutionCompare;
     private PictureRenderData portrait;
     private String author;
     private String introduce;
@@ -34,11 +34,11 @@ public class MyDataModel extends DataSourceBaseTest {
         return this.feature;
     }
 
-    public MiniTableRenderData getSolutionCompare() {
+    public TableRenderData getSolutionCompare() {
         return solutionCompare;
     }
 
-    public void setSolutionCompare(MiniTableRenderData solutionCompare) {
+    public void setSolutionCompare(TableRenderData solutionCompare) {
         this.solutionCompare = solutionCompare;
     }
 

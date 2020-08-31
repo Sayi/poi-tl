@@ -10,10 +10,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Arrays;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import com.deepoove.poi.data.ChartMultiSeriesRenderData;
 import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.ParagraphRenderData;
@@ -32,7 +29,6 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.RenderData;
-import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.RowV2RenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
@@ -41,7 +37,6 @@ import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.StyleBuilder;
-import com.deepoove.poi.data.style.TableStyle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SerializableTest {
@@ -109,24 +104,6 @@ public class SerializableTest {
         DocxRenderData result = write(data).getResult(DocxRenderData.class);
 
         assertArrayEquals(result.getMergedDoc(), data.getMergedDoc());
-    }
-
-    @Test
-    void testMiniTableRenderData() throws Exception {
-        RowRenderData row1 = RowRenderData.build("李四", "博士");
-        MiniTableRenderData data = new MiniTableRenderData(Arrays.asList(row1));
-        data.setNoDatadesc("NO DESC");
-        data.setWidth(10.01f);
-        TableStyle style = new TableStyle();
-        style.setAlign(TableRowAlign.CENTER);
-        data.setStyle(style);
-        MiniTableRenderData result = write(data).getResult(MiniTableRenderData.class);
-
-        assertEquals(result.getNoDatadesc(), data.getNoDatadesc());
-        assertEquals(result.getWidth(), data.getWidth());
-        assertEquals(result.getStyle().getAlign(), data.getStyle().getAlign());
-        assertEquals(result.getRows().get(0).getCells().get(0).getCellText().getText(),
-                data.getRows().get(0).getCells().get(0).getCellText().getText());
     }
 
     @Test

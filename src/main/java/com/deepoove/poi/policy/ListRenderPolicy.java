@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
@@ -45,8 +45,8 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
                 XWPFRun createRun = bodyContainer.insertNewParagraph(run).createRun();
                 StyleUtils.styleRun(createRun, run);
                 TextRenderPolicy.Helper.renderTextRun(createRun, data);
-            } else if (data instanceof MiniTableRenderData) {
-                MiniTableRenderPolicy.Helper.renderMiniTable(run, (MiniTableRenderData) data);
+            } else if (data instanceof TableRenderData) {
+                TableRenderPolicy.Helper.renderTable(run, (TableRenderData) data);
             } else if (data instanceof NumberingRenderData) {
                 NumberingRenderPolicy.Helper.renderNumbering(run, (NumberingRenderData) data);
             } else if (data instanceof PictureRenderData) {

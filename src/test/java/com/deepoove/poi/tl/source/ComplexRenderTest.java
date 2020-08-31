@@ -3,19 +3,17 @@ package com.deepoove.poi.tl.source;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Test;
-
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.policy.MiniTableRenderPolicy;
+import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.util.BytePictureUtils;
 
 /**
@@ -107,19 +105,19 @@ public class ComplexRenderTest {
 
                 put("m_key", "5");
 
-                RowRenderData headers = RowRenderData.build(new TextRenderData("d0d0d0", "过户主体"),
-                        new TextRenderData("d0d0d0", "过户时间"), new TextRenderData("d0d0d0", "过户方式"));
+                RowV2RenderData headers = Rows.of(new TextRenderData("d0d0d0", "过户主体"),
+                        new TextRenderData("d0d0d0", "过户时间"), new TextRenderData("d0d0d0", "过户方式")).create();
                 put("table",
-                        new MiniTableRenderData(headers,
-                                Arrays.asList(RowRenderData.build("1", "add new # gramer", "3"),
-                                        RowRenderData.build("2", "add new # gramer", "3"))));
+                        Tables.of(headers,
+                                Rows.of("1", "add new # gramer", "3").create(),
+                                        Rows.of("2", "add new # gramer", "3").create()).create());
 
             }
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
         // 动态持有XWPFTable对象
-        template.bind("table", new MiniTableRenderPolicy());
+        template.bind("table", new TableRenderPolicy());
         template.render(datas);
 
         FileOutputStream out = new FileOutputStream("out_complex.docx");

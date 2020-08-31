@@ -60,6 +60,6 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
      * @param table 表格
      * @param data  数据
      */
-    public abstract void render(XWPFTable table, Object data);
+    public abstract void render(XWPFTable table, Object data) throws Exception;
 
 }

@@ -33,14 +33,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -48,17 +47,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.data.style.TableV2Style;
 
 /**
@@ -169,6 +165,7 @@ public final class StyleUtils {
     public static void styleTable(XWPFTable table, TableV2Style tableStyle) {
         if (null == table || null == tableStyle) return;
         String width = tableStyle.getWidth();
+        ensureTblW(table);
         table.setWidth(width);
 
         int[] colWidths = tableStyle.getColWidths();
@@ -200,6 +197,12 @@ public final class StyleUtils {
             table.setTableAlignment(tableStyle.getAlign());
         }
 
+    }
+
+    private static void ensureTblW(XWPFTable table) {
+        CTTbl ctTbl = table.getCTTbl();
+        CTTblPr tblPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
+        if (!tblPr.isSetTblW()) tblPr.addNewTblW();
     }
 
     /**
@@ -290,35 +293,6 @@ public final class StyleUtils {
                 fonts.setEastAsia(fontFamily);
             }
         }
-    }
-
-    @Deprecated
-    public static void styleTable(XWPFTable table, TableStyle style) {
-        if (null == table || null == style) return;
-        CTTblPr tblPr = table.getCTTbl().getTblPr();
-        if (null == tblPr) {
-            tblPr = table.getCTTbl().addNewTblPr();
-        }
-        if (null != style.getAlign()) {
-            table.setTableAlignment(style.getAlign());
-        }
-        if (StringUtils.isNotBlank(style.getBackgroundColor())) {
-            CTShd ctshd = tblPr.isSetShd() ? tblPr.getShd() : tblPr.addNewShd();
-            ctshd.setColor("auto");
-            ctshd.setVal(STShd.CLEAR);
-            ctshd.setFill(style.getBackgroundColor());
-        }
-    }
-
-    @Deprecated
-    public static void styleTableParagraph(XWPFParagraph par, TableStyle style) {
-        if (null != par && null != style && null != style.getAlign()) {
-            CTP ctp = par.getCTP();
-            CTPPr CTPpr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
-            CTJc jc = CTPpr.isSetJc() ? CTPpr.getJc() : CTPpr.addNewJc();
-            jc.setVal(STJc.Enum.forInt(style.getAlign().getValue()));
-        }
-
     }
 
     private static void styleParaRpr(XWPFParagraph paragraph, Style style) {

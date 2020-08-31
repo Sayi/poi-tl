@@ -1,7 +1,6 @@
 package com.deepoove.poi.tl.policy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,27 +12,28 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.ListRenderPolicy;
 
 @DisplayName("List Render test case")
 public class ListRenderPolicyTest {
 
-    RowRenderData header, row0, row1, row2;
+    RowV2RenderData header, row0, row1, row2;
 
     @BeforeEach
     public void init() {
-        header = RowRenderData.build(new TextRenderData("FF00FF", "姓名"), new TextRenderData("FF00FF", "学历"));
-        row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
-                new TextRenderData("1E915D", "研究生"));
-        row1 = RowRenderData.build("李四", "博士");
-        row2 = RowRenderData.build("王五", "博士后");
+        header = Rows.of(new TextRenderData("FF00FF", "姓名"), new TextRenderData("FF00FF", "学历")).create();
+        row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
+                new TextRenderData("1E915D", "研究生")).create();
+        row1 = Rows.of("李四", "博士").create();
+        row2 = Rows.of("王五", "博士后").create();
     }
 
     @SuppressWarnings("serial")
@@ -48,7 +48,7 @@ public class ListRenderPolicyTest {
                 add(new TextRenderData("ver 0.0.4"));
                 add(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
                 add(getData(NumberingFormat.LOWER_LETTER));
-                add(new MiniTableRenderData(header, Arrays.asList(row0, row1, row2)));
+                add(Tables.of(header, row0, row1, row2));
             }
         };
 

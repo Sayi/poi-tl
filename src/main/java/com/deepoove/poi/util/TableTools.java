@@ -36,7 +36,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import com.deepoove.poi.data.style.BorderStyle;
-import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.data.style.TableV2Style;
 
 /**
  * XWPFTable 增强工具类 <br/>
@@ -83,7 +83,7 @@ public final class TableTools {
             if (TableWidthType.DXA == tableCell.getWidthType()) {
                 if (-1 == tableCell.getWidth()) return;
                 tcw += tableCell.getWidth();
-            }else {
+            } else {
                 return;
             }
         }
@@ -209,7 +209,7 @@ public final class TableTools {
      * @param width
      * @param style
      */
-    public static void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
+    public static void initBasicTable(XWPFTable table, int col, float width, TableV2Style style) {
         int defaultBorderSize = 4;
         widthTable(table, width, col);
         borderTable(table, defaultBorderSize);
@@ -220,8 +220,7 @@ public final class TableTools {
         return ((XWPFParagraph) run.getParent()).getPartType() == BodyType.TABLECELL;
     }
 
-    @SuppressWarnings("deprecation")
-    public static void styleTable(XWPFTable table, TableStyle style) {
+    public static void styleTable(XWPFTable table, TableV2Style style) {
         StyleUtils.styleTable(table, style);
     }
 

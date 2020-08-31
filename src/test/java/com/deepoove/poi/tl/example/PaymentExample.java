@@ -3,18 +3,20 @@ package com.deepoove.poi.tl.example;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.MiniTableRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.CellV2RenderData;
+import com.deepoove.poi.data.Cells;
+import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.Tables;
+import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.TableStyle;
 
 @DisplayName("Example for Table")
 public class PaymentExample {
@@ -24,19 +26,6 @@ public class PaymentExample {
 
     @BeforeEach
     public void init() {
-        Style headTextStyle = new Style();
-        TableStyle headStyle = new TableStyle();
-        TableStyle rowStyle = new TableStyle();
-        headTextStyle.setFontFamily("Hei");
-        headTextStyle.setFontSize(9);
-        headTextStyle.setColor("7F7F7F");
-
-        headStyle.setBackgroundColor("F2F2F2");
-        headStyle.setAlign(TableRowAlign.CENTER);
-
-        rowStyle = new TableStyle();
-        rowStyle.setAlign(TableRowAlign.CENTER);
-
         datas.setNO("KB.6890451");
         datas.setID("ZHANG_SAN_091");
         datas.setTaitou("深圳XX家装有限公司");
@@ -49,26 +38,29 @@ public class PaymentExample {
         datas.setUnpay("6600");
         datas.setTotal("总共：7200");
 
-        RowRenderData header = RowRenderData.build(new TextRenderData("日期", headTextStyle),
-                new TextRenderData("订单编号", headTextStyle), new TextRenderData("销售代表", headTextStyle),
-                new TextRenderData("离岸价", headTextStyle), new TextRenderData("发货方式", headTextStyle),
-                new TextRenderData("条款", headTextStyle), new TextRenderData("税号", headTextStyle));
-        header.setRowStyle(headStyle);
+        Style headTextStyle = new Style();
+        headTextStyle.setFontFamily("Hei");
+        headTextStyle.setFontSize(9);
+        headTextStyle.setColor("7F7F7F");
+        CellV2RenderData cell0 = Cells.of(Texts.of("日期").style(headTextStyle).create()).create();
+        CellV2RenderData cell1 = Cells.of(Texts.of("订单编号").style(headTextStyle).create()).create();
+        CellV2RenderData cell2 = Cells.of(Texts.of("销售代表").style(headTextStyle).create()).create();
+        CellV2RenderData cell3 = Cells.of(Texts.of("离岸价").style(headTextStyle).create()).create();
+        CellV2RenderData cell4 = Cells.of(Texts.of("发货方式").style(headTextStyle).create()).create();
+        CellV2RenderData cell5 = Cells.of(Texts.of("条款").style(headTextStyle).create()).create();
+        CellV2RenderData cell6 = Cells.of(Texts.of("税号").style(headTextStyle).create()).create();
+        RowV2RenderData header = Rows.of(cell0, cell1, cell2, cell3, cell4, cell5, cell6).bgColor("F2F2F2").center()
+                .create();
 
-        RowRenderData row = RowRenderData.build("2018-06-12", "SN18090", "李四", "5000元", "快递", "附录A", "T11090");
-        row.setRowStyle(rowStyle);
-        MiniTableRenderData miniTableRenderData = new MiniTableRenderData(header, Arrays.asList(row),
-                MiniTableRenderData.WIDTH_A4_MEDIUM_FULL);
-        miniTableRenderData.setStyle(headStyle);
-        datas.setOrder(miniTableRenderData);
+        RowV2RenderData row = Rows.of("2018-06-12", "SN18090", "李四", "5000元", "快递", "附录A", "T11090").center().create();
+        TableRenderData table = Tables.ofA4MediumWidth().addRow(header).addRow(row).center().create();
+        datas.setOrder(table);
 
         DetailData detailTable = new DetailData();
-        RowRenderData good = RowRenderData.build("4", "墙纸", "书房+卧室", "1500", "/", "400", "1600");
-        good.setRowStyle(rowStyle);
-        List<RowRenderData> goods = Arrays.asList(good, good, good);
-        RowRenderData labor = RowRenderData.build("油漆工", "2", "200", "400");
-        labor.setRowStyle(rowStyle);
-        List<RowRenderData> labors = Arrays.asList(labor, labor, labor, labor);
+        RowV2RenderData good = Rows.of("4", "墙纸", "书房+卧室", "1500", "/", "400", "1600").center().create();
+        List<RowV2RenderData> goods = Arrays.asList(good, good, good);
+        RowV2RenderData labor = Rows.of("油漆工", "2", "200", "400").center().create();
+        List<RowV2RenderData> labors = Arrays.asList(labor, labor, labor, labor);
         detailTable.setGoods(goods);
         detailTable.setLabors(labors);
         datas.setDetailTable(detailTable);

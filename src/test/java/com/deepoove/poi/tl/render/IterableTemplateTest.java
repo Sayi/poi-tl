@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperLinkTextRenderData;
-import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.RowV2RenderData;
+import com.deepoove.poi.data.Rows;
+import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 
@@ -156,12 +157,12 @@ public class IterableTemplateTest {
     @Test
     @DisplayName("using all gramer together")
     public void testTogether() throws Exception {
-        RowRenderData row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
-                new TextRenderData("1E915D", "研究生"));
+        RowV2RenderData row0 = Rows.of(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
+                new TextRenderData("1E915D", "研究生")).create();
 
-        RowRenderData row1 = RowRenderData.build("李四", "博士");
+        RowV2RenderData row1 = Rows.of("李四", "博士").create();
 
-        RowRenderData row2 = RowRenderData.build("王五", "博士后");
+        RowV2RenderData row2 = Rows.of("王五", "博士后").create();
 
         final TextRenderData textRenderData = new TextRenderData("负责生产BUG，然后修复BUG，同时有效实施招聘行为");
         Style style = new Style();
@@ -191,7 +192,7 @@ public class IterableTemplateTest {
                 put("list", new NumberingRenderData(NumberingFormat.DECIMAL,
                         textRenderData, textRenderData));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
-                put("table", new MiniTableRenderData(Arrays.asList(row0, row1, row2)));
+                put("table", Tables.of(row0, row1, row2).create());
 
             }
         });
