@@ -22,12 +22,17 @@ import com.deepoove.poi.util.BytePictureUtils;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
+ * Factory methods for the builder of {@link PictureRenderData} instances.
+ * 
  * @author Sayi
  *
  */
 public class Pictures implements RenderDataBuilder<PictureRenderData> {
 
     private PictureRenderData data;
+
+    private Pictures() {
+    }
 
     public static Pictures ofLocal(String src) {
         Pictures inst = new Pictures();

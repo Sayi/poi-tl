@@ -43,6 +43,18 @@ public class Tables implements RenderDataBuilder<TableRenderData> {
         return inst;
     }
 
+    public static Tables of(String[][] strings) {
+        Tables inst = Tables.ofA4Width();
+        if (null != strings) {
+            Arrays.stream(strings).map(string -> {
+                Rows row = Rows.of();
+                Arrays.stream(string).map(text -> Cells.of(text).create()).forEach(row::addCell);
+                return row.create();
+            }).forEach(inst::addRow);
+        }
+        return inst;
+    }
+
     public static Tables ofWidth(double cm) {
         return ofWidth(cm, null);
     }

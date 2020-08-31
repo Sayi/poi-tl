@@ -30,6 +30,16 @@ public class Rows implements RenderDataBuilder<RowV2RenderData> {
         return inst;
     }
 
+    public static Rows of(String... cellText) {
+        Rows inst = Rows.of();
+        if (null != cellText) {
+            Arrays.stream(cellText).map(text -> {
+                return Cells.of(text).create();
+            }).forEach(inst::addCell);
+        }
+        return inst;
+    }
+
     public Rows bgColor(String color) {
         CellStyle defaultCellStyle = getDefaultCellStyle();
         defaultCellStyle.setBackgroundColor(color);

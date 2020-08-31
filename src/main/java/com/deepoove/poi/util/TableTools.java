@@ -18,6 +18,7 @@ package com.deepoove.poi.util;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.usermodel.BodyType;
+import org.apache.poi.xwpf.usermodel.TableWidthType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -62,16 +63,31 @@ public final class TableTools {
      */
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol, int toCol) {
         if (toCol <= fromCol) return;
-        XWPFTableCell cell = table.getRow(row).getCell(fromCol);
-        CTTcPr tcPr = getTcPr(cell);
+        mergeCellsHorizontalWithoutRemove(table, row, fromCol, toCol);
         XWPFTableRow rowTable = table.getRow(row);
         for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
             rowTable.getCtRow().removeTc(fromCol + 1);
             rowTable.removeCell(fromCol + 1);
         }
+    }
 
+    public static void mergeCellsHorizontalWithoutRemove(XWPFTable table, int row, int fromCol, int toCol) {
+        if (toCol <= fromCol) return;
+        XWPFTableCell cell = table.getRow(row).getCell(fromCol);
+        CTTcPr tcPr = getTcPr(cell);
         tcPr.addNewGridSpan();
         tcPr.getGridSpan().setVal(BigInteger.valueOf((long) (toCol - fromCol + 1)));
+        int tcw = 0;
+        for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
+            XWPFTableCell tableCell = table.getRow(row).getCell(colIndex);
+            if (TableWidthType.DXA == tableCell.getWidthType()) {
+                if (-1 == tableCell.getWidth()) return;
+                tcw += tableCell.getWidth();
+            }else {
+                return;
+            }
+        }
+        if (0 != tcw) cell.setWidth(tcw + "");
     }
 
     /**
@@ -212,6 +228,10 @@ public final class TableTools {
     public static void setBorder(FourthConsumer<XWPFBorderType, Integer, Integer, String> consumer,
             BorderStyle border) {
         if (null != border) consumer.accept(border.getType(), border.getSize(), 0, border.getColor());
+    }
+
+    public static int obtainRowSize(XWPFTable table) {
+        return table.getRows().size();
     }
 
     public static int obtainColumnSize(XWPFTable table) {

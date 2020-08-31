@@ -105,7 +105,7 @@ public class Charts {
     public static class ChartMultis extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
-        public ChartMultis(String chartTitle, String[] categories) {
+        ChartMultis(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
@@ -132,7 +132,7 @@ public class Charts {
     public static class ChartCombos extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
-        public ChartCombos(String chartTitle, String[] categories) {
+        ChartCombos(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
@@ -175,7 +175,7 @@ public class Charts {
     public static class ChartSingles extends ChartBuilder implements RenderDataBuilder<ChartSingleSeriesRenderData> {
         private SeriesRenderData series;
 
-        public ChartSingles(String chartTitle, String[] categories) {
+        ChartSingles(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 

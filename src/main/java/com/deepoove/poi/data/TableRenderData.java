@@ -32,6 +32,8 @@ public class TableRenderData implements RenderData {
     private List<RowV2RenderData> rows = new ArrayList<>();
     private TableV2Style tableStyle;
 
+    MergeCellRule mergeRule;
+
     public List<RowV2RenderData> getRows() {
         return rows;
     }
@@ -46,6 +48,14 @@ public class TableRenderData implements RenderData {
 
     public void setTableStyle(TableV2Style tableStyle) {
         this.tableStyle = tableStyle;
+    }
+
+    public MergeCellRule getMergeRule() {
+        return mergeRule;
+    }
+
+    public void setMergeRule(MergeCellRule mergeRule) {
+        this.mergeRule = mergeRule;
     }
 
     public TableRenderData addRow(RowV2RenderData row) {

@@ -14,6 +14,8 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.CellV2RenderData;
 import com.deepoove.poi.data.Cells;
+import com.deepoove.poi.data.MergeCellRule;
+import com.deepoove.poi.data.MergeCellRule.Grid;
 import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.Pictures;
@@ -127,13 +129,31 @@ public class TableRenderTest {
         TableRenderData table = Tables.of(row0, row1, row2).width(14.63f, new double[] { 5.63f, 3.0f, 3.0f, 3.0f })
                 .border(BorderStyle.DEFAULT).create();
 
+        RowV2RenderData rowNoData = Rows.of("没有数据", null, null, null).create();
+        RowV2RenderData header = Rows.of("列0", "列1", "列2", "列3").horizontalCenter().bgColor("f58d71").create();
+        TableRenderData table1 = Tables.of(header, rowNoData).border(BorderStyle.DEFAULT).create();
+        MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 3)).build();
+        table1.setMergeRule(rule);
+
+        TableRenderData table2 = Tables.of(new String[][] { new String[] { "00", "01", "02", "03", "04" },
+                new String[] { "10", "11", "12", "13", "14" }, new String[] { "20", "21", "22", "23", "24" },
+                new String[] { "30", "31", "32", "33", "34" } }).border(BorderStyle.DEFAULT).create();
+        MergeCellRule rule2 = MergeCellRule.builder().map(Grid.of(0, 0), Grid.of(1, 1))
+                .map(Grid.of(1, 2), Grid.of(2, 3)).map(Grid.of(2, 0), Grid.of(2, 1)).map(Grid.of(1, 4), Grid.of(3, 4))
+                .map(Grid.of(3, 1), Grid.of(3, 2))
+                .build();
+        table2.setMergeRule(rule2);
+
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("table", table);
+                put("no_data_table", table1);
+                put("complex_table", table2);
             }
         };
 
-        Configure config = Configure.newBuilder().bind("table", new TableRenderPolicy()).build();
+        Configure config = Configure.newBuilder().bind("table", new TableRenderPolicy())
+                .bind("complex_table", new TableRenderPolicy()).bind("no_data_table", new TableRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/template/render_tablev2.docx", config).render(datas)
                 .writeToFile("out_render_table_builder.docx");
 

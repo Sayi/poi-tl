@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.TableRowAlign;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -33,7 +33,7 @@ public class MiniTableRenderTest {
         // 表格头文字居中对齐
         TableStyle style = new TableStyle();
         style.setBackgroundColor("009688");
-        style.setAlign(STJc.CENTER);
+        style.setAlign(TableRowAlign.CENTER);
         header.setRowStyle(style);
 
         row0 = RowRenderData.build(new HyperLinkTextRenderData("张三", "http://deepoove.com"),
@@ -44,11 +44,11 @@ public class MiniTableRenderTest {
         List<CellRenderData> cellDatas = new ArrayList<CellRenderData>();
         TableStyle cellStyle = new TableStyle();
         cellStyle.setBackgroundColor("0000ff");
-        cellStyle.setAlign(STJc.LEFT);
+        cellStyle.setAlign(TableRowAlign.LEFT);
         cellDatas.add(new CellRenderData(new TextRenderData("FFFFFF", "白字\n蓝底居左"), cellStyle));
         cellStyle = new TableStyle();
         cellStyle.setBackgroundColor("666666");
-        cellStyle.setAlign(STJc.RIGHT);
+        cellStyle.setAlign(TableRowAlign.RIGHT);
         cellDatas.add(new CellRenderData(new TextRenderData("00ff00", "绿字灰底居右"), cellStyle));
         row3 = new RowRenderData(cellDatas);
     }
@@ -72,7 +72,8 @@ public class MiniTableRenderTest {
                 MiniTableRenderData miniTableRenderData = new MiniTableRenderData(header,
                         Arrays.asList(row0, row1, row2, row3), 8.00f);
                 TableStyle style = new TableStyle();
-                style.setAlign(STJc.CENTER);
+                style.setAlign(TableRowAlign.CENTER);
+                style.setBackgroundColor("00FF00");
                 miniTableRenderData.setStyle(style);
                 put("width_table", miniTableRenderData);
 

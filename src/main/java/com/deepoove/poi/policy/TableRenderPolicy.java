@@ -15,7 +15,9 @@
  */
 package com.deepoove.poi.policy;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -25,6 +27,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 
 import com.deepoove.poi.data.CellV2RenderData;
+import com.deepoove.poi.data.MergeCellRule;
+import com.deepoove.poi.data.MergeCellRule.Grid;
 import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.RowV2RenderData;
 import com.deepoove.poi.data.TableRenderData;
@@ -33,6 +37,7 @@ import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.TableV2Style;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
+import com.deepoove.poi.util.TableTools;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
@@ -84,6 +89,49 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             for (int i = 0; i < size; i++) {
                 renderRow(rows.get(i), data.getRows().get(i));
             }
+
+            // merge cells by rule
+            MergeCellRule mergeRule = data.getMergeRule();
+            mergeCells(table, mergeRule);
+        }
+
+        private static void mergeCells(XWPFTable table, MergeCellRule mergeRule) {
+            if (null == mergeRule) return;
+            int[][] markRemovedCell = new int[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
+            Iterator<Entry<Grid, Grid>> iterator = mergeRule.mappingIterator();
+            while (iterator.hasNext()) {
+                Entry<Grid, Grid> next = iterator.next();
+                Grid key = next.getKey();
+                Grid value = next.getValue();
+                int startI = key.getI() > value.getI() ? value.getI() : key.getI();
+                int startJ = key.getJ() > value.getJ() ? value.getJ() : key.getJ();
+                int endI = key.getI() > value.getI() ? key.getI() : value.getI();
+                int endJ = key.getJ() > value.getJ() ? key.getJ() : value.getJ();
+                // merge(VMerge mark) vertical
+                if (startI != endI) {
+                    for (int j = startJ; j <= endJ; j++) {
+                        TableTools.mergeCellsVertically(table, j, startI, endI);
+                    }
+                }
+                // merge horizontal cells without remove cells
+                if (startJ != endJ) {
+                    for (int i = startI; i <= endI; i++) {
+                        TableTools.mergeCellsHorizontalWithoutRemove(table, i, startJ, endJ);
+                        for (int removedCol = startJ + 1; removedCol <= endJ; removedCol++) {
+                            markRemovedCell[i][removedCol] = 1;
+                        }
+                    }
+                }
+            }
+            // remove marked cell
+            for (int i = 0; i < markRemovedCell.length; i++) {
+                for (int j = markRemovedCell[i].length - 1; j >= 0; j--) {
+                    if (markRemovedCell[i][j] >= 1) {
+                        table.getRow(i).removeCell(j);
+                        table.getRow(i).getCtRow().removeTc(j);
+                    }
+                }
+            }
         }
 
         public static void renderRow(XWPFTableRow row, RowV2RenderData data) throws Exception {
@@ -102,6 +150,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
         public static void renderCell(XWPFTableCell cell, CellV2RenderData data, CellStyle defaultCellStyle)
                 throws Exception {
+            if (null == data) return;
             StyleUtils.styleTableCell(cell, defaultCellStyle);
             StyleUtils.styleTableCell(cell, data.getCellStyle());
             ParagraphAlignment defaultParaAlign = null == data.getCellStyle()
