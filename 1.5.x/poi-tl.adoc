@@ -540,7 +540,7 @@ image::../example/example_poitl_template.png[align='center']
 
 这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型。同时也向我们展示了无需编码设置样式：模板，不仅仅是标签模板，还是样式模板。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[Junit XWPFTemplateTest]
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/1.5.0/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[Junit XWPFTemplateTest]
 
 [[example-table]]
 === 付款通知书
@@ -622,7 +622,7 @@ public class DetailTablePolicy extends DynamicTableRenderPolicy {
 [source, java]
 Configure config = Configure.newBuilder().customPolicy("detail_table", new DetailTablePolicy()).build();
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[Junit PaymentExample]
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/1.5.0/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[Junit PaymentExample]
 
 
 [[example-article]]
@@ -647,7 +647,7 @@ image::../example/example_story_template.png[align='center']
 
 基本原理是后台提供数据模型的集合，不断渲染segment.docx，将渲染结果合并到story.docx文档中。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/StoryExample.java[Junit StoryExample]
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/1.5.0/src/test/java/com/deepoove/poi/tl/example/StoryExample.java[Junit StoryExample]
 
 === 个人简历
 [example]
@@ -670,7 +670,7 @@ image::../example/example_resume_template.png[align='center']
 
 因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
-NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/master/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
+NOTE: 源码参见link:https://github.com/Sayi/poi-tl/blob/1.5.0/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[Junit ResumeExample]
 
 == License
 Apache License 2.0
