@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
-import com.deepoove.poi.util.BytePictureUtils;
+import com.deepoove.poi.util.BufferedImageUtils;
 
 @DisplayName("Picture Render test case")
 public class PictureRenderTest {
@@ -23,7 +23,7 @@ public class PictureRenderTest {
 
     @BeforeEach
     public void init() {
-        bufferImage = BytePictureUtils.newBufferImage(100, 100);
+        bufferImage = BufferedImageUtils.newBufferImage(100, 100);
         Graphics2D g = (Graphics2D) bufferImage.getGraphics();
         g.setColor(Color.CYAN);
         g.fillRect(0, 0, 100, 100);

@@ -56,7 +56,6 @@ import com.deepoove.poi.xwpf.XWPFRunWrapper;
  * Resolver
  * 
  * @author Sayi
- * @version 1.7.0
  */
 public class TemplateResolver extends AbstractResolver {
 
@@ -258,8 +257,7 @@ public class TemplateResolver extends AbstractResolver {
 
     <T extends IBody> List<MetaTemplate> resolveBodys(List<T> bodys) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
-        if (null == bodys)
-            return metaTemplates;
+        if (null == bodys) return metaTemplates;
 
         bodys.forEach(body -> {
             metaTemplates.addAll(resolveBodyElements(body.getBodyElements()));

@@ -80,11 +80,9 @@ public class CTDrawingWrapper {
         XmlCursor newCursor = graphicData.newCursor();
         try {
             boolean child = newCursor.toChild(0);
-            if (!child)
-                return null;
+            if (!child) return null;
             XmlObject xmlObject = newCursor.getObject();
-            if (null == xmlObject || !(xmlObject instanceof CTRelId))
-                return null;
+            if (null == xmlObject || !(xmlObject instanceof CTRelId)) return null;
             CTRelId cchart = (CTRelId) xmlObject;
             return cchart.getId();
         } finally {

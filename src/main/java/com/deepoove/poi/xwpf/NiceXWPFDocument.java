@@ -36,9 +36,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -70,7 +68,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
@@ -81,7 +78,6 @@ import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
- * 对原生poi的扩展
  * 
  * @author Sayi
  * @version 0.0.1
@@ -103,14 +99,14 @@ public class NiceXWPFDocument extends XWPFDocument {
     public NiceXWPFDocument(InputStream in) throws IOException {
         this(in, false);
     }
-    
+
     public NiceXWPFDocument(InputStream in, boolean adjustDoc) throws IOException {
         super(in);
         this.adjustDoc = adjustDoc;
         idenifierManagerWrapper = new IdenifierManagerWrapper(this);
         myDocumentRead();
     }
-    
+
     @Override
     protected void onDocumentCreate() {
         // add all document attribute for new document
@@ -118,23 +114,23 @@ public class NiceXWPFDocument extends XWPFDocument {
         try {
             CTDocument1 ctDocument = getDocument();
             CTDocument1 parse = null;
-            String doc = "<xml-fragment xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \n" + 
-                    "    xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" \n" + 
-                    "    xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \n" + 
-                    "    xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" \n" + 
-                    "    xmlns:o=\"urn:schemas-microsoft-com:office:office\" \n" + 
-                    "    xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" \n" + 
-                    "    xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" \n" + 
-                    "    xmlns:v=\"urn:schemas-microsoft-com:vml\" \n" + 
-                    "    xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" \n" + 
-                    "    xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" \n" + 
-                    "    xmlns:w10=\"urn:schemas-microsoft-com:office:word\" \n" + 
-                    "    xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" \n" + 
-                    "    xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" \n" + 
-                    "    xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" \n" + 
-                    "    xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" \n" + 
-                    "    xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \n" + 
-                    "    xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 wp14\"><w:body></w:body></xml-fragment>";
+            String doc = "<xml-fragment xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \n"
+                    + "    xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" \n"
+                    + "    xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \n"
+                    + "    xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" \n"
+                    + "    xmlns:o=\"urn:schemas-microsoft-com:office:office\" \n"
+                    + "    xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" \n"
+                    + "    xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" \n"
+                    + "    xmlns:v=\"urn:schemas-microsoft-com:vml\" \n"
+                    + "    xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" \n"
+                    + "    xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" \n"
+                    + "    xmlns:w10=\"urn:schemas-microsoft-com:office:word\" \n"
+                    + "    xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" \n"
+                    + "    xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" \n"
+                    + "    xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" \n"
+                    + "    xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" \n"
+                    + "    xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \n"
+                    + "    xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 wp14\"><w:body></w:body></xml-fragment>";
             parse = CTDocument1.Factory.parse(doc);
             ctDocument.set(parse);
         } catch (XmlException e) {
@@ -154,8 +150,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     private void readParagraphs(List<XWPFParagraph> paragraphs) {
-        paragraphs.forEach(
-                paragraph -> paragraph.getRuns().forEach(run -> readRun(run)));
+        paragraphs.forEach(paragraph -> paragraph.getRuns().forEach(run -> readRun(run)));
     }
 
     private void readRun(XWPFRun run) {
@@ -199,7 +194,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         allTables.addAll(tables);
         for (XWPFTable table : tables) {
             List<XWPFTableRow> rows = table.getRows();
-            if (null == rows) continue;;
+            if (null == rows) continue;
+            ;
             for (XWPFTableRow row : rows) {
                 List<XWPFTableCell> cells = row.getTableCells();
                 if (null == cells) continue;
@@ -231,7 +227,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         if (null == numbering) {
             numbering = this.createNumbering();
         }
-        
+
         NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
@@ -242,10 +238,10 @@ public class NiceXWPFDocument extends XWPFDocument {
             NumberingFormat numFmt = numFmts[i];
             CTLvl cTLvl = cTAbstractNum.addNewLvl();
             CTPPr ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
-            CTInd ind = ppr.isSetInd()? ppr.getInd() : ppr.addNewInd();
+            CTInd ind = ppr.isSetInd() ? ppr.getInd() : ppr.addNewInd();
             ind.setLeft(BigInteger.valueOf(UnitUtils.cm2Twips(0.74f) * i));
 
-            Enum fmt =  STNumberFormat.Enum.forInt(numFmt.getNumFmt());
+            Enum fmt = STNumberFormat.Enum.forInt(numFmt.getNumFmt());
             String val = numFmt.getLvlText();
             cTLvl.addNewNumFmt().setVal(fmt);
             cTLvl.addNewLvlText().setVal(val);
@@ -253,9 +249,9 @@ public class NiceXWPFDocument extends XWPFDocument {
             cTLvl.setIlvl(BigInteger.valueOf(i));
             if (fmt == STNumberFormat.BULLET) {
                 cTLvl.addNewLvlJc().setVal(STJc.LEFT);
-            } 
+            }
         }
-        
+
         XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
         return numbering.addNum(abstractNumID);
@@ -264,9 +260,9 @@ public class NiceXWPFDocument extends XWPFDocument {
     public RelationPart addChartData(XWPFChart chart) throws InvalidFormatException, IOException {
         int chartNumber = getNextPartNumber(XWPFRelation.CHART, charts.size() + 1);
 
-        //create relationship in document for new chart
-        RelationPart rp = createRelationship(
-                XWPFRelation.CHART, new XWPFChartFactory(chart.getPackagePart()), chartNumber, false);
+        // create relationship in document for new chart
+        RelationPart rp = createRelationship(XWPFRelation.CHART, new XWPFChartFactory(chart.getPackagePart()),
+                chartNumber, false);
 
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
@@ -275,7 +271,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         ctChartSpace.unsetExternalData();
         xwpfChart.setWorkbook(chart.getWorkbook());
 
-        //add chart object to chart list
+        // add chart object to chart list
         charts.add(xwpfChart);
         return rp;
     }
@@ -297,8 +293,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     /**
      * 文档末尾合并另一个Word文档
      * 
-     * @param docMerge
-     *            待合并文档
+     * @param docMerge 待合并文档
      * @return 合并后的文档
      * @throws Exception
      * @since 1.3.0
@@ -310,10 +305,8 @@ public class NiceXWPFDocument extends XWPFDocument {
     /**
      * 指定位置合并Word文档
      * 
-     * @param docMerges
-     *            待合并的文档
-     * @param run
-     *            合并的位置
+     * @param docMerges 待合并的文档
+     * @param run       合并的位置
      * @return 合并后的文档
      * @throws Exception
      * @since 1.3.0
@@ -322,7 +315,6 @@ public class NiceXWPFDocument extends XWPFDocument {
         if (null == docMerges || docMerges.isEmpty() || null == run) return this;
         return merge(docMerges.iterator(), run);
     }
-
 
     public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
         if (null == iterator || !iterator.hasNext() || null == run) return this;
@@ -333,10 +325,10 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         List<String> addParts = convertStr(iterator);
         iterator = null;
-        
+
         XmlOptions optionsInner = DefaultXmlOptions.OPTIONS_INNER;
-        String srcString = body.xmlText(optionsInner );
-        //hack for create document or single element document
+        String srcString = body.xmlText(optionsInner);
+        // hack for create document or single element document
         if (!srcString.startsWith("<xml-fragment")) {
             body.addNewSectPr();
             srcString = body.xmlText(optionsInner);
@@ -346,27 +338,26 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         CTP makeBody = CTP.Factory.parse(prefix + StringUtils.join(addParts, "") + sufix);
         ctp.set(makeBody);
-        
+
         String xmlText = body.xmlText(optionsInner);
         xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>").replaceAll("<w:p><w:p\\s", "<w:p ")
                 .replaceAll("<w:p><w:tbl>", "<w:tbl>").replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
-        
-        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
-                .replaceAll("</w:p></w:p>", "</w:p>").replaceAll("</w:tbl></w:p>", "</w:tbl>")
-                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
+
+        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>").replaceAll("</w:p></w:p>", "</w:p>")
+                .replaceAll("</w:tbl></w:p>", "</w:tbl>").replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
                 .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
-        
+
         // System.out.println(xmlText);
         body.set(CTBody.Factory.parse(xmlText));
-        
+
         return generateWithAdjust();
     }
 
-    private List<String> convertStr(Iterator<NiceXWPFDocument> iterator)
-            throws InvalidFormatException, IOException {
+    private List<String> convertStr(Iterator<NiceXWPFDocument> iterator) throws InvalidFormatException, IOException {
         List<String> strList = new ArrayList<String>();
 
-        // cache the merge doc style if docs have same style, or should merge style first
+        // cache the merge doc style if docs have same style, or should merge style
+        // first
         NiceXWPFDocument next = iterator.next();
         Map<String, String> styleMapCache = mergeStyles(next);
         mergeNamespaces(next);
@@ -374,7 +365,7 @@ public class NiceXWPFDocument extends XWPFDocument {
             strList.add(extractMergePart(next, styleMapCache));
             if (iterator.hasNext()) next = iterator.next();
             else break;
-        } while(true);
+        } while (true);
         return strList;
     }
 
@@ -398,13 +389,14 @@ public class NiceXWPFDocument extends XWPFDocument {
         do {
             if (newCursor.currentTokenType().isStart()) {
                 return true;
-            } else if (newCursor.hasNextToken()) { 
+            } else if (newCursor.hasNextToken()) {
                 newCursor.toNextToken();
             } else return false;
         } while (true);
     }
 
-    private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap) throws InvalidFormatException, IOException {
+    private String extractMergePart(NiceXWPFDocument docMerge, Map<String, String> styleIdsMap)
+            throws InvalidFormatException, IOException {
         CTBody bodyMerge = docMerge.getDocument().getBody();
         // Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<BigInteger, BigInteger> numIdsMap = mergeNumbering(docMerge);
@@ -424,7 +416,7 @@ public class NiceXWPFDocument extends XWPFDocument {
                     .replaceAll("<w:rStyle\\sw:val=\"" + styleId + "\"",
                             "<w:rStyle w:val=\"" + styleIdsMap.get(styleId) + "\"");
         }
-        
+
         // 图片旧的id和新的id可能有交集
         Map<String, String> placeHolderblipIdsMap = new HashMap<String, String>();
         for (String relaId : blipIdsMap.keySet()) {
@@ -443,19 +435,17 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
         for (String relaId : hyperlinkMap.keySet()) {
             // w:hyperlink r:id
-            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
-                    "r:id=\"" + hyperlinkMap.get(relaId) + "\"");
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"", "r:id=\"" + hyperlinkMap.get(relaId) + "\"");
         }
-        
+
         // 图表
         for (String relaId : chartIdsMap.keySet()) {
             chartIdsMap.put(relaId, chartIdsMap.get(relaId) + "@PoiTL@");
         }
         for (String relaId : chartIdsMap.keySet()) {
-            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
-                    "r:id=\"" + chartIdsMap.get(relaId) + "\"");
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"", "r:id=\"" + chartIdsMap.get(relaId) + "\"");
         }
-        
+
         // 列表numId
         Map<BigInteger, String> numIdsStrMap = new HashMap<BigInteger, String>();
         for (BigInteger relaId : numIdsMap.keySet()) {
@@ -465,12 +455,13 @@ public class NiceXWPFDocument extends XWPFDocument {
             addPart = addPart.replaceAll("<w:numId\\sw:val=\"" + numId + "\"",
                     "<w:numId w:val=\"" + numIdsStrMap.get(numId) + "\"");
         }
-        
+
         addPart = addPart.replaceAll("@PoiTL@", "");
         // 关闭合并流
         try {
             docMerge.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return addPart;
     }
 
@@ -481,8 +472,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         int end = appendString.lastIndexOf("<");
         if (-1 != lastIndexOf) {
             String prefix = appendString.substring(begin, appendString.lastIndexOf("<w:sectPr"));
-            String sufix = appendString.substring(appendString.lastIndexOf("</w:sectPr>") + 11,
-                    end);
+            String sufix = appendString.substring(appendString.lastIndexOf("</w:sectPr>") + 11, end);
             return prefix + sufix;
         } else if (begin < end) {
             addPart = appendString.substring(begin, end);
@@ -490,14 +480,12 @@ public class NiceXWPFDocument extends XWPFDocument {
         return addPart;
     }
 
-    private Map<String, String> mergePicture(NiceXWPFDocument docMerge)
-            throws InvalidFormatException {
+    private Map<String, String> mergePicture(NiceXWPFDocument docMerge) throws InvalidFormatException {
         Map<String, String> blipIdsMap = new HashMap<String, String>();
         List<XWPFPictureData> allPictures = docMerge.getAllPictures();
         for (XWPFPictureData xwpfPictureData : allPictures) {
             String relationId = docMerge.getRelationId(xwpfPictureData);
-            String blidId = this.addPictureData(xwpfPictureData.getData(),
-                    xwpfPictureData.getPictureType());
+            String blidId = this.addPictureData(xwpfPictureData.getData(), xwpfPictureData.getPictureType());
             blipIdsMap.put(relationId, blidId);
         }
         return blipIdsMap;
@@ -524,8 +512,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
             cTAbstractNum = cache.get(xwpfNum.getCTNum().getAbstractNumId().getVal());
             if (null == cTAbstractNum) {
-                xwpfAbstractNum = numberingMerge
-                        .getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
+                xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
                 if (null == xwpfAbstractNum) {
                     logger.warn("cannot find cTAbstractNum by XWPFNum.");
                     continue;
@@ -538,8 +525,9 @@ public class NiceXWPFDocument extends XWPFDocument {
             }
             ret.put(mergeNumId, cTAbstractNum);
         }
-        
-        new HashSet<CTAbstractNum>(ret.values()).forEach(abnum -> abnum.setAbstractNumId(wrapper.getNextAbstractNumID()));
+
+        new HashSet<CTAbstractNum>(ret.values())
+                .forEach(abnum -> abnum.setAbstractNumId(wrapper.getNextAbstractNumID()));
         final XWPFNumbering finalNumbering = numbering;
         ret.forEach((mergeNumId, abnum) -> {
             BigInteger numID = finalNumbering.addNum(finalNumbering.addAbstractNum(new XWPFAbstractNum(abnum)));
@@ -577,20 +565,20 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private Map<String, String> mergeHyperlink(NiceXWPFDocument docMerge) throws InvalidFormatException {
         Map<String, String> map = new HashMap<String, String>();
-        PackageRelationshipCollection hyperlinks = docMerge.getPackagePart().getRelationshipsByType(PackageRelationshipTypes.HYPERLINK_PART);
+        PackageRelationshipCollection hyperlinks = docMerge.getPackagePart()
+                .getRelationshipsByType(PackageRelationshipTypes.HYPERLINK_PART);
         Iterator<PackageRelationship> iterator = hyperlinks.iterator();
         while (iterator.hasNext()) {
             PackageRelationship relationship = iterator.next();
-            PackageRelationship relationshipNew = getPackagePart()
-                    .addExternalRelationship(relationship.getTargetURI().toString(), XWPFRelation.HYPERLINK.getRelation());
+            PackageRelationship relationshipNew = getPackagePart().addExternalRelationship(
+                    relationship.getTargetURI().toString(), XWPFRelation.HYPERLINK.getRelation());
             map.put(relationship.getId(), relationshipNew.getId());
         }
         return map;
     }
-    
+
     private Map<String, String> mergeChart(NiceXWPFDocument docMerge) throws InvalidFormatException, IOException {
         Map<String, String> map = new HashMap<String, String>();
-        // TODO
         List<XWPFChart> charts = docMerge.getCharts();
         for (XWPFChart chart : charts) {
             String relationId = docMerge.getRelationId(chart);
@@ -598,61 +586,6 @@ public class NiceXWPFDocument extends XWPFDocument {
             map.put(relationId, addChartData.getRelationship().getId());
         }
         return map;
-    }
-
-    public int getPosOfParagraphCTP(CTP bodyObj) {
-        IBodyElement current;
-        for (int i = 0; i < bodyElements.size(); i++) {
-            current = bodyElements.get(i);
-            if (current.getElementType() == BodyElementType.PARAGRAPH) {
-                if (((XWPFParagraph)current).getCTP().equals(bodyObj)) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-
-    public int getPosOfTableCTTbl(CTTbl bodyObj) {
-        IBodyElement current;
-        for (int i = 0; i < bodyElements.size(); i++) {
-            current = bodyElements.get(i);
-            if (current.getElementType() == BodyElementType.TABLE) {
-                if (((XWPFTable)current).getCTTbl().equals(bodyObj)) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }
-    
-    public int getParaPos(XWPFParagraph insertNewParagraph) {
-        for (int i = 0; i < paragraphs.size(); i++) {
-            if (paragraphs.get(i) == insertNewParagraph) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public int getTablePos(XWPFTable insertNewTbl) {
-        for (int i = 0; i < tables.size(); i++) {
-            if (tables.get(i) == insertNewTbl) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public void updateBodyElements(IBodyElement insertNewParagraph, IBodyElement copy) {
-        int pos = -1;
-        for (int i = 0; i < bodyElements.size(); i++) {
-            if (bodyElements.get(i) == insertNewParagraph) {
-                pos =  i;
-            }
-        }
-        if (-1 != pos) bodyElements.set(pos, copy);
-        
     }
 
 }

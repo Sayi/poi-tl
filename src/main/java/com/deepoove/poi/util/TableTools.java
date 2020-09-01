@@ -39,14 +39,7 @@ import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 
 /**
- * XWPFTable 增强工具类 <br/>
- * 
- * <ul>
- * <li>合并行单元格</li>
- * <li>合并列单元格</li>
- * <li>设置每列宽度</li>
- * <li>边框大小</li>
- * </ul>
+ * XWPFTable Tools
  * 
  * @author Sayi
  * @version 1.4.0
@@ -54,15 +47,15 @@ import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 public final class TableTools {
 
     /**
-     * 合并行单元格
+     * merge several columns of cells in the same row
      * 
-     * @param table   表格对象
-     * @param row     行 从0开始
-     * @param fromCol 起始列
-     * @param toCol   结束列
+     * @param table   table
+     * @param row     index of the row
+     * @param fromCol from column to be merged
+     * @param toCol   to column to be merged
      */
     public static void mergeCellsHorizonal(XWPFTable table, int row, int fromCol, int toCol) {
-        if (toCol <= fromCol) return;
+        Preconditions.requireGreaterThan(toCol, fromCol, "To column to be merged must greater than from column.");
         mergeCellsHorizontalWithoutRemove(table, row, fromCol, toCol);
         XWPFTableRow rowTable = table.getRow(row);
         for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
@@ -71,8 +64,16 @@ public final class TableTools {
         }
     }
 
+    /**
+     * merge several columns of cells in the same row, but do'not remove extra cells
+     * 
+     * @param table   table
+     * @param row     index of the row
+     * @param fromCol from column to be merged
+     * @param toCol   to column to be merged
+     */
     public static void mergeCellsHorizontalWithoutRemove(XWPFTable table, int row, int fromCol, int toCol) {
-        if (toCol <= fromCol) return;
+        Preconditions.requireGreaterThan(toCol, fromCol, "To column to be merged must greater than from column.");
         XWPFTableCell cell = table.getRow(row).getCell(fromCol);
         CTTcPr tcPr = getTcPr(cell);
         tcPr.addNewGridSpan();
@@ -80,6 +81,7 @@ public final class TableTools {
         int tcw = 0;
         for (int colIndex = fromCol; colIndex <= toCol; colIndex++) {
             XWPFTableCell tableCell = table.getRow(row).getCell(colIndex);
+            // TODO pct, auto
             if (TableWidthType.DXA == tableCell.getWidthType()) {
                 if (-1 == tableCell.getWidth()) return;
                 tcw += tableCell.getWidth();
@@ -91,15 +93,15 @@ public final class TableTools {
     }
 
     /**
-     * 合并列单元格
+     * merge several rows of cells in the same column
      * 
-     * @param table   表格对象
-     * @param col     列 从0开始
-     * @param fromRow 起始行
-     * @param toRow   结束行
+     * @param table   table
+     * @param col     index of the column
+     * @param fromRow from row to be merged
+     * @param toRow   end row to be merged
      */
     public static void mergeCellsVertically(XWPFTable table, int col, int fromRow, int toRow) {
-        if (toRow <= fromRow) return;
+        Preconditions.requireGreaterThan(toRow, fromRow, "To row to be merged must greater than from row.");
         for (int rowIndex = fromRow; rowIndex <= toRow; rowIndex++) {
             XWPFTableCell cell = table.getRow(rowIndex).getCell(col);
             CTTcPr tcPr = getTcPr(cell);
@@ -114,12 +116,6 @@ public final class TableTools {
         }
     }
 
-    /**
-     * 设置表格每列的宽度
-     * 
-     * @param table  表格对象
-     * @param widths 每列的宽度，单位CM
-     */
     public static void widthTable(XWPFTable table, float[] colWidths) {
         float widthCM = 0;
         for (float w : colWidths) {
@@ -144,13 +140,6 @@ public final class TableTools {
         }
     }
 
-    /**
-     * 表格设置宽度，每列平均分布
-     * 
-     * @param table
-     * @param widthCM
-     * @param cols
-     */
     public static void widthTable(XWPFTable table, float widthCM, int cols) {
         int width = UnitUtils.cm2Twips(widthCM);
         CTTblPr tblPr = table.getCTTbl().getTblPr();
@@ -174,12 +163,6 @@ public final class TableTools {
         }
     }
 
-    /**
-     * 设置表格边框
-     * 
-     * @param table
-     * @param size
-     */
     public static void borderTable(XWPFTable table, int size) {
         CTTblPr tblPr = getTblPr(table);
         CTTblBorders tblBorders = tblPr.getTblBorders();
@@ -201,14 +184,6 @@ public final class TableTools {
         tblBorders.getInsideV().setSz(borderSize);
     }
 
-    /**
-     * 构建基础表格
-     * 
-     * @param table
-     * @param col
-     * @param width
-     * @param style
-     */
     public static void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
         int defaultBorderSize = 4;
         widthTable(table, width, col);

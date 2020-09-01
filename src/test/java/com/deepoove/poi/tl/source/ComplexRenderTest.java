@@ -14,7 +14,7 @@ import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.TableRenderPolicy;
-import com.deepoove.poi.util.BytePictureUtils;
+import com.deepoove.poi.util.ByteUtils;
 
 /**
  * 复杂模板
@@ -50,7 +50,7 @@ public class ComplexRenderTest {
                 put("s_antiWord", "没有安全问题");
 
                 put("brakePicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
-                put("treadPicture", new PictureRenderData(220, 135, ".png", BytePictureUtils
+                put("treadPicture", new PictureRenderData(220, 135, ".png", ByteUtils
                         .getLocalByteArray(new File("src/test/resources/logo.png"))));
                 put("fluidPicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
                 put("antiPicture", new PictureRenderData(75, 170, "src/test/resources/logo.png"));

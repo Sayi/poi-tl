@@ -18,6 +18,7 @@ package com.deepoove.poi.xwpf;
 
 import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.IRunBody;
@@ -28,40 +29,181 @@ import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import com.deepoove.poi.util.ParagraphUtils;
+import com.deepoove.poi.util.ReflectionUtils;
 
-public interface BodyContainer extends ParentContext{
+/**
+ * {@link IBody} operation
+ * 
+ * @author Sayi
+ *
+ */
+public interface BodyContainer extends ParentContext {
 
-    int getPosOfParagraphCTP(CTP startCtp);
+    /**
+     * get the position of paragraph in bodyElements
+     * 
+     * @param ctp paragraph
+     * @return the position of paragraph
+     */
+    default int getPosOfParagraphCTP(CTP ctp) {
+        IBodyElement current;
+        List<IBodyElement> bodyElements = getTarget().getBodyElements();
+        for (int i = 0; i < bodyElements.size(); i++) {
+            current = bodyElements.get(i);
+            if (current.getElementType() == BodyElementType.PARAGRAPH) {
+                if (((XWPFParagraph) current).getCTP().equals(ctp)) {
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
 
-    void removeBodyElement(int i);
+    /**
+     * get the position of paragraph in bodyElements
+     * 
+     * @param paragraph
+     * @return the position of paragraph
+     */
+    default int getPosOfParagraph(XWPFParagraph paragraph) {
+        return getPosOfParagraphCTP(paragraph.getCTP());
+    }
 
-    int getPosOfParagraph(XWPFParagraph startParagraph);
+    /**
+     * get all bodyElements
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    default List<IBodyElement> getBodyElements() {
+        return (List<IBodyElement>) ReflectionUtils.getValue("bodyElements", getTarget());
+    }
 
-    List<IBodyElement> getBodyElements();
+    /**
+     * remove body element from bodyElements
+     * 
+     * @param pos the position of bodyElement
+     */
+    void removeBodyElement(int pos);
 
-    XWPFParagraph insertNewParagraph(XmlCursor insertPostionCursor);
-    
+    /**
+     * insert paragraph at position of the cursor
+     * 
+     * @param insertPostionCursor
+     * @return the inserted paragraph
+     */
+    default XWPFParagraph insertNewParagraph(XmlCursor insertPostionCursor) {
+        return getTarget().insertNewParagraph(insertPostionCursor);
+    }
+
+    /**
+     * insert paragraph at position of run
+     * 
+     * @param run
+     * @return the inserted paragraph
+     */
     default XWPFParagraph insertNewParagraph(XWPFRun run) {
         XmlCursor cursor = ((XWPFParagraph) run.getParent()).getCTP().newCursor();
         return insertNewParagraph(cursor);
     }
 
-    int getParaPos(XWPFParagraph insertNewParagraph);
+    /**
+     * get the position of paragraph in paragraphs
+     * 
+     * @param paragraph
+     * @return the position of paragraph
+     */
+    default int getParaPos(XWPFParagraph paragraph) {
+        List<XWPFParagraph> paragraphs = getTarget().getParagraphs();
+        for (int i = 0; i < paragraphs.size(); i++) {
+            if (paragraphs.get(i) == paragraph) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
-    void setParagraph(XWPFParagraph iBodyElement, int paraPos);
+    /**
+     * set paragraph at position
+     * 
+     * @param paragraph
+     * @param pos
+     */
+    void setParagraph(XWPFParagraph paragraph, int pos);
 
+    /**
+     * container itself
+     * 
+     * @return
+     */
     IBody getTarget();
 
-    XWPFTable insertNewTbl(XmlCursor insertPostionCursor);
+    /**
+     * insert table at position of the cursor
+     * 
+     * @param insertPostionCursor
+     * @return the inserted table
+     */
+    default XWPFTable insertNewTbl(XmlCursor insertPostionCursor) {
+        return getTarget().insertNewTbl(insertPostionCursor);
+    }
 
-    int getTablePos(XWPFTable insertNewTbl);
+    /**
+     * get the position of table in tables
+     * 
+     * @param table
+     * @return the position of table
+     */
+    default int getTablePos(XWPFTable table) {
+        List<XWPFTable> tables = getTarget().getTables();
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i) == table) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
-    void setTable(int tablePos, XWPFTable iBodyElement);
+    /**
+     * set table
+     * 
+     * @param tablePos
+     * @param table
+     */
+    void setTable(int tablePos, XWPFTable table);
 
-    void updateBodyElements(IBodyElement insertNewParagraph, IBodyElement copy);
+    /**
+     * update body elements
+     * 
+     * @param bodyElement
+     * @param copy
+     */
+    default void updateBodyElements(IBodyElement bodyElement, IBodyElement copy) {
+        int pos = -1;
+        List<IBodyElement> bodyElements = getBodyElements();
+        for (int i = 0; i < bodyElements.size(); i++) {
+            if (bodyElements.get(i) == bodyElement) {
+                pos = i;
+            }
+        }
+        if (-1 != pos) bodyElements.set(pos, copy);
+    }
 
+    /**
+     * insert table at position of the run
+     * 
+     * @param run
+     * @param row
+     * @param col
+     * @return
+     */
     XWPFTable insertNewTable(XWPFRun run, int row, int col);
 
+    /**
+     * clear run
+     * 
+     * @param run
+     */
     default void clearPlaceholder(XWPFRun run) {
         IRunBody parent = run.getParent();
         run.setText("", 0);

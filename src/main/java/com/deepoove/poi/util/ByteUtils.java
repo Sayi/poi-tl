@@ -31,10 +31,9 @@ public final class ByteUtils {
     private static Logger logger = LoggerFactory.getLogger(ByteUtils.class);
 
     /**
-     * 通过网络地址获取byte数组
+     * Get byte array of network url
      * 
      * @param urlPath
-     *            网络地址
      * @return
      */
     public static byte[] getUrlByteArray(String urlPath) {
@@ -47,10 +46,9 @@ public final class ByteUtils {
     }
 
     /**
-     * 获取文件byte数组
+     * Get byte array of file
      * 
      * @param res
-     *            文件
      * @return
      */
     public static byte[] getLocalByteArray(File res) {
@@ -64,7 +62,7 @@ public final class ByteUtils {
     }
 
     /**
-     * 流转换成byte数组
+     * Get byte array of stream
      * 
      * @param is
      * @return
@@ -75,8 +73,7 @@ public final class ByteUtils {
             return IOUtils.toByteArray(is);
         } catch (IOException e) {
             logger.error("toByteArray error", e);
-        }
-        finally {
+        } finally {
             try {
                 is.close();
             } catch (IOException e) {
@@ -86,13 +83,6 @@ public final class ByteUtils {
         return null;
     }
 
-    /**
-     * 加载网络流
-     * 
-     * @param urlPath
-     * @return
-     * @throws IOException
-     */
     public static InputStream getUrlStream(String urlPath) throws IOException {
         URL url = new URL(urlPath);
         return url.openConnection().getInputStream();

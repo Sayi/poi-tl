@@ -43,21 +43,24 @@ import com.deepoove.poi.util.Preconditions;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * The template of word(docx)
+ * The facade of word(docx) template
+ * 
+ * <p>
+ * It works by expanding tags in a template using values provided in a Map or
+ * Object.
+ * </p>
  * 
  * @author Sayi
- * @version 0.0.1
+ * @since 0.0.1
  */
 public class XWPFTemplate implements Closeable {
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-    private static final String SUPPORT_MINIMUM_VERSION = "4.1.1";
+    private static final String SUPPORT_MINIMUM_VERSION = "4.1.2";
 
     private NiceXWPFDocument doc;
-
     private Configure config;
     private Resolver resolver;
     private Render renderer;
-
     private List<MetaTemplate> eleTemplates;
 
     static {
@@ -65,16 +68,17 @@ public class XWPFTemplate implements Closeable {
             Class.forName("org.apache.poi.Version");
             Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION,
                     (cur, min) -> "Require Apache POI version at least " + min + ", but now is " + cur
-                    + ", please check the dependency of project.");
+                            + ", please check the dependency of project.");
         } catch (ClassNotFoundException e) {
             // no-op
         }
     }
 
-    private XWPFTemplate() {}
+    private XWPFTemplate() {
+    }
 
-    public static XWPFTemplate compile(String filePath) {
-        return compile(new File(filePath));
+    public static XWPFTemplate compile(String path) {
+        return compile(new File(path));
     }
 
     public static XWPFTemplate compile(File file) {
@@ -85,8 +89,8 @@ public class XWPFTemplate implements Closeable {
         return compile(inputStream, Configure.createDefault());
     }
 
-    public static XWPFTemplate compile(String filePath, Configure config) {
-        return compile(new File(filePath), config);
+    public static XWPFTemplate compile(String path, Configure config) {
+        return compile(new File(path), config);
     }
 
     public static XWPFTemplate compile(File file, Configure config) {
@@ -97,14 +101,6 @@ public class XWPFTemplate implements Closeable {
         }
     }
 
-    /**
-     * template file as InputStream
-     * 
-     * @param inputStream
-     * @param config
-     * @return
-     * @version 1.2.0
-     */
     public static XWPFTemplate compile(InputStream inputStream, Configure config) {
         try {
             XWPFTemplate template = new XWPFTemplate();
@@ -134,9 +130,8 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * Render the template by data model and write to OutputStream, do'not
-     * forget invoke #{@link XWPFTemplate#close()},
-     * #{@link OutputStream#close()}
+     * Render the template by data model and write to OutputStream, do'not forget
+     * invoke {@link XWPFTemplate#close()}, {@link OutputStream#close()}
      * 
      * @param model
      * @param out
@@ -162,11 +157,10 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * write to output stream, do'not forget invoke
-     * #{@link XWPFTemplate#close()}, #{@link OutputStream#close()} finally
+     * write to output stream, do'not forget invoke {@link XWPFTemplate#close()},
+     * {@link OutputStream#close()} finally
      * 
-     * @param out
-     *            eg.ServletOutputStream
+     * @param out eg.ServletOutputStream
      * @throws IOException
      */
     public void write(OutputStream out) throws IOException {
@@ -176,7 +170,7 @@ public class XWPFTemplate implements Closeable {
     /**
      * write to file, this method will close all the stream
      * 
-     * @param path
+     * @param path output path
      * @throws IOException
      */
     public void writeToFile(String path) throws IOException {
@@ -185,8 +179,7 @@ public class XWPFTemplate implements Closeable {
             out = new FileOutputStream(path);
             this.write(out);
             out.flush();
-        }
-        finally {
+        } finally {
             PoitlIOUtils.closeQuietlyMulti(this.doc, out);
         }
     }

@@ -19,7 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 
-import com.deepoove.poi.util.BytePictureUtils;
+import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
@@ -40,7 +40,7 @@ public class Pictures implements RenderDataBuilder<PictureRenderData> {
     }
 
     public static Pictures ofUrl(String url, PictureType pictureType) {
-        return ofBytes(BytePictureUtils.getUrlByteArray(url), pictureType);
+        return ofBytes(ByteUtils.getUrlByteArray(url), pictureType);
     }
 
     public static Pictures ofStream(InputStream inputStream, PictureType pictureType) {
@@ -48,7 +48,7 @@ public class Pictures implements RenderDataBuilder<PictureRenderData> {
     }
 
     public static Pictures ofBufferedImage(BufferedImage image, PictureType pictureType) {
-        return ofBytes(BytePictureUtils.getBufferByteArray(image, pictureType.format()), pictureType);
+        return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
 
     public static Pictures ofBytes(byte[] bytes, PictureType pictureType) {

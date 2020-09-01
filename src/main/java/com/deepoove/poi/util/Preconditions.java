@@ -19,11 +19,18 @@ import java.util.function.BiFunction;
 
 /**
  * @author Sayi
- * @version 
+ * @version
  */
 public final class Preconditions {
 
-    private Preconditions() {}
+    private Preconditions() {
+    }
+
+    public static void requireGreaterThan(int first, int second, String message) {
+        if (first <= second) {
+            throw new IllegalStateException(message);
+        }
+    }
 
     public static void checkMinimumVersion(String currentVer, String minimumVer,
             BiFunction<String, String, String> message) {
@@ -36,7 +43,9 @@ public final class Preconditions {
             // not strict compare
             return;
         }
-        if (ret < 0) { throw new IllegalStateException(message.apply(currentVer, minimumVer)); }
+        if (ret < 0) {
+            throw new IllegalStateException(message.apply(currentVer, minimumVer));
+        }
     }
 
     static class ComparableVersion implements Comparable<ComparableVersion> {

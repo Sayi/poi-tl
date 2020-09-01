@@ -45,10 +45,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPImpl;
 import com.deepoove.poi.exception.ReflectionException;
 
 /**
- * XWPFParagraph 包装器
+ * XWPFParagraph wrapper
  * 
  * @author Sayi
- * @version
  */
 public class XWPFParagraphWrapper {
 
@@ -90,7 +89,7 @@ public class XWPFParagraphWrapper {
     }
 
     public XWPFRun insertNewHyperLinkRun(XWPFRun run, String link) {
-        if (StringUtils.isBlank(link)) throw new IllegalArgumentException("HyperLink must not be Empty!");
+        if (StringUtils.isBlank(link)) throw new IllegalArgumentException("Hyperlink must not be Empty!");
         if (link.startsWith("anchor:")) {
             return insertNewAnchor(getPosOfRun(run), link.substring("anchor:".length()));
         }
@@ -102,7 +101,7 @@ public class XWPFParagraphWrapper {
             CTHyperlink hyperlink = insertNewHyperlink(pos);
             // hyperlink.setAnchor(link.substring("anchor:".length()));
             PackageRelationship relationship = paragraph.getPart().getPackagePart().addExternalRelationship(link,
-                        XWPFRelation.HYPERLINK.getRelation());
+                    XWPFRelation.HYPERLINK.getRelation());
             hyperlink.setId(relationship.getId());
 
             CTR ctr = hyperlink.addNewR();
@@ -177,15 +176,11 @@ public class XWPFParagraphWrapper {
 
     public XWPFRun insertNewRun(int pos) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
-
             CTR ctRun = this.insertNewR(pos);
             XWPFRun newRun = new XWPFRun(ctRun, (IRunBody) paragraph);
-
             updateRunsAndIRuns(pos, newRun);
-
             return newRun;
         }
-
         return null;
     }
 
@@ -202,7 +197,6 @@ public class XWPFParagraphWrapper {
 
     public XWPFFieldRun insertNewField(int pos) {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
-
             CTSimpleField ctSimpleField = this.insertNewFldSimple(pos);
             CTR addNewR = ctSimpleField.addNewR();
             XWPFFieldRun newRun = new XWPFFieldRun(ctSimpleField, addNewR, (IRunBody) paragraph);
@@ -210,10 +204,8 @@ public class XWPFParagraphWrapper {
             // To update the iruns, find where we're going
             // in the normal runs, and go in there
             updateRunsAndIRuns(pos, newRun);
-
             return newRun;
         }
-
         return null;
     }
 
@@ -229,7 +221,6 @@ public class XWPFParagraphWrapper {
             }
         }
         iruns.add(iPos, newRun);
-
         // Runs itself is easy to update
         runs.add(pos, newRun);
     }

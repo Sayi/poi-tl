@@ -24,21 +24,23 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import com.deepoove.poi.template.IterableTemplate;
 
+/**
+ * Factory to create BodyContainer
+ */
 public class BodyContainerFactory {
 
     public static BodyContainer getBodyContainer(IBody body) {
-        BodyContainer bodyContainer = null;
         if (body instanceof XWPFTableCell) {
-            bodyContainer = new CellBodyContainer((XWPFTableCell) body);
+            return new CellBodyContainer((XWPFTableCell) body);
         } else if (body instanceof XWPFHeaderFooter) {
-            bodyContainer = new HeaderFooterBodyContainer((XWPFHeaderFooter) body);
+            return new HeaderFooterBodyContainer((XWPFHeaderFooter) body);
         } else {
-            bodyContainer = new DocumentBodyContainer((NiceXWPFDocument) body);
+            return new DocumentBodyContainer((NiceXWPFDocument) body);
         }
-        return bodyContainer;
     }
 
     public static BodyContainer getBodyContainer(XWPFRun run) {
+        // TODO XWPFSdt
         return getBodyContainer(((XWPFParagraph) run.getParent()).getBody());
     }
 

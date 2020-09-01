@@ -28,7 +28,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
 import com.deepoove.poi.util.ParagraphUtils;
@@ -36,23 +35,10 @@ import com.deepoove.poi.util.ReflectionUtils;
 
 public class CellBodyContainer implements BodyContainer {
 
-    XWPFTableCell cell;
+    private XWPFTableCell cell;
 
     public CellBodyContainer(XWPFTableCell cell) {
         this.cell = cell;
-    }
-
-    @Override
-    public int getPosOfParagraphCTP(CTP startCtp) {
-        IBodyElement current;
-        List<IBodyElement> bodyElements = cell.getBodyElements();
-        for (int i = 0; i < bodyElements.size(); i++) {
-            current = bodyElements.get(i);
-            if (current.getElementType() == BodyElementType.PARAGRAPH) {
-                if (((XWPFParagraph) current).getCTP().equals(startCtp)) { return i; }
-            }
-        }
-        return -1;
     }
 
     @SuppressWarnings("unchecked")
@@ -79,74 +65,20 @@ public class CellBodyContainer implements BodyContainer {
             }
             bodyElements.remove(pos);
         }
-
-    }
-
-    @Override
-    public int getPosOfParagraph(XWPFParagraph startParagraph) {
-        return getPosOfParagraphCTP(startParagraph.getCTP());
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<IBodyElement> getBodyElements() {
-        return (List<IBodyElement>) ReflectionUtils.getValue("bodyElements", cell);
-    }
-
-    @Override
-    public XWPFParagraph insertNewParagraph(XmlCursor insertPostionCursor) {
-        return cell.insertNewParagraph(insertPostionCursor);
-    }
-
-    @Override
-    public int getParaPos(XWPFParagraph insertNewParagraph) {
-        List<XWPFParagraph> paragraphs = cell.getParagraphs();
-        for (int i = 0; i < paragraphs.size(); i++) {
-            if (paragraphs.get(i) == insertNewParagraph) { return i; }
-        }
-        return -1;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void setParagraph(XWPFParagraph p, int paraPos) {
+    public void setParagraph(XWPFParagraph p, int pos) {
         List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", cell);
-        paragraphs.set(paraPos, p);
+        paragraphs.set(pos, p);
         CTTc ctTc = cell.getCTTc();
-        ctTc.setPArray(paraPos, p.getCTP());
-
+        ctTc.setPArray(pos, p.getCTP());
     }
 
     @Override
     public IBody getTarget() {
         return cell;
-    }
-
-    @Override
-    public void updateBodyElements(IBodyElement insertNewParagraph, IBodyElement copy) {
-        int pos = -1;
-        List<IBodyElement> bodyElements = getBodyElements();
-        for (int i = 0; i < bodyElements.size(); i++) {
-            if (bodyElements.get(i) == insertNewParagraph) {
-                pos = i;
-            }
-        }
-        if (-1 != pos) bodyElements.set(pos, copy);
-
-    }
-
-    @Override
-    public XWPFTable insertNewTbl(XmlCursor insertPostionCursor) {
-        return cell.insertNewTbl(insertPostionCursor);
-    }
-
-    @Override
-    public int getTablePos(XWPFTable insertNewTbl) {
-        List<XWPFTable> tables = cell.getTables();
-        for (int i = 0; i < tables.size(); i++) {
-            if (tables.get(i) == insertNewTbl) { return i; }
-        }
-        return -1;
     }
 
     @SuppressWarnings("unchecked")
@@ -184,7 +116,7 @@ public class CellBodyContainer implements BodyContainer {
     public void clearPlaceholder(XWPFRun run) {
         IRunBody parent = run.getParent();
         run.setText("", 0);
-        // 遇到不明确的单元格匹配问题, 可能丢失段落元素，<p>元素必须位于</tc>元素之前
+        // <p>elements must be located before </tc> elements
         if (parent instanceof XWPFParagraph) {
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             if ("".equals(paragraphText)) {
