@@ -36,6 +36,8 @@ public class ParagraphStyle implements Serializable {
     private double spacing;
 
     private Style glyphStyle;
+    private long numId = -1;
+    private long lvl = -1;
 
     private Style defaultTextStyle;
 
@@ -46,6 +48,8 @@ public class ParagraphStyle implements Serializable {
         this.align = builder.align;
         this.spacing = builder.spacing;
         this.glyphStyle = builder.glyphStyle;
+        this.numId = builder.numId;
+        this.lvl = builder.lvl;
         this.defaultTextStyle = builder.defaultTextStyle;
     }
 
@@ -108,6 +112,22 @@ public class ParagraphStyle implements Serializable {
         this.defaultTextStyle = defaultTextStyle;
     }
 
+    public long getNumId() {
+        return numId;
+    }
+
+    public void setNumId(long numId) {
+        this.numId = numId;
+    }
+
+    public long getLvl() {
+        return lvl;
+    }
+
+    public void setLvl(long lvl) {
+        this.lvl = lvl;
+    }
+
     /**
      * Creates builder to build {@link ParagraphStyle}.
      * 
@@ -127,6 +147,8 @@ public class ParagraphStyle implements Serializable {
         private ParagraphAlignment align;
         private double spacing;
         private Style glyphStyle;
+        private long numId;
+        private long lvl;
         private Style defaultTextStyle;
 
         private Builder() {
@@ -159,6 +181,16 @@ public class ParagraphStyle implements Serializable {
 
         public Builder withGlyphStyle(Style glyphStyle) {
             this.glyphStyle = glyphStyle;
+            return this;
+        }
+
+        public Builder withNumId(long numId) {
+            this.numId = numId;
+            return this;
+        }
+
+        public Builder withLvl(long lvl) {
+            this.lvl = lvl;
             return this;
         }
 

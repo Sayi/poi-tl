@@ -15,56 +15,55 @@
  */
 package com.deepoove.poi.policy;
 
-import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.data.DocumentRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.ParagraphRenderData;
+import com.deepoove.poi.data.RenderData;
+import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
-/**
- * @author Sayi
- */
-public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {
+public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderData> {
 
     @Override
-    protected boolean validate(NumberingRenderData data) {
-        return (null != data && CollectionUtils.isNotEmpty(data.getItems()));
+    protected boolean validate(DocumentRenderData data) {
+        return null != data && !data.getContents().isEmpty();
     }
 
     @Override
-    public void doRender(RenderContext<NumberingRenderData> context) throws Exception {
-        Helper.renderNumbering(context.getRun(), context.getData());
-    }
-
-    @Override
-    protected void afterRender(RenderContext<NumberingRenderData> context) {
+    protected void afterRender(RenderContext<DocumentRenderData> context) {
         clearPlaceholder(context, true);
     }
 
-    public static class Helper {
+    @Override
+    public void doRender(RenderContext<DocumentRenderData> context) throws Exception {
+        Helper.renderDocument(context.getRun(), context.getData());
+    }
 
-        public static void renderNumbering(XWPFRun run, NumberingRenderData data) throws Exception {
-            List<ParagraphRenderData> items = data.getItems();
-            BigInteger numID = ((NiceXWPFDocument) run.getParent().getDocument()).addNewNumberingId(data.getFormat());
+    public static class Helper {
+        public static void renderDocument(XWPFRun run, DocumentRenderData data) throws Exception {
+            List<RenderData> contents = data.getContents();
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
-            for (ParagraphRenderData item : items) {
+            for (RenderData item : contents) {
                 XWPFParagraph paragraph = bodyContainer.insertNewParagraph(run);
-                paragraph.setNumID(numID);
                 XWPFRun createRun = paragraph.createRun();
-                StyleUtils.styleParaRpr(paragraph, StyleUtils.retriveStyle(run));
                 StyleUtils.styleRun(createRun, run);
-                ParagraphRenderPolicy.Helper.renderParagraph(createRun, item);
+                if (item instanceof ParagraphRenderData) {
+                    ParagraphRenderPolicy.Helper.renderParagraph(createRun, (ParagraphRenderData) item);
+                } else if (item instanceof TableRenderData) {
+                    TableRenderPolicy.Helper.renderTable(createRun, (TableRenderData) item);
+                } else if (item instanceof NumberingRenderData) {
+                    NumberingRenderPolicy.Helper.renderNumbering(createRun, (NumberingRenderData) item);
+                }
             }
         }
-
     }
+
 }

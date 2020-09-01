@@ -135,7 +135,7 @@ public final class StyleUtils {
         if (null == dest || null == src) return;
         if (StringUtils.isNotEmpty(src.getStyle())) dest.setStyle(src.getStyle());
         if (Boolean.TRUE.equals(src.isBold())) dest.setBold(src.isBold());
-        dest.setColor(src.getColor());
+        if (StringUtils.isNotBlank(src.getColor())) dest.setColor(src.getColor());
         if (0 != src.getCharacterSpacing()) dest.setCharacterSpacing(src.getCharacterSpacing());
         if (StringUtils.isNotBlank(src.getFontFamily())) dest.setFontFamily(src.getFontFamily());
         int fontSize = src.getFontSize();
@@ -331,6 +331,12 @@ public final class StyleUtils {
             BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentHangingChars() * 100.0)));
             indent.setHangingChars(bi);
             if (indent.isSetHanging()) indent.unsetHanging();
+        }
+        if (-1 != style.getNumId()) {
+            paragraph.setNumID(BigInteger.valueOf(style.getNumId()));
+        }
+        if (-1 != style.getLvl()) {
+            paragraph.setNumILvl(BigInteger.valueOf(style.getLvl()));
         }
     }
 

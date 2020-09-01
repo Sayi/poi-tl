@@ -65,8 +65,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
@@ -76,6 +78,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.data.NumberingFormat;
+import com.deepoove.poi.util.UnitUtils;
 
 /**
  * 对原生poi的扩展
@@ -220,34 +223,41 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     public BigInteger addNewNumberingId(NumberingFormat numFmt) {
+        return addNewMultiLevelNumberingId(numFmt);
+    }
+
+    public BigInteger addNewMultiLevelNumberingId(NumberingFormat... numFmts) {
         XWPFNumbering numbering = this.getNumbering();
         if (null == numbering) {
             numbering = this.createNumbering();
         }
-
+        
         NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
         // free number first.
-        cTAbstractNum
-                .setAbstractNumId(numberingWrapper.getNextAbstractNumID());
+        cTAbstractNum.setAbstractNumId(numberingWrapper.getNextAbstractNumID());
+        // CTMultiLevelType.setVal(STMultiLevelType.HYBRID_MULTILEVEL);
+        for (int i = 0; i < numFmts.length; i++) {
+            NumberingFormat numFmt = numFmts[i];
+            CTLvl cTLvl = cTAbstractNum.addNewLvl();
+            CTPPr ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
+            CTInd ind = ppr.isSetInd()? ppr.getInd() : ppr.addNewInd();
+            ind.setLeft(BigInteger.valueOf(UnitUtils.cm2Twips(0.74f) * i));
 
-        Enum fmt =  STNumberFormat.Enum.forInt(numFmt.getNumFmt());
-        String val = numFmt.getLvlText();
-        CTLvl cTLvl = cTAbstractNum.addNewLvl();
-        cTLvl.addNewNumFmt().setVal(fmt);
-        cTLvl.addNewLvlText().setVal(val);
-        cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
-        cTLvl.setIlvl(BigInteger.valueOf(0));
-        if (fmt == STNumberFormat.BULLET) {
-            cTLvl.addNewLvlJc().setVal(STJc.LEFT);
-        } else {
-            // cTLvl.setIlvl(BigInteger.valueOf(0));
+            Enum fmt =  STNumberFormat.Enum.forInt(numFmt.getNumFmt());
+            String val = numFmt.getLvlText();
+            cTLvl.addNewNumFmt().setVal(fmt);
+            cTLvl.addNewLvlText().setVal(val);
+            cTLvl.addNewStart().setVal(BigInteger.valueOf(1));
+            cTLvl.setIlvl(BigInteger.valueOf(i));
+            if (fmt == STNumberFormat.BULLET) {
+                cTLvl.addNewLvlJc().setVal(STJc.LEFT);
+            } 
         }
-
+        
         XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
-
         return numbering.addNum(abstractNumID);
     }
 

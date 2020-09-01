@@ -101,8 +101,8 @@ public class XWPFParagraphWrapper {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
             CTHyperlink hyperlink = insertNewHyperlink(pos);
             // hyperlink.setAnchor(link.substring("anchor:".length()));
-            PackageRelationship relationship = paragraph.getDocument().getPackagePart().addExternalRelationship(link,
-                    XWPFRelation.HYPERLINK.getRelation());
+            PackageRelationship relationship = paragraph.getPart().getPackagePart().addExternalRelationship(link,
+                        XWPFRelation.HYPERLINK.getRelation());
             hyperlink.setId(relationship.getId());
 
             CTR ctr = hyperlink.addNewR();

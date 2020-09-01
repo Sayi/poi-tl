@@ -142,7 +142,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
         private static void mergeCells(XWPFTable table, MergeCellRule mergeRule) {
             if (null == mergeRule) return;
-            int[][] markRemovedCell = new int[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
+            byte[][] markRemovedCell = new byte[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
             Iterator<Entry<Grid, Grid>> iterator = mergeRule.mappingIterator();
             while (iterator.hasNext()) {
                 Entry<Grid, Grid> next = iterator.next();
