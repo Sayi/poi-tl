@@ -16,7 +16,6 @@
 package com.deepoove.poi.policy;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.util.Units;
@@ -60,7 +59,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
             if (null == picture.getImage()) {
-                throw new IOException("Can't get input data from picture!");
+                throw new IllegalStateException("Can't get input data from picture!");
             }
             try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
                 run.addPicture(stream, picture.getPictureType().type(), "Generated",

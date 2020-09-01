@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 
- * calculate expression
+ * default el expression
  * 
  * @author Sayi
  *

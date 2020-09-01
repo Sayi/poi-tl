@@ -86,25 +86,23 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             XWPFTable table = bodyContainer.insertNewTable(run, data.obtainRowSize(), data.obtainColSize());
             StyleUtils.styleTable(table, data.getTableStyle());
 
-            List<XWPFTableRow> rows = table.getRows();
-            int size = rows.size();
+            int size = table.getRows().size();
             for (int i = 0; i < size; i++) {
-                renderRow(rows.get(i), data.getRows().get(i));
+                renderRow(table.getRows().get(i), data.getRows().get(i));
             }
 
-            // merge cells by rule
-            mergeCells(table, data.getMergeRule());
+            applyMergeRule(table, data.getMergeRule());
         }
 
         public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
+            if (null == data) return;
             int size = row.getTableCells().size();
             if (size != data.obtainColSize()) {
                 throw new IllegalArgumentException("Number of cells and render data should be the same!");
             }
-
             StyleUtils.styleTableRow(row, data.getRowStyle());
-            CellStyle defaultCellStyle = null == data.getRowStyle() ? null : data.getRowStyle().getDefaultCellStyle();
 
+            CellStyle defaultCellStyle = null == data.getRowStyle() ? null : data.getRowStyle().getDefaultCellStyle();
             for (int i = 0; i < size; i++) {
                 renderCell(row.getCell(i), data.getCells().get(i), defaultCellStyle);
             }
@@ -123,13 +121,13 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
                 defaultParaStyles.add(data.getCellStyle().getDefaultParagraphStyle());
             }
 
-            List<ParagraphRenderData> cellParagraphDatas = data.getParagraphs();
-            if (null != cellParagraphDatas && !cellParagraphDatas.isEmpty()) {
+            List<ParagraphRenderData> contents = data.getParagraphs();
+            if (null != contents && !contents.isEmpty()) {
                 BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(cell);
                 XWPFParagraph placeHolder = cell.getParagraphArray(0);
                 if (null == placeHolder) placeHolder = cell.addParagraph();
 
-                for (ParagraphRenderData item : cellParagraphDatas) {
+                for (ParagraphRenderData item : contents) {
                     XWPFParagraph paragraph = bodyContainer.insertNewParagraph(placeHolder.getCTP().newCursor());
                     ParagraphRenderPolicy.Helper.renderParagraph(paragraph.createRun(), item, defaultParaStyles);
                 }
@@ -140,7 +138,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
         }
 
-        private static void mergeCells(XWPFTable table, MergeCellRule mergeRule) {
+        private static void applyMergeRule(XWPFTable table, MergeCellRule mergeRule) {
             if (null == mergeRule) return;
             byte[][] markRemovedCell = new byte[TableTools.obtainRowSize(table)][TableTools.obtainColumnSize(table)];
             Iterator<Entry<Grid, Grid>> iterator = mergeRule.mappingIterator();
@@ -173,7 +171,9 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
                 for (int j = markRemovedCell[i].length - 1; j >= 0; j--) {
                     if (markRemovedCell[i][j] >= 1) {
                         table.getRow(i).removeCell(j);
-                        table.getRow(i).getCtRow().removeTc(j);
+                        if (table.getRow(i).getTableCells().size() != table.getRow(i).getCtRow().sizeOfTcArray()) {
+                            table.getRow(i).getCtRow().removeTc(j);
+                        }
                     }
                 }
             }

@@ -28,6 +28,11 @@ import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
+/**
+ * @author Sayi
+ *
+ * @Deprecated use {@link DocumentRenderPolicy} instead
+ */
 public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
     @Override

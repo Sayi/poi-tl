@@ -31,7 +31,6 @@ import com.deepoove.poi.template.ChartTemplate;
  * single series chart
  * 
  * @author Sayi
- * @version 1.8.0
  */
 public class SingleSeriesChartTemplateRenderPolicy
         extends AbstractChartTemplateRenderPolicy<ChartSingleSeriesRenderData> {
@@ -39,7 +38,6 @@ public class SingleSeriesChartTemplateRenderPolicy
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
             throws Exception {
-        if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = chart.getChartSeries().get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();

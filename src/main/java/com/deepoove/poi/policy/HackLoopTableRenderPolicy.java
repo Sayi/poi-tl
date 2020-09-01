@@ -40,6 +40,9 @@ import com.deepoove.poi.util.TableTools;
 
 /**
  * Hack for loop table
+ * 
+ * @author Sayi
+ *
  */
 public class HackLoopTableRenderPolicy implements RenderPolicy {
 
@@ -104,7 +107,7 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
             throw new RenderException("HackLoopTable for " + eleTemplate + "error: " + e.getMessage(), e);
         }
     }
-    
+
     protected void afterloop(XWPFTable table, Object data) {
     }
 

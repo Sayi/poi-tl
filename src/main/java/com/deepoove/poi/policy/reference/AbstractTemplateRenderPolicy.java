@@ -25,6 +25,7 @@ public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T>
     @SuppressWarnings("unchecked")
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
+        if (null == data) return;
         // type safe
         T model = null;
         try {
@@ -36,7 +37,7 @@ public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T>
         try {
             doRender((E) eleTemplate, model, template);
         } catch (Exception e) {
-            if (e instanceof RenderException) throw (RenderException)e;
+            if (e instanceof RenderException) throw (RenderException) e;
             else throw new RenderException("TemplateRenderPolicy render error", e);
         }
 

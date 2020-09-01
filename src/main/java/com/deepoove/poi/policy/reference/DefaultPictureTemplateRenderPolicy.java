@@ -15,8 +15,6 @@
  */
 package com.deepoove.poi.policy.reference;
 
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -28,29 +26,21 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 public class DefaultPictureTemplateRenderPolicy
         extends AbstractTemplateRenderPolicy<PictureTemplate, PictureRenderData> {
 
     @Override
-    public void doRender(PictureTemplate pictureTemplate, PictureRenderData picdata, XWPFTemplate template)
+    public void doRender(PictureTemplate pictureTemplate, PictureRenderData data, XWPFTemplate template)
             throws Exception {
-        if (null == picdata) return;
         XWPFPicture t = pictureTemplate.getPicture();
-        NiceXWPFDocument doc = template.getXWPFDocument();
-        int format = picdata.getPictureType().type();
-        byte[] data = picdata.getImage();
+        byte[] image = data.getImage();
         XWPFRun run = (XWPFRun) ReflectionUtils.getValue("run", t);
-        if (run.getParent().getPart() instanceof XWPFHeader) {
+        if (run.getParent().getPart() instanceof XWPFHeaderFooter) {
             XWPFHeaderFooter headerFooter = (XWPFHeaderFooter) run.getParent().getPart();
-            setPictureReference(t, headerFooter.addPictureData(data, format));
-
-        } else if (run.getParent().getPart() instanceof XWPFFooter) {
-            XWPFHeaderFooter headerFooter = (XWPFHeaderFooter) run.getParent().getPart();
-            setPictureReference(t, headerFooter.addPictureData(data, format));
+            setPictureReference(t, headerFooter.addPictureData(image, data.getPictureType().type()));
         } else {
-            setPictureReference(t, doc.addPictureData(data, format));
+            setPictureReference(t, template.getXWPFDocument().addPictureData(image, data.getPictureType().type()));
         }
     }
 

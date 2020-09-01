@@ -44,7 +44,6 @@ import com.deepoove.poi.util.ReflectionUtils;
  * multi series chart
  * 
  * @author Sayi
- * @version 1.8.0
  */
 public class MultiSeriesChartTemplateRenderPolicy
         extends AbstractChartTemplateRenderPolicy<ChartMultiSeriesRenderData> {
@@ -52,39 +51,29 @@ public class MultiSeriesChartTemplateRenderPolicy
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartMultiSeriesRenderData data, XWPFTemplate template)
             throws Exception {
-        if (null == data) return;
         XWPFChart chart = eleTemplate.getChart();
         List<XDDFChartData> chartSeries = chart.getChartSeries();
-        // validate combo
-        if (chartSeries.size() >= 2) {
-            long nullCount = data.getSeriesDatas().stream().filter(d -> null == d.getComboType()).count();
-            if (nullCount > 0) throw new RenderException("Combo chart must set comboType field of series!");
-        }
+        validate(chartSeries, data);
 
-        // hack for poi 4.1.1+: repair seriesCount value,
-        int totalSeriesCount = chartSeries.stream().mapToInt(XDDFChartData::getSeriesCount).sum();
-        Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
-        field.setAccessible(true);
-        field.set(chart, totalSeriesCount);
-
+        int totalSeriesCount = ensureSeriesCount(chart, chartSeries);
         int valueCol = 0;
         List<SeriesRenderData> usedSeriesDatas = new ArrayList<>();
         for (XDDFChartData chartData : chartSeries) {
             int orignSize = chartData.getSeriesCount();
-            List<SeriesRenderData> seriesDatas = null;
+            List<SeriesRenderData> currentSeriesData = null;
             if (chartSeries.size() <= 1) {
                 // ignore combo type
-                seriesDatas = data.getSeriesDatas();
+                currentSeriesData = data.getSeriesDatas();
             } else {
-                seriesDatas = obtainSeriesData(chartData.getClass(), data.getSeriesDatas());
+                currentSeriesData = obtainSeriesData(chartData.getClass(), data.getSeriesDatas());
             }
-            usedSeriesDatas.addAll(seriesDatas);
-            int seriesSize = seriesDatas.size();
+            usedSeriesDatas.addAll(currentSeriesData);
+            int currentSeriesSize = currentSeriesData.size();
 
             XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
-            for (int i = 0; i < seriesSize; i++) {
+            for (int i = 0; i < currentSeriesSize; i++) {
                 XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
-                        seriesDatas.get(i).getValues(), valueCol);
+                        currentSeriesData.get(i).getValues(), valueCol);
 
                 XDDFChartData.Series currentSeries = null;
                 if (i < orignSize) {
@@ -95,12 +84,12 @@ public class MultiSeriesChartTemplateRenderPolicy
                     currentSeries = chartData.addSeries(categoriesData, valuesData);
                     processNewSeries(chartData, currentSeries);
                 }
-                String name = seriesDatas.get(i).getName();
+                String name = currentSeriesData.get(i).getName();
                 currentSeries.setTitle(name, chart.setSheetTitle(name, valueCol + VALUE_START_COL));
                 valueCol++;
             }
             // clear extra series
-            removeExtraSeries(chartData, orignSize, seriesSize);
+            removeExtraSeries(chartData, orignSize, currentSeriesSize);
         }
 
         XSSFSheet sheet = chart.getWorkbook().getSheetAt(0);
@@ -116,6 +105,23 @@ public class MultiSeriesChartTemplateRenderPolicy
     }
 
     protected void processNewSeries(XDDFChartData chartData, Series addSeries) {
+    }
+
+    private int ensureSeriesCount(XWPFChart chart, List<XDDFChartData> chartSeries) throws IllegalAccessException {
+        // hack for poi 4.1.1+: repair seriesCount value,
+        int totalSeriesCount = chartSeries.stream().mapToInt(XDDFChartData::getSeriesCount).sum();
+        Field field = ReflectionUtils.findField(XDDFChart.class, "seriesCount");
+        field.setAccessible(true);
+        field.set(chart, totalSeriesCount);
+        return totalSeriesCount;
+    }
+
+    private void validate(List<XDDFChartData> chartSeries, ChartMultiSeriesRenderData data) {
+        // validate combo
+        if (chartSeries.size() >= 2) {
+            long nullCount = data.getSeriesDatas().stream().filter(d -> null == d.getComboType()).count();
+            if (nullCount > 0) throw new RenderException("Combo chart must set comboType field of series!");
+        }
     }
 
     private List<SeriesRenderData> obtainSeriesData(Class<? extends XDDFChartData> clazz,

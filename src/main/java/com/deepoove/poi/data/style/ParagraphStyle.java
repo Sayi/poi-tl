@@ -35,6 +35,7 @@ public class ParagraphStyle implements Serializable {
      */
     private double spacing;
 
+    // TODO ADD numbering style Class
     private Style glyphStyle;
     private long numId = -1;
     private long lvl = -1;

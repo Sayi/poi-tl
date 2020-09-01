@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -30,12 +31,9 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * <p>
- * word模板List循环渲染后合并
- * </p>
+ * Nested/Merge/Include/Reference docx render
  * 
  * @author Sayi
- * @version 1.3.0
  */
 public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
@@ -53,8 +51,7 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     public void doRender(RenderContext<DocxRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
         XWPFTemplate template = context.getTemplate();
-        doc = doc.merge(new XWPFDocumentIterator(context.getData(), context.getConfig()),
-                context.getRun());
+        doc = doc.merge(new XWPFDocumentIterator(context.getData(), context.getConfig()), context.getRun());
         template.reload(doc);
     }
 
@@ -62,42 +59,41 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     class XWPFDocumentIterator implements Iterator<NiceXWPFDocument> {
 
         private Configure config;
-        private byte[] docx;
+        private byte[] bytes;
         private List<?> datas;
+        private int length;
 
         int cursor = 0;
 
         XWPFDocumentIterator(DocxRenderData data, Configure config) {
-            this.docx = data.getMergedDoc();
+            this.bytes = data.getMergedDoc();
             this.datas = data.getDataModels();
             this.config = config;
+            this.length = null == this.datas ? 1 : this.datas.size();
         }
 
         @Override
         public boolean hasNext() {
-            if (CollectionUtils.isEmpty(datas)) { return cursor != Integer.MAX_VALUE; }
-            return cursor < datas.size();
+            return cursor < length;
         }
 
         @Override
         public NiceXWPFDocument next() {
-            if (CollectionUtils.isEmpty(datas)) {
-                if (cursor != Integer.MAX_VALUE) {
-                    try {
-                        cursor = Integer.MAX_VALUE;
-                        // 待合并的文档不是模板
-                        return new NiceXWPFDocument(new ByteArrayInputStream(docx));
-                    } catch (IOException e) {
-                        throw new RenderException("Next NiceXWPFDocument", e);
-                    }
+            if (!hasNext()) throw new NoSuchElementException("No instance of NiceXWPFDocument");
+            if (CollectionUtils.isEmpty(datas) && 0 == cursor) {
+                try {
+                    cursor++;
+                    return new NiceXWPFDocument(new ByteArrayInputStream(bytes));
+                } catch (IOException e) {
+                    throw new RenderException("Create XWPFDocument error", e);
                 }
             } else {
                 // TODO performance, should compile template only once?
-                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(docx), config);
+                XWPFTemplate temp = XWPFTemplate.compile(new ByteArrayInputStream(bytes), config);
                 temp.render(datas.get(cursor++));
                 return temp.getXWPFDocument();
             }
-            return null;
+
         }
     }
 }
