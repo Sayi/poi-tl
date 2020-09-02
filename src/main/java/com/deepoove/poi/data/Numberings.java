@@ -19,75 +19,85 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Builder to build {@link NumberingRenderData}
+ * Factory to create {@link NumberingRenderData}
  * 
  * @author Sayi
  *
  */
-public class Numberings implements RenderDataBuilder<NumberingRenderData> {
-
-    private NumberingRenderData data;
+public class Numberings {
 
     private Numberings() {
     }
 
-    public static Numberings ofBullet() {
+    public static NumberingBuilder ofBullet() {
         return of(NumberingFormat.BULLET);
     }
 
-    public static Numberings ofDecimal() {
+    public static NumberingBuilder ofDecimal() {
         return of(NumberingFormat.DECIMAL);
     }
 
-    public static Numberings ofDecimalParentheses() {
+    public static NumberingBuilder ofDecimalParentheses() {
         return of(NumberingFormat.DECIMAL_PARENTHESES);
     }
 
-    public static Numberings of(NumberingFormat format) {
-        Numberings inst = new Numberings();
-        inst.data = new NumberingRenderData(format, new ArrayList<>());
+    public static NumberingBuilder of(NumberingFormat format) {
+        NumberingBuilder inst = new NumberingBuilder(format);
         return inst;
     }
 
-    public static Numberings of(TextRenderData... text) {
-        Numberings inst = ofBullet();
+    public static NumberingBuilder of(TextRenderData... text) {
+        NumberingBuilder inst = ofBullet();
         if (null != text) {
             Arrays.stream(text).forEach(inst::addItem);
         }
         return inst;
     }
 
-    public static Numberings of(String... text) {
-        Numberings inst = ofBullet();
+    public static NumberingBuilder of(String... text) {
+        NumberingBuilder inst = ofBullet();
         if (null != text) {
             Arrays.stream(text).forEach(inst::addItem);
         }
         return inst;
     }
 
-    public Numberings addItem(ParagraphRenderData item) {
-        data.getItems().add(item);
-        return this;
-    }
+    /**
+     * Builder to build {@link NumberingRenderData}
+     *
+     */
+    public static class NumberingBuilder implements RenderDataBuilder<NumberingRenderData> {
 
-    public Numberings addItem(TextRenderData item) {
-        data.getItems().add(Paragraphs.of(item).create());
-        return this;
-    }
+        private NumberingRenderData data;
 
-    public Numberings addItem(PictureRenderData item) {
-        data.getItems().add(Paragraphs.of(item).create());
-        return this;
-    }
+        private NumberingBuilder(NumberingFormat format) {
+            data = new NumberingRenderData(format, new ArrayList<>());
+        }
 
-    public Numberings addItem(String text) {
-        this.addItem(Texts.of(text).create());
-        return this;
-    }
+        public NumberingBuilder addItem(ParagraphRenderData item) {
+            data.getItems().add(item);
+            return this;
+        }
 
-    @Override
-    public NumberingRenderData create() {
-        return data;
+        public NumberingBuilder addItem(TextRenderData item) {
+            data.getItems().add(Paragraphs.of(item).create());
+            return this;
+        }
+
+        public NumberingBuilder addItem(PictureRenderData item) {
+            data.getItems().add(Paragraphs.of(item).create());
+            return this;
+        }
+
+        public NumberingBuilder addItem(String text) {
+            this.addItem(Texts.of(text).create());
+            return this;
+        }
+
+        @Override
+        public NumberingRenderData create() {
+            return data;
+        }
     }
 
 }

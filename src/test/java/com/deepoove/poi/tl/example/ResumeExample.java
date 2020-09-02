@@ -1,7 +1,5 @@
 package com.deepoove.poi.tl.example;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +8,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.data.Includes;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 
@@ -24,7 +23,7 @@ public class ResumeExample {
 
     @BeforeEach
     public void init() {
-        datas.setPortrait(new PictureRenderData(100, 100, "src/test/resources/sayi.png"));
+        datas.setPortrait(Pictures.ofLocal("src/test/resources/sayi.png").size(100, 100).create());
         datas.setName("卅一");
         datas.setJob("BUG工程师");
         datas.setPhone("18080809090");
@@ -42,12 +41,9 @@ public class ResumeExample {
 
         // 技术栈部分
         TextRenderData textRenderData = new TextRenderData("SpringBoot、SprigCloud、Mybatis");
-        Style style = new Style();
-        style.setFontSize(10);
-        style.setColor("7F7F7F");
-        style.setFontFamily("微软雅黑");
+        Style style = Style.builder().buildFontSize(10).buildColor("7F7F7F").buildFontFamily("微软雅黑").build();
         textRenderData.setStyle(style);
-        datas.setStack(NumberingRenderData.build(textRenderData, textRenderData, textRenderData));
+        datas.setStack(Numberings.of(textRenderData, textRenderData, textRenderData).create());
 
         // 模板文档循环合并
         List<ExperienceData> experiences = new ArrayList<ExperienceData>();
@@ -68,22 +64,20 @@ public class ResumeExample {
         textRenderData.setStyle(style);
         TextRenderData textRenderData1 = new TextRenderData("持续集成、Swagger文档等工具调研");
         textRenderData1.setStyle(style);
-        data1.setResponsibility(new NumberingRenderData(NumberingFormat.LOWER_ROMAN, textRenderData, textRenderData1, textRenderData));
+        data1.setResponsibility(Numberings.of(NumberingFormat.LOWER_ROMAN).addItem(textRenderData)
+                .addItem(textRenderData1).addItem(textRenderData).create());
         experiences.add(data0);
         experiences.add(data1);
         experiences.add(data0);
         experiences.add(data1);
-        datas.setExperience(new DocxRenderData(new File("src/test/resources/resume/segment.docx"), experiences));
+        datas.setExperience(
+                Includes.ofLocal("src/test/resources/resume/segment.docx").setRenderModel(experiences).create());
     }
 
     @Test
     public void testResumeExample() throws Exception {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/resume/resume.docx").render(datas);
-        FileOutputStream out = new FileOutputStream("out_example_resume.docx");
-        template.write(out);
-        out.flush();
-        out.close();
-        template.close();
+        template.writeToFile("out_example_resume.docx");
     }
 
 }

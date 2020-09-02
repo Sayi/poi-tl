@@ -16,42 +16,52 @@
 package com.deepoove.poi.data;
 
 /**
- * Builder to build {@link DocumentRenderData}
+ * Factory method to create {@link DocumentRenderData}
  * 
  * @author Sayi
  *
  */
-public class Documents implements RenderDataBuilder<DocumentRenderData> {
-
-    private DocumentRenderData data;
+public class Documents {
 
     private Documents() {
     }
 
-    public static Documents of() {
-        Documents inst = new Documents();
-        inst.data = new DocumentRenderData();
+    public static DocumentBuilder of() {
+        DocumentBuilder inst = new DocumentBuilder();
         return inst;
     }
 
-    public Documents addParagraph(ParagraphRenderData paragraph) {
-        data.addParagraph(paragraph);
-        return this;
-    }
+    /**
+     * Builder to build {@link DocumentRenderData}
+     *
+     */
+    public static class DocumentBuilder implements RenderDataBuilder<DocumentRenderData> {
 
-    public Documents addNumbering(NumberingRenderData numbering) {
-        data.addNumbering(numbering);
-        return this;
-    }
+        private DocumentRenderData data;
 
-    public Documents addTable(TableRenderData table) {
-        data.addTable(table);
-        return this;
-    }
+        private DocumentBuilder() {
+            data = new DocumentRenderData();
+        }
 
-    @Override
-    public DocumentRenderData create() {
-        return data;
+        public DocumentBuilder addParagraph(ParagraphRenderData paragraph) {
+            data.addParagraph(paragraph);
+            return this;
+        }
+
+        public DocumentBuilder addNumbering(NumberingRenderData numbering) {
+            data.addNumbering(numbering);
+            return this;
+        }
+
+        public DocumentBuilder addTable(TableRenderData table) {
+            data.addTable(table);
+            return this;
+        }
+
+        @Override
+        public DocumentRenderData create() {
+            return data;
+        }
     }
 
 }

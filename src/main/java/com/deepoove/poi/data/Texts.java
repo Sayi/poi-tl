@@ -18,125 +18,135 @@ package com.deepoove.poi.data;
 import com.deepoove.poi.data.style.Style;
 
 /**
- * builder to build {@link TextRenderData}
+ * Factory method to create {@link TextRenderData}
  * 
  * @author Sayi
  *
  */
-public class Texts implements RenderDataBuilder<TextRenderData> {
-
-    private String text;
-    private Style style;
-    private String url;
+public final class Texts {
 
     private Texts() {
     }
 
-    public static Texts of(String text) {
-        Texts inst = new Texts();
-        inst.text = text;
+    public static TextBuilder of(String text) {
+        TextBuilder inst = new TextBuilder(text);
+
         return inst;
     }
 
-    public Texts style(Style style) {
-        this.style = style;
-        return this;
-    }
+    /**
+     * Builder to build {@link TextRenderData}
+     *
+     */
+    public static class TextBuilder implements RenderDataBuilder<TextRenderData> {
+        private String text;
+        private Style style;
+        private String url;
 
-    public Texts color(String color) {
-        if (null != this.style) {
-            style.setColor(color);
-        } else {
-            this.style = Style.builder().buildColor(color).build();
+        private TextBuilder(String text) {
+            this.text = text;
         }
-        return this;
-    }
 
-    public Texts bold() {
-        if (null != this.style) {
-            style.setBold(true);
-        } else {
-            this.style = Style.builder().buildBold().build();
+        public TextBuilder style(Style style) {
+            this.style = style;
+            return this;
         }
-        return this;
-    }
 
-    public Texts italic() {
-        if (null != this.style) {
-            style.setItalic(true);
-        } else {
-            this.style = Style.builder().buildItalic().build();
+        public TextBuilder color(String color) {
+            if (null != this.style) {
+                style.setColor(color);
+            } else {
+                this.style = Style.builder().buildColor(color).build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts sup() {
-        if (null != this.style) {
-            style.setVertAlign("superscript");
-        } else {
-            this.style = Style.builder().buildSuper().build();
+        public TextBuilder bold() {
+            if (null != this.style) {
+                style.setBold(true);
+            } else {
+                this.style = Style.builder().buildBold().build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts sub() {
-        if (null != this.style) {
-            style.setVertAlign("subscript");
-        } else {
-            this.style = Style.builder().buildSub().build();
+        public TextBuilder italic() {
+            if (null != this.style) {
+                style.setItalic(true);
+            } else {
+                this.style = Style.builder().buildItalic().build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts fontSize(int fontSize) {
-        if (null != this.style) {
-            style.setFontSize(fontSize);
-        } else {
-            this.style = Style.builder().buildFontSize(fontSize).build();
+        public TextBuilder sup() {
+            if (null != this.style) {
+                style.setVertAlign("superscript");
+            } else {
+                this.style = Style.builder().buildSuper().build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts fontFamily(String fontFamily) {
-        if (null != this.style) {
-            style.setFontFamily(fontFamily);
-        } else {
-            this.style = Style.builder().buildFontFamily(fontFamily).build();
+        public TextBuilder sub() {
+            if (null != this.style) {
+                style.setVertAlign("subscript");
+            } else {
+                this.style = Style.builder().buildSub().build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts link(String url) {
-        this.url = url;
-        // default blue color and underline
-        if (null == this.style) {
-            this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
+        public TextBuilder fontSize(int fontSize) {
+            if (null != this.style) {
+                style.setFontSize(fontSize);
+            } else {
+                this.style = Style.builder().buildFontSize(fontSize).build();
+            }
+            return this;
         }
-        return this;
-    }
 
-    public Texts mailto(String address, String subject) {
-        StringBuilder sb = new StringBuilder(128);
-        sb.append("mailto:").append(address).append("?subject=").append(subject);
-        return link(sb.toString());
-    }
-
-    public Texts anchor(String anchorName) {
-        StringBuilder sb = new StringBuilder(32);
-        sb.append("anchor:").append(anchorName);
-        return link(sb.toString());
-    }
-
-    @Override
-    public TextRenderData create() {
-        TextRenderData data = null;
-        if (null != url) {
-            data = new HyperlinkTextRenderData(text, url);
-            data.setStyle(style);
-        } else {
-            data = new TextRenderData(text, style);
+        public TextBuilder fontFamily(String fontFamily) {
+            if (null != this.style) {
+                style.setFontFamily(fontFamily);
+            } else {
+                this.style = Style.builder().buildFontFamily(fontFamily).build();
+            }
+            return this;
         }
-        return data;
+
+        public TextBuilder link(String url) {
+            this.url = url;
+            // default blue color and underline
+            if (null == this.style) {
+                this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
+            }
+            return this;
+        }
+
+        public TextBuilder mailto(String address, String subject) {
+            StringBuilder sb = new StringBuilder(128);
+            sb.append("mailto:").append(address).append("?subject=").append(subject);
+            return link(sb.toString());
+        }
+
+        public TextBuilder anchor(String anchorName) {
+            StringBuilder sb = new StringBuilder(32);
+            sb.append("anchor:").append(anchorName);
+            return link(sb.toString());
+        }
+
+        @Override
+        public TextRenderData create() {
+            TextRenderData data = null;
+            if (null != url) {
+                data = new HyperlinkTextRenderData(text, url);
+                data.setStyle(style);
+            } else {
+                data = new TextRenderData(text, style);
+            }
+            return data;
+        }
     }
 
 }

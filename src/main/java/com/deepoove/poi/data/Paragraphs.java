@@ -24,98 +24,108 @@ import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
 
 /**
- * Builder to build {@link ParagraphRenderData}
+ * Factory to create {@link ParagraphRenderData}
  * 
  * @author Sayi
  *
  */
-public class Paragraphs implements RenderDataBuilder<ParagraphRenderData> {
-
-    private List<RenderData> contents = new ArrayList<>();
-    private ParagraphStyle paragraphStyle;
+public class Paragraphs {
 
     private Paragraphs() {
     }
 
-    public static Paragraphs of() {
-        Paragraphs inst = new Paragraphs();
+    public static ParagraphBuilder of() {
+        ParagraphBuilder inst = new ParagraphBuilder();
         return inst;
     }
 
-    public static Paragraphs of(String text) {
+    public static ParagraphBuilder of(String text) {
         return Paragraphs.of().addText(text);
     }
 
-    public static Paragraphs of(TextRenderData text) {
+    public static ParagraphBuilder of(TextRenderData text) {
         return Paragraphs.of().addText(text);
     }
 
-    public static Paragraphs of(PictureRenderData picture) {
+    public static ParagraphBuilder of(PictureRenderData picture) {
         return Paragraphs.of().addPicture(picture);
     }
 
-    public Paragraphs addText(TextRenderData text) {
-        contents.add(text);
-        return this;
-    }
+    /**
+     * Builder to build {@link ParagraphRenderData}
+     *
+     */
+    public static class ParagraphBuilder implements RenderDataBuilder<ParagraphRenderData> {
 
-    public Paragraphs addText(String text) {
-        contents.add(Texts.of(text).create());
-        return this;
-    }
+        private List<RenderData> contents = new ArrayList<>();
+        private ParagraphStyle paragraphStyle;
 
-    public Paragraphs addPicture(PictureRenderData picture) {
-        contents.add(picture);
-        return this;
-    }
-
-    public Paragraphs paraStyle(ParagraphStyle style) {
-        this.paragraphStyle = style;
-        return this;
-    }
-
-    public Paragraphs glyphStyle(Style style) {
-        if (null == this.paragraphStyle) {
-            this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
-        } else {
-            this.paragraphStyle.setGlyphStyle(style);
+        private ParagraphBuilder() {
         }
-        return this;
-    }
 
-    public Paragraphs left() {
-        if (null == this.paragraphStyle) {
-            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.LEFT).build();
-        } else {
-            this.paragraphStyle.setAlign(ParagraphAlignment.LEFT);
+        public ParagraphBuilder addText(TextRenderData text) {
+            contents.add(text);
+            return this;
         }
-        return this;
-    }
 
-    public Paragraphs center() {
-        if (null == this.paragraphStyle) {
-            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
-        } else {
-            this.paragraphStyle.setAlign(ParagraphAlignment.CENTER);
+        public ParagraphBuilder addText(String text) {
+            contents.add(Texts.of(text).create());
+            return this;
         }
-        return this;
-    }
 
-    public Paragraphs right() {
-        if (null == this.paragraphStyle) {
-            this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.RIGHT).build();
-        } else {
-            this.paragraphStyle.setAlign(ParagraphAlignment.RIGHT);
+        public ParagraphBuilder addPicture(PictureRenderData picture) {
+            contents.add(picture);
+            return this;
         }
-        return this;
-    }
 
-    @Override
-    public ParagraphRenderData create() {
-        ParagraphRenderData data = new ParagraphRenderData();
-        data.setContents(contents);
-        data.setParagraphStyle(paragraphStyle);
-        return data;
+        public ParagraphBuilder paraStyle(ParagraphStyle style) {
+            this.paragraphStyle = style;
+            return this;
+        }
+
+        public ParagraphBuilder glyphStyle(Style style) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
+            } else {
+                this.paragraphStyle.setGlyphStyle(style);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder left() {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.LEFT).build();
+            } else {
+                this.paragraphStyle.setAlign(ParagraphAlignment.LEFT);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder center() {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
+            } else {
+                this.paragraphStyle.setAlign(ParagraphAlignment.CENTER);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder right() {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.RIGHT).build();
+            } else {
+                this.paragraphStyle.setAlign(ParagraphAlignment.RIGHT);
+            }
+            return this;
+        }
+
+        @Override
+        public ParagraphRenderData create() {
+            ParagraphRenderData data = new ParagraphRenderData();
+            data.setContents(contents);
+            data.setParagraphStyle(paragraphStyle);
+            return data;
+        }
     }
 
 }

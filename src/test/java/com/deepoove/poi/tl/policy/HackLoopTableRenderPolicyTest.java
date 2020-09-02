@@ -1,8 +1,6 @@
 package com.deepoove.poi.tl.policy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -20,17 +18,16 @@ import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 public class HackLoopTableRenderPolicyTest {
 
     String resource = "src/test/resources/payment/payment_hack.docx";
-    PaymentHackData data1 = new PaymentHackData();
-    PaymentHackData data2 = new PaymentHackData();
+    PaymentHackData data = new PaymentHackData();
 
     @BeforeEach
     public void init() {
-        data1.setSubtotal("8000");
-        data1.setTax("600");
-        data1.setTransform("120");
-        data1.setOther("250");
-        data1.setUnpay("6600");
-        data1.setTotal("总共：7200");
+        data.setSubtotal("8000");
+        data.setTax("600");
+        data.setTransform("120");
+        data.setOther("250");
+        data.setUnpay("6600");
+        data.setTotal("总共：7200");
 
         List<Goods> goods = new ArrayList<>();
         Goods good = new Goods();
@@ -41,12 +38,13 @@ public class HackLoopTableRenderPolicyTest {
         good.setPrice(400);
         good.setTax(new Random().nextInt(10) + 20);
         good.setTotalPrice(1600);
-        good.setPicture(Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).size(24,  24).create());
+        good.setPicture(
+                Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).size(24, 24).create());
         goods.add(good);
         goods.add(good);
         goods.add(good);
         goods.add(good);
-        data1.setGoods(goods);
+        data.setGoods(goods);
 
         List<Labor> labors = new ArrayList<>();
         Labor labor = new Labor();
@@ -58,29 +56,16 @@ public class HackLoopTableRenderPolicyTest {
         labors.add(labor);
         labors.add(labor);
         labors.add(labor);
-        data1.setLabors(labors);
-        
-        data2.setSubtotal("8002");
-        data2.setTax("602");
-        data2.setTransform("122");
-        data2.setOther("252");
-        data2.setUnpay("6602");
-        data2.setTotal("总共：7202");
-        
-        data2.setGoods(goods);
+        data.setLabors(labors);
+
     }
 
-    @SuppressWarnings("serial")
     @Test
     public void testPaymentHackExample() throws Exception {
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).build();
-        XWPFTemplate template = XWPFTemplate.compile(resource, config).render(new HashMap<String, Object>() {
-            {
-                put("datas", Arrays.asList(data1, data2));
-            }
-        });
+        XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
         template.writeToFile("out_example_payment_hack.docx");
     }
 

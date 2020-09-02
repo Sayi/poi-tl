@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -151,6 +152,25 @@ public class ConfigureTest {
         XWPFTemplate renew = XWPFTestSupport.readNewTemplate(template);
         assertEquals(renew.getElementTemplates().size(), 0);
         renew.close();
+    }
+
+    @Test
+    public void testNewLine() {
+        String text = "hello\npoi-tl";
+        String text1 = "hello\n\npoi-tl";
+        String text2 = "hello\n\n";
+        String text3 = "\n\npoi-tl";
+        String text4 = "\n\n\n\n";
+        String text5 = "hi\n\n\n\nwhat\nis\n\n\nthis";
+
+        String regexLine = TextRenderPolicy.Helper.REGEX_LINE_CHARACTOR;
+
+        assertEquals(Arrays.toString(text.split(regexLine, -1)), "[hello, poi-tl]");
+        assertEquals(Arrays.toString(text1.split(regexLine, -1)), "[hello, , poi-tl]");
+        assertEquals(Arrays.toString(text2.split(regexLine, -1)), "[hello, , ]");
+        assertEquals(Arrays.toString(text3.split(regexLine, -1)), "[, , poi-tl]");
+        assertEquals(Arrays.toString(text4.split(regexLine, -1)), "[, , , , ]");
+        assertEquals(Arrays.toString(text5.split(regexLine, -1)), "[hi, , , , what, is, , , this]");
     }
 
 }

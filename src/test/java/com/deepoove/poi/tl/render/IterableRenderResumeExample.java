@@ -9,8 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.tl.example.ExperienceData;
@@ -22,7 +22,7 @@ public class IterableRenderResumeExample {
 
     @BeforeEach
     public void init() {
-        datas.setPortrait(new PictureRenderData(100, 100, "src/test/resources/sayi.png"));
+        datas.setPortrait(Pictures.ofLocal("src/test/resources/sayi.png").size(100, 100).create());
         datas.setName("卅一");
         datas.setJob("BUG工程师");
         datas.setPhone("18080809090");
@@ -40,12 +40,9 @@ public class IterableRenderResumeExample {
 
         // 技术栈部分
         TextRenderData textRenderData = new TextRenderData("SpringBoot、SprigCloud、Mybatis");
-        Style style = new Style();
-        style.setFontSize(10);
-        style.setColor("7F7F7F");
-        style.setFontFamily("微软雅黑");
+        Style style = Style.builder().buildFontSize(10).buildColor("7F7F7F").buildFontFamily("微软雅黑").build();
         textRenderData.setStyle(style);
-        datas.setStack(NumberingRenderData.build(textRenderData, textRenderData, textRenderData));
+        datas.setStack(Numberings.of(textRenderData, textRenderData, textRenderData).create());
 
         /*
          * {{?experiences}} {{company}} {{department}} {{time}} {{position}}
@@ -59,7 +56,7 @@ public class IterableRenderResumeExample {
         data0.setPosition("BUG工程师");
         textRenderData = new TextRenderData("负责生产BUG，然后修复BUG，同时有效实施招聘行为");
         textRenderData.setStyle(style);
-        data0.setResponsibility(NumberingRenderData.build(textRenderData, textRenderData));
+        data0.setResponsibility(Numberings.of(textRenderData, textRenderData).create());
         ExperienceData data1 = new ExperienceData();
         data1.setCompany("自由职业");
         data1.setDepartment("OpenSource 项目组");
@@ -69,7 +66,7 @@ public class IterableRenderResumeExample {
         textRenderData.setStyle(style);
         TextRenderData textRenderData1 = new TextRenderData("持续集成、Swagger文档等工具调研");
         textRenderData1.setStyle(style);
-        data1.setResponsibility(NumberingRenderData.build(textRenderData, textRenderData1, textRenderData));
+        data1.setResponsibility(Numberings.of(textRenderData, textRenderData1, textRenderData).create());
         experiences.add(data0);
         experiences.add(data1);
         experiences.add(data0);

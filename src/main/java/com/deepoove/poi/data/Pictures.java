@@ -23,54 +23,63 @@ import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
- * Builder to build {@link PictureRenderData} instances.
+ * Factory method to build {@link PictureRenderData} instances.
  * 
  * @author Sayi
  *
  */
-public class Pictures implements RenderDataBuilder<PictureRenderData> {
-
-    private PictureRenderData data;
-
+public class Pictures {
     private Pictures() {
     }
 
-    public static Pictures ofLocal(String src) {
+    public static PictureBuilder ofLocal(String src) {
         return Pictures.ofBytes(ByteUtils.getLocalByteArray(new File(src)), PictureType.suggestFileType(src));
     }
 
-    public static Pictures ofUrl(String url, PictureType pictureType) {
+    public static PictureBuilder ofUrl(String url, PictureType pictureType) {
         return ofBytes(ByteUtils.getUrlByteArray(url), pictureType);
     }
 
-    public static Pictures ofStream(InputStream inputStream, PictureType pictureType) {
+    public static PictureBuilder ofStream(InputStream inputStream, PictureType pictureType) {
         return ofBytes(ByteUtils.toByteArray(inputStream), pictureType);
     }
 
-    public static Pictures ofBufferedImage(BufferedImage image, PictureType pictureType) {
+    public static PictureBuilder ofBufferedImage(BufferedImage image, PictureType pictureType) {
         return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
 
-    public static Pictures ofBytes(byte[] bytes, PictureType pictureType) {
-        Pictures inst = new Pictures();
-        inst.data = new PictureRenderData(0, 0, pictureType, bytes);
+    public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
+        PictureBuilder inst = new PictureBuilder(pictureType, bytes);
         return inst;
     }
 
-    public Pictures size(int width, int height) {
-        data.setWidth(width);
-        data.setHeight(height);
-        return this;
-    }
+    /**
+     * Builder to build {@link PictureRenderData} instances.
+     *
+     */
+    public static class PictureBuilder implements RenderDataBuilder<PictureRenderData> {
 
-    public Pictures altMeta(String altMeta) {
-        data.setAltMeta(altMeta);
-        return this;
-    }
+        private PictureRenderData data;
 
-    @Override
-    public PictureRenderData create() {
-        return data;
+        private PictureBuilder(PictureType pictureType, byte[] bytes) {
+            data = new PictureRenderData(0, 0, pictureType, bytes);
+        }
+
+        public PictureBuilder size(int width, int height) {
+            data.setWidth(width);
+            data.setHeight(height);
+            return this;
+        }
+
+        public PictureBuilder altMeta(String altMeta) {
+            data.setAltMeta(altMeta);
+            return this;
+        }
+
+        @Override
+        public PictureRenderData create() {
+            return data;
+        }
     }
 
 }

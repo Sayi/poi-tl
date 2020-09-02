@@ -1,13 +1,12 @@
 package com.deepoove.poi.tl.example;
 
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Pictures;
 
 /**
  * @author Sayi
@@ -24,7 +23,7 @@ public class CertificateExample {
                 put("y", "2020");
                 put("m", "8");
                 put("d", "19");
-                put("img", new PictureRenderData(120, 120, ".png", new FileInputStream("src/test/resources/lu.png")));
+                put("img", Pictures.ofLocal("src/test/resources/lu.png").size(120, 120).create());
             }
         };
 

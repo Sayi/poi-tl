@@ -21,7 +21,7 @@ import java.util.List;
 import com.deepoove.poi.data.SeriesRenderData.ComboType;
 
 /**
- * factory to create chart builder
+ * Factory method to create chart
  * 
  * @author Sayi
  *

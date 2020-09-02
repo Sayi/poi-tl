@@ -103,7 +103,7 @@ public class IfTemplateRenderTest {
 
     @SuppressWarnings("serial")
     @Test
-    public void testShow() throws Exception {
+    public void testBasicIf() throws Exception {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");

@@ -22,40 +22,49 @@ import java.util.List;
 import com.deepoove.poi.util.ByteUtils;
 
 /**
- * builder to build {@link DocxRenderData}
+ * Factory method to create {@link DocxRenderData}
  * 
  * @author Sayi
  *
  */
-public class Includes implements RenderDataBuilder<DocxRenderData> {
-
-    DocxRenderData data;
-
+public class Includes {
     private Includes() {
     }
 
-    public static Includes ofLocal(String src) {
+    public static IncludeBuilder ofLocal(String src) {
         return ofBytes(ByteUtils.getLocalByteArray(new File(src)));
     }
 
-    public static Includes ofStream(InputStream inputStream) {
+    public static IncludeBuilder ofStream(InputStream inputStream) {
         return ofBytes(ByteUtils.toByteArray(inputStream));
     }
 
-    public static Includes ofBytes(byte[] bytes) {
-        Includes inst = new Includes();
-        inst.data = new DocxRenderData(bytes, null);
+    public static IncludeBuilder ofBytes(byte[] bytes) {
+        IncludeBuilder inst = new IncludeBuilder(bytes);
         return inst;
     }
 
-    public Includes setRenderModel(List<?> models) {
-        this.data.setDataModels(models);
-        return this;
-    }
+    /**
+     * Builder to build {@link DocxRenderData}
+     *
+     */
+    public static class IncludeBuilder implements RenderDataBuilder<DocxRenderData> {
 
-    @Override
-    public DocxRenderData create() {
-        return data;
+        DocxRenderData data;
+
+        private IncludeBuilder(byte[] bytes) {
+            data = new DocxRenderData(bytes, null);
+        }
+
+        public IncludeBuilder setRenderModel(List<?> models) {
+            this.data.setDataModels(models);
+            return this;
+        }
+
+        @Override
+        public DocxRenderData create() {
+            return data;
+        }
     }
 
 }

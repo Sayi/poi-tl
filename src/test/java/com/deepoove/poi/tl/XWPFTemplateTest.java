@@ -15,7 +15,6 @@ import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.tl.source.MyDataModel;
 
@@ -78,9 +77,7 @@ public class XWPFTemplateTest {
         obj.setIntroduce("http://www.deepoove.com");
         obj.setPortrait(new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
         obj.setSolutionCompare(table);
-        obj.setFeature(new NumberingRenderData(new TextRenderData("Plug-in grammar, add new grammar by yourself"),
-                new TextRenderData("Supports word text, local pictures, web pictures, table, list, header, footer..."),
-                new TextRenderData("Templates, not just templates, but also style templates")));
+        obj.setFeature(numbering);
 
         XWPFTemplate.compile("src/test/resources/template/template.docx").render(obj)
                 .writeToFile("out_template_object.docx");

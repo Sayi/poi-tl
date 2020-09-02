@@ -27,32 +27,32 @@ import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
+ * Factory method to create {@link RowRenderData}
+ * 
  * @author Sayi
  *
  */
-public class Rows implements RenderDataBuilder<RowRenderData> {
-
-    private RowRenderData data;
+public class Rows {
 
     private Rows() {
     }
 
-    public static Rows of() {
-        Rows inst = new Rows();
+    public static RowBuilder of() {
+        RowBuilder inst = new RowBuilder();
         inst.data = new RowRenderData();
         return inst;
     }
 
-    public static Rows of(CellRenderData... cell) {
-        Rows inst = Rows.of();
+    public static RowBuilder of(CellRenderData... cell) {
+        RowBuilder inst = Rows.of();
         if (null != cell) {
             Arrays.stream(cell).forEach(inst::addCell);
         }
         return inst;
     }
 
-    public static Rows of(String... cell) {
-        Rows inst = Rows.of();
+    public static RowBuilder of(String... cell) {
+        RowBuilder inst = Rows.of();
         if (null != cell) {
             Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
@@ -61,8 +61,8 @@ public class Rows implements RenderDataBuilder<RowRenderData> {
         return inst;
     }
 
-    public static Rows of(TextRenderData... cell) {
-        Rows inst = Rows.of();
+    public static RowBuilder of(TextRenderData... cell) {
+        RowBuilder inst = Rows.of();
         if (null != cell) {
             Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
@@ -71,101 +71,119 @@ public class Rows implements RenderDataBuilder<RowRenderData> {
         return inst;
     }
 
-    public Rows bgColor(String color) {
-        CellStyle defaultCellStyle = getDefaultCellStyle();
-        defaultCellStyle.setBackgroundColor(color);
-        return this;
-    }
+    /**
+     * Builder to build {@link RowRenderData}
+     *
+     */
+    public static class RowBuilder implements RenderDataBuilder<RowRenderData> {
+        private RowRenderData data;
 
-    public Rows center() {
-        verticalCenter();
-        horizontalCenter();
-        return this;
-    }
-
-    public Rows verticalCenter() {
-        CellStyle defaultCellStyle = getDefaultCellStyle();
-        defaultCellStyle.setVertAlign(XWPFVertAlign.CENTER);
-        return this;
-    }
-
-    public Rows horizontalCenter() {
-        ParagraphStyle defaultParaStyle = getDefaultParagraphStyle();
-        defaultParaStyle.setAlign(ParagraphAlignment.CENTER);
-        return this;
-    }
-
-    public Rows rowHeight(double cm) {
-        RowStyle rowStyle = getRowStyle();
-        rowStyle.setHeight(UnitUtils.cm2Twips(cm));
-        return this;
-    }
-
-    public Rows addCell(CellRenderData cell) {
-        data.addCell(cell);
-        return this;
-    }
-
-    public Rows textColor(String color) {
-        Style style = getDefaultTextStyle();
-        style.setColor(color);
-        return this;
-    }
-
-    public Rows textBold() {
-        Style style = getDefaultTextStyle();
-        style.setBold(true);
-        return this;
-    }
-
-    public Rows textFontSize(int fontSize) {
-        Style style = getDefaultTextStyle();
-        style.setFontSize(fontSize);
-        return this;
-    }
-
-    private CellStyle getDefaultCellStyle() {
-        RowStyle rowStyle = getRowStyle();
-        CellStyle defaultCellStyle = rowStyle.getDefaultCellStyle();
-        if (null == defaultCellStyle) {
-            defaultCellStyle = new CellStyle();
-            rowStyle.setDefaultCellStyle(defaultCellStyle);
+        private RowBuilder() {
+            data = new RowRenderData();
         }
-        return defaultCellStyle;
-    }
 
-    private Style getDefaultTextStyle() {
-        ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
-        Style defaultTextStyle = defaultParagraphStyle.getDefaultTextStyle();
-        if (null == defaultTextStyle) {
-            defaultTextStyle = Style.builder().build();
-            defaultParagraphStyle.setDefaultTextStyle(defaultTextStyle);
+        public RowBuilder bgColor(String color) {
+            CellStyle defaultCellStyle = getDefaultCellStyle();
+            defaultCellStyle.setBackgroundColor(color);
+            return this;
         }
-        return defaultTextStyle;
-    }
 
-    private ParagraphStyle getDefaultParagraphStyle() {
-        CellStyle cellStyle = getDefaultCellStyle();
-        ParagraphStyle defaultParagraphStyle = cellStyle.getDefaultParagraphStyle();
-        if (null == defaultParagraphStyle) {
-            defaultParagraphStyle = ParagraphStyle.builder().build();
-            cellStyle.setDefaultParagraphStyle(defaultParagraphStyle);
+        public RowBuilder center() {
+            verticalCenter();
+            horizontalCenter();
+            return this;
         }
-        return defaultParagraphStyle;
-    }
 
-    private RowStyle getRowStyle() {
-        RowStyle rowStyle = data.getRowStyle();
-        if (null == rowStyle) {
-            rowStyle = new RowStyle();
-            data.setRowStyle(rowStyle);
+        public RowBuilder verticalCenter() {
+            CellStyle defaultCellStyle = getDefaultCellStyle();
+            defaultCellStyle.setVertAlign(XWPFVertAlign.CENTER);
+            return this;
         }
-        return rowStyle;
-    }
 
-    @Override
-    public RowRenderData create() {
-        return data;
+        public RowBuilder horizontalCenter() {
+            ParagraphStyle defaultParaStyle = getDefaultParagraphStyle();
+            defaultParaStyle.setAlign(ParagraphAlignment.CENTER);
+            return this;
+        }
+
+        public RowBuilder rowHeight(double cm) {
+            RowStyle rowStyle = getRowStyle();
+            rowStyle.setHeight(UnitUtils.cm2Twips(cm));
+            return this;
+        }
+
+        public RowBuilder addCell(CellRenderData cell) {
+            data.addCell(cell);
+            return this;
+        }
+
+        public RowBuilder textColor(String color) {
+            Style style = getDefaultTextStyle();
+            style.setColor(color);
+            return this;
+        }
+
+        public RowBuilder textBold() {
+            Style style = getDefaultTextStyle();
+            style.setBold(true);
+            return this;
+        }
+
+        public RowBuilder textFontSize(int fontSize) {
+            Style style = getDefaultTextStyle();
+            style.setFontSize(fontSize);
+            return this;
+        }
+
+        public RowBuilder textFontFamily(String fontFamily) {
+            Style style = getDefaultTextStyle();
+            style.setFontFamily(fontFamily);
+            return this;
+        }
+
+        private CellStyle getDefaultCellStyle() {
+            RowStyle rowStyle = getRowStyle();
+            CellStyle defaultCellStyle = rowStyle.getDefaultCellStyle();
+            if (null == defaultCellStyle) {
+                defaultCellStyle = new CellStyle();
+                rowStyle.setDefaultCellStyle(defaultCellStyle);
+            }
+            return defaultCellStyle;
+        }
+
+        private Style getDefaultTextStyle() {
+            ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
+            Style defaultTextStyle = defaultParagraphStyle.getDefaultTextStyle();
+            if (null == defaultTextStyle) {
+                defaultTextStyle = Style.builder().build();
+                defaultParagraphStyle.setDefaultTextStyle(defaultTextStyle);
+            }
+            return defaultTextStyle;
+        }
+
+        private ParagraphStyle getDefaultParagraphStyle() {
+            CellStyle cellStyle = getDefaultCellStyle();
+            ParagraphStyle defaultParagraphStyle = cellStyle.getDefaultParagraphStyle();
+            if (null == defaultParagraphStyle) {
+                defaultParagraphStyle = ParagraphStyle.builder().build();
+                cellStyle.setDefaultParagraphStyle(defaultParagraphStyle);
+            }
+            return defaultParagraphStyle;
+        }
+
+        private RowStyle getRowStyle() {
+            RowStyle rowStyle = data.getRowStyle();
+            if (null == rowStyle) {
+                rowStyle = new RowStyle();
+                data.setRowStyle(rowStyle);
+            }
+            return rowStyle;
+        }
+
+        @Override
+        public RowRenderData create() {
+            return data;
+        }
     }
 
 }

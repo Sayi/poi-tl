@@ -69,8 +69,8 @@ public class DocxRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx").render(datas);
-        template.writeToFile("out_render_include.docx");
+        XWPFTemplate.compile("src/test/resources/template/render_include.docx").render(datas)
+                .writeToFile("out_render_include.docx");
 
     }
 

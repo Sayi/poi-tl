@@ -66,9 +66,7 @@ public class IterableTemplateTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_withstyle.docx");
-
-        template.render(datas);
-        template.writeToFile("out_iterable_foreach_withstyle.docx");
+        template.render(datas).writeToFile("out_iterable_foreach_withstyle.docx");
     }
 
     @SuppressWarnings("serial")
@@ -156,9 +154,10 @@ public class IterableTemplateTest {
     @SuppressWarnings("serial")
     @Test
     @DisplayName("using all gramer together")
-    public void testTogether() throws Exception {
-        RowRenderData row0 = Rows.of(new HyperlinkTextRenderData("张三", "http://deepoove.com"),
-                new TextRenderData("1E915D", "研究生")).create();
+    public void testTogetherBasic() throws Exception {
+        RowRenderData row0 = Rows
+                .of(new HyperlinkTextRenderData("张三", "http://deepoove.com"), new TextRenderData("1E915D", "研究生"))
+                .create();
 
         RowRenderData row1 = Rows.of("李四", "博士").create();
 
@@ -189,8 +188,7 @@ public class IterableTemplateTest {
             {
                 put("name", "Sayi");
                 put("addrs", addrs);
-                put("list", new NumberingRenderData(NumberingFormat.DECIMAL,
-                        textRenderData, textRenderData));
+                put("list", new NumberingRenderData(NumberingFormat.DECIMAL, textRenderData, textRenderData));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 put("table", Tables.of(row0, row1, row2).create());
 
@@ -199,8 +197,7 @@ public class IterableTemplateTest {
         users.add(new HashMap<String, Object>() {
             {
                 put("name", "Deepoove");
-                put("list", new NumberingRenderData(NumberingFormat.DECIMAL,
-                        textRenderData, textRenderData));
+                put("list", new NumberingRenderData(NumberingFormat.DECIMAL, textRenderData, textRenderData));
                 put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
 
             }
