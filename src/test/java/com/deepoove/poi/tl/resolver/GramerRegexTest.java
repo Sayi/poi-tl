@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.util.RegexUtils;
 
@@ -21,7 +20,7 @@ public class GramerRegexTest {
     @Test
     public void testDefaultRegex() {
         // 默认tag 正则：Chinese, letters, numbers and underscores
-        String defaultRegex = Configure.newBuilder().build().getGrammerRegex();
+        String defaultRegex = Configure.builder().build().getGrammerRegex();
         Pattern pattern = Pattern.compile(defaultRegex);
         testMatcherTextTrue(pattern);
         testMatcherTextFalse(pattern);
@@ -83,7 +82,7 @@ public class GramerRegexTest {
     @Test
     public void testSpELWithPrefixAndSuffixMatcher() {
         // Spring EL使用的正则，包含前后缀语法
-        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
+        Configure config = Configure.builder().useSpringEL().build();
         TemplateResolver resolver = new TemplateResolver(config);
         Pattern pattern = resolver.getTemplatePattern();
 
@@ -132,7 +131,7 @@ public class GramerRegexTest {
     @Test
     public void testSpELWithCustomPrefixAndSuffixMatcher() {
         // Spring EL使用的正则，包含前后缀语法
-        Configure config = Configure.newBuilder().buildGramer("${", "}").setElMode(ELMode.SPEL_MODE).build();
+        Configure config = Configure.builder().buildGramer("${", "}").useSpringEL().build();
         TemplateResolver resolver = new TemplateResolver(config);
         Pattern pattern = resolver.getTemplatePattern();
 

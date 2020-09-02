@@ -12,7 +12,7 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 /**
  * 通过
  *  <code>
- * Configure.newBuilder().bind("report", new
+ * Configure.builder().bind("report", new
  * CustomTableRenderPolicy());
  * </code> 
  * 将模板report的策略设置成自定义的表格策略

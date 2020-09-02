@@ -17,7 +17,7 @@ public class DefaultRunTemplateFactoryTest {
 
     @Test
     public void testCreateRunTemplate() {
-        Configure config = Configure.newBuilder().build();
+        Configure config = Configure.builder().build();
         TemplateResolver resolver = new TemplateResolver(config);
 
         Pattern templatePattern = resolver.getTemplatePattern();

@@ -16,6 +16,7 @@
 package com.deepoove.poi.render.compute;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.expression.EvaluationContext;
@@ -24,7 +25,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
- * 基于Spring Expression Language的计算
+ * Spring expression language compute
  * 
  * @author Sayi
  * @since 1.5.0
@@ -34,16 +35,20 @@ public class SpELRenderDataCompute implements RenderDataCompute {
     private final ExpressionParser parser;
     private final EvaluationContext context;
 
+    public SpELRenderDataCompute(Object root) {
+        this(root, Collections.emptyMap());
+    }
+
     public SpELRenderDataCompute(Object root, Map<String, Method> spELFunction) {
         parser = new SpelExpressionParser();
         context = new StandardEvaluationContext(root);
-        ((StandardEvaluationContext)context).addPropertyAccessor(new ReadMapAccessor());
-		spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
-	}
+        ((StandardEvaluationContext) context).addPropertyAccessor(new ReadMapAccessor());
+        spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
+    }
 
-	@Override
+    @Override
     public Object compute(String el) {
-        // mark: 无法计算或者读取表达式，会直接抛异常
+        // If cannot calculate expression, throw an exception
         return parser.parseExpression(el).getValue(context);
     }
 

@@ -19,6 +19,7 @@ package com.deepoove.poi.render.compute;
  * @author Sayi
  * @version 1.7.0
  */
+@FunctionalInterface
 public interface RenderDataComputeFactory {
 
     RenderDataCompute newCompute(Object model);

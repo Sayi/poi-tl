@@ -19,17 +19,16 @@ import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.expression.DefaultEL;
 
 /**
- * 基于ELObject的计算
+ * default expression compute
  * 
  * @author Sayi
- * @version 1.5.0
  */
-public class ELObjectRenderDataCompute implements RenderDataCompute {
+public class DefaultELRenderDataCompute implements RenderDataCompute {
 
     private DefaultEL elObject;
     private boolean isStrict;
 
-    public ELObjectRenderDataCompute(Object root, boolean isStrict) {
+    public DefaultELRenderDataCompute(Object root, boolean isStrict) {
         elObject = DefaultEL.create(root);
         this.isStrict = isStrict;
     }
@@ -39,9 +38,8 @@ public class ELObjectRenderDataCompute implements RenderDataCompute {
         try {
             return elObject.eval(el);
         } catch (ExpressionEvalException e) {
-            if (isStrict)
-                throw e;
-            // mark：无法计算或者读取表达式，默认返回null
+            if (isStrict) throw e;
+            // Cannot calculate the expression, the default returns null
             return null;
         }
     }

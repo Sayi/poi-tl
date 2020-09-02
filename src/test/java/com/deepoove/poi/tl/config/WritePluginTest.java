@@ -30,7 +30,7 @@ public class WritePluginTest {
     public void testPoitlSea() throws IOException {
 
         // where绑定policy
-        Configure config = Configure.newBuilder().bind("sea", new AbstractRenderPolicy<String>() {
+        Configure config = Configure.builder().bind("sea", new AbstractRenderPolicy<String>() {
             @Override
             public void doRender(RenderContext<String> context) throws Exception {
                 // anywhere

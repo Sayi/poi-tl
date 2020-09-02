@@ -104,14 +104,9 @@ public class Configure implements Cloneable {
     String grammerRegex = DEFAULT_GRAMER_REGEX;
 
     /**
-     * the mode of compute tag
-     */
-    ELMode elMode = ELMode.POI_TL_STANDARD_MODE;
-
-    /**
      * the factory of render data compute
      */
-    RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(this);
+    RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(false);
 
     /**
      * the factory of resovler run template
@@ -260,10 +255,6 @@ public class Configure implements Cloneable {
         return grammerRegex;
     }
 
-    public ELMode getElMode() {
-        return elMode;
-    }
-
     public ValidErrorHandler getValidErrorHandler() {
         return handler;
     }
@@ -291,7 +282,6 @@ public class Configure implements Cloneable {
         sb.append("  Basic gramer: ").append(gramerPrefix).append(gramerSuffix).append("\n");
         sb.append("  If and foreach gramer: ").append(gramerPrefix).append(iterable.getLeft()).append(gramerSuffix);
         sb.append(gramerPrefix).append(iterable.getRight()).append(gramerSuffix).append("\n");
-        sb.append("  EL Mode: ").append(elMode).append("\n");
         sb.append("  Regex:").append(grammerRegex).append("\n");
         sb.append("  Valid Error Handler: ").append(handler.getClass().getSimpleName()).append("\n");
         sb.append("  Default Plugin: ").append("\n");
@@ -328,33 +318,12 @@ public class Configure implements Cloneable {
         return (Configure) super.clone();
     }
 
-    public Configure clone(String prefix, String suffix) throws CloneNotSupportedException {
+    public Configure copy(String prefix, String suffix) throws CloneNotSupportedException {
         Configure clone = clone();
         clone.gramerPrefix = prefix;
         clone.gramerSuffix = suffix;
-        if (clone.elMode == ELMode.SPEL_MODE) {
-            clone.grammerRegex = RegexUtils.createGeneral(clone.gramerPrefix, clone.gramerSuffix);
-        }
+        clone.grammerRegex = RegexUtils.createGeneral(clone.gramerPrefix, clone.gramerSuffix);
         return clone;
-    }
-
-    public enum ELMode {
-
-        /**
-         * Standard mode: When the expression cannot be calculated, renderData defaults
-         * to a null value
-         */
-        POI_TL_STANDARD_MODE,
-        /**
-         * Strict mode: When the expression cannot be calculated directly throw an
-         * exception
-         */
-        POI_TL_STICT_MODE,
-        /**
-         * Spring EL
-         */
-        SPEL_MODE;
-
     }
 
     public interface ValidErrorHandler {

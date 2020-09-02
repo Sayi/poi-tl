@@ -54,7 +54,7 @@ public class TocTest {
     }
 
     public void testTOC() throws IOException {
-        Configure config = Configure.newBuilder().bind("toc", new RenderPolicy() {
+        Configure config = Configure.builder().bind("toc", new RenderPolicy() {
 
             @SuppressWarnings("deprecation")
             @Override

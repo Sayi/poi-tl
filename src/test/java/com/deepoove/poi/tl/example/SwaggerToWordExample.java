@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.BookmarkRenderPolicy;
@@ -64,9 +63,9 @@ public class SwaggerToWordExample {
         SwaggerView viewData = convert(swagger);
 
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
-        Configure config = Configure.newBuilder().bind("parameters", hackLoopTableRenderPolicy)
+        Configure config = Configure.builder().bind("parameters", hackLoopTableRenderPolicy)
                 .bind("responses", hackLoopTableRenderPolicy).bind("properties", hackLoopTableRenderPolicy)
-                .addPlugin('>', new BookmarkRenderPolicy()).setElMode(ELMode.SPEL_MODE).build();
+                .addPlugin('>', new BookmarkRenderPolicy()).useSpringEL().build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config)
                 .render(viewData);
         template.writeToFile("out_example_swagger.docx");

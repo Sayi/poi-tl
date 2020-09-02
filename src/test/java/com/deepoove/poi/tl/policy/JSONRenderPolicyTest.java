@@ -40,7 +40,7 @@ public class JSONRenderPolicyTest {
         };
 
         JSONRenderPolicy policy = new JSONRenderPolicy("ffffff");
-        Configure config = Configure.newBuilder().bind("json", policy).build();
+        Configure config = Configure.builder().bind("json", policy).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_json.docx", config)
                 .render(datas);
 

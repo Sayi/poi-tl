@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
 
@@ -221,7 +220,7 @@ public class SpELTest {
 
     @Test
     public void testSpELTemplate() throws IOException {
-        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).setSpELFunction(spELFunction).build();
+        Configure config = Configure.builder().useSpringEL(spELFunction).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/config_spel.docx", config).render(data);
 
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);

@@ -38,7 +38,7 @@ public class ConfigureTest {
      * [[姓名]]
      */
     String resource = "src/test/resources/template/config.docx";
-    ConfigureBuilder builder = Configure.newBuilder();
+    ConfigureBuilder builder = Configure.builder();
 
     @BeforeEach
     public void init() {

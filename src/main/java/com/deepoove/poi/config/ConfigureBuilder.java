@@ -21,10 +21,11 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
 
-import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.render.compute.DefaultELRenderDataCompute;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
+import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 import com.deepoove.poi.resolver.ElementTemplateFactory;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.RegexUtils;
@@ -37,6 +38,8 @@ import com.deepoove.poi.util.RegexUtils;
  */
 public class ConfigureBuilder {
     private Configure config;
+    private boolean usedSpringEL;
+    private boolean changeRegex;
 
     ConfigureBuilder() {
         config = new Configure();
@@ -54,13 +57,23 @@ public class ConfigureBuilder {
     }
 
     public ConfigureBuilder buildGrammerRegex(String reg) {
+        changeRegex = true;
         config.grammerRegex = reg;
         return this;
     }
 
-    public ConfigureBuilder setElMode(ELMode mode) {
-        config.elMode = mode;
-        return this;
+    public ConfigureBuilder useSpringEL() {
+        usedSpringEL = true;
+        return setRenderDataComputeFactory(SpELRenderDataCompute::new);
+    }
+
+    public ConfigureBuilder useSpringEL(Map<String, Method> spELFunction) {
+        usedSpringEL = true;
+        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, spELFunction));
+    }
+
+    public ConfigureBuilder useDefaultStrictEL() {
+        return setRenderDataComputeFactory(root -> new DefaultELRenderDataCompute(root, true));
     }
 
     public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {
@@ -70,11 +83,6 @@ public class ConfigureBuilder {
 
     public ConfigureBuilder setRenderDataComputeFactory(RenderDataComputeFactory renderDataComputeFactory) {
         config.renderDataComputeFactory = renderDataComputeFactory;
-        return this;
-    }
-
-    public ConfigureBuilder setSpELFunction(Map<String, Method> spELFunction) {
-        config.spELFunction = spELFunction;
         return this;
     }
 
@@ -104,7 +112,7 @@ public class ConfigureBuilder {
     }
 
     public Configure build() {
-        if (config.elMode == ELMode.SPEL_MODE) {
+        if (usedSpringEL && !changeRegex) {
             config.grammerRegex = RegexUtils.createGeneral(config.gramerPrefix, config.gramerSuffix);
         }
         return config;

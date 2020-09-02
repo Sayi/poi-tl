@@ -53,7 +53,7 @@ public class RunningRunParagraphTest {
     @Test
     public void testCustomGramer() throws IOException {
 
-        Configure config = Configure.newBuilder().buildGramer("${", "}").build();
+        Configure config = Configure.builder().buildGramer("${", "}").build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/resolver_running_run_custom.docx",
                 config);
         List<MetaTemplate> elementTemplates = template.getElementTemplates();

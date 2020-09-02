@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.Configure.ELMode;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
@@ -87,7 +86,7 @@ public class ELModeTest {
     public void testPoitlStrictELMode() throws Exception {
         model.getDetail().setDesc(null);
         // poi_tl_strict_mode 无法容忍变量不存在，直接抛出异常(可以防止人为的失误)
-        Configure config = Configure.newBuilder().setElMode(ELMode.POI_TL_STICT_MODE).build();
+        Configure config = Configure.builder().useDefaultStrictEL().build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config);
 
         RenderException exception = assertThrows(RenderException.class, () -> template.render(model));
@@ -97,7 +96,7 @@ public class ELModeTest {
     @Test
     public void testSpringELMode() throws Exception {
         // Spring EL 无法容忍变量不存在，直接抛出异常，表达式计算引擎为Spring Expression Language
-        Configure config = Configure.newBuilder().setElMode(ELMode.SPEL_MODE).build();
+        Configure config = Configure.builder().useSpringEL().build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(model);
 
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);

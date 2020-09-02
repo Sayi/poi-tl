@@ -15,7 +15,7 @@ public class Issue361 {
     public void test361() throws Exception {
         Map<String, Object> datas = new HashMap<String, Object>();
         datas.put("testItems", Arrays.asList("2", "2"));
-        Configure config = Configure.newBuilder().buildGramer("${", "}").build();
+        Configure config = Configure.builder().buildGramer("${", "}").build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/361.docx", config).render(datas);;
         template.writeToFile("out_issue_361.docx");
     }

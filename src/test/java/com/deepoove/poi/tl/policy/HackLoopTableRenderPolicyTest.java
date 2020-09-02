@@ -74,7 +74,7 @@ public class HackLoopTableRenderPolicyTest {
     @Test
     public void testPaymentHackExample() throws Exception {
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
-        Configure config = Configure.newBuilder().bind("goods", hackLoopTableRenderPolicy)
+        Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(new HashMap<String, Object>() {
             {

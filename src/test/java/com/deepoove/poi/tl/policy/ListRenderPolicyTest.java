@@ -61,7 +61,7 @@ public class ListRenderPolicyTest {
         /*
          * List demo {{website}} List demo.
          */
-        Configure config = Configure.newBuilder().bind("website", new ListRenderPolicy() {
+        Configure config = Configure.builder().bind("website", new ListRenderPolicy() {
         }).build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_list.docx", config);
         template.render(datas).writeToFile("out_render_list.docx");

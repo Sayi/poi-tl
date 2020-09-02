@@ -17,7 +17,7 @@ package com.deepoove.poi.render.compute;
 
 /**
  * 
- * 根据表达式计算渲染数据
+ * Expression compute
  * 
  * @author Sayi
  * @since 1.5.0

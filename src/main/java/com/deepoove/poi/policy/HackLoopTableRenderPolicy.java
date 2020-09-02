@@ -77,7 +77,7 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                 XWPFTableRow templateRow = table.getRow(templateRowIndex);
                 int insertPosition = templateRowIndex;
 
-                TemplateResolver resolver = new TemplateResolver(template.getConfig().clone(prefix, suffix));
+                TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
                 while (iterator.hasNext()) {
                     insertPosition = templateRowIndex++;
                     XWPFTableRow nextRow = table.insertNewTableRow(insertPosition);

@@ -23,7 +23,7 @@ public class AnimalExmample {
     @Test
     public void testChart() throws Exception {
 
-        Configure configure = Configure.newBuilder().bind("chart", new MultiSeriesChartTemplateRenderPolicy()).build();
+        Configure configure = Configure.builder().bind("chart", new MultiSeriesChartTemplateRenderPolicy()).build();
 
         HashMap<String, Object> data1 = new HashMap<String, Object>() {
             {
