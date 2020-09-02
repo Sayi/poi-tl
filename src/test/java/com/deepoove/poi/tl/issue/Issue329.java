@@ -57,7 +57,7 @@ public class Issue329 {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx")
                 .render(datas);
 
-        template.writeToFile("out_issue_329.docx");
+        // template.writeToFile("out_issue_329.docx");
 
         //System.out.println("game over................");
 

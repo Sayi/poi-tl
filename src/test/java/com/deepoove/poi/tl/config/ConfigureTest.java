@@ -38,10 +38,11 @@ public class ConfigureTest {
      * [[姓名]]
      */
     String resource = "src/test/resources/template/config.docx";
-    ConfigureBuilder builder = Configure.builder();
+    ConfigureBuilder builder;
 
     @BeforeEach
     public void init() {
+        builder = Configure.builder();
         // 自定义语法以[[开头，以]]结尾
         builder.buildGramer("[[", "]]");
         // 自定义标签text的策略：不是文本，是图片
@@ -104,7 +105,6 @@ public class ConfigureTest {
     public void testAbortHandler() {
         // 没有变量时，无法容忍，抛出异常
         builder.setValidErrorHandler(new AbortHandler());
-
         assertThrows(RenderException.class,
                 () -> XWPFTemplate.compile(resource, builder.build()).render(new HashMap<String, Object>()));
     }

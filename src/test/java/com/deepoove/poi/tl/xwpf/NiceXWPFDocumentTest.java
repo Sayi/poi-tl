@@ -33,7 +33,6 @@ public class NiceXWPFDocumentTest {
         source.close();
     }
 
-    @SuppressWarnings("resource")
     @Test
     public void testMergeAtRun() throws Exception {
         NiceXWPFDocument source = new NiceXWPFDocument(

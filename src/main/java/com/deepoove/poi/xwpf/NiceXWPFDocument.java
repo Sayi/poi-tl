@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -525,9 +526,11 @@ public class NiceXWPFDocument extends XWPFDocument {
             }
             ret.put(mergeNumId, cTAbstractNum);
         }
-
-        new HashSet<CTAbstractNum>(ret.values())
-                .forEach(abnum -> abnum.setAbstractNumId(wrapper.getNextAbstractNumID()));
+        long nextId = wrapper.getNextAbstractNumID().longValue();
+        Set<CTAbstractNum> hashSet = new HashSet<>(ret.values());
+        for (CTAbstractNum abnum : hashSet) {
+            abnum.setAbstractNumId(BigInteger.valueOf(nextId++));
+        }
         final XWPFNumbering finalNumbering = numbering;
         ret.forEach((mergeNumId, abnum) -> {
             BigInteger numID = finalNumbering.addNum(finalNumbering.addAbstractNum(new XWPFAbstractNum(abnum)));

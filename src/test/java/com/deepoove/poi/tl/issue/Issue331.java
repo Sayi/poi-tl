@@ -1,18 +1,19 @@
 package com.deepoove.poi.tl.issue;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Issue331 hyperlink fldSimple")
 public class Issue331 {
@@ -28,25 +29,15 @@ public class Issue331 {
         map.put("maillink", new HyperlinkTextRenderData("发邮件给作者", "mailto:adasai90@gmail.com?subject=poi-tl"));
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/331.docx").render(map);
-        template.writeToFile("out_issue_331.docx");
-    }
-
-    // insertNewRun 实现的bug，如果找不到i元素则在末尾插入，可能需要cursor或者qnameset来插入
-    // @Test
-    public void testinsertNewRunRun() throws FileNotFoundException, IOException {
-        XWPFDocument doc = new XWPFDocument(new FileInputStream("src/test/resources/issue/331_hyper.docx"));
-        XWPFParagraph createParagraph = doc.getParagraphArray(0);
-        XWPFRun insertNewRun = createParagraph.insertNewRun(0);
-        insertNewRun.setText("Hi");
-
-        // FileOutputStream out = new FileOutputStream("out_tem.docx");
-        // doc.write(out);
-        // doc.close();
-        // out.close();
+        XWPFDocument document = XWPFTestSupport.readNewDocument(template);
+        assertEquals("QA4时20分2020/3/2 16:20Deepoove website. and 发邮件给作者", document.getParagraphArray(0).getText());
+        document.close();
 
     }
 
+    @SuppressWarnings("serial")
     // @Test
+    // TODO Unpassed
     public void testRunTemlate() throws FileNotFoundException, IOException {
         XWPFTemplate template = XWPFTemplate.compile(new FileInputStream("src/test/resources/issue/331_hyper.docx"));
 
@@ -55,8 +46,10 @@ public class Issue331 {
                 put("title", "Hi");
             }
         });
-        // template.writeToFile("out_temp11.docx");
-
+        // insertNewRun 实现的bug，如果找不到i元素则在末尾插入，可能需要cursor或者qnameset来插入
+        XWPFDocument document = XWPFTestSupport.readNewDocument(template);
+        assertEquals("HiAAhttp://baidu.comhttp:deepoove.com", document.getParagraphArray(0).getText());
+        document.close();
     }
 
 }
