@@ -34,19 +34,19 @@ public class TableRenderTest {
         cell = Cells.of(Texts.of("Hello").color("ffffff").create())
                 .addParagraph(Paragraphs.of(Texts.of("World").color("ffffff").bold().create()).left().create())
                 .create();
-        cell1 = Cells.of("document").create();
+        cell1 = Cells.create("document");
         cell2 = Cells.of(Pictures.ofLocal("src/test/resources/sayi.png").size(40, 40).create()).addParagraph("Sayi")
                 .center().create();
 
         row0 = Rows.of(cell, cell, cell, cell).center().rowHeight(2.54f).bgColor("f58d71").create();
-        row1 = Rows.of(cell2, cell1, cell1, cell1).create();
-        row2 = Rows.of(cell2, cell1, cell1, cell1).create();
+        row1 = Rows.create(cell2, cell1, cell1, cell1);
+        row2 = Rows.create(cell2, cell1, cell1, cell1);
 
         TableRenderData table = Tables.of(row0, row1, row2).width(14.63f, new double[] { 5.63f, 3.0f, 3.0f, 3.0f })
                 .border(BorderStyle.DEFAULT).create();
 
         // table 1
-        RowRenderData rowNoData = Rows.of("没有数据", null, null, null).create();
+        RowRenderData rowNoData = Rows.create("没有数据", null, null, null);
         RowRenderData header = Rows.of("列0", "列1", "列2", "列3").horizontalCenter().bgColor("f58d71").create();
         TableRenderData table1 = Tables.of(header, rowNoData).border(BorderStyle.DEFAULT).create();
         MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 3)).build();

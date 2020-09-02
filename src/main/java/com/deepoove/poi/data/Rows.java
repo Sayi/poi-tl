@@ -39,7 +39,6 @@ public class Rows {
 
     public static RowBuilder of() {
         RowBuilder inst = new RowBuilder();
-        inst.data = new RowRenderData();
         return inst;
     }
 
@@ -69,6 +68,14 @@ public class Rows {
             }).forEach(inst::addCell);
         }
         return inst;
+    }
+
+    public static RowRenderData create(String... cell) {
+        return of(cell).create();
+    }
+
+    public static RowRenderData create(CellRenderData... cell) {
+        return of(cell).create();
     }
 
     /**

@@ -62,6 +62,10 @@ public class Numberings {
         return inst;
     }
 
+    public static NumberingRenderData create(String... text) {
+        return of(text).create();
+    }
+
     /**
      * Builder to build {@link NumberingRenderData}
      *

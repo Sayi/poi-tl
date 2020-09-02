@@ -55,6 +55,10 @@ public class Cells {
         return inst;
     }
 
+    public static CellRenderData create(String text) {
+        return of(text).create();
+    }
+
     /**
      * Builder to build {@link CellRenderData}
      *

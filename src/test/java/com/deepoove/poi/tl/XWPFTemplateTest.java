@@ -31,17 +31,17 @@ public class XWPFTemplateTest {
         // create table
         RowRenderData header = Rows.of("Word处理方案", "是否跨平台", "易用性").textColor("FFFFFF").bgColor("ff9800").center()
                 .rowHeight(2.5f).create();
-        RowRenderData row0 = Rows.of("Poi-tl", "纯Java组件，跨平台", "简单：模板引擎功能，并对POI进行了一些封装").create();
-        RowRenderData row1 = Rows.of("Apache Poi", "纯Java组件，跨平台", "简单，缺少一些功能的封装").create();
-        RowRenderData row2 = Rows.of("Freemarker", "XML操作，跨平台", "复杂，需要理解XML结构").create();
-        RowRenderData row3 = Rows.of("OpenOffice", "需要安装OpenOffice软件", "复杂，需要了解OpenOffice的API").create();
-        RowRenderData row4 = Rows.of("Jacob、winlib", "Windows平台", "复杂，不推荐使用").create();
-        table = Tables.of(header, row0, row1, row2, row3, row4).create();
+        RowRenderData row0 = Rows.create("Poi-tl", "纯Java组件，跨平台", "简单：模板引擎功能，并对POI进行了一些封装");
+        RowRenderData row1 = Rows.create("Apache Poi", "纯Java组件，跨平台", "简单，缺少一些功能的封装");
+        RowRenderData row2 = Rows.create("Freemarker", "XML操作，跨平台", "复杂，需要理解XML结构");
+        RowRenderData row3 = Rows.create("OpenOffice", "需要安装OpenOffice软件", "复杂，需要了解OpenOffice的API");
+        RowRenderData row4 = Rows.create("Jacob、winlib", "Windows平台", "复杂，不推荐使用");
+        table = Tables.create(header, row0, row1, row2, row3, row4);
 
         // create numbering
-        numbering = Numberings.of("Plug-in grammar, add new grammar by yourself",
+        numbering = Numberings.create("Plug-in grammar, add new grammar by yourself",
                 "Supports word text, local pictures, web pictures, table, list, header, footer...",
-                "Templates, not just templates, but also style templates").create();
+                "Templates, not just templates, but also style templates");
     }
 
     @Test

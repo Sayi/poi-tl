@@ -89,6 +89,10 @@ public class Tables {
         return inst;
     }
 
+    public static TableRenderData create(RowRenderData... row) {
+        return of(row).create();
+    }
+
     public static TableBuilder ofAutoWidth() {
         return ofPercentWidth("auto");
     }
