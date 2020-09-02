@@ -31,10 +31,11 @@ import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
 /**
- * 对当前位置的委托，提供更多操作当前位置的方法。
+ * The delegation of the current location provides more methods of operating the
+ * current location.
  * 
  * @author Sayi
- * @version 1.5.1
+ * @since 1.5.1
  */
 public class WhereDelegate {
 

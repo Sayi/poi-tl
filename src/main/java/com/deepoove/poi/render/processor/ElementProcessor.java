@@ -16,12 +16,13 @@
 
 package com.deepoove.poi.render.processor;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataCompute;
@@ -31,6 +32,12 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * process element template
+ * 
+ * @author Sayi
+ *
+ */
 public class ElementProcessor extends DefaultTemplateProcessor {
 
     private static Logger logger = LoggerFactory.getLogger(ElementProcessor.class);
@@ -56,9 +63,7 @@ public class ElementProcessor extends DefaultTemplateProcessor {
 
     void visit(ElementTemplate eleTemplate) {
         RenderPolicy policy = eleTemplate.findPolicy(template.getConfig());
-        if (null == policy) {
-            throw new RenderException("Cannot find render policy: [" + eleTemplate.getTagName() + "]");
-        }
+        Objects.requireNonNull(policy, "Cannot find render policy: [" + eleTemplate.getTagName() + "]");
         if (policy instanceof DocxRenderPolicy) return;
         logger.info("Start render Template {}, Sign:{}, policy:{}", eleTemplate, eleTemplate.getSign(),
                 ClassUtils.getShortClassName(policy.getClass()));

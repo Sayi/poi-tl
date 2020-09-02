@@ -65,7 +65,7 @@ public class DefaultRender implements Render {
             renderInclude(template, renderDataCompute);
 
         } catch (Exception e) {
-            if (e instanceof RenderException) throw (RenderException)e;
+            if (e instanceof RenderException) throw (RenderException) e;
             throw new RenderException("Cannot render docx template, please check the Exception", e);
         } finally {
             watch.stop();
@@ -76,7 +76,7 @@ public class DefaultRender implements Render {
     private void renderTemplate(XWPFTemplate template, RenderDataCompute renderDataCompute) {
         // log
         new LogProcessor().process(template.getElementTemplates());
-        
+
         // render
         DocumentProcessor documentRender = new DocumentProcessor(template, template.getResolver(), renderDataCompute);
         documentRender.process(template.getElementTemplates());

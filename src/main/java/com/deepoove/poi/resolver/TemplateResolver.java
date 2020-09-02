@@ -16,6 +16,7 @@
 package com.deepoove.poi.resolver;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -235,11 +236,7 @@ public class TemplateResolver extends AbstractResolver {
 
     private <T extends MetaTemplate> void addNewMeta(final List<MetaTemplate> metaTemplates,
             final Deque<BlockTemplate> stack, T newMeta) {
-        if (stack.isEmpty()) {
-            metaTemplates.add(newMeta);
-        } else {
-            stack.peek().getTemplates().add(newMeta);
-        }
+        addNewMeta(metaTemplates, stack, Collections.singletonList(newMeta));
     }
 
     private void checkStack(Deque<BlockTemplate> stack) {

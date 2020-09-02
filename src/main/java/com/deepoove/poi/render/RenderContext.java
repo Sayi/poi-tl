@@ -26,7 +26,7 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * 模板标签上下文
+ * Template context
  * 
  * @author Sayi
  */
