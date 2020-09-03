@@ -34,6 +34,8 @@ public class BodyContainerFactory {
             return new CellBodyContainer((XWPFTableCell) body);
         } else if (body instanceof XWPFHeaderFooter) {
             return new HeaderFooterBodyContainer((XWPFHeaderFooter) body);
+        } else if (body instanceof XWPFTextboxContent) {
+            return new TextBoxBodyContainer((XWPFTextboxContent) body);
         } else {
             return new DocumentBodyContainer((NiceXWPFDocument) body);
         }
