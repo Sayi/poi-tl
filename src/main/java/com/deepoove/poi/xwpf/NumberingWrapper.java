@@ -84,8 +84,8 @@ public class NumberingWrapper {
     }
     
     public BigInteger getMaxIdOfAbstractNum() {
-        if (abstractNums == null) return BigInteger.valueOf(0);
-        BigInteger max = BigInteger.valueOf(0);
+        if (abstractNums == null) return BigInteger.ZERO;
+        BigInteger max = BigInteger.ZERO;
         for (XWPFAbstractNum abstractNum : abstractNums) {
             CTAbstractNum ctAbstractNum = abstractNum.getCTAbstractNum();
             BigInteger abstractNumId = ctAbstractNum.getAbstractNumId();
