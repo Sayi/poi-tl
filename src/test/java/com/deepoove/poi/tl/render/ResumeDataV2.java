@@ -6,12 +6,6 @@ import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.tl.example.ExperienceData;
 
-/**
- * 代码由CodeGenUtils生成
- * 
- * @author Sayi
- * @version
- */
 public class ResumeDataV2 {
 
     private PictureRenderData portrait;

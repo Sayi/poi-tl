@@ -14,10 +14,10 @@ import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 
-@DisplayName("Example for Hack Table")
+@DisplayName("Example for HackLoop Table")
 public class HackLoopTableRenderPolicyTest {
 
-    String resource = "src/test/resources/payment/payment_hack.docx";
+    String resource = "src/test/resources/template/render_hackloop.docx";
     PaymentHackData data = new PaymentHackData();
 
     @BeforeEach
@@ -66,7 +66,7 @@ public class HackLoopTableRenderPolicyTest {
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("out_example_payment_hack.docx");
+        template.writeToFile("out_render_hackloop.docx");
     }
 
 }

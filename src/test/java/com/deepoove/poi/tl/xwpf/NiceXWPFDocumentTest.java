@@ -1,12 +1,17 @@
 package com.deepoove.poi.tl.xwpf;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +20,6 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
 @DisplayName("Merge word test case")
 public class NiceXWPFDocumentTest {
 
-    @SuppressWarnings("resource")
     @Test
     public void testMergeAtEnd() throws Exception {
         NiceXWPFDocument source = new NiceXWPFDocument(
@@ -55,7 +59,7 @@ public class NiceXWPFDocumentTest {
         source.close();
 
     }
-    
+
     @SuppressWarnings("resource")
     @Test
     public void testMergeWithChart() throws Exception {
@@ -66,7 +70,38 @@ public class NiceXWPFDocumentTest {
         source = source.merge(target1);
         source.write(new FileOutputStream("out_merge_chart.docx"));
         source.close();
-        
+
+    }
+
+    @Test
+    public void testNewMergeNewNamespace() throws Exception {
+        NiceXWPFDocument source;
+        NiceXWPFDocument target;
+        NiceXWPFDocument result;
+
+        XWPFDocument doc = new XWPFDocument();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        doc.write(byteArrayOutputStream);
+        doc.close();
+
+        source = new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+        assertEquals(-1, source.getXWPFDocument().getDocument().toString().indexOf(":wps="));
+
+        target = new NiceXWPFDocument();
+        assertNotEquals(-1, target.getXWPFDocument().getDocument().toString().indexOf(":wps="));
+        XWPFParagraph createParagraph = target.createParagraph();
+        createParagraph.createRun();
+
+        result = source.merge(target);
+
+        assertEquals(result.getParagraphs().size(), 1);
+        assertEquals(result.getParagraphArray(0).getText(), "");
+        assertNotEquals(-1, target.getXWPFDocument().getDocument().toString().indexOf(":wps="));
+
+        source.close();
+        target.close();
+        result.close();
+
     }
 
 }

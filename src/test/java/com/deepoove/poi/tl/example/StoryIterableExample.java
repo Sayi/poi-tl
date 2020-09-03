@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.render;
+package com.deepoove.poi.tl.example;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.tl.example.SegmentData;
+import com.deepoove.poi.tl.render.StoryDataV2;
 
 @DisplayName("Example for A Story")
-public class IterableRenderStoryExample {
+public class StoryIterableExample {
 
     @Test
     public void testStoryExample() throws Exception {
@@ -67,7 +67,7 @@ public class IterableRenderStoryExample {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/story/iterable_story.docx").render(data);
 
-        FileOutputStream out = new FileOutputStream("out_iterable_story.docx");
+        FileOutputStream out = new FileOutputStream("out_example_story_iterable.docx");
         template.write(out);
         out.flush();
         out.close();

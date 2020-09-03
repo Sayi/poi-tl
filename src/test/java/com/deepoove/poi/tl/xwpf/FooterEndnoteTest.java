@@ -31,7 +31,6 @@ public class FooterEndnoteTest {
         // separator continue para
         XWPFFootnote xwpfFootnote = document.getFootnotes().get(2);
         XWPFEndnote xwpfEndnote = document.getEndnotes().get(2);
-        System.out.println(xwpfEndnote.getCTFtnEdn());
         assertEquals(" Chinathis is endnote", xwpfEndnote.getParagraphArray(0).getText());
         assertEquals("世界地图this is footernote", xwpfFootnote.getParagraphArray(0).getText());
 

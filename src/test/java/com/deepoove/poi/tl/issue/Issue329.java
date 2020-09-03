@@ -54,7 +54,7 @@ public class Issue329 {
         // Zip Bomb detected
         ZipSecureFile.setMinInflateRatio(-1.0d);
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_include.docx")
+        XWPFTemplate.compile("src/test/resources/template/render_include.docx")
                 .render(datas);
 
         // template.writeToFile("out_issue_329.docx");

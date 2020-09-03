@@ -1,11 +1,16 @@
 package com.deepoove.poi.tl.render;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +24,7 @@ import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 @DisplayName("Foreach template test case")
 public class IterableTemplateTest {
@@ -73,16 +79,8 @@ public class IterableTemplateTest {
     @Test
     public void testForeach() throws Exception {
         List<Map<String, Object>> addrs = new ArrayList<>();
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Hangzhou,China");
-            }
-        });
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Shanghai,China");
-            }
-        });
+        addrs.add(Collections.singletonMap("position", "Hangzhou,China"));
+        addrs.add(Collections.singletonMap("position", "Shanghai,China"));
 
         List<Map<String, Object>> users = new ArrayList<>();
         users.add(new HashMap<String, Object>() {
@@ -91,11 +89,7 @@ public class IterableTemplateTest {
                 put("addrs", addrs);
             }
         });
-        users.add(new HashMap<String, Object>() {
-            {
-                put("name", "Deepoove");
-            }
-        });
+        users.add(Collections.singletonMap("name", "Deepoove"));
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "poi-tl");
@@ -103,27 +97,35 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach1.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach.docx");
         template.render(datas);
-        template.writeToFile("out_iterable_foreach1.docx");
+        XWPFDocument document = XWPFTestSupport.readNewDocument(template);
+        assertEquals("Hi, poi-tl", document.getParagraphArray(0).getText());
+        assertEquals("My perfect Sayi.My perfect Deepoove.", document.getParagraphArray(1).getText());
+        assertEquals("Please My perfect Sayi.My perfect Deepoove.", document.getParagraphArray(2).getText());
+        assertEquals("Good My perfect Sayi.My perfect Deepoove. Game.", document.getParagraphArray(3).getText());
+
+        assertEquals("Hello, My perfect Sayi.", document.getParagraphArray(5).getText());
+
+        XWPFTable table0 = document.getTables().get(0);
+        assertEquals("Sayi", table0.getRow(1).getCell(2).getText());
+        assertEquals("addr: Hangzhou,China.", table0.getRow(2).getCell(1).getParagraphArray(0).getText());
+        assertEquals("addr: Shanghai,China.", table0.getRow(2).getCell(1).getParagraphArray(1).getText());
+
+        XWPFTable table1 = document.getTables().get(1);
+        assertEquals("Deepoove", table1.getRow(1).getCell(2).getText());
+        assertEquals("", table1.getRow(2).getCell(1).getText());
+
+        document.close();
+
     }
 
     @SuppressWarnings("serial")
     @Test
     public void testHyperField() throws Exception {
         List<Map<String, Object>> addrs = new ArrayList<>();
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Hangzhou,China");
-
-            }
-        });
-        addrs.add(new HashMap<String, Object>() {
-            {
-                put("position", "Shanghai,China");
-
-            }
-        });
+        addrs.add(Collections.singletonMap("position", "Hangzhou,China"));
+        addrs.add(Collections.singletonMap("position", "Shanghai,China"));
 
         List<Map<String, Object>> users = new ArrayList<>();
         users.add(new HashMap<String, Object>() {
@@ -139,16 +141,20 @@ public class IterableTemplateTest {
 
             }
         });
-        Map<String, Object> datas = new HashMap<String, Object>() {
-            {
-                put("users", users);
-
-            }
-        };
+        Map<String, Object> datas = Collections.singletonMap("users", users);
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_hyperlink.docx");
         template.render(datas);
-        template.writeToFile("out_iterable_hyperlink.docx");
+        XWPFDocument document = XWPFTestSupport.readNewDocument(template);
+        assertEquals("开始，", document.getParagraphArray(0).getText());
+        assertEquals("结束。", document.getParagraphArray(1).getText());
+        assertEquals("开始，结束。", document.getParagraphArray(3).getText());
+        assertEquals(
+                "Hello, My perfect, http://deepoove.com,Sayi."
+                + "addr:http://deepoove.comHangzhou,China.addr:http://deepoove.comShanghai,China."
+                + "Hello, My perfect, http://deepoove.com,Deepoove website..",
+                document.getParagraphArray(6).getText());
+        document.close();
     }
 
     @SuppressWarnings("serial")
@@ -211,9 +217,9 @@ public class IterableTemplateTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach2.docx");
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_all.docx");
         template.render(datas);
-        template.writeToFile("out_iterable_foreach2.docx");
+        template.writeToFile("out_iterable_foreach_all.docx");
     }
 
 }

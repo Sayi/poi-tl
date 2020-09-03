@@ -31,23 +31,23 @@ public class PictureTemplateRenderTest {
         mores.add(data);
         mores.add(data1);
 
-        XWPFTemplate.compile("src/test/resources/template/render_picture_template.docx")
+        XWPFTemplate.compile("src/test/resources/template/reference_picture_iterable.docx")
                 .render(new HashMap<String, Object>() {
                     {
                         put("mores", mores);
                     }
-                }).writeToFile("out_render_picture_template.docx");
+                }).writeToFile("out_reference_picture_iterable.docx");
     }
 
     @SuppressWarnings("serial")
     @Test
     public void testReplacePictureByOptionalText() throws Exception {
-        XWPFTemplate.compile("src/test/resources/template/render_picture_template1.docx")
+        XWPFTemplate.compile("src/test/resources/template/reference_picture.docx")
                 .render(new HashMap<String, Object>() {
                     {
                         put("img", Pictures.ofLocal("src/test/resources/sayi.png").size(100, 120).create());
                     }
-                }).writeToFile("out_render_picture_template1.docx");
+                }).writeToFile("out_reference_picture.docx");
     }
 
 }

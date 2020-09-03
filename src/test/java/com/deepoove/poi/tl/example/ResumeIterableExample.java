@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.render;
+package com.deepoove.poi.tl.example;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.tl.example.ExperienceData;
+import com.deepoove.poi.tl.render.ResumeDataV2;
 
 @DisplayName("Foreach resume example")
-public class IterableRenderResumeExample {
+public class ResumeIterableExample {
 
     ResumeDataV2 datas = new ResumeDataV2();
 
@@ -78,7 +78,7 @@ public class IterableRenderResumeExample {
     public void testResumeExample() throws Exception {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_resume.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_iterable_resume.docx");
+        FileOutputStream out = new FileOutputStream("out_example_resume_iterable.docx");
         template.write(out);
         out.flush();
         out.close();
