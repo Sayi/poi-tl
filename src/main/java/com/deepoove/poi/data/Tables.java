@@ -149,6 +149,11 @@ public class Tables {
             return this;
         }
 
+        public TableBuilder mergeRule(MergeCellRule rule) {
+            data.setMergeRule(rule);
+            return this;
+        }
+
         @Override
         public TableRenderData create() {
             return data;

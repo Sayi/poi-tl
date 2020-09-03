@@ -148,8 +148,8 @@ public class ParagraphStyle implements Serializable {
         private ParagraphAlignment align;
         private double spacing;
         private Style glyphStyle;
-        private long numId;
-        private long lvl;
+        private long numId = -1;
+        private long lvl = -1;
         private Style defaultTextStyle;
 
         private Builder() {

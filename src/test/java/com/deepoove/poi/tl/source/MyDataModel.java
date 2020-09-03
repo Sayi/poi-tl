@@ -3,6 +3,7 @@ package com.deepoove.poi.tl.source;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.expression.Name;
 
 public class MyDataModel extends DataSourceBaseTest {
@@ -15,7 +16,7 @@ public class MyDataModel extends DataSourceBaseTest {
     private TableRenderData solutionCompare;
     private PictureRenderData portrait;
     private String author;
-    private String introduce;
+    private TextRenderData introduce;
     private String header;
 
     public void setWhat(String what) {
@@ -58,12 +59,12 @@ public class MyDataModel extends DataSourceBaseTest {
         return this.author;
     }
 
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
+    public TextRenderData getIntroduce() {
+        return introduce;
     }
 
-    public String getIntroduce() {
-        return this.introduce;
+    public void setIntroduce(TextRenderData introduce) {
+        this.introduce = introduce;
     }
 
     public void setHeader(String header) {

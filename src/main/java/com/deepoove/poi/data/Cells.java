@@ -115,6 +115,18 @@ public class Cells {
             return this;
         }
 
+        public CellBuilder horizontalLeft() {
+            ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
+            defaultParagraphStyle.setAlign(ParagraphAlignment.LEFT);
+            return this;
+        }
+
+        public CellBuilder horizontalRight() {
+            ParagraphStyle defaultParagraphStyle = getDefaultParagraphStyle();
+            defaultParagraphStyle.setAlign(ParagraphAlignment.RIGHT);
+            return this;
+        }
+
         private CellStyle getCellStyle() {
             CellStyle cellStyle = data.getCellStyle();
             if (null == cellStyle) {
