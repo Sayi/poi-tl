@@ -72,6 +72,7 @@ public class XWPFTextboxContent implements IBody {
      *
      * @see org.apache.poi.xwpf.usermodel.IBody#getPart()
      */
+    @Override
     @SuppressWarnings("deprecation")
     public POIXMLDocumentPart getPart() {
         // TODO
@@ -81,6 +82,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * @see org.apache.poi.xwpf.usermodel.IBody#getPartType()
      */
+    @Override
     public BodyType getPartType() {
         // TODO
         return BodyType.TABLECELL;
@@ -91,6 +93,7 @@ public class XWPFTextboxContent implements IBody {
      *
      * @see org.apache.poi.xwpf.usermodel.IBody#getBodyElements()
      */
+    @Override
     public List<IBodyElement> getBodyElements() {
         return Collections.unmodifiableList(bodyElements);
     }
@@ -105,6 +108,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * returns a list of paragraphs
      */
+    @Override
     public List<XWPFParagraph> getParagraphs() {
         return Collections.unmodifiableList(paragraphs);
     }
@@ -168,6 +172,7 @@ public class XWPFTextboxContent implements IBody {
      *         in the paragraphList of this table XWPFParagraph with the
      *         correspondig CTP p
      */
+    @Override
     public XWPFParagraph getParagraph(CTP p) {
         for (XWPFParagraph paragraph : paragraphs) {
             if (p.equals(paragraph.getCTP())) {
@@ -183,6 +188,7 @@ public class XWPFTextboxContent implements IBody {
      * @param cursor The XmlCursor structure created with XmlBeans
      * @return the inserted paragraph
      */
+    @Override
     public XWPFParagraph insertNewParagraph(final XmlCursor cursor) {
         if (!isCursorInTextBox(cursor)) {
             return null;
@@ -210,7 +216,9 @@ public class XWPFTextboxContent implements IBody {
         p2.dispose();
         while (cursor.toPrevSibling()) {
             o = cursor.getObject();
-            if (o instanceof CTP || o instanceof CTTbl) i++;
+            if (o instanceof CTP || o instanceof CTTbl) {
+                i++;
+            }
         }
         bodyElements.add(i, newP);
         p2 = p.newCursor();
@@ -234,6 +242,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * @see org.apache.poi.xwpf.usermodel.IBody#getParagraphArray(int)
      */
+    @Override
     public XWPFParagraph getParagraphArray(int pos) {
         if (pos >= 0 && pos < paragraphs.size()) {
             return paragraphs.get(pos);
@@ -246,6 +255,7 @@ public class XWPFTextboxContent implements IBody {
      *
      * @see org.apache.poi.xwpf.usermodel.IBody#getTable(org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl)
      */
+    @Override
     public XWPFTable getTable(CTTbl ctTable) {
         return null;
     }
@@ -253,6 +263,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * @see org.apache.poi.xwpf.usermodel.IBody#getTableArray(int)
      */
+    @Override
     public XWPFTable getTableArray(int pos) {
         return null;
     }
@@ -260,6 +271,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * @see org.apache.poi.xwpf.usermodel.IBody#getTables()
      */
+    @Override
     public List<XWPFTable> getTables() {
         return null;
     }
@@ -270,10 +282,12 @@ public class XWPFTextboxContent implements IBody {
      * @see org.apache.poi.xwpf.usermodel.IBody#insertTable(int,
      *      org.apache.poi.xwpf.usermodel.XWPFTable)
      */
+    @Override
     public void insertTable(int pos, XWPFTable table) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public XWPFDocument getXWPFDocument() {
         return part.getXWPFDocument();
     }

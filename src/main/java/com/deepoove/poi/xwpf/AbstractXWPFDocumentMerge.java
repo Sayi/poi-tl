@@ -32,10 +32,12 @@ public abstract class AbstractXWPFDocumentMerge implements DocumentMerge<NiceXWP
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Override
     public NiceXWPFDocument merge(NiceXWPFDocument source, NiceXWPFDocument merged) throws Exception {
         return merge(source, Collections.singleton(merged).iterator());
     }
 
+    @Override
     public NiceXWPFDocument merge(NiceXWPFDocument source, Iterator<NiceXWPFDocument> mergedIterator) throws Exception {
         return merge(source, mergedIterator, source.createParagraph().createRun());
     }
@@ -43,6 +45,7 @@ public abstract class AbstractXWPFDocumentMerge implements DocumentMerge<NiceXWP
     /**
      * the each element in mergedIterator should be the same document!
      */
+    @Override
     public abstract NiceXWPFDocument merge(NiceXWPFDocument source, Iterator<NiceXWPFDocument> mergedIterator,
             XWPFRun location) throws Exception;
 

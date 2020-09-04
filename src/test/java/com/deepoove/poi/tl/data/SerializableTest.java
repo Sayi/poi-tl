@@ -140,7 +140,7 @@ public class SerializableTest {
                 assertEquals(((TextRenderData) renderData2).getText(), ((TextRenderData) renderData).getText());
             }
             if (renderData instanceof PictureRenderData) {
-                assertEquals(((PictureRenderData) renderData2).getImage(), ((PictureRenderData) renderData).getImage());
+                assertArrayEquals(((PictureRenderData) renderData2).getImage(), ((PictureRenderData) renderData).getImage());
             }
         }
 

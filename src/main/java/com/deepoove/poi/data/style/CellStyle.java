@@ -15,10 +15,13 @@
  */
 package com.deepoove.poi.data.style;
 
+import java.io.Serializable;
+
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
-public class CellStyle {
+public class CellStyle implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String backgroundColor;
     /**
      * vertical align in cell

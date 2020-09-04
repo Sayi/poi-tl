@@ -61,7 +61,9 @@ public class ChartTemplate extends ElementTemplate {
 
     private ChartTypes readChartType(XWPFChart chart) {
         List<XDDFChartData> chartSeries = chart.getChartSeries();
-        if (CollectionUtils.isEmpty(chartSeries)) return null;
+        if (CollectionUtils.isEmpty(chartSeries)) {
+            return null;
+        }
         XDDFChartData chartData = chartSeries.get(0);
         ChartTypes chartType = null;
         if (chartData.getClass() == XDDFAreaChartData.class) {
@@ -115,9 +117,12 @@ public class ChartTemplate extends ElementTemplate {
         visitor.visit(this);
     }
 
+    @Override
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy policy = config.getCustomPolicy(tagName);
-        if (null == policy) policy = config.getChartPolicy(chartType);
+        if (null == policy) {
+            policy = config.getChartPolicy(chartType);
+        }
         return null == policy ? config.getTemplatePolicy(this.getClass()) : policy;
     }
 
