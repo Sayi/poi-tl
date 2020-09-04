@@ -111,7 +111,7 @@ public class Configure implements Cloneable {
     /**
      * the factory of resovler run template
      */
-    ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory(this);
+    ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory();
 
     /**
      * the policy of process tag for valid render data error(null or illegal)

@@ -25,4 +25,12 @@ public class XWPFTestSupport {
         return new XWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
 
+    public static ByteArrayInputStream readInputStream(XWPFDocument doc) throws IOException {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        doc.write(stream);
+        doc.close();
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(stream.toByteArray());
+        return inputStream;
+    }
+
 }

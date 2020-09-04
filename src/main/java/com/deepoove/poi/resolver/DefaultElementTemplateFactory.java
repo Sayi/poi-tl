@@ -33,14 +33,12 @@ import com.deepoove.poi.template.run.RunTemplate;
 public class DefaultElementTemplateFactory implements ElementTemplateFactory {
 
     public static final char EMPTY_CHAR = '\0';
-    private final Configure config;
 
-    public DefaultElementTemplateFactory(Configure config) {
-        this.config = config;
+    public DefaultElementTemplateFactory() {
     }
 
     @Override
-    public RunTemplate createRunTemplate(String tag, XWPFRun run) {
+    public RunTemplate createRunTemplate(Configure config, String tag, XWPFRun run) {
         RunTemplate template = new RunTemplate();
         Set<Character> gramerChars = config.getGramerChars();
         Character symbol = Character.valueOf(EMPTY_CHAR);
@@ -61,7 +59,7 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     }
 
     @Override
-    public PictureTemplate createPicureTemplate(String tag, XWPFPicture pic) {
+    public PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic) {
         PictureTemplate template = new PictureTemplate();
         template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
         template.setTagName(tag);
@@ -71,7 +69,7 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     }
 
     @Override
-    public ChartTemplate createChartTemplate(String tag, XWPFChart chart, XWPFRun run) {
+    public ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run) {
         ChartTemplate template = new ChartTemplate(tag, chart, run);
         template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
         template.setSign(EMPTY_CHAR);

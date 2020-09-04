@@ -268,11 +268,11 @@ public class TemplateResolver extends AbstractResolver {
             logger.debug("Resolve where text: {}, and create ElementTemplate for {}", text, obj.getClass());
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {
-                return (RunTemplate) elementTemplateFactory.createRunTemplate(tag, (XWPFRun) obj);
+                return (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);
             } else if (obj.getClass() == XWPFPicture.class) {
-                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(tag, (XWPFPicture) obj);
+                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(config, tag, (XWPFPicture) obj);
             } else if (obj.getClass() == XWPFChart.class) {
-                return (ChartTemplate) elementTemplateFactory.createChartTemplate(tag, (XWPFChart) obj, run);
+                return (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag, (XWPFChart) obj, run);
             }
         }
         return null;
