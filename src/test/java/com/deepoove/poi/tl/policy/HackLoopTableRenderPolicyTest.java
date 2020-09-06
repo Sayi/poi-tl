@@ -30,8 +30,7 @@ public class HackLoopTableRenderPolicyTest {
         good.setPrice(400);
         good.setTax(new Random().nextInt(10) + 20);
         good.setTotalPrice(1600);
-        good.setPicture(
-                Pictures.ofLocal("src/test/resources/earth.png").size(24, 24).create());
+        good.setPicture(Pictures.ofLocal("src/test/resources/earth.png").size(24, 24).create());
         goods.add(good);
         goods.add(good);
         goods.add(good);
@@ -49,13 +48,20 @@ public class HackLoopTableRenderPolicyTest {
         data.setLabors(labors);
 
         data.setTotal("1024");
+
+        // same line
+        data.setGoods2(goods);
+        data.setLabors2(labors);
+
     }
 
     @Test
     public void testPaymentHackExample() throws Exception {
         HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+        HackLoopTableRenderPolicy hackLoopSameLineTableRenderPolicy = new HackLoopTableRenderPolicy(true);
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
-                .bind("labors", hackLoopTableRenderPolicy).build();
+                .bind("labors", hackLoopTableRenderPolicy).bind("goods2", hackLoopSameLineTableRenderPolicy)
+                .bind("labors2", hackLoopSameLineTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
         template.writeToFile("out_render_looprow.docx");
     }

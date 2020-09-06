@@ -51,14 +51,24 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
 
     private String prefix;
     private String suffix;
+    private boolean onSameLine;
 
     public HackLoopTableRenderPolicy() {
-        this("[", "]");
+        this(false);
+    }
+    
+    public HackLoopTableRenderPolicy(boolean onSameLine) {
+        this("[", "]", onSameLine);
     }
 
     public HackLoopTableRenderPolicy(String prefix, String suffix) {
+        this(prefix, suffix, false);
+    }
+
+    public HackLoopTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
         this.prefix = prefix;
         this.suffix = suffix;
+        this.onSameLine = onSameLine;
     }
 
     @Override
@@ -71,10 +81,10 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                         "The template tag " + runTemplate.getSource() + " must be inside a table");
             }
             XWPFTableCell tagCell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
-            XWPFTableRow tagRow = tagCell.getTableRow();
             XWPFTable table = tagCell.getTableRow().getTable();
+            run.setText("", 0);
 
-            int templateRowIndex = getRowIndex(table, tagRow) + 1;
+            int templateRowIndex = getTemplateRowIndex(tagCell);
             if (null != data && data instanceof Iterable) {
                 Iterator<?> iterator = ((Iterable<?>) data).iterator();
                 XWPFTableRow templateRow = table.getRow(templateRowIndex);
@@ -118,12 +128,16 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                 }
             }
 
-            run.setText("", 0);
             table.removeRow(templateRowIndex);
             afterloop(table, data);
         } catch (Exception e) {
             throw new RenderException("HackLoopTable for " + eleTemplate + "error: " + e.getMessage(), e);
         }
+    }
+
+    private int getTemplateRowIndex(XWPFTableCell tagCell) {
+        XWPFTableRow tagRow = tagCell.getTableRow();
+        return onSameLine ? getRowIndex(tagRow) : (getRowIndex(tagRow) + 1);
     }
 
     protected void afterloop(XWPFTable table, Object data) {
@@ -136,8 +150,8 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
         table.getCTTbl().setTrArray(pos, templateRow.getCtRow());
     }
 
-    private int getRowIndex(XWPFTable table, XWPFTableRow row) {
-        List<XWPFTableRow> rows = table.getRows();
+    private int getRowIndex(XWPFTableRow row) {
+        List<XWPFTableRow> rows = row.getTable().getRows();
         return rows.indexOf(row);
     }
 

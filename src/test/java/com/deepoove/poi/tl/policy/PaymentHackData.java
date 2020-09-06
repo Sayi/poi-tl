@@ -13,7 +13,25 @@ public class PaymentHackData {
     private String total;
 
     private List<Goods> goods;
+    private List<Goods> goods2;
     private List<Labor> labors;
+    private List<Labor> labors2;
+
+    public List<Goods> getGoods2() {
+        return goods2;
+    }
+
+    public void setGoods2(List<Goods> goods2) {
+        this.goods2 = goods2;
+    }
+
+    public List<Labor> getLabors2() {
+        return labors2;
+    }
+
+    public void setLabors2(List<Labor> labors2) {
+        this.labors2 = labors2;
+    }
 
     public List<Goods> getGoods() {
         return goods;

@@ -57,14 +57,24 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
 
     private String prefix;
     private String suffix;
+    private boolean onSameLine;
 
     public LoopColumnTableRenderPolicy() {
-        this("[", "]");
+        this(false);
+    }
+
+    public LoopColumnTableRenderPolicy(boolean onSameLine) {
+        this("[", "]", onSameLine);
     }
 
     public LoopColumnTableRenderPolicy(String prefix, String suffix) {
+        this(prefix, suffix, false);
+    }
+
+    public LoopColumnTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
         this.prefix = prefix;
         this.suffix = suffix;
+        this.onSameLine = onSameLine;
     }
 
     @Override
@@ -78,8 +88,9 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
             }
             XWPFTableCell tagCell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
             XWPFTable table = tagCell.getTableRow().getTable();
+            run.setText("", 0);
 
-            int templateColIndex = getColIndex(table, tagCell) + 1;
+            int templateColIndex = getTemplateColIndex(tagCell);
             int actualColIndex = getActualInsertPosition(tagCell.getTableRow(), templateColIndex);
             XWPFTableCell firstCell = tagCell.getTableRow().getCell(actualColIndex);
             int width = firstCell.getWidth();
@@ -131,7 +142,6 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
                 }
             }
 
-            run.setText("", 0);
             for (int i = 0; i < rowSize; i++) {
                 XWPFTableRow row = table.getRow(i);
                 int actualInsertPosition = getActualInsertPosition(row, templateColIndex);
@@ -145,6 +155,10 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
         } catch (Exception e) {
             throw new RenderException("HackLoopTable for " + eleTemplate + "error: " + e.getMessage(), e);
         }
+    }
+
+    private int getTemplateColIndex(XWPFTableCell tagCell) {
+        return onSameLine ? getColIndex(tagCell) : (getColIndex(tagCell) + 1);
     }
 
     private void minusGridSpan(XWPFTableRow row, int templateColIndex) {
@@ -213,7 +227,7 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
         row.getCtRow().setTcArray(pos, templateCell.getCTTc());
     }
 
-    private int getColIndex(XWPFTable table, XWPFTableCell cell) {
+    private int getColIndex(XWPFTableCell cell) {
         XWPFTableRow tableRow = cell.getTableRow();
         int orginalCol = 0;
         for (int i = 0; i < tableRow.getTableCells().size(); i++) {

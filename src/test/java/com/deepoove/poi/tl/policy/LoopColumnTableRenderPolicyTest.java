@@ -12,6 +12,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.policy.LoopColumnTableRenderPolicy;
+import com.deepoove.poi.policy.RenderPolicy;
 
 @DisplayName("Example for HackLoop Table")
 public class LoopColumnTableRenderPolicyTest {
@@ -51,13 +52,19 @@ public class LoopColumnTableRenderPolicyTest {
         labors.add(labor);
         data.setLabors(labors);
 
+        // same line
+        data.setGoods2(goods);
+        data.setLabors2(labors);
+
     }
 
     @Test
     public void testPaymentHackExample() throws Exception {
         LoopColumnTableRenderPolicy hackLoopTableRenderPolicy = new LoopColumnTableRenderPolicy();
+        RenderPolicy hackLoopSameLineTableRenderPolicy = new LoopColumnTableRenderPolicy(true);
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
-                .bind("labors", hackLoopTableRenderPolicy).build();
+                .bind("labors", hackLoopTableRenderPolicy).bind("goods2", hackLoopSameLineTableRenderPolicy)
+                .bind("labors2", hackLoopSameLineTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
         template.writeToFile("out_render_loopcolumn.docx");
     }
