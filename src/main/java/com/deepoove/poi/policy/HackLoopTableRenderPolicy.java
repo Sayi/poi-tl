@@ -26,6 +26,9 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
@@ -78,6 +81,7 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                 int insertPosition = templateRowIndex;
 
                 TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
+                boolean firstFlag = true;
                 while (iterator.hasNext()) {
                     insertPosition = templateRowIndex++;
                     XWPFTableRow nextRow = table.insertNewTableRow(insertPosition);
@@ -88,6 +92,20 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                     newCursor.toPrevSibling();
                     XmlObject object = newCursor.getObject();
                     nextRow = new XWPFTableRow((CTRow) object, table);
+                    if (!firstFlag) {
+                        // update VMerge cells for non-first row
+                        List<XWPFTableCell> tableCells = nextRow.getTableCells();
+                        for (XWPFTableCell cell : tableCells) {
+                            CTTcPr tcPr = TableTools.getTcPr(cell);
+                            CTVMerge vMerge = tcPr.getVMerge();
+                            if (null == vMerge) continue;
+                            if (STMerge.RESTART == vMerge.getVal()) {
+                                vMerge.setVal(STMerge.CONTINUE);
+                            }
+                        }
+                    } else {
+                        firstFlag = false;
+                    }
                     setTableRow(table, nextRow, insertPosition);
 
                     RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory()

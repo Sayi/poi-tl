@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 
@@ -22,13 +21,6 @@ public class HackLoopTableRenderPolicyTest {
 
     @BeforeEach
     public void init() {
-        data.setSubtotal("8000");
-        data.setTax("600");
-        data.setTransform("120");
-        data.setOther("250");
-        data.setUnpay("6600");
-        data.setTotal("总共：7200");
-
         List<Goods> goods = new ArrayList<>();
         Goods good = new Goods();
         good.setCount(4);
@@ -39,8 +31,7 @@ public class HackLoopTableRenderPolicyTest {
         good.setTax(new Random().nextInt(10) + 20);
         good.setTotalPrice(1600);
         good.setPicture(
-                Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).size(24, 24).create());
-        goods.add(good);
+                Pictures.ofLocal("src/test/resources/earth.png").size(24, 24).create());
         goods.add(good);
         goods.add(good);
         goods.add(good);
@@ -55,9 +46,9 @@ public class HackLoopTableRenderPolicyTest {
         labors.add(labor);
         labors.add(labor);
         labors.add(labor);
-        labors.add(labor);
         data.setLabors(labors);
 
+        data.setTotal("1024");
     }
 
     @Test
@@ -66,7 +57,7 @@ public class HackLoopTableRenderPolicyTest {
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("out_render_hackloop.docx");
+        template.writeToFile("out_render_looprow.docx");
     }
 
 }

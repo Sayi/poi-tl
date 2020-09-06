@@ -228,7 +228,7 @@ public final class TableTools {
         return tblPr;
     }
 
-    private static CTTcPr getTcPr(XWPFTableCell cell) {
+    public static CTTcPr getTcPr(XWPFTableCell cell) {
         CTTcPr tcPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr() : cell.getCTTc().addNewTcPr();
         return tcPr;
     }
