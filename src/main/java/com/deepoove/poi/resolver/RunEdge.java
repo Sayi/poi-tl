@@ -16,7 +16,7 @@
 package com.deepoove.poi.resolver;
 
 /**
- * 奔跑的边界
+ * Running boundary
  * 
  * @author Sayi
  * @version 0.0.2
@@ -24,17 +24,18 @@ package com.deepoove.poi.resolver;
 public class RunEdge {
 
     /**
-     * 起始文本在段落内部的全局位置
+     * The global position of the starting text inside the paragraph
      */
     private int allEdge;
 
     /**
-     * 起始文本在run内部的位置
+     * The position of the starting text inside the run
      */
     private int runEdge;
 
     /**
-     * 起始文本所在的run在段落内的位置
+     * The position of the run within the paragraph where the starting text is
+     * located
      */
     private int runPos;
 
@@ -89,7 +90,10 @@ public class RunEdge {
 
     @Override
     public String toString() {
-        return "段落内第" + runPos + "个run,标签为" + tag + ", 在这个run内的边界位置为：" + runEdge;
+        StringBuilder sb = new StringBuilder();
+        sb.append("The run position of ").append(tag).append(" is ").append(runPos)
+                .append(", Offset in run is ").append(runEdge);
+        return sb.toString();
     }
 
 }
