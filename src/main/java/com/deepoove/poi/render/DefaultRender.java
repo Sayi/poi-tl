@@ -114,7 +114,6 @@ public class DefaultRender implements Render {
                         runTemplate.getSign(), ClassUtils.getShortClassName(policy.getClass()));
                 policy.render(runTemplate, renderDataCompute.compute(runTemplate.getTagName()), template);
 
-                // 没有最终合并，继续下一个合并
                 if (current == template.getXWPFDocument()) {
                     i++;
                 } else {

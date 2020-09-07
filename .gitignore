@@ -18,6 +18,8 @@ out*.docx
 out_*
 merge_all
 
+/doc/*
+
 #private
 complex.docx
 ~$*.docx

@@ -32,7 +32,7 @@ import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * render paragraph
+ * paragraph render
  * 
  * @author Sayi
  *

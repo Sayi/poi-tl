@@ -31,6 +31,8 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
+ * Numbering render
+ * 
  * @author Sayi
  */
 public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {

@@ -26,6 +26,8 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 
 /**
+ * picture render
+ * 
  * @author Sayi
  *
  */

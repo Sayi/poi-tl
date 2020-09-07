@@ -15,8 +15,6 @@
  */
 package com.deepoove.poi.data;
 
-import com.deepoove.poi.exception.RenderException;
-
 /**
  * @author Sayi
  * @see org.apache.poi.xwpf.usermodel.Document
@@ -118,7 +116,7 @@ public enum PictureType {
         else if (imgFile.endsWith(".wpg"))
             format = WPG;
         else {
-            throw new RenderException(
+            throw new IllegalArgumentException(
                     "Unsupported picture: " + imgFile + ". Expected emf|wmf|pict|jpeg|png|dib|gif|tiff|eps|bmp|wpg");
         }
         return format;

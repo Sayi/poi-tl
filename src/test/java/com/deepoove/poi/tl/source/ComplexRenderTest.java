@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
@@ -115,9 +116,9 @@ public class ComplexRenderTest {
             }
         };
 
-        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx");
+        Configure build = Configure.builder().bind("table", new TableRenderPolicy()).build();
+        XWPFTemplate template = XWPFTemplate.compile("src/test/resources/complex.docx", build);
         // 动态持有XWPFTable对象
-        template.bind("table", new TableRenderPolicy());
         template.render(datas);
 
         FileOutputStream out = new FileOutputStream("out_complex.docx");

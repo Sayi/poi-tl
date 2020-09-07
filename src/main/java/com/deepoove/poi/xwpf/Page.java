@@ -2,7 +2,7 @@ package com.deepoove.poi.xwpf;
 
 import java.math.BigInteger;
 
-public class Page {
+class Page {
 
     public static final Page A4_NORMAL = new Page(210, 297, new PageMargin(1440, 1440, 1800, 1800));
     public static final Page A4_NARROW = new Page(210, 297, new PageMargin(720, 720, 720, 720));

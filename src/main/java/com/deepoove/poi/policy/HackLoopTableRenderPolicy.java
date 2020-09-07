@@ -42,7 +42,7 @@ import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
 
 /**
- * Hack for loop table
+ * Hack for loop table row
  * 
  * @author Sayi
  *

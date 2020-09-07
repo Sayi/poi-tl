@@ -142,7 +142,7 @@ public final class StyleUtils {
         if (-1 != fontSize) dest.setFontSize(fontSize);
         if (Boolean.TRUE.equals(src.isItalic())) dest.setItalic(src.isItalic());
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
-        dest.setUnderline(src.getUnderline());
+        if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
     }
 
     /**

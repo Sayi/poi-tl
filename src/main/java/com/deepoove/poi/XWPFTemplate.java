@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.ResolverException;
-import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.DefaultRender;
 import com.deepoove.poi.render.Render;
 import com.deepoove.poi.resolver.Resolver;
@@ -121,7 +120,7 @@ public class XWPFTemplate implements Closeable {
     /**
      * Render the template by data model
      * 
-     * @param model
+     * @param model render data
      * @return
      */
     public XWPFTemplate render(Object model) {
@@ -133,26 +132,14 @@ public class XWPFTemplate implements Closeable {
      * Render the template by data model and write to OutputStream, do'not forget
      * invoke {@link XWPFTemplate#close()}, {@link OutputStream#close()}
      * 
-     * @param model
-     * @param out
+     * @param model render data
+     * @param out   output
      * @return
      * @throws IOException
      */
     public XWPFTemplate render(Object model, OutputStream out) throws IOException {
         this.render(model);
         this.write(out);
-        return this;
-    }
-
-    /**
-     * bind render policy
-     * 
-     * @param tagName
-     * @param policy
-     * @return
-     */
-    public XWPFTemplate bind(String tagName, RenderPolicy policy) {
-        this.config.customPolicy(tagName, policy);
         return this;
     }
 
@@ -187,7 +174,7 @@ public class XWPFTemplate implements Closeable {
     /**
      * reload the template
      * 
-     * @param doc
+     * @param doc load new template document
      */
     public void reload(NiceXWPFDocument doc) {
         PoitlIOUtils.closeLoggerQuietly(this.doc);
@@ -205,6 +192,11 @@ public class XWPFTemplate implements Closeable {
         this.doc.close();
     }
 
+    /**
+     * Get all tags in the document
+     * 
+     * @return
+     */
     public List<MetaTemplate> getElementTemplates() {
         return eleTemplates;
     }
@@ -213,10 +205,20 @@ public class XWPFTemplate implements Closeable {
         return this.doc;
     }
 
+    /**
+     * Get configuration
+     * 
+     * @return
+     */
     public Configure getConfig() {
         return config;
     }
 
+    /**
+     * Get Resolver
+     * 
+     * @return
+     */
     public Resolver getResolver() {
         return resolver;
     }

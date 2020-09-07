@@ -30,6 +30,12 @@ import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
+/**
+ * Document Render
+ * 
+ * @author Sayi
+ *
+ */
 public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderData> {
 
     @Override

@@ -36,8 +36,7 @@ public class Issue331 {
     }
 
     @SuppressWarnings("serial")
-    // @Test
-    // TODO Unpassed
+    @Test
     public void testRunTemlate() throws FileNotFoundException, IOException {
         XWPFTemplate template = XWPFTemplate.compile(new FileInputStream("src/test/resources/issue/331_hyper.docx"));
 
@@ -46,7 +45,6 @@ public class Issue331 {
                 put("title", "Hi");
             }
         });
-        // insertNewRun 实现的bug，如果找不到i元素则在末尾插入，可能需要cursor或者qnameset来插入
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
         assertEquals("HiAAhttp://baidu.comhttp:deepoove.com", document.getParagraphArray(0).getText());
         document.close();

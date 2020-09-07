@@ -35,6 +35,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
+import com.deepoove.poi.data.style.CellStyle;
+import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 
@@ -128,11 +130,7 @@ public final class TableTools {
         tblW.setW(BigInteger.valueOf(width));
 
         if (0 != width) {
-            CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
-            if (null == tblGrid) {
-                tblGrid = table.getCTTbl().addNewTblGrid();
-            }
-
+            CTTblGrid tblGrid = getTblGrid(table);
             for (float w : colWidths) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
                 addNewGridCol.setW(BigInteger.valueOf(UnitUtils.cm2Twips(w)));
@@ -142,20 +140,13 @@ public final class TableTools {
 
     public static void widthTable(XWPFTable table, float widthCM, int cols) {
         int width = UnitUtils.cm2Twips(widthCM);
-        CTTblPr tblPr = table.getCTTbl().getTblPr();
-        if (null == tblPr) {
-            tblPr = table.getCTTbl().addNewTblPr();
-        }
+        CTTblPr tblPr = getTblPr(table);
         CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
         tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
         tblW.setW(BigInteger.valueOf(width));
 
         if (0 != width) {
-            CTTblGrid tblGrid = table.getCTTbl().getTblGrid();
-            if (null == tblGrid) {
-                tblGrid = table.getCTTbl().addNewTblGrid();
-            }
-
+            CTTblGrid tblGrid = getTblGrid(table);
             for (int j = 0; j < cols; j++) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
                 addNewGridCol.setW(BigInteger.valueOf(width / cols));
@@ -184,6 +175,20 @@ public final class TableTools {
         tblBorders.getInsideV().setSz(borderSize);
     }
 
+    /**
+     * set border style
+     * <p>
+     * TableTools.setBorder(table::setLeftBorder, border);
+     * </p>
+     * 
+     * @param consumer
+     * @param border
+     */
+    public static void setBorder(FourthConsumer<XWPFBorderType, Integer, Integer, String> consumer,
+            BorderStyle border) {
+        if (null != border) consumer.accept(border.getType(), border.getSize(), 0, border.getColor());
+    }
+
     public static void initBasicTable(XWPFTable table, int col, float width, TableStyle style) {
         int defaultBorderSize = 4;
         widthTable(table, width, col);
@@ -199,9 +204,12 @@ public final class TableTools {
         StyleUtils.styleTable(table, style);
     }
 
-    public static void setBorder(FourthConsumer<XWPFBorderType, Integer, Integer, String> consumer,
-            BorderStyle border) {
-        if (null != border) consumer.accept(border.getType(), border.getSize(), 0, border.getColor());
+    public static void styleTableRow(XWPFTableRow row, RowStyle rowStyle) {
+        StyleUtils.styleTableRow(row, rowStyle);
+    }
+
+    public static void styleTableCell(XWPFTableCell cell, CellStyle cellStyle) {
+        StyleUtils.styleTableCell(cell, cellStyle);
     }
 
     public static int obtainRowSize(XWPFTable table) {
