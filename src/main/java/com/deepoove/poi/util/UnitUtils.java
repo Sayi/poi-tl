@@ -35,6 +35,16 @@ public final class UnitUtils {
     }
 
     /**
+     * point to twips
+     * 
+     * @param pt
+     * @return in twentieths of a point (1/1440 of an inch)
+     */
+    public static int point2Twips(int pt) {
+        return pt * 20;
+    }
+
+    /**
      * average the width
      * 
      * @param width
