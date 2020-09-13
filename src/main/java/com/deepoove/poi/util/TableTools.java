@@ -154,6 +154,15 @@ public final class TableTools {
         }
     }
 
+    public static void borderTable(XWPFTable table, BorderStyle borderStyle) {
+        setBorder(table::setLeftBorder, borderStyle);
+        setBorder(table::setRightBorder, borderStyle);
+        setBorder(table::setTopBorder, borderStyle);
+        setBorder(table::setBottomBorder, borderStyle);
+        setBorder(table::setInsideHBorder, borderStyle);
+        setBorder(table::setInsideVBorder, borderStyle);
+    }
+
     public static void borderTable(XWPFTable table, int size) {
         CTTblPr tblPr = getTblPr(table);
         CTTblBorders tblBorders = tblPr.getTblBorders();

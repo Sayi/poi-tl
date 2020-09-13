@@ -57,6 +57,10 @@ public class MergeCellRule implements Serializable {
         return mapping.entrySet().iterator();
     }
 
+    public Map<Grid, Grid> getMapping() {
+        return mapping;
+    }
+
     @Override
     public String toString() {
         return mapping.toString();
