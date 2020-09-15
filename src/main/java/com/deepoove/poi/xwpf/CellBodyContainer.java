@@ -119,7 +119,8 @@ public class CellBodyContainer implements BodyContainer {
         // <p>elements must be located before </tc> elements
         if (parent instanceof XWPFParagraph) {
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
-            if ("".equals(paragraphText)) {
+            boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
+            if ("".equals(paragraphText) && !havePictures) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
                 int lastPos = cell.getBodyElements().size() - 1;
                 if (canRemoveParagraph(pos, lastPos)) {

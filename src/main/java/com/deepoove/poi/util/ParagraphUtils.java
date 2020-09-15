@@ -18,6 +18,7 @@ package com.deepoove.poi.util;
 
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -47,6 +48,14 @@ public final class ParagraphUtils {
             }
         }
         return null;
+    }
+
+    public static boolean havePictures(XWPFParagraph paragraph) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        for (XWPFRun run : runs) {
+            if (CollectionUtils.isNotEmpty(run.getEmbeddedPictures())) return true;
+        }
+        return false;
     }
 
 }
