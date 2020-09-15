@@ -341,7 +341,7 @@ Address: Shanghai,China
 
 ## 详细文档与示例
 
-[中文文档Documentation](http://deepoove.com/poi-tl)  
+[中文文档Documentation](http://deepoove.com/poi-tl)  [1.9.0-beta文档](http://deepoove.com/poi-tl/1.9.0-beta)  
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
