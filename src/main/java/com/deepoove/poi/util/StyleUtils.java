@@ -42,6 +42,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
@@ -49,6 +50,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
 import com.deepoove.poi.data.style.CellStyle;
@@ -176,6 +178,8 @@ public final class StyleUtils {
         }
         if (null != colWidths) {
             CTTblGrid tblGrid = TableTools.getTblGrid(table);
+            CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
+            tblLayout.setType(STTblLayoutType.FIXED);
             for (int index = 0; index < colWidths.length; index++) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
                 addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));

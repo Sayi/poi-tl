@@ -28,6 +28,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
@@ -235,6 +236,11 @@ public final class TableTools {
             tblGrid = table.getCTTbl().addNewTblGrid();
         }
         return tblGrid;
+    }
+
+    public static CTTblLayoutType getTblLayout(XWPFTable table) {
+        CTTblPr tblPr = getTblPr(table);
+        return tblPr.isSetTblLayout() ? tblPr.getTblLayout() : tblPr.addNewTblLayout();
     }
 
     private static CTTblPr getTblPr(XWPFTable table) {
