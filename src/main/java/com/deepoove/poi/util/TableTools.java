@@ -62,8 +62,10 @@ public final class TableTools {
         mergeCellsHorizontalWithoutRemove(table, row, fromCol, toCol);
         XWPFTableRow rowTable = table.getRow(row);
         for (int colIndex = fromCol + 1; colIndex <= toCol; colIndex++) {
-            rowTable.getCtRow().removeTc(fromCol + 1);
             rowTable.removeCell(fromCol + 1);
+            if (rowTable.getTableCells().size() != rowTable.getCtRow().sizeOfTcArray()) {
+                rowTable.getCtRow().removeTc(fromCol + 1);
+            }
         }
     }
 
