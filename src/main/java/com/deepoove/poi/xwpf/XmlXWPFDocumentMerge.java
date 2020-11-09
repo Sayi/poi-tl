@@ -32,6 +32,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
+import org.apache.poi.openxml4j.opc.TargetMode;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
@@ -156,6 +157,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         // Map<String, String> styleIdsMap = mergeStyles(docMerge);
         Map<String, String> numIdsMap = mergeNumbering(source, merged);
         Map<String, String> blipIdsMap = mergePicture(source, merged);
+        Map<String, String> externalBlipIdsMap = mergeExternalPicture(source, merged);
         Map<String, String> hyperlinkMap = mergeHyperlink(source, merged);
         Map<String, String> chartIdsMap = mergeChart(source, merged);
 
@@ -185,6 +187,14 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             // w:pict v:shape v:imagedata
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"",
                     "r:id=\"" + placeHolderblipIdsMap.get(relaId) + "\"");
+        }
+        Map<String, String> placeHolderExternalblipIdsMap = new HashMap<String, String>();
+        for (String relaId : externalBlipIdsMap.keySet()) {
+            placeHolderExternalblipIdsMap.put(relaId, blipIdsMap.get(relaId) + CROSS_REPLACE_STRING);
+        }
+        for (String relaId : placeHolderExternalblipIdsMap.keySet()) {
+            addPart = addPart.replaceAll("r:link=\"" + relaId + "\"",
+                    "r:link=\"" + placeHolderExternalblipIdsMap.get(relaId) + "\"");
         }
         // hyperlink id
         for (String relaId : hyperlinkMap.keySet()) {
@@ -238,6 +248,23 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             String relationId = merged.getRelationId(xwpfPictureData);
             String blidId = source.addPictureData(xwpfPictureData.getData(), xwpfPictureData.getPictureType());
             blipIdsMap.put(relationId, blidId);
+        }
+        return blipIdsMap;
+    }
+
+    private Map<String, String> mergeExternalPicture(NiceXWPFDocument source, NiceXWPFDocument merged)
+            throws InvalidFormatException {
+        Map<String, String> blipIdsMap = new HashMap<String, String>();
+        PackageRelationshipCollection imagePart = merged.getPackagePart()
+                .getRelationshipsByType(PackageRelationshipTypes.IMAGE_PART);
+        Iterator<PackageRelationship> iterator = imagePart.iterator();
+        while (iterator.hasNext()) {
+            PackageRelationship relationship = iterator.next();
+            if (relationship.getTargetMode() == TargetMode.EXTERNAL) {
+                PackageRelationship relationshipNew = source.getPackagePart().addExternalRelationship(
+                        relationship.getTargetURI().toString(), XWPFRelation.IMAGES.getRelation());
+                blipIdsMap.putIfAbsent(relationship.getId(), relationshipNew.getId());
+            }
         }
         return blipIdsMap;
     }
