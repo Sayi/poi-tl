@@ -33,7 +33,7 @@ public class Pictures {
     }
 
     public static PictureBuilder ofLocal(String src) {
-        return Pictures.ofBytes(ByteUtils.getLocalByteArray(new File(src)), PictureType.suggestFileType(src));
+        return ofBytes(ByteUtils.getLocalByteArray(new File(src)), PictureType.suggestFileType(src));
     }
 
     public static PictureBuilder ofUrl(String url, PictureType pictureType) {
@@ -47,6 +47,10 @@ public class Pictures {
     public static PictureBuilder ofBufferedImage(BufferedImage image, PictureType pictureType) {
         return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
+
+	public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
+		return ofBytes(ByteUtils.getBase64ByteArray(base64), pictureType);
+	}
 
     public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
         PictureBuilder inst = new PictureBuilder(pictureType, bytes);
