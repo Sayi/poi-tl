@@ -58,7 +58,6 @@ public class DocumentProcessor implements Visitor {
         templates.forEach(template -> template.accept(this));
         Set<XWPFTextboxContent> textboxs = obtainTextboxes(templates);
         textboxs.forEach(content -> {
-            System.out.println(content.getCTTxbxContent().hashCode());
             content.getXmlObject().set(content.getCTTxbxContent());
         });
     }
