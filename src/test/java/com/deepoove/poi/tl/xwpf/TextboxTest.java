@@ -28,6 +28,7 @@ public class TextboxTest {
                 put("author", new TextRenderData("000000", "Sayi卅一"));
                 put("introduce", new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("portrait", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+                
             }
         };
 
@@ -37,6 +38,12 @@ public class TextboxTest {
         Map<String, Object> data = new HashMap<String, Object>() {
             {
                 put("mores", mores);
+//                put("volumes", "1900");
+//                put("journal", new HashMap<String, String>(){
+//                    {
+//                        put("issn", "8848");
+//                    }
+//                });
             }
         };
 

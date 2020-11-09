@@ -19,11 +19,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
+import com.deepoove.poi.template.BlockTemplate;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
@@ -51,22 +53,31 @@ public class DocumentProcessor implements Visitor {
         inlineIterableProcessor = new InlineIterableProcessor(template, resolver, renderDataCompute);
     }
 
-    @SuppressWarnings("deprecation")
     public void process(List<MetaTemplate> templates) {
         // process in order( or sort first)
         templates.forEach(template -> template.accept(this));
+        Set<XWPFTextboxContent> textboxs = obtainTextboxes(templates);
+        textboxs.forEach(content -> {
+            System.out.println(content.getCTTxbxContent().hashCode());
+            content.getXmlObject().set(content.getCTTxbxContent());
+        });
+    }
+
+    @SuppressWarnings("deprecation")
+    private Set<XWPFTextboxContent> obtainTextboxes(List<MetaTemplate> templates) {
         Set<XWPFTextboxContent> textboxs = new HashSet<>();
+        if (CollectionUtils.isEmpty(templates)) return textboxs;
         templates.forEach(template -> {
-            if (template instanceof RunTemplate) {
-                if (((RunTemplate) template).getRun().getParent() instanceof XWPFParagraph
-                        && ((RunTemplate) template).getRun().getParagraph().getBody() instanceof XWPFTextboxContent) {
-                    textboxs.add((XWPFTextboxContent) ((RunTemplate) template).getRun().getParagraph().getBody());
+            RunTemplate checkTemplate = template instanceof RunTemplate ? (RunTemplate) template
+                    : (template instanceof BlockTemplate ? ((BlockTemplate) template).getStartMark() : null);
+            if (null != checkTemplate) {
+                if (checkTemplate.getRun().getParent() instanceof XWPFParagraph
+                        && checkTemplate.getRun().getParagraph().getBody() instanceof XWPFTextboxContent) {
+                    textboxs.add((XWPFTextboxContent) checkTemplate.getRun().getParagraph().getBody());
                 }
             }
         });
-        textboxs.forEach(content -> {
-            content.getXmlObject().set(content.getCTTxbxContent());
-        });
+        return textboxs;
     }
 
     @Override
