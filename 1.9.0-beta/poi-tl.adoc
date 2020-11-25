@@ -1539,7 +1539,7 @@ image::../example/example_animal_template.png[align='center']
 
 这个示例展示了区块对的循环功能，以及如何在循环中使用引用图片和引用图表的功能。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.8.2/src/test/java/com/deepoove/poi/tl/example/AnimalExample.java[JUnit AnimalExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.8.2/src/test/java/com/deepoove/poi/tl/example/AnimalExmample.java[JUnit AnimalExample]
 
 [[example-certificate]]
 === 证书奖状
