@@ -48,6 +48,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
@@ -328,13 +331,37 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             Field listStyleField = XWPFStyles.class.getDeclaredField("listStyle");
             listStyleField.setAccessible(true);
             List<XWPFStyle> lists = (List<XWPFStyle>) listStyleField.get(stylesMerge);
+            String defaultParaStyleId = null;
             for (XWPFStyle xwpfStyle : lists) {
                 if (styles.styleExist(xwpfStyle.getStyleId())) {
                     String id = xwpfStyle.getStyleId();
-                    xwpfStyle.setStyleId(UUID.randomUUID().toString());
+                    xwpfStyle.setStyleId(UUID.randomUUID().toString().substring(0, 8));
                     styleIdsMap.put(id, xwpfStyle.getStyleId());
                 }
+                
+                // fix github issue 499
+                CTStyle ctStyle = xwpfStyle.getCTStyle();
+                if (ctStyle.isSetDefault() && ctStyle.getDefault() == STOnOff.X_1
+                        && ctStyle.getType() == STStyleType.PARAGRAPH) {
+                    defaultParaStyleId = ctStyle.getStyleId();
+                }
+                
+                if (ctStyle.isSetDefault()) {
+                    ctStyle.unsetDefault();
+                }
+                if (ctStyle.isSetName()) {
+                    ctStyle.getName().setVal(ctStyle.getName().getVal() + xwpfStyle.getStyleId());
+                }
+                if (ctStyle.isSetBasedOn()) {
+                    String newId = styleIdsMap.get(ctStyle.getBasedOn().getVal());
+                    if (null != newId) ctStyle.getBasedOn().setVal(newId);
+                }
                 styles.addStyle(xwpfStyle);
+            }
+            
+            if (null != defaultParaStyleId) {
+                final String dpid = defaultParaStyleId;
+                merged.getParagraphs().stream().filter(p -> null == p.getStyle()).forEach(p -> p.setStyle(dpid));
             }
         } catch (Exception e) {
             // throw exception?
