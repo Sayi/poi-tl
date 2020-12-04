@@ -34,6 +34,11 @@ public class RowStyle implements Serializable {
     private int height;
 
     /**
+     * atleast、auto、exact
+     */
+    private String heightRule;
+
+    /**
      * default cell style for all cells in the current row
      */
     private CellStyle defaultCellStyle;
@@ -44,6 +49,14 @@ public class RowStyle implements Serializable {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public String getHeightRule() {
+        return heightRule;
+    }
+
+    public void setHeightRule(String heightRule) {
+        this.heightRule = heightRule;
     }
 
     public CellStyle getDefaultCellStyle() {

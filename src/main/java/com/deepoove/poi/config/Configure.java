@@ -61,23 +61,23 @@ public class Configure implements Cloneable {
     /**
      * template by bind: Highest priority
      */
-    private final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
+    protected final Map<String, RenderPolicy> CUSTOM_POLICYS = new HashMap<String, RenderPolicy>();
 
     /**
      * template by xwpfRun: Medium priority
      */
-    private final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
+    protected final Map<Character, RenderPolicy> DEFAULT_POLICYS = new HashMap<Character, RenderPolicy>();
 
     /**
      * template by xwpfchart: Medium priority
      */
-    private final Map<ChartTypes, RenderPolicy> DEFAULT_CHART_POLICYS = new EnumMap<ChartTypes, RenderPolicy>(
+    protected final Map<ChartTypes, RenderPolicy> DEFAULT_CHART_POLICYS = new EnumMap<ChartTypes, RenderPolicy>(
             ChartTypes.class);
 
     /**
      * template by element template: Lowest priority
      */
-    private final Map<Class<? extends MetaTemplate>, RenderPolicy> DEFAULT_TEMPLATE_POLICYS = new HashMap<>();
+    protected final Map<Class<? extends MetaTemplate>, RenderPolicy> DEFAULT_TEMPLATE_POLICYS = new HashMap<>();
 
     /**
      * if & for each
@@ -85,43 +85,43 @@ public class Configure implements Cloneable {
      * eg. {{?user}} Hello, World {{/user}}
      * </p>
      */
-    Pair<Character, Character> iterable = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
+    protected Pair<Character, Character> iterable = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
             GramerSymbol.BLOCK_END.getSymbol());
 
     /**
      * tag prefix
      */
-    String gramerPrefix = "{{";
+    protected String gramerPrefix = "{{";
 
     /**
      * tag suffix
      */
-    String gramerSuffix = "}}";
+    protected String gramerSuffix = "}}";
 
     /**
      * tag regular expression
      */
-    String grammerRegex = DEFAULT_GRAMER_REGEX;
+    protected String grammerRegex = DEFAULT_GRAMER_REGEX;
 
     /**
      * the factory of render data compute
      */
-    RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(false);
+    protected RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(false);
 
     /**
      * the factory of resovler run template
      */
-    ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory();
+    protected ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory();
 
     /**
      * the policy of process tag for valid render data error(null or illegal)
      */
-    ValidErrorHandler handler = new ClearHandler();
+    protected ValidErrorHandler handler = new ClearHandler();
 
     /**
      * sp el custom static method
      */
-    Map<String, Method> spELFunction = new HashMap<String, Method>();
+    protected Map<String, Method> spELFunction = new HashMap<String, Method>();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -156,16 +156,6 @@ public class Configure implements Cloneable {
      */
     public static Configure createDefault() {
         return builder().build();
-    }
-
-    /**
-     * Builder to build {@link Configure}
-     * 
-     * @return
-     */
-    @Deprecated
-    public static ConfigureBuilder newBuilder() {
-        return new ConfigureBuilder();
     }
 
     /**

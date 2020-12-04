@@ -29,9 +29,7 @@ public final class Texts {
     }
 
     public static TextBuilder of(String text) {
-        TextBuilder inst = new TextBuilder(text);
-
-        return inst;
+        return new TextBuilder(text);
     }
 
     /**
@@ -97,7 +95,7 @@ public final class Texts {
             return this;
         }
 
-        public TextBuilder fontSize(int fontSize) {
+        public TextBuilder fontSize(double fontSize) {
             if (null != this.style) {
                 style.setFontSize(fontSize);
             } else {

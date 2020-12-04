@@ -38,12 +38,11 @@ public class Rows {
     }
 
     public static RowBuilder of() {
-        RowBuilder inst = new RowBuilder();
-        return inst;
+        return new RowBuilder();
     }
 
     public static RowBuilder of(CellRenderData... cell) {
-        RowBuilder inst = Rows.of();
+        RowBuilder inst = of();
         if (null != cell) {
             Arrays.stream(cell).forEach(inst::addCell);
         }
@@ -51,7 +50,7 @@ public class Rows {
     }
 
     public static RowBuilder of(String... cell) {
-        RowBuilder inst = Rows.of();
+        RowBuilder inst = of();
         if (null != cell) {
             Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
@@ -61,7 +60,7 @@ public class Rows {
     }
 
     public static RowBuilder of(TextRenderData... cell) {
-        RowBuilder inst = Rows.of();
+        RowBuilder inst = of();
         if (null != cell) {
             Arrays.stream(cell).map(text -> {
                 return Cells.of(text).create();
@@ -116,6 +115,20 @@ public class Rows {
         public RowBuilder rowHeight(double cm) {
             RowStyle rowStyle = getRowStyle();
             rowStyle.setHeight(UnitUtils.cm2Twips(cm));
+            return this;
+        }
+
+        public RowBuilder rowExactHeight(double cm) {
+            RowStyle rowStyle = getRowStyle();
+            rowStyle.setHeight(UnitUtils.cm2Twips(cm));
+            rowStyle.setHeightRule("exact");
+            return this;
+        }
+
+        public RowBuilder rowAtleastHeight(double cm) {
+            RowStyle rowStyle = getRowStyle();
+            rowStyle.setHeight(UnitUtils.cm2Twips(cm));
+            rowStyle.setHeightRule("atleast");
             return this;
         }
 

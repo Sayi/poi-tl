@@ -42,8 +42,7 @@ public class Numberings {
     }
 
     public static NumberingBuilder of(NumberingFormat format) {
-        NumberingBuilder inst = new NumberingBuilder(format);
-        return inst;
+        return new NumberingBuilder(format);
     }
 
     public static NumberingBuilder of(TextRenderData... text) {

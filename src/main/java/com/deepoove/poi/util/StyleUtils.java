@@ -226,7 +226,10 @@ public final class StyleUtils {
             CTTrPr properties = (ctRow.isSetTrPr()) ? ctRow.getTrPr() : ctRow.addNewTrPr();
             CTHeight h = properties.sizeOfTrHeightArray() == 0 ? properties.addNewTrHeight()
                     : properties.getTrHeightArray(0);
-            h.setHRule(STHeightRule.AT_LEAST);
+            String heightRule = rowStyle.getHeightRule();
+            if ("exact".equals(heightRule)) h.setHRule(STHeightRule.EXACT);
+            else if ("atleast".equals(heightRule)) h.setHRule(STHeightRule.AT_LEAST);
+            else h.setHRule(STHeightRule.AUTO);
         }
     }
 
@@ -270,9 +273,9 @@ public final class StyleUtils {
         }
 
         if (0 != style.getFontSize() && -1 != style.getFontSize()) {
-            BigInteger bint = new BigInteger("" + style.getFontSize());
+            BigDecimal bd = BigDecimal.valueOf(style.getFontSize());
             CTHpsMeasure ctSize = pr.isSetSz() ? pr.getSz() : pr.addNewSz();
-            ctSize.setVal(bint.multiply(new BigInteger("2")));
+            ctSize.setVal(bd.multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).toBigInteger());
         }
 
         if (null != style.isStrike()) {

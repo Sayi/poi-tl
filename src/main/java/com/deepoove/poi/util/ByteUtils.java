@@ -62,23 +62,24 @@ public final class ByteUtils {
         return null;
     }
 
-	/**
-	 * Get byte array of base64
-	 * @param base64
-	 * @return
-	 */
-	public static byte [] getBase64ByteArray(String base64) {
-		String encodingPrefix = "base64,";
-		if (base64.contains(encodingPrefix)) {
-			int contentStartIndex = base64.indexOf(encodingPrefix) + encodingPrefix.length();
-			base64 = base64.substring(contentStartIndex);
-		}
-		boolean isBase64 = Base64.isBase64(base64);
-		if (isBase64) {
-			return Base64.decodeBase64(base64);
-		}
-		return null;
-	}
+    /**
+     * Get byte array of base64
+     * 
+     * @param base64
+     * @return
+     */
+    public static byte[] getBase64ByteArray(String base64) {
+        String encodingPrefix = "base64,";
+        if (base64.contains(encodingPrefix)) {
+            int contentStartIndex = base64.indexOf(encodingPrefix) + encodingPrefix.length();
+            base64 = base64.substring(contentStartIndex);
+        }
+        boolean isBase64 = Base64.isBase64(base64);
+        if (isBase64) {
+            return Base64.decodeBase64(base64);
+        }
+        return null;
+    }
 
     /**
      * Get byte array of stream

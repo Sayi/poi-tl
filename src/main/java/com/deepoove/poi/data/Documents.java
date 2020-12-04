@@ -27,8 +27,7 @@ public class Documents {
     }
 
     public static DocumentBuilder of() {
-        DocumentBuilder inst = new DocumentBuilder();
-        return inst;
+        return new DocumentBuilder();
     }
 
     /**

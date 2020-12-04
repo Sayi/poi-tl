@@ -36,7 +36,7 @@ public class Tables {
 
     public static TableBuilder of(RowRenderData... row) {
         // default A4
-        TableBuilder inst = Tables.ofA4Width();
+        TableBuilder inst = ofA4Width();
         if (null != row) {
             Arrays.stream(row).forEach(inst::addRow);
         }
@@ -44,7 +44,7 @@ public class Tables {
     }
 
     public static TableBuilder of(String[][] strings) {
-        TableBuilder inst = Tables.ofA4Width();
+        TableBuilder inst = ofA4Width();
         if (null != strings) {
             Arrays.stream(strings).map(string -> {
                 RowBuilder row = Rows.of();

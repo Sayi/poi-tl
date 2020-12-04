@@ -35,20 +35,19 @@ public class Paragraphs {
     }
 
     public static ParagraphBuilder of() {
-        ParagraphBuilder inst = new ParagraphBuilder();
-        return inst;
+        return new ParagraphBuilder();
     }
 
     public static ParagraphBuilder of(String text) {
-        return Paragraphs.of().addText(text);
+        return of().addText(text);
     }
 
     public static ParagraphBuilder of(TextRenderData text) {
-        return Paragraphs.of().addText(text);
+        return of().addText(text);
     }
 
     public static ParagraphBuilder of(PictureRenderData picture) {
-        return Paragraphs.of().addPicture(picture);
+        return of().addPicture(picture);
     }
 
     /**

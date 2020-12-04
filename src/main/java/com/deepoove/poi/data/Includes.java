@@ -40,8 +40,7 @@ public class Includes {
     }
 
     public static IncludeBuilder ofBytes(byte[] bytes) {
-        IncludeBuilder inst = new IncludeBuilder(bytes);
-        return inst;
+        return new IncludeBuilder(bytes);
     }
 
     /**

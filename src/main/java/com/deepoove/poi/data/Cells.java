@@ -38,19 +38,19 @@ public class Cells {
     }
 
     public static CellBuilder of(String text) {
-        CellBuilder inst = Cells.of();
-        inst.data.addParagraph(Paragraphs.of(text).create());
+        CellBuilder inst = of();
+        inst.addParagraph(Paragraphs.of(text).create());
         return inst;
     }
 
     public static CellBuilder of(PictureRenderData picture) {
-        CellBuilder inst = Cells.of();
+        CellBuilder inst = of();
         inst.addParagraph(picture);
         return inst;
     }
 
     public static CellBuilder of(TextRenderData text) {
-        CellBuilder inst = Cells.of();
+        CellBuilder inst = of();
         inst.addParagraph(text);
         return inst;
     }

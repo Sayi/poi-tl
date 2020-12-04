@@ -48,13 +48,12 @@ public class Pictures {
         return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
 
-	public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
-		return ofBytes(ByteUtils.getBase64ByteArray(base64), pictureType);
-	}
+    public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
+        return ofBytes(ByteUtils.getBase64ByteArray(base64), pictureType);
+    }
 
     public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
-        PictureBuilder inst = new PictureBuilder(pictureType, bytes);
-        return inst;
+        return new PictureBuilder(pictureType, bytes);
     }
 
     /**
