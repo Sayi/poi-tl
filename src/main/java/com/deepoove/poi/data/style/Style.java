@@ -31,16 +31,17 @@ public class Style implements Serializable {
 
     private String color;
     private String fontFamily;
-    private int fontSize;
+    private double fontSize;
     private Boolean isBold;
     private Boolean isItalic;
     private Boolean isStrike;
     private Boolean isUnderLine;
 
     /**
-     * text background highlight color
+     * text background highlight color name
+     * {@link STHighlightColor.Enum}
      */
-    private STHighlightColor.Enum highlightColor;
+    private String highlightColor;
 
     /**
      * point unit(pt)
@@ -63,7 +64,7 @@ public class Style implements Serializable {
         this.color = color;
     }
 
-    public Style(String fontFamily, int fontSize) {
+    public Style(String fontFamily, double fontSize) {
         this.fontFamily = fontFamily;
         this.fontSize = fontSize;
     }
@@ -84,11 +85,11 @@ public class Style implements Serializable {
         this.fontFamily = fontFamily;
     }
 
-    public int getFontSize() {
+    public double getFontSize() {
         return fontSize;
     }
 
-    public void setFontSize(int fontSize) {
+    public void setFontSize(double fontSize) {
         this.fontSize = fontSize;
     }
 
@@ -124,11 +125,11 @@ public class Style implements Serializable {
         this.isUnderLine = isUnderLine;
     }
 
-    public STHighlightColor.Enum getHighlightColor() {
+    public String getHighlightColor() {
         return highlightColor;
     }
 
-    public void setHighlightColor(STHighlightColor.Enum highlightColor) {
+    public void setHighlightColor(String highlightColor) {
         this.highlightColor = highlightColor;
     }
 
@@ -166,7 +167,7 @@ public class Style implements Serializable {
             return this;
         }
 
-        public StyleBuilder buildFontSize(int fontSize) {
+        public StyleBuilder buildFontSize(double fontSize) {
             style.setFontSize(fontSize);
             return this;
         }

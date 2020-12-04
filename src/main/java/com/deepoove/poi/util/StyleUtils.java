@@ -15,7 +15,9 @@
  */
 package com.deepoove.poi.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +32,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
@@ -47,8 +48,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
@@ -75,8 +74,8 @@ public final class StyleUtils {
      */
     public static void styleRun(XWPFRun run, Style style) {
         if (null == run || null == style) return;
+        CTRPr pr = getRunProperties(run);
         String color = style.getColor();
-        CTRPr pr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
         if (StringUtils.isNotBlank(color)) {
             // run.setColor(color);
             // issue 326
@@ -84,8 +83,12 @@ public final class StyleUtils {
             ctColor.setVal(color);
             if (ctColor.isSetThemeColor()) ctColor.unsetThemeColor();
         }
-        int fontSize = style.getFontSize();
-        if (0 != fontSize && -1 != fontSize) run.setFontSize(fontSize);
+        double fontSize = style.getFontSize();
+        if (0 != fontSize && -1 != fontSize) {
+            BigDecimal bd = BigDecimal.valueOf(fontSize);
+            CTHpsMeasure ctSize = pr.isSetSz() ? pr.getSz() : pr.addNewSz();
+            ctSize.setVal(bd.multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).toBigInteger());
+        }
         String fontFamily = style.getFontFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
             run.setFontFamily(fontFamily);
@@ -95,18 +98,9 @@ public final class StyleUtils {
             fonts.setCs(fontFamily);
             fonts.setEastAsia(fontFamily);
         }
-        Enum highlightColor = style.getHighlightColor();
+        String highlightColor = style.getHighlightColor();
         if (null != highlightColor) {
-            CTHighlight highlight = pr.isSetHighlight() ? pr.getHighlight() : pr.addNewHighlight();
-            STHighlightColor hColor = highlight.xgetVal();
-            if (hColor == null) {
-                hColor = STHighlightColor.Factory.newInstance();
-            }
-            STHighlightColor.Enum val = STHighlightColor.Enum.forString(highlightColor.toString());
-            if (val != null) {
-                hColor.setStringValue(val.toString());
-                highlight.xsetVal(hColor);
-            }
+            run.setTextHighlightColor(highlightColor);
         }
         Boolean bold = style.isBold();
         if (null != bold) run.setBold(bold);
@@ -140,8 +134,15 @@ public final class StyleUtils {
         if (StringUtils.isNotBlank(src.getColor())) dest.setColor(src.getColor());
         if (0 != src.getCharacterSpacing()) dest.setCharacterSpacing(src.getCharacterSpacing());
         if (StringUtils.isNotBlank(src.getFontFamily())) dest.setFontFamily(src.getFontFamily());
-        int fontSize = src.getFontSize();
-        if (-1 != fontSize) dest.setFontSize(fontSize);
+        CTRPr pr = src.getCTR().getRPr();
+        BigDecimal fontSize = (pr != null && pr.isSetSz())
+                ? new BigDecimal(pr.getSz().getVal()).divide(BigDecimal.valueOf(2)).setScale(1, RoundingMode.HALF_UP)
+                : null;
+        if (null != fontSize) {
+            CTRPr destPr = getRunProperties(dest);
+            CTHpsMeasure ctSize = destPr.isSetSz() ? destPr.getSz() : destPr.addNewSz();
+            ctSize.setVal(fontSize.multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).toBigInteger());
+        }
         if (Boolean.TRUE.equals(src.isItalic())) dest.setItalic(src.isItalic());
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
@@ -352,6 +353,10 @@ public final class StyleUtils {
         if (run.isItalic()) builder.buildItalic();
         if (run.isStrikeThrough()) builder.buildStrike();
         return builder.build();
+    }
+
+    private static CTRPr getRunProperties(XWPFRun run) {
+        return run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
     }
 
 }

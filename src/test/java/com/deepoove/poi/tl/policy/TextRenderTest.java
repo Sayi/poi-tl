@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.TextRenderData;
@@ -34,13 +33,13 @@ public class TextRenderTest {
                 // 指定文本样式
                 Style style = new Style("FF5722");
                 style.setBold(true);
-                style.setFontSize(48);
+                style.setFontSize(48l);
                 style.setItalic(true);
                 style.setStrike(true);
                 style.setUnderLine(true);
                 style.setFontFamily("微软雅黑");
                 style.setCharacterSpacing(20);
-                style.setHighlightColor(STHighlightColor.DARK_GREEN);
+                style.setHighlightColor("darkGreen");
                 put("word", Texts.of("just deepoove.").style(style).create());
 
                 // 换行
