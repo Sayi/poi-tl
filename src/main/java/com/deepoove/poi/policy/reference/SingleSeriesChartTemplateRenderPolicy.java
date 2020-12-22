@@ -51,8 +51,7 @@ public class SingleSeriesChartTemplateRenderPolicy
         updateCTTable(chart.getWorkbook().getSheetAt(0), Arrays.asList(seriesDatas));
 
         plot(chart, pie);
-        chart.setTitleText(data.getChartTitle());
-        chart.setTitleOverlay(false);
+        setTitle(chart, data.getChartTitle());
     }
 
 }

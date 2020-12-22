@@ -127,5 +127,14 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             method.invoke(chart, sheet, series.getCategoryData(), series.getValuesData());
         }
     }
+    
+    protected void setTitle(XWPFChart chart, String title) {
+        if (null == title && chart.getCTChart().isSetTitle()) {
+            chart.getCTChart().unsetTitle();
+            return;
+        }
+        chart.setTitleText(title);
+        chart.setTitleOverlay(false);
+    }
 
 }

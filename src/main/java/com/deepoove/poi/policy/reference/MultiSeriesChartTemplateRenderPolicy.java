@@ -100,8 +100,7 @@ public class MultiSeriesChartTemplateRenderPolicy
         for (XDDFChartData chartData : chartSeries) {
             plot(chart, chartData);
         }
-        chart.setTitleText(data.getChartTitle());
-        chart.setTitleOverlay(false);
+        setTitle(chart, data.getChartTitle());
     }
 
     protected void processNewSeries(XDDFChartData chartData, Series addSeries) {

@@ -44,7 +44,7 @@ public class ChartReferencePolicyTest {
 
     private ChartMultiSeriesRenderData createMultiSeriesChart() {
         return Charts
-                .ofMultiSeries("ChartTitle",
+                .ofMultiSeries(null,
                         new String[] { "中文", "English", "日本語", "português", "中文", "English", "日本語", "português" })
                 .addSeries("countries", new Double[] { 15.0, 6.0, 18.0, 231.0, 150.0, 6.0, 118.0, 31.0 })
                 .addSeries("speakers", new Double[] { 223.0, 119.0, 154.0, 142.0, 223.0, 119.0, 54.0, 42.0 })
