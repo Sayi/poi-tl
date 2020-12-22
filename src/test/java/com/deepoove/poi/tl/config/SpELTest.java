@@ -57,7 +57,7 @@ public class SpELTest {
         Method substringStaticMethod = StringUtils.class.getDeclaredMethod("substring", String.class, int.class);
         spELFunction.put("substringStaticMethod", substringStaticMethod);
 
-        spelForFunction = new SpELRenderDataCompute(data, spELFunction);
+        spelForFunction = new SpELRenderDataCompute(data, true, spELFunction);
         spelForMap = new SpELRenderDataCompute(map);
         spelForBean = new SpELRenderDataCompute(data);
     }

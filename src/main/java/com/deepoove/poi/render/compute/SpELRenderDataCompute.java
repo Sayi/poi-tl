@@ -34,12 +34,18 @@ public class SpELRenderDataCompute implements RenderDataCompute {
 
     private final ExpressionParser parser;
     private final EvaluationContext context;
+    private boolean isStrict;
 
     public SpELRenderDataCompute(Object root) {
-        this(root, Collections.emptyMap());
+        this(root, true, Collections.emptyMap());
     }
 
-    public SpELRenderDataCompute(Object root, Map<String, Method> spELFunction) {
+    public SpELRenderDataCompute(Object root, boolean isStrict) {
+        this(root, isStrict, Collections.emptyMap());
+    }
+
+    public SpELRenderDataCompute(Object root, boolean isStrict, Map<String, Method> spELFunction) {
+        this.isStrict = isStrict;
         parser = new SpelExpressionParser();
         context = new StandardEvaluationContext(root);
         ((StandardEvaluationContext) context).addPropertyAccessor(new ReadMapAccessor());
@@ -48,8 +54,12 @@ public class SpELRenderDataCompute implements RenderDataCompute {
 
     @Override
     public Object compute(String el) {
-        // If cannot calculate expression, throw an exception
-        return parser.parseExpression(el).getValue(context);
+        try {
+            return parser.parseExpression(el).getValue(context);
+        } catch (Exception e) {
+            if (isStrict) throw e;
+            return null;
+        }
     }
 
 }

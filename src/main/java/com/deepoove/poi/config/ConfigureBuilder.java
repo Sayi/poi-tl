@@ -63,16 +63,21 @@ public class ConfigureBuilder {
     }
 
     public ConfigureBuilder useSpringEL() {
+        return useSpringEL(true);
+    }
+
+    public ConfigureBuilder useSpringEL(boolean isStrict) {
         usedSpringEL = true;
-        return setRenderDataComputeFactory(SpELRenderDataCompute::new);
+        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, isStrict));
     }
 
     public ConfigureBuilder useSpringEL(Map<String, Method> spELFunction) {
         usedSpringEL = true;
-        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, spELFunction));
+        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, true, spELFunction));
     }
 
     public ConfigureBuilder useDefaultStrictEL() {
+        usedSpringEL = false;
         return setRenderDataComputeFactory(root -> new DefaultELRenderDataCompute(root, true));
     }
 
