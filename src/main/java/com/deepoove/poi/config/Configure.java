@@ -167,6 +167,11 @@ public class Configure implements Cloneable {
         return new ConfigureBuilder();
     }
 
+    @Deprecated
+    public static ConfigureBuilder newBuilder() {
+        return new ConfigureBuilder();
+    }
+
     /**
      * add grammar plugin
      * 

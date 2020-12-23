@@ -23,10 +23,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
@@ -74,6 +77,8 @@ public class NiceXWPFDocument extends XWPFDocument {
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
     protected IdenifierManagerWrapper idenifierManagerWrapper;
     protected boolean adjustDoc = false;
+
+    protected Map<XWPFChart, PackagePart> chartMappingPart = new HashMap<>();
 
     public NiceXWPFDocument() {
         super();
@@ -244,8 +249,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         int chartNumber = getNextPartNumber(XWPFRelation.CHART, charts.size() + 1);
 
         // create relationship in document for new chart
-        RelationPart rp = createRelationship(XWPFRelation.CHART, new XWPFChartFactory(chart.getPackagePart()),
-                chartNumber, false);
+        RelationPart rp = createRelationship(XWPFRelation.CHART,
+                new XWPFChartFactory(chartMappingPart.getOrDefault(chart, chart.getPackagePart())), chartNumber, false);
 
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
@@ -256,6 +261,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         // add chart object to chart list
         charts.add(xwpfChart);
+        chartMappingPart.put(xwpfChart, chart.getPackagePart());
         return rp;
     }
 
