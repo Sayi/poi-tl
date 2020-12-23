@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.render.compute.EnvModel;
 import com.deepoove.poi.render.compute.SpELRenderDataCompute;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
 
@@ -57,9 +58,9 @@ public class SpELTest {
         Method substringStaticMethod = StringUtils.class.getDeclaredMethod("substring", String.class, int.class);
         spELFunction.put("substringStaticMethod", substringStaticMethod);
 
-        spelForFunction = new SpELRenderDataCompute(data, true, spELFunction);
-        spelForMap = new SpELRenderDataCompute(map);
-        spelForBean = new SpELRenderDataCompute(data);
+        spelForFunction = new SpELRenderDataCompute(EnvModel.ofModel(data), true, spELFunction);
+        spelForMap = new SpELRenderDataCompute(EnvModel.ofModel(map));
+        spelForBean = new SpELRenderDataCompute(EnvModel.ofModel(data));
     }
 
     @Test

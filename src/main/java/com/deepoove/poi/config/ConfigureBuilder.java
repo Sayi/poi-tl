@@ -68,17 +68,17 @@ public class ConfigureBuilder {
 
     public ConfigureBuilder useSpringEL(boolean isStrict) {
         usedSpringEL = true;
-        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, isStrict));
+        return setRenderDataComputeFactory(model -> new SpELRenderDataCompute(model, isStrict));
     }
 
     public ConfigureBuilder useSpringEL(Map<String, Method> spELFunction) {
         usedSpringEL = true;
-        return setRenderDataComputeFactory(root -> new SpELRenderDataCompute(root, true, spELFunction));
+        return setRenderDataComputeFactory(model -> new SpELRenderDataCompute(model, true, spELFunction));
     }
 
     public ConfigureBuilder useDefaultStrictEL() {
         usedSpringEL = false;
-        return setRenderDataComputeFactory(root -> new DefaultELRenderDataCompute(root, true));
+        return setRenderDataComputeFactory(model -> new DefaultELRenderDataCompute(model, true));
     }
 
     public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {

@@ -37,7 +37,7 @@ import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.MultiSeriesChartTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.SingleSeriesChartTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.render.compute.DefaultRenderDataComputeFactory;
+import com.deepoove.poi.render.compute.DefaultELRenderDataCompute;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.resolver.DefaultElementTemplateFactory;
 import com.deepoove.poi.resolver.ElementTemplateFactory;
@@ -106,10 +106,10 @@ public class Configure implements Cloneable {
     /**
      * the factory of render data compute
      */
-    protected RenderDataComputeFactory renderDataComputeFactory = new DefaultRenderDataComputeFactory(false);
+    protected RenderDataComputeFactory renderDataComputeFactory = model -> new DefaultELRenderDataCompute(model, false);
 
     /**
-     * the factory of resovler run template
+     * the factory of resolver run template
      */
     protected ElementTemplateFactory elementTemplateFactory = new DefaultElementTemplateFactory();
 

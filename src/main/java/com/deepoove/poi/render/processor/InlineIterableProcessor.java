@@ -17,7 +17,6 @@
 package com.deepoove.poi.render.processor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -34,9 +33,9 @@ import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.ParagraphContext;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.RunBodyContext;
-import com.deepoove.poi.xwpf.ParagraphContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 public class InlineIterableProcessor extends AbstractIterableProcessor {
@@ -75,10 +74,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
         Integer endRunPos = end.getRunPos();
         IterableContext context = new IterableContext(startRunPos, endRunPos);
 
-        Iterator<?> iterator = compute.iterator();
-        while (iterator.hasNext()) {
-            next(iterableTemplate, parentContext, context, iterator.next());
-        }
+        foreach(iterableTemplate, parentContext, context, compute.iterator());
 
         // clear self iterable template
         for (int i = endRunPos - 1; i > startRunPos; i--) {

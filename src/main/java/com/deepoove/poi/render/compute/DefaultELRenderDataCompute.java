@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.render.compute;
 
+import java.util.Map;
+
 import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.expression.DefaultEL;
 
@@ -26,16 +28,24 @@ import com.deepoove.poi.expression.DefaultEL;
 public class DefaultELRenderDataCompute implements RenderDataCompute {
 
     private DefaultEL elObject;
+    private Map<String, Object> env;
     private boolean isStrict;
 
-    public DefaultELRenderDataCompute(Object root, boolean isStrict) {
-        elObject = DefaultEL.create(root);
+    public DefaultELRenderDataCompute(EnvModel model, boolean isStrict) {
+        this.elObject = DefaultEL.create(model.getRoot());
+        this.env = model.getEnv();
         this.isStrict = isStrict;
     }
 
     @Override
     public Object compute(String el) {
         try {
+            if (null != env) {
+                Object val = env.get(el);
+                if (null != val) {
+                    return val;
+                }
+            }
             return elObject.eval(el);
         } catch (ExpressionEvalException e) {
             if (isStrict) throw e;

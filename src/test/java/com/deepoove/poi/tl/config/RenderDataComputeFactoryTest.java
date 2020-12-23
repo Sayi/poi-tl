@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
 import com.google.common.collect.Maps;
@@ -19,19 +18,7 @@ public class RenderDataComputeFactoryTest {
 
     @Test
     public void testConfigRenderDataCompute() throws IOException {
-        RenderDataComputeFactory renderDataComputeFactory = new RenderDataComputeFactory() {
-
-            @Override
-            public RenderDataCompute newCompute(Object model) {
-                return new RenderDataCompute() {
-
-                    @Override
-                    public Object compute(String el) {
-                        return "123";
-                    }
-                };
-            }
-        };
+        RenderDataComputeFactory renderDataComputeFactory = model -> el -> "123";
         Configure config = Configure.builder().setRenderDataComputeFactory(renderDataComputeFactory).build();
 
         XWPFDocument doc = new XWPFDocument();

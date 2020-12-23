@@ -22,6 +22,10 @@ package com.deepoove.poi.render.compute;
 @FunctionalInterface
 public interface RenderDataComputeFactory {
 
-    RenderDataCompute newCompute(Object model);
+    RenderDataCompute newCompute(EnvModel model);
+
+    default RenderDataCompute newCompute(Object model) {
+        return newCompute(model instanceof EnvModel ? (EnvModel)model : EnvModel.ofModel(model));
+    }
 
 }
