@@ -155,20 +155,28 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
+     * write to and close output stream
+     * 
+     * @param out eg.ServletOutputStream
+     * @throws IOException
+     */
+    public void writeAndClose(OutputStream out) throws IOException {
+        try {
+            this.write(out);
+            out.flush();
+        } finally {
+            PoitlIOUtils.closeQuietlyMulti(this.doc, out);
+        }
+    }
+
+    /**
      * write to file, this method will close all the stream
      * 
      * @param path output path
      * @throws IOException
      */
     public void writeToFile(String path) throws IOException {
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(path);
-            this.write(out);
-            out.flush();
-        } finally {
-            PoitlIOUtils.closeQuietlyMulti(this.doc, out);
-        }
+        this.writeAndClose(new FileOutputStream(path));
     }
 
     /**
