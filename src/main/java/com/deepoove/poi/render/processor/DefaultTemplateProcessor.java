@@ -29,7 +29,7 @@ public abstract class DefaultTemplateProcessor implements Visitor {
 
     protected XWPFTemplate template;
     protected final RenderDataCompute renderDataCompute;
-    protected final Resolver resolver;;
+    protected final Resolver resolver;
 
     public DefaultTemplateProcessor(XWPFTemplate template, final Resolver resolver,
             final RenderDataCompute renderDataCompute) {

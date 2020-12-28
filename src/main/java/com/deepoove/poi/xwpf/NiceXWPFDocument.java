@@ -61,6 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.data.NumberingFormat;
+import com.deepoove.poi.util.ParagraphUtils;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
@@ -289,7 +290,15 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     public NiceXWPFDocument merge(Iterator<NiceXWPFDocument> iterator, XWPFRun run) throws Exception {
-        return new XmlXWPFDocumentMerge().merge(this, iterator, run);
+        XWPFRun newRun = run;
+        String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) run.getParent());
+        boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) run.getParent());
+        if (!ParagraphUtils.trimLine(run.text()).equals(paragraphText) || havePictures) {
+            BodyContainer container = BodyContainerFactory.getBodyContainer(run);
+            XWPFParagraph paragraph = container.insertNewParagraph(run);
+            newRun = paragraph.createRun();
+        } 
+        return new XmlXWPFDocumentMerge().merge(this, iterator, newRun);
     }
 
 }

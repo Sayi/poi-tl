@@ -25,7 +25,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 public final class ParagraphUtils {
 
     public static String trimLine(XWPFParagraph paragraph) {
-        String value = paragraph.getText();
+        return trimLine(paragraph.getText());
+    }
+
+    public static String trimLine(String value) {
         int len = value.length();
         int st = 0;
         char[] val = value.toCharArray();
