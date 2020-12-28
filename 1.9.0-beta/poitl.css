@@ -1,0 +1,40 @@
+/* <link rel="stylesheet" href="./poitl.css"> */
+/* @import "./poitl.css"; */
+th {
+    background-color: #3f3f3f;
+    color: #fff !important;
+}
+#toc.toc2 {
+    background: #fff !important;
+}
+.conum[data-value] {
+    background: #009688 !important;
+}
+.green {
+    color: #4CAF50 !important;
+    font-size: 28px;
+}
+:not(pre):not([class^=L])>code {
+    background: #dada6b !important;
+    color: #575757 !important;
+}
+.exampleblock>.content {
+    background: #eeffcc  !important;
+    border: none;
+}
+.sidebarblock {
+    border-style: none;
+    background: #eeffcc  !important;
+}
+a:hover, a:focus {
+    color: #333 !important;
+    text-decoration: none;
+    font-weight: bolder;
+}
+a {
+    color: #6f6f6f !important;
+}
+a.link {
+    color: #ba3925 !important;
+    font-weight: bolder;
+}
