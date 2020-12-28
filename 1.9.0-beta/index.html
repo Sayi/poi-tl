@@ -9,6 +9,7 @@
 <meta name="keywords" content="poi,word,docx,template,模板,导出,图表,合并">
 <meta name="author" content="Sayi">
 <title>Poi-tl Documentation</title>
+<link rel="stylesheet" href="./poitl.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -458,7 +459,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_maven">4.1. Maven</a></li>
 <li><a href="#_gradle">4.2. Gradle</a></li>
-<li><a href="#_2min快速入门">4.3. 2min快速入门</a></li>
+<li><a href="#_2分钟快速入门">4.3. 2分钟快速入门</a></li>
 <li><a href="#_template模板">4.4. Template：模板</a></li>
 <li><a href="#_data_model数据">4.5. Data-model：数据</a></li>
 <li><a href="#_output输出">4.6. Output：输出</a></li>
@@ -532,7 +533,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>poi-tl（poi template language）是Word模板引擎，基于Microsoft Word模板和数据生成新的文档。</p>
+<p>poi-tl（poi template language）是Word模板引擎，基于Word模板和数据生成新的文档。</p>
 </div>
 <div class="quoteblock">
 <blockquote>
@@ -744,7 +745,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_maven"><a class="anchor" href="#_maven"></a><a class="link" href="#_maven">4.1. Maven</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
   &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
   &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
   &lt;version&gt;1.9.0-beta&lt;/version&gt;
@@ -756,52 +757,48 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_gradle"><a class="anchor" href="#_gradle"></a><a class="link" href="#_gradle">4.2. Gradle</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.9.0-beta'</code></pre>
+<pre class="highlightjs highlight"><code data-lang="groovy" class="language-groovy hljs">compile group: 'com.deepoove', name: 'poi-tl', version: '1.9.0-beta'</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_2min快速入门"><a class="anchor" href="#_2min快速入门"></a><a class="link" href="#_2min快速入门">4.3. 2min快速入门</a></h3>
+<h3 id="_2分钟快速入门"><a class="anchor" href="#_2分钟快速入门"></a><a class="link" href="#_2分钟快速入门">4.3. 2分钟快速入门</a></h3>
 <div class="paragraph">
 <p>新建Word文档template.docx，包含标签 <code>{{title}}</code></p>
 </div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template.docx</div>
+<div class="title">模板template.docx</div>
 <p>{{title}}</p>
 </div>
 </div>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
 <div class="content">
-<div class="title">代码示例</div>
 <div class="listingblock">
+<div class="title">代码示例</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
   new HashMap&lt;String, Object&gt;(){{
     put("title", "Hi, poi-tl Word模板引擎");
 }}); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
-OutputStream out = new FileOutputStream("output.docx");
-template.write(out); <i class="conum" data-value="3"></i><b>(3)</b>
-out.flush();
-out.close();
-template.close();</code></pre>
+template.writeAndClose(new FileOutputStream("output.docx")); <i class="conum" data-value="3"></i><b>(3)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>编译模板</td>
+<td><code>compile</code> 编译模板</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>渲染数据</td>
+<td><code>render</code> 渲染数据</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>输出到流</td>
+<td><code>write</code> 输出到流</td>
 </tr>
 </table>
 </div>
@@ -813,7 +810,7 @@ template.close();</code></pre>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output.docx</div>
+<div class="title">生成output.docx</div>
 <p>Hi, poi-tl Word模板引擎</p>
 </div>
 </div>
@@ -821,57 +818,34 @@ template.close();</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_template模板"><a class="anchor" href="#_template模板"></a><a class="link" href="#_template模板">4.4. Template：模板</a></h3>
-<div class="quoteblock">
-<blockquote>
-<div class="paragraph">
-<p>模板就要所见即所得。</p>
-</div>
-</blockquote>
-</div>
 <div class="paragraph">
 <p>模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。</p>
 </div>
 <div class="paragraph">
-<p>所有的标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等等。poi-tl遵循<strong>“所见即所得”</strong>的设计，模板和标签的样式会被完全保留。</p>
+<p>所有的标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。</p>
 </div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-表格布局可以设计出很多优秀专业的文档，模板推荐使用表格布局。
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>poi-tl模板遵循<strong>“所见即所得”</strong>的设计，模板和标签的样式会被完全保留。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_data_model数据"><a class="anchor" href="#_data_model数据"></a><a class="link" href="#_data_model数据">4.5. Data-model：数据</a></h3>
-<div class="quoteblock">
-<blockquote>
 <div class="paragraph">
-<p>数据类似于哈希或者字典。</p>
-</div>
-</blockquote>
-</div>
-<div class="paragraph">
-<p>数据可以是Map（key是标签名称）：</p>
+<p>数据类似于哈希或者字典，可以是Map结构（key是标签名称）：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
 data.put("name", "Sayi");
 data.put("start_time", "2019-08-04");</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>数据可以是对象（属性名是标签名称）：</p>
+<p>可以是对象（属性名是标签名称）：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public class Data {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Data {
   private String name;
   private String startTime;
   private Author author;
@@ -895,11 +869,11 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="html">&lt;img src="{{path}}" width="{{width}}" height="{{height}}"&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;img src="{{path}}" width="{{width}}" height="{{height}}"&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口 <code>RenderData</code> ，比如图片数据模型 <code>PictureRenderData</code> 包含图片路径、宽、高三个属性。</p>
+<p>但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口RenderData，比如图片数据模型PictureRenderData包含图片路径、宽、高三个属性。</p>
 </div>
 </div>
 <div class="sect2">
@@ -909,7 +883,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">template.write(OutputStream stream)</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">template.write(OutputStream stream)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -917,18 +891,16 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">response.setContentType("application/octet-stream");
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">response.setContentType("application/octet-stream");
 response.setHeader("Content-disposition","attachment;filename=\""+"out_template.docx"+"\"");
 
 // HttpServletResponse response
 OutputStream out = response.getOutputStream();
 BufferedOutputStream bos = new BufferedOutputStream(out);
 template.write(bos);
-template.close();
 bos.flush();
-bos.close();
 out.flush();
-out.close();</code></pre>
+PoitlIOUtils.closeQuietlyMulti(template, bos, out);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -941,7 +913,7 @@ out.close();</code></pre>
 <h2 id="_标签"><a class="anchor" href="#_标签"></a><a class="link" href="#_标签">5. 标签</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成， <code>{{title}}</code> 是标签， <code>{{?title}}</code> 也是标签， <code>title</code> 是这个标签的名称， <code>?</code> 标识了标签类型，接下来我们来看看有哪些默认标签类型(用户可以创建新的标签类型，这属于更高级的话题)。</p>
+<p>poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成， {{title}} 是标签， {{?title}} 也是标签， title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。</p>
 </div>
 <div class="sect2">
 <h3 id="_文本"><a class="anchor" href="#_文本"></a><a class="link" href="#_文本">5.1. 文本</a></h3>
@@ -967,7 +939,7 @@ out.close();</code></pre>
 <p><code>HyperlinkTextRenderData</code> ：超链接文本</p>
 </li>
 <li>
-<p><code>Object</code> ：调用 <code>toString()</code> 方法转化为文本</p>
+<p><code>Object</code> ：调用 toString() 方法转化为文本</p>
 </li>
 </ul>
 </div>
@@ -976,9 +948,9 @@ out.close();</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">put("name", "Sayi");
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("name", "Sayi");
 put("author", new TextRenderData("000000", "Sayi"));
-put("welink", new HyperlinkTextRenderData("website", "http://deepoove.com"));
+put("link", new HyperlinkTextRenderData("website", "http://deepoove.com"));
 put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));</code></pre>
 </div>
 </div>
@@ -989,12 +961,12 @@ put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));</co
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title">代码示例</div>
+<div class="title">链式代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">put("name", "Sayi");
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("name", "Sayi");
 put("author", Texts.of("Sayi").color("000000").create());
-put("welink", Texts.of("website").link("http://deepoove.com").create());
+put("link", Texts.of("website").link("http://deepoove.com").create());
 put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 </div>
 </div>
@@ -1005,10 +977,10 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>TextRenderData</code> 的结构体</div>
+<div class="title">TextRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "text": "Sayi",
   "style": {
     "strike": false, <i class="conum" data-value="1"></i><b>(1)</b>
@@ -1109,7 +1081,7 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// 本地图片
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 本地图片
 put("localImg", Pictures.ofLocal("sayi.png").size(120, 120).create());
 
 // 图片流
@@ -1128,16 +1100,16 @@ put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 </div>
 </div>
 <div class="paragraph">
-<p>图片支持 <code>BufferedImage</code>，这意味着我们可以利用Java生成图表插入到word文档中。</p>
+<p>图片支持BufferedImage，这意味着我们可以利用Java生成图表插入到word文档中。</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>PictureRenderData</code> 的结构体</div>
+<div class="title">PictureRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "pictureType" : "PNG", <i class="conum" data-value="1"></i><b>(1)</b>
-  "image": [], <i class="conum" data-value="2"></i><b>(2)</b>
+  "image": byte[], <i class="conum" data-value="2"></i><b>(2)</b>
   "altMeta": "图片不存在", <i class="conum" data-value="3"></i><b>(3)</b>
   "width": 100, <i class="conum" data-value="4"></i><b>(4)</b>
   "height": 100 <i class="conum" data-value="5"></i><b>(5)</b>
@@ -1191,47 +1163,57 @@ put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 <div class="paragraph">
 <p>推荐使用工厂 <code>Tables</code> 、 <code>Rows</code> 和 <code>Cells</code> 构建表格模型。</p>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
+<div class="title">Example 1. 基础表格示例</div>
 <div class="content">
-<div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// 一个2行2列的表格
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 一个2行2列的表格
 put("table0", Tables.of(new String[][] {
                 new String[] { "00", "01" },
                 new String[] { "10", "11" }
             }).border(BorderStyle.DEFAULT).create());</code></pre>
 </div>
 </div>
-<div class="imageblock text-center">
+<div class="imageblock">
 <div class="content">
 <img src="./../table_simple.png" alt="table simple" width="500">
 </div>
 </div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2. 表格样式示例</div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// 第0行居中且背景为蓝色的表格
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 第0行居中且背景为蓝色的表格
 RowRenderData row0 = Rows.of("姓名", "学历").textColor("FFFFFF")
       .bgColor("4472C4").center().create();
 RowRenderData row1 = Rows.create("李四", "博士");
 put("table1", Tables.create(row0, row1));</code></pre>
 </div>
 </div>
-<div class="imageblock text-center">
+<div class="imageblock">
 <div class="content">
 <img src="./../table_header.png" alt="table header" width="500">
 </div>
 </div>
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 3. 表格合并示例</div>
+<div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// 合并第1行所有单元格的表格
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 合并第1行所有单元格的表格
 RowRenderData row0 = Rows.of("列0", "列1", "列2").center().bgColor("4472C4").create();
 RowRenderData row1 = Rows.create("没有数据", null, null);
 MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 2)).build();
 put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 </div>
 </div>
-<div class="imageblock text-center">
+<div class="imageblock">
 <div class="content">
 <img src="./../table_merge.png" alt="table merge" width="500">
 </div>
@@ -1239,14 +1221,14 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>TableRenderData</code> 表格模型在单元格内可以展示文本图片的组合，同时也可以指定表格样式、行样式和单元格样式，而且在N行N列渲染完成后可以应用单元格合并规则 <code>MergeCellRule</code> ，从而实现更复杂的表格。</p>
+<p>TableRenderData表格模型在单元格内可以展示文本和图片，同时也可以指定表格样式、行样式和单元格样式，而且在N行N列渲染完成后可以应用单元格合并规则 <strong>MergeCellRule</strong> ，从而实现更复杂的表格。</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>TableRenderData</code> 的结构体</div>
+<div class="title">TableRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "rows": [ <i class="conum" data-value="1"></i><b>(1)</b>
     {
       "cells": [ <i class="conum" data-value="2"></i><b>(2)</b>
@@ -1345,7 +1327,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>现实需求中表格的布局和样式可能很复杂，此时默认表格样式将无法满足，可以尝试一些已有表格插件来解决，参见<a href="#plugin-list">可选插件列表</a>。</p>
+<p>现实需求中表格的布局和样式可能很复杂，可以尝试一些已有表格插件来解决，参见<a href="#plugin-list">可选插件列表</a>。</p>
 </div>
 <div class="paragraph">
 <p>我们也可以编写插件，完全由自己生成整个表格，这个方案需要你熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 <a href="#cus-policy-section">开发一个插件</a>。</p>
@@ -1380,7 +1362,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">put("list", Numberings.create("Plug-in grammar",
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("list", Numberings.create("Plug-in grammar",
                     "Supports word text, pictures, table...",
                     "Not just templates"));</code></pre>
 </div>
@@ -1392,7 +1374,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>DECIMAL //1. 2. 3.
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">DECIMAL //1. 2. 3.
 DECIMAL_PARENTHESES //1) 2) 3)
 BULLET //● ● ●
 LOWER_LETTER //a. b. c.
@@ -1460,28 +1442,24 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="sect3">
 <h4 id="_false或空集合"><a class="anchor" href="#_false或空集合"></a><a class="link" href="#_false或空集合">5.5.1. False或空集合</a></h4>
 <div class="paragraph">
-<p>如果区块对的值是 <code>null</code> 、<code>false</code> 或者空的集合，位于区块中的所有文档元素将不会显示，这就等同于if语句的条件为 <code>false</code>。</p>
-</div>
-<div class="paragraph">
-<p>数据:</p>
+<p>如果区块对的值是 null 、false 或者空的集合，位于区块中的所有文档元素将不会显示，这就等同于if语句的条件为 false。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title">数据</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "announce": false
 }</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>模板:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">模板.docx</div>
 <p>Made it,Ma!{{?announce}}Top of the world!{{/announce}}</p>
 </div>
 <div class="paragraph">
@@ -1498,12 +1476,10 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>输出:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">输出.docx</div>
 <p>Made it,Ma!</p>
 </div>
 <div class="paragraph">
@@ -1515,28 +1491,24 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="sect3">
 <h4 id="_非false且不是集合"><a class="anchor" href="#_非false且不是集合"></a><a class="link" href="#_非false且不是集合">5.5.2. 非False且不是集合</a></h4>
 <div class="paragraph">
-<p>如果区块对的值不为 <code>null</code> 、 <code>false</code> ，且不是集合，位于区块中的所有文档元素会被渲染一次，这就等同于if语句的条件为 <code>true</code>。</p>
-</div>
-<div class="paragraph">
-<p>数据:</p>
+<p>如果区块对的值不为 null 、 false ，且不是集合，位于区块中的所有文档元素会被渲染一次，这就等同于if语句的条件为 true。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title">数据</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "person": { "name": "Sayi" }
 }</code></pre>
 </div>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>模板:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">模板.docx</div>
 <p>{{?person}}</p>
 </div>
 <div class="paragraph">
@@ -1547,12 +1519,10 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>输出:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">输出.docx</div>
 <p>Hi Sayi!</p>
 </div>
 </div>
@@ -1564,7 +1534,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-区块对中标签的作用域会限定为当前区块对，当且仅当区块对的值是 <code>boolean</code> 类型且为 <code>true</code> 时，这些标签作用域才不会改变。
+区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是 <code>boolean</code> 类型且为 <code>true</code> 时，这些标签作用域才不会改变。
 </td>
 </tr>
 </table>
@@ -1575,14 +1545,12 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="paragraph">
 <p>如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染一次或者N次，这取决于集合的大小，类似于foreach语法。</p>
 </div>
-<div class="paragraph">
-<p>数据:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title">数据</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "songs": [
     { "name": "Memories" },
     { "name": "Sugar" },
@@ -1593,12 +1561,10 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>模板:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">模板.docx</div>
 <p>{{?songs}}</p>
 </div>
 <div class="paragraph">
@@ -1609,12 +1575,10 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>输出:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">输出.docx</div>
 <p>Memories</p>
 </div>
 <div class="paragraph">
@@ -1636,7 +1600,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "produces": [
     "application/json",
     "application/xml"
@@ -1645,21 +1609,21 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Word模板:</p>
+<p>模板.docx:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>{{?produces}}
+<pre class="highlightjs highlight"><code class="language-none hljs">{{?produces}}
 {{=#this}}
 {{/produces}}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>输出:</p>
+<p>输出.docx:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>application/json
+<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">application/json
 application/xml</code></pre>
 </div>
 </div>
@@ -1692,18 +1656,18 @@ application/xml</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">List&lt;SegmentData&gt; subData = new ArrayList&lt;SegmentData&gt;();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">List&lt;SegmentData&gt; subData = new ArrayList&lt;SegmentData&gt;();
 SegmentData s1 = new SegmentData();
-s1.setTitle("经常抱怨的自己");
-s1.setContent("每个人生活得都不容易。");
+s1.setTitle("Monday");
+s1.setContent("Two parallel lines will intersect one day.");
 subData.add(s1);
 
 SegmentData s2 = new SegmentData();
-s2.setTitle("拖拖拉拉的自己");
-s2.setContent("能够今天做完的事情，不要拖到明天？");
+s2.setTitle("Friday");
+s2.setContent("Confidence is not necessarily successful.");
 subData.add(s2);
 
-put("docx_word", Includes.ofLocal("~/segment.docx").setRenderModel(subData).create()); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create()); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -1742,14 +1706,14 @@ put("docx_word", Includes.ofLocal("~/segment.docx").setRenderModel(subData).crea
 </div>
 </div>
 <div class="paragraph">
-<p>引用图片标签只会替换图片而不会改变图片尺寸和布局，数据模型和图片标签一致：PictureRenderData。</p>
+<p>引用图片标签只会替换图片而不会改变图片尺寸和布局，数据模型和图片标签一致：<code>PictureRenderData</code> 。</p>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
 <div class="content">
-<div class="title">代码示例</div>
 <div class="listingblock">
+<div class="title">代码示例</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">put("img", Pictures.ofLocal("sayi.png").create());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("img", Pictures.ofLocal("sayi.png").create());</code></pre>
 </div>
 </div>
 </div>
@@ -1788,7 +1752,7 @@ put("docx_word", Includes.ofLocal("~/segment.docx").setRenderModel(subData).crea
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">ChartMultiSeriesRenderData chart = Charts
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartMultiSeriesRenderData chart = Charts
                 .ofMultiSeries("ChartTitle", new String[] { "中文", "English" })
                 .addSeries("countries", new Double[] { 15.0, 6.0 })
                 .addSeries("speakers", new Double[] { 223.0, 119.0 })
@@ -1804,10 +1768,10 @@ put("barChart", chart);</code></pre>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>ChartMultiSeriesRenderData</code> 的结构体</div>
+<div class="title">ChartMultiSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "chartTitle": "ChartTitle", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "中文", "English"
@@ -1889,7 +1853,7 @@ put("barChart", chart);</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">ChartSingleSeriesRenderData pie = Charts
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartSingleSeriesRenderData pie = Charts
                 .ofSingleSeries("ChartTitle", new String[] { "美国", "中国" })
                 .series("countries", new Integer[] { 9826675, 9596961 })
                 .create();
@@ -1901,10 +1865,10 @@ put("pieChart", pie);</code></pre>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>ChartSingleSeriesRenderData</code> 的结构体</div>
+<div class="title">ChartSingleSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "chartTitle": "ChartTitle", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "美国",
@@ -1950,7 +1914,7 @@ put("pieChart", pie);</code></pre>
 <div class="sect2">
 <h3 id="_组合图表"><a class="anchor" href="#_组合图表"></a><a class="link" href="#_组合图表">6.4. 组合图表</a></h3>
 <div class="paragraph">
-<p>组合图表指的是由多系列图表(柱形图、折线图、面积图)组合而成的图表。</p>
+<p>组合图表指的是由多系列图表（柱形图、折线图、面积图）组合而成的图表。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -1970,7 +1934,7 @@ put("pieChart", pie);</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">ChartSingleSeriesRenderData comb = Charts
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartSingleSeriesRenderData comb = Charts
                 .ofComboSeries("MyChart", new String[] { "中文", "English" })
                 .addBarSeries("countries", new Double[] { 15.0, 6.0 })
                 .addBarSeries("speakers", new Double[] { 223.0, 119.0 })
@@ -1985,10 +1949,10 @@ put("combChart", comb);</code></pre>
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title"><code>ChartMultiSeriesRenderData</code> 的结构体</div>
+<div class="title">ChartMultiSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "chartTitle": "MyChart", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "中文", "English"
@@ -2032,7 +1996,7 @@ put("combChart", comb);</code></pre>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>当前系列的图表类型：柱形图BAR、折线图LINE、面积图AREA</td>
+<td>当前系列的图表类型comboType：柱形图BAR、折线图LINE、面积图AREA</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
@@ -2053,7 +2017,7 @@ put("combChart", comb);</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">ConfigureBuilder builder = Configure.builder();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ConfigureBuilder builder = Configure.builder();
 XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 </div>
@@ -2064,7 +2028,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.buildGramer("${", "}");</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGramer("${", "}");</code></pre>
 </div>
 </div>
 </div>
@@ -2075,7 +2039,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.addPlugin('%', new PictureRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('%', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2083,7 +2047,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.addPlugin('@', new TableRenderPolicy());
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('@', new TableRenderPolicy());
 builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
@@ -2094,11 +2058,11 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 <div class="sect2">
 <h3 id="_标签正则"><a class="anchor" href="#_标签正则"></a><a class="link" href="#_标签正则">7.3. 标签正则</a></h3>
 <div class="paragraph">
-<p>标签默认支持<strong>中文、字母、数字、下划线</strong>的组合，比如 <code>{{客户手机号}}</code> ，我们可以通过正则表达式来配置标签的规则，比如不允许中文：</p>
+<p>标签默认支持<strong>中文、字母、数字、下划线</strong>的组合，我们可以通过正则表达式来配置标签的规则，比如不允许中文：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2106,18 +2070,18 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_计算标签值"><a class="anchor" href="#_计算标签值"></a><a class="link" href="#_计算标签值">7.4. 计算标签值</a></h3>
 <div class="paragraph">
-<p>计算标签值是指如何在数据中寻找标签的值，你可以完全自定义计算的方式。</p>
+<p>计算标签值是指如何在数据中索引标签的值，你可以完全自定义计算的方式。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -2133,7 +2097,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </table>
 </div>
 <div class="paragraph">
-<p>我们可以通过此方式支持任何的表达式引擎，Sping表达式正是通过 <code>SpELRenderDataCompute</code> 实现。</p>
+<p>我们可以通过此方式支持任何的表达式引擎，Spring表达式正是通过 <code>SpELRenderDataCompute</code> 实现。</p>
 </div>
 </div>
 <div class="sect2">
@@ -2143,7 +2107,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
   &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
   &lt;version&gt;4.3.6.RELEASE&lt;/version&gt;
@@ -2155,7 +2119,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.useSpringEL();</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useSpringEL();</code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -2167,7 +2131,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>{{name}}
+<pre class="highlightjs highlight"><code class="language-none hljs">{{name}}
 {{name.toUpperCase()}} <i class="conum" data-value="1"></i><b>(1)</b>
 {{name == 'poi-tl'}} <i class="conum" data-value="2"></i><b>(2)</b>
 {{empty?:'这个字段为空'}}
@@ -2213,14 +2177,12 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="paragraph">
 <p>Spring表达式与区块对结合可以实现更强大的功能。</p>
 </div>
-<div class="paragraph">
-<p>数据:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="listingblock">
+<div class="title">数据</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="json">{
+<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
   "desc": "",
   "summary": "Find A Pet",
   "produces": [
@@ -2231,12 +2193,10 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>模板:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">模板.docx</div>
 <p>{{?desc == null or desc == ''}}{{summary}}{{/}}</p>
 </div>
 <div class="paragraph">
@@ -2244,12 +2204,10 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 </div>
-<div class="paragraph">
-<p>输出:</p>
-</div>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
+<div class="title">输出.docx</div>
 <p>Find A Pet</p>
 </div>
 </div>
@@ -2276,32 +2234,36 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="sect3">
 <h4 id="_标签无法被计算"><a class="anchor" href="#_标签无法被计算"></a><a class="link" href="#_标签无法被计算">7.6.1. 标签无法被计算</a></h4>
 <div class="paragraph">
-<p>标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，比如 <code>{{author.name}}</code> 中author的值为null，此时就无法计算name的值。</p>
+<p>标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，如 <code>{{author.name}}</code> 中author的值为null，此时就无法计算name的值。</p>
 </div>
 <div class="paragraph">
 <p>poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为 <code>null</code> 。当我们需要严格校验模板是否有人为失误时，可以抛出异常：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// 严格模式，标签计算错误的情况下抛出异常，这种情况下要求表达式必须可被计算
-builder.useDefaultStrictEL();</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useDefaultEL(true);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>注意的是，如果使用SpringEL表达式，错误处理会遵循SpringEL的规则抛出异常。</p>
+<p>注意的是，如果使用SpringEL表达式，可以通过参数来配置异常处理的方式：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useSpringEL(true);</code></pre>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_标签数据类型不合法"><a class="anchor" href="#_标签数据类型不合法"></a><a class="link" href="#_标签数据类型不合法">7.6.2. 标签数据类型不合法</a></h4>
 <div class="paragraph">
-<p>我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法(为空或者是一个错误的数据类型)，可以配置模板标签的渲染行为。</p>
+<p>我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法（为空或者是一个错误的数据类型），可以配置模板标签的渲染行为。</p>
 </div>
 <div class="paragraph">
 <p>poi-tl默认的行为会清空标签，如果希望保留标签：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.setValidErrorHandler(new DiscardHandler());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setValidErrorHandler(new DiscardHandler());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2309,7 +2271,7 @@ builder.useDefaultStrictEL();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.setValidErrorHandler(new AbortHandler());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setValidErrorHandler(new AbortHandler());</code></pre>
 </div>
 </div>
 </div>
@@ -2317,11 +2279,11 @@ builder.useDefaultStrictEL();</code></pre>
 <div class="sect2">
 <h3 id="_模板生成模板"><a class="anchor" href="#_模板生成模板"></a><a class="link" href="#_模板生成模板">7.7. 模板生成模板</a></h3>
 <div class="paragraph">
-<p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们想构造这样的新模板：把原先的一个模板标签分成两个模板标签：</p>
+<p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们把原先的一个模板标签分成两个模板标签：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">put("title", "{{title}}\n{{subtitle}}");</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("title", "{{title}}\n{{subtitle}}");</code></pre>
 </div>
 </div>
 </div>
@@ -2335,7 +2297,7 @@ builder.useDefaultStrictEL();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
   &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
   &lt;artifactId&gt;logback-core&lt;/artifactId&gt;
   &lt;version&gt;1.2.3&lt;/version&gt;
@@ -2352,7 +2314,7 @@ builder.useDefaultStrictEL();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;configuration&gt;
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;encoder&gt;
@@ -2431,11 +2393,11 @@ builder.useDefaultStrictEL();</code></pre>
 <div class="sect2">
 <h3 id="cus-policy-section"><a class="anchor" href="#cus-policy-section"></a><a class="link" href="#cus-policy-section">8.2. 开发一个插件</a></h3>
 <div class="paragraph">
-<p>插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现 <code>RenderPolicy</code> 接口开发自己的渲染策略插件：</p>
+<p>插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现 <code>RenderPolicy</code> 接口开发自己的插件：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public interface RenderPolicy {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface RenderPolicy {
   void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
@@ -2463,7 +2425,7 @@ builder.useDefaultStrictEL();</code></pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public class HelloWorldRenderPolicy implements RenderPolicy {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class HelloWorldRenderPolicy implements RenderPolicy {
 
   @Override
   public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
@@ -2497,7 +2459,7 @@ builder.useDefaultStrictEL();</code></pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public class CustomTableRenderPolicy extends AbstractRenderPolicy&lt;Object&gt; {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class CustomTableRenderPolicy extends AbstractRenderPolicy&lt;Object&gt; {
 
   @Override
   protected void afterRender(RenderContext&lt;Object&gt; context) {
@@ -2560,7 +2522,7 @@ builder.useDefaultStrictEL();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">ConfigureBuilder builder = Configure.builder();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ConfigureBuilder builder = Configure.builder();
 builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 </div>
@@ -2572,7 +2534,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());</code></pre>
 </div>
 </div>
 </div>
@@ -2583,7 +2545,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">builder.addPlugin('%', new HelloWorldRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('%', new HelloWorldRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2603,7 +2565,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">// where绑定policy
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// where绑定policy
 Configure config = Configure.builder().bind("sea", new AbstractRenderPolicy&lt;String&gt;() {
   @Override
   public void doRender(RenderContext&lt;String&gt; context) throws Exception { <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2735,7 +2697,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TOCRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">实验功能：目录，打开文档时需要更新域</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Beta实验功能：目录，打开文档时需要更新域</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -2761,7 +2723,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>货物明细和人工费在同一个表格中，货物明细需要展示所有货物，人工费需要展示所有费用。<code>{{goods}}</code> 是个标准的标签，将 <code>{{goods}}</code> <strong>置于循环行的上一行</strong>，循环行设置要循环的标签和内容，注意此时的标签应该使用 <code>[]</code> ，以此来区别poi-tl的默认标签语法。同理，<code>{{labors}}</code> 也<strong>置于循环行的上一行</strong>。</p>
 </div>
 <div class="imageblock text-center">
@@ -2771,15 +2733,15 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 </div>
 </div>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
 <div class="content">
-<div class="title">代码示例</div>
 <div class="paragraph">
+<div class="title">代码示例</div>
 <p><code>{{goods}}</code> 和 <code>{{labors}}</code> 标签对应的数据分别是货物集合和人工费集合，如果集合为空则会删除循环行。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">class Goods {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">class Goods {
   private int count;
   private String name;
   private String desc;
@@ -2807,7 +2769,7 @@ List&lt;Labor&gt; labors = new ArrayList&lt;&gt;();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
 
 Configure config = Configure.builder()
         .bind("goods", policy).bind("labors", policy).build(); <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2833,7 +2795,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>最终生成的文档列出了所有货物和人工费。</p>
 </div>
 <div class="imageblock text-center">
@@ -2864,7 +2826,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p><code>LoopColumnTableRenderPolicy</code> 循环列的使用方式和插件 <code>HackLoopTableRenderPolicy</code> 是一样的，需要将占位标签放在循环列的前一列。</p>
 </div>
 <div class="imageblock text-center">
@@ -2874,14 +2836,14 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
 <div class="content">
-<div class="title">代码示例</div>
 <div class="listingblock">
+<div class="title">代码示例</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">LoopColumnTableRenderPolicy policy = new LoopColumnTableRenderPolicy();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">LoopColumnTableRenderPolicy policy = new LoopColumnTableRenderPolicy();
 
-Configure config = Configure.builder().bind("goods", policy).build(); <i class="conum" data-value="1"></i><b>(1)</b>
+Configure config = Configure.builder().bind("goods", policy).build();
 
 XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
   new HashMap&lt;String, Object&gt;() {{
@@ -2895,7 +2857,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>最终生成的文档列出了所有货物和人工费。</p>
 </div>
 <div class="imageblock text-center">
@@ -2925,7 +2887,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public abstract class DynamicTableRenderPolicy implements RenderPolicy {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public abstract class DynamicTableRenderPolicy implements RenderPolicy {
   public abstract void render(XWPFTable table, Object data);
 }</code></pre>
 </div>
@@ -2933,7 +2895,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>{{detail_table}}标签可以在表格内的任意单元格内，DynamicTableRenderPolicy会获取XWPFTable对象进而获得操作整个表格的能力。</p>
 </div>
 <div class="imageblock text-center">
@@ -2943,15 +2905,15 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 </div>
-<div class="sidebarblock">
+<div class="exampleblock">
 <div class="content">
-<div class="title">代码示例</div>
 <div class="paragraph">
+<div class="title">代码示例</div>
 <p>首先新建渲染策略DetailTablePolicy，继承于抽象表格策略。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">public class DetailTablePolicy extends DynamicTableRenderPolicy {
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
   // 货品填充数据所在行数
   int goodsStartRow = 2;
@@ -2998,7 +2960,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();</code></pre>
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();</code></pre>
 </div>
 </div>
 </div>
@@ -3006,7 +2968,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>最终生成的文档列出了所有货物和人工费。</p>
 </div>
 <div class="imageblock text-center">
@@ -3042,7 +3004,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。<a href="example/poi_tl.docx">poi_tl.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3055,7 +3017,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>使用poi-tl标签制作模板，可以看到标签可以拥有样式。</p>
 </div>
 <div class="imageblock text-center">
@@ -3086,7 +3048,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要创建一个订单的表格(图中第一个表格)，还需要在一个已有表格中，填充货物明细和人工费数据(图中第二个表格)。下载最终生成的文件<a href="example/payment.docx">payment.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3099,7 +3061,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>使用{{#order}}生成poi-tl提供的默认样式的表格，设置{{detail_table}}为自定义模板渲染策略(继承抽象表格策略DynamicTableRenderPolicy)，自定义已有表格中部分单元格的渲染。</p>
 </div>
 <div class="imageblock text-center">
@@ -3133,7 +3095,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>需要制定一份OKR目标计划，业务目标和管理目标使用表格呈现，数量不等。下载最终生成的文件<a href="example/okr.docx">okr.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3146,7 +3108,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>将表格放到区块对中，当区块对取值为空集合或者null则不会展示目标表格，当区块对是一个非空集合则循环展示表格。</p>
 </div>
 <div class="imageblock text-center">
@@ -3177,7 +3139,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>针对野生动物出具一份现状的调查报告，野生动物种类不确定，调查报告包含图片、文字和图表。下载最终生成的文件<a href="example/animal.docx">animal.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3190,7 +3152,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>不确定动物种类使用区块对{{?animals}}的循环功能实现，图片和图表如模板所示，使用引用标签，在可选文字标题位置输入标签。</p>
 </div>
 <div class="imageblock text-center">
@@ -3221,7 +3183,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>颁发一张由特殊样式图片、姓名、日期构成的证书奖状。下载最终生成的文件<a href="example/certificate.docx">certificate.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3234,7 +3196,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>图片格式和布局由模板指定，图片使用引用标签替换即可。</p>
 </div>
 <div class="imageblock text-center">
@@ -3265,7 +3227,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
+<div class="title">output.docx</div>
 <p>需要生成这样的一份个人简历：左侧是个人的基本信息，技术栈是个典型的列表，右侧是个人的工作经历，数量不定。下载最终生成的文件<a href="example/resume.docx">resume.docx</a></p>
 </div>
 <div class="imageblock text-center">
@@ -3280,7 +3242,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>工作经历是一个循环显示的内容，我们使用区块对标签{{?experiences}}{{/experiences}}。</p>
 </div>
 <div class="imageblock text-center">
@@ -3308,7 +3270,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>工作经历可以使用嵌套标签，我们制作两个模板，一套主模板简历.docx(下图左侧)，一套为文档模板segment.docx(下图右侧)。</p>
 </div>
 <div class="imageblock text-center">
@@ -3343,8 +3305,8 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">output</div>
-<p>这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，接口需要循环展示，接口的参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型，模型支持代码块高亮展示。下载最终生成的文件<a href="example/swagger.docx">swagger.docx</a></p>
+<div class="title">output.docx</div>
+<p>这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，API列表需要循环展示，接口的请求参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型，模型支持代码块高亮展示。下载最终生成的文件<a href="example/swagger.docx">swagger.docx</a></p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -3361,7 +3323,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
-<div class="title">template</div>
+<div class="title">template.docx</div>
 <p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>HackLoopTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。</p>
 </div>
 <div class="imageblock text-center">
@@ -3381,7 +3343,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="listingblock">
 <div class="title">代码示例</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="java">SwaggerParser swaggerParser = new SwaggerParser();
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">SwaggerParser swaggerParser = new SwaggerParser();
 Swagger swagger = swaggerParser.read("https://petstore.swagger.io/v2/swagger.json");
 SwaggerView viewData = convert(swagger); <i class="conum" data-value="1"></i><b>(1)</b>
 
@@ -3514,7 +3476,9 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/zenburn.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/groovy.min.js"></script>
+<script>hljs.initHighlighting()</script>
 </body>
 </html>
