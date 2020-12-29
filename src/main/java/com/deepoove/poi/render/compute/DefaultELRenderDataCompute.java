@@ -31,7 +31,9 @@ public class DefaultELRenderDataCompute implements RenderDataCompute {
 
     public DefaultELRenderDataCompute(EnvModel model, boolean isStrict) {
         this.elObject = DefaultEL.create(model.getRoot());
-        this.envObject = DefaultEL.create(model.getEnv());
+        if (null != model.getEnv() && !model.getEnv().isEmpty()) {
+            this.envObject = DefaultEL.create(model.getEnv());
+        }
         this.isStrict = isStrict;
     }
 

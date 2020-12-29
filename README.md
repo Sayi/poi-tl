@@ -15,7 +15,7 @@ poi-tl是一种 *"logic-less"* 模板引擎，没有复杂的控制结构和变�
 > 
 > [《Google CTemplate》](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)
 
-poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何位置执行，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
+poi-tl支持自定义函数(插件)，函数可以在Word模板的任何位置执行，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
 
 ## Maven
 
@@ -23,7 +23,7 @@ poi-tl支持自定义渲染函数(插件)，函数可以在Word模板的任何�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.8.2</version>
+  <version>1.9.0</version>
 </dependency>
 ```
 
@@ -74,13 +74,16 @@ Word模板:
 ```json
 {
   "watermelon": {
-    "path": "assets/watermelon.png"
+    "image": "assets/watermelon.png",
+    "pictureType" : "PNG"
   },
   "lemon": {
-    "path": "http://xxx/lemon.png"
+    "image": "http://xxx/lemon.png",
+    "pictureType" : "PNG"
   },
   "banana": {
-    "path": "sob.png",
+    "image": "sob.png",
+    "pictureType" : "PNG",
     "width": 24,
     "height": 24
   }
@@ -111,27 +114,34 @@ banana 🍌
 数据:
 ```json
 {
-  "song": {
-    "rows": [
-      {
-        "cells": [
-          {"cellText": {"text": "Song name"}},
-          {"cellText": {"text": "artist"}}
-        ]
-      }
-    ],
-    "rows": [
-      {
-        "cells": [
-          {"cellText": {"text": "Memories"}},
-          {"cellText": {"text": "Maroon 5"}}
-        ],
-        "rowStyle":{
-          "backgroundColor":"f6f8fa"
+  "rows": [
+    {
+      "cells": [
+        {
+          "paragraphs": [
+            {
+              "contents": [
+                {
+                  "text": "Song name"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "paragraphs": [
+            {
+              "contents": [
+                {
+                  "text": "Artist"
+                }
+              ]
+            }
+          ]
         }
-      }
-    ]
-  }
+      ]
+    }
+  ]
 }
 ```
 
@@ -145,7 +155,6 @@ Word模板:
 
 <table>
 <tr><td>Song name</td><td>Artist</td></tr>
-<tr><td>Memories</td><td>Maroon 5</td></tr>
 </table>
 
 ### 列表
@@ -154,22 +163,22 @@ Word模板:
 数据:
 ```json
 {
-  "feature": {
-    "numFmt": {
-      "decimal": "%1)"
-    },
-    "numbers": [
-      {
-        "text": "Plug-in function, define your own function"
-      },
-      {
-        "text": "Supports text, pictures, table, list, if, foreach..."
-      },
-      {
-        "text": "Templates, not just templates, but also style templates"
-      }
-    ]
-  }
+  "format" : {
+    "lvlText" : "●"
+  },
+  "items" : [ {
+    "contents" : [ {
+      "text" : "Plug-in grammar, add new grammar by yourself"
+    } ]
+  }, {
+    "contents" : [ {
+      "text" : "Supports word text, local pictures, web pictures, table, list, header, footer..."
+    } ]
+  }, {
+    "contents" : [ {
+      "text" : "Templates, not just templates, but also style templates"
+    } ]
+  } ]
 }
 ```
 
@@ -182,9 +191,9 @@ Word模板:
 输出:
 
 ```
-1) Plug-in function, define your own function
-2) Supports text, pictures, table, list, if, foreach...
-3) Templates, not just templates, but also style templates
+● Plug-in function, define your own function
+● Supports text, pictures, table, list, if, foreach...
+● Templates, not just templates, but also style templates
 ```
 
 ### 区块对
@@ -341,7 +350,7 @@ Address: Shanghai,China
 
 ## 详细文档与示例
 
-[中文文档Documentation](http://deepoove.com/poi-tl)  [1.9.0-beta文档](http://deepoove.com/poi-tl/1.9.0-beta)  
+[中文文档Documentation](http://deepoove.com/poi-tl)
 
 * [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
 * [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)

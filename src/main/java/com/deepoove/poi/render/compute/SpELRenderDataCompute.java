@@ -48,10 +48,12 @@ public class SpELRenderDataCompute implements RenderDataCompute {
     public SpELRenderDataCompute(EnvModel model, boolean isStrict, Map<String, Method> spELFunction) {
         this.isStrict = isStrict;
         this.parser = new SpelExpressionParser();
-        this.envContext = new StandardEvaluationContext(model.getEnv());
+        if (null != model.getEnv() && !model.getEnv().isEmpty()) {
+            this.envContext = new StandardEvaluationContext(model.getEnv());
+            ((StandardEvaluationContext) envContext).addPropertyAccessor(new ReadMapAccessor());
+        }
         this.context = new StandardEvaluationContext(model.getRoot());
         ((StandardEvaluationContext) context).addPropertyAccessor(new ReadMapAccessor());
-        ((StandardEvaluationContext) envContext).addPropertyAccessor(new ReadMapAccessor());
         spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
     }
 
