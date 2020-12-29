@@ -525,7 +525,7 @@ put("title", "{{title}}\n{{subtitle}}");
 [example]
 --
 .output
-需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。下载最终生成的文件link:example/poi_tl.docx[poi_tl.docx]
+需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。下载最终生成的文件link:example/poi-tl.docx[poi_tl.docx]
 
 image::../example/example_poitl_output.png[align='center']
 --
