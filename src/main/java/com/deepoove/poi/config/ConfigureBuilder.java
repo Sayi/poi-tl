@@ -76,9 +76,9 @@ public class ConfigureBuilder {
         return setRenderDataComputeFactory(model -> new SpELRenderDataCompute(model, true, spELFunction));
     }
 
-    public ConfigureBuilder useDefaultStrictEL() {
+    public ConfigureBuilder useDefaultEL(boolean isStrict) {
         usedSpringEL = false;
-        return setRenderDataComputeFactory(model -> new DefaultELRenderDataCompute(model, true));
+        return setRenderDataComputeFactory(model -> new DefaultELRenderDataCompute(model, isStrict));
     }
 
     public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {

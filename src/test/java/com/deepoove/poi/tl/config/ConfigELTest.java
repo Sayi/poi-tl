@@ -78,7 +78,7 @@ public class ConfigELTest {
     public void testStrictELMode() throws Exception {
         model.getDetail().setDesc(null);
         // 无法容忍变量不存在，直接抛出异常(可以防止人为的失误)
-        Configure config = Configure.builder().useDefaultStrictEL().build();
+        Configure config = Configure.builder().useDefaultEL(true).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config);
 
         RenderException exception = assertThrows(RenderException.class, () -> template.render(model));
