@@ -9,6 +9,8 @@ v1.9.0
 :toc: left
 // :toclevels: 3
 :icons: font
+// :source-highlighter: rouge
+// :rouge-style: monokai
 :source-highlighter: highlightjs
 :highlightjs-theme: zenburn
 :highlightjs-languages: groovy
@@ -103,7 +105,7 @@ V1.9.x版本作了一些不兼容但更强大的改动，升级的时候需要�
 compile group: 'com.deepoove', name: 'poi-tl', version: '1.9.0'
 
 === 2分钟快速入门
-新建Word文档template.docx，包含标签 `{{title}}`
+新建Word文档template.docx，包含标签 `{{title}}` 
 [example]
 --
 .template.docx 
@@ -138,7 +140,7 @@ Hi, poi-tl Word模板引擎
 
 模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。
 
-所有的标签都是以 `{{` 开头，以 `}}` 结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。
+所有的标签都是以``{{``开头，以``}}``结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。
 
 poi-tl模板遵循**“所见即所得”**的设计，模板和标签的样式会被完全保留。
 
@@ -163,7 +165,7 @@ public class Data {
 }
 ----
 
-TIP: 数据可以是树结构，每级之间用点来分隔开，比如 `{{author.name}}` 标签对应的数据是author对象的name属性值。
+TIP: 数据可以是树结构，每级之间用点来分隔开，比如``{{author.name}}``标签对应的数据是author对象的name属性值。
 
 FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径、宽和高：
 [source, html]
@@ -176,7 +178,7 @@ FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径�
 
 [source, java]
 ----
-template.write(OutputStream stream)
+template.write(OutputStream stream);
 ----
 
 可以写到任意输出流中，比如文件流或网络流：
@@ -196,7 +198,7 @@ PoitlIOUtils.closeQuietlyMulti(template, bos, out);
 **最后不要忘记关闭这些流。**
 
 == 标签
-poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成， {{title}} 是标签， {{?title}} 也是标签， title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。
+poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成，{{title}}是标签，{{?title}}也是标签，title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。
 
 === 文本
 [example]
@@ -481,7 +483,7 @@ UPPER_LETTER //A. B. C.
 [example]
 区块对由前后两个标签组成，开始标签以?标识，结束标签以/标识：{{?sections}}{{/sections}}
 
-区块对开始和结束标签中间可以 **包含多个图片、表格、段落、列表、图表** 等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。
+区块对开始和结束标签中间可以**包含多个图片、表格、段落、列表、图表**等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。
 
 区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素可以被渲染零次，一次或N次，这取决于区块对的取值。
 
@@ -558,7 +560,7 @@ Hi {{name}}!
 Hi Sayi!
 --
 
-IMPORTANT: 区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是 `boolean` 类型且为 `true` 时，这些标签作用域才不会改变。
+IMPORTANT: 区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是``boolean``类型且为``true``时，这些标签作用域才不会改变。
 
 #### 非空集合
 如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染一次或者N次，这取决于集合的大小，类似于foreach语法。
@@ -674,7 +676,7 @@ put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create
 == 引用标签
 引用标签是一种特殊位置的特殊标签，提供了直接引用文档中的元素句柄的能力，**这个重要的特性在我们只想改变文档中某个元素极小一部分样式和属性的时候特别有用，因为其余样式和属性都可以在模板中预置好，真正的所见即所得**。
 
-[[ref-policy-section]]
+[#ref-policy-section]
 === 图片
 
 [example]
@@ -1000,7 +1002,7 @@ poi-tl支持在发生错误的时候定制引擎的行为。
 ==== 标签无法被计算
 标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，如 `{{author.name}}` 中author的值为null，此时就无法计算name的值。
 
-poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为 `null` 。当我们需要严格校验模板是否有人为失误时，可以抛出异常：
+poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为``null``。当我们需要严格校验模板是否有人为失误时，可以抛出异常：
 [source, java]
 ----
 builder.useDefaultEL(true);
@@ -1078,7 +1080,7 @@ Successfully Render the template file in 13 millis
 --
 
 == 插件
-插件，又称为 *自定义函数*，它允许用户在模板标签位置处执行预先定义好的函数。由于插件机制的存在，我们几乎可以在模板的任何位置执行任何操作。
+插件，又称为**自定义函数**，它允许用户在模板标签位置处执行预先定义好的函数。由于插件机制的存在，我们几乎可以在模板的任何位置执行任何操作。
 
 *插件是poi-tl的核心*，默认的标签和引用标签都是通过插件加载。
 
@@ -1096,9 +1098,9 @@ poi-tl默认提供了八个策略插件，用来处理文本、图片、列表�
 
 由于这八个插件如此通用，因此将这些插件注册为不同的标签类型，从而搭建了poi-tl的标签体系，也构筑了poi-tl高度自由的插件机制。
 
-[[cus-policy-section]]
+[#cus-policy-section]
 === 开发一个插件
-插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现 `RenderPolicy` 接口开发自己的插件：
+插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现``RenderPolicy``接口开发自己的插件：
 [source, java]
 ----
 public interface RenderPolicy {
@@ -1263,7 +1265,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 
 == 可选插件
 
-[[plugin-list]]
+[#plugin-list]
 === 插件列表
 除了八个通用的策略插件外，还内置了一些额外用途的插件。
 |===
@@ -1280,7 +1282,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 
 NOTE: 如果你写了一个不错的插件，欢迎分享。
 
-[[hack-loop-table]]
+[#hack-loop-table]
 === 表格行循环
 `HackLoopTableRenderPolicy` 是一个特定场景的插件，根据集合数据循环表格行。
 
@@ -1349,7 +1351,7 @@ image::./example/example_looptable_output.png[width=650, align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/HackLoopTableRenderPolicyTest.java[JUnit HackLoopTableRenderPolicyTest]，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 `new HackLoopTableRenderPolicy(true)` 来构造插件。
 
-[[loop-col-table]]
+[#loop-col-table]
 === 表格列循环
 `LoopColumnTableRenderPolicy` 是一个特定场景的插件，根据集合数据循环表格列。**要注意的是，由于文档宽度有限，因此模板列必须设置宽度，所有循环列将平分模板列的宽度。**
 
@@ -1388,7 +1390,7 @@ image::./example/example_loopcol_output.png[width=650, align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/LoopColumnTableRenderPolicyTest.java[JUnit LoopColumnTableRenderPolicyTest]
 
-[[plugin-dynamic-table]]
+[#plugin-dynamic-table]
 === 动态表格
 当需求中的表格更加复杂的时候，我们完全可以设计好那些固定的部分，将需要动态渲染的部分单元格交给自定义模板渲染策略。poi-tl提供了抽象表格策略 `DynamicTableRenderPolicy` 来实现这样的功能。
 [source, java]
@@ -1497,7 +1499,7 @@ image::./example/example_poitl_template1.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[JUnit XWPFTemplateTest]
 
-[[example-table]]
+[#example-table]
 === 付款通知书
 [example]
 --
@@ -1521,7 +1523,7 @@ image::./example/example_payment_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
 
-[[example-okr]]
+[#example-okr]
 === 目标制定
 [example]
 --
@@ -1543,7 +1545,7 @@ image::./example/example_okr_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/OKRExample.java[JUnit OKRExample]
 
-[[example-animal]]
+[#example-animal]
 === 野生动物现状
 [example]
 --
@@ -1565,7 +1567,7 @@ image::./example/example_animal_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/AnimalExmample.java[JUnit AnimalExample]
 
-[[example-certificate]]
+[#example-certificate]
 === 证书奖状
 [example]
 --
@@ -1587,7 +1589,7 @@ image::./example/example_certificate_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/CertificateExample.java[JUnit CertificateExample]
 
-[[example-resume]]
+[#example-resume]
 === 个人简历
 [example]
 --
@@ -1623,7 +1625,7 @@ image::./example/example_resume_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[JUnit ResumeExample]
 
-[[example-swagger]]
+[#example-swagger]
 === Swagger文档
 [example]
 --
