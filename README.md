@@ -23,7 +23,7 @@ poi-tl支持自定义函数(插件)，函数可以在Word模板的任何位置�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.9.0</version>
+  <version>1.9.1</version>
 </dependency>
 ```
 

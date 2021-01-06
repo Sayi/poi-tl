@@ -40,7 +40,7 @@ public class DefaultELRenderDataCompute implements RenderDataCompute {
     @Override
     public Object compute(String el) {
         try {
-            if (null != envObject) {
+            if (null != envObject && !el.contains("#this")) {
                 try {
                     Object val = envObject.eval(el);
                     if (null != val) {
