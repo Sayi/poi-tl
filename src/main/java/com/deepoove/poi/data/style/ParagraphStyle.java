@@ -29,6 +29,7 @@ public class ParagraphStyle implements Serializable {
     private double indentHangingChars;
 
     private ParagraphAlignment align;
+    private String backgroundColor;
 
     /**
      * Example: 1.5 spacing
@@ -47,6 +48,7 @@ public class ParagraphStyle implements Serializable {
         this.indentRightChars = builder.indentRightChars;
         this.indentHangingChars = builder.indentHangingChars;
         this.align = builder.align;
+        this.backgroundColor = builder.backgroundColor;
         this.spacing = builder.spacing;
         this.glyphStyle = builder.glyphStyle;
         this.numId = builder.numId;
@@ -87,6 +89,14 @@ public class ParagraphStyle implements Serializable {
 
     public void setAlign(ParagraphAlignment align) {
         this.align = align;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 
     public double getSpacing() {
@@ -146,6 +156,7 @@ public class ParagraphStyle implements Serializable {
         private double indentRightChars;
         private double indentHangingChars;
         private ParagraphAlignment align;
+        private String backgroundColor;
         private double spacing;
         private Style glyphStyle;
         private long numId = -1;
@@ -172,6 +183,11 @@ public class ParagraphStyle implements Serializable {
 
         public Builder withAlign(ParagraphAlignment align) {
             this.align = align;
+            return this;
+        }
+
+        public Builder withBackgroundColor(String backgroundColor) {
+            this.backgroundColor = backgroundColor;
             return this;
         }
 

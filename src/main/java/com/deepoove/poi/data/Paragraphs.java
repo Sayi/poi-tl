@@ -66,6 +66,11 @@ public class Paragraphs {
             contents.add(text);
             return this;
         }
+        
+        public ParagraphBuilder addTexts(List<TextRenderData> texts) {
+            texts.forEach(this::addText);
+            return this;
+        }
 
         public ParagraphBuilder addText(String text) {
             contents.add(Texts.of(text).create());
@@ -114,6 +119,15 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.RIGHT).build();
             } else {
                 this.paragraphStyle.setAlign(ParagraphAlignment.RIGHT);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder bgColor(String backgroundColor) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withBackgroundColor(backgroundColor).build();
+            } else {
+                this.paragraphStyle.setBackgroundColor(backgroundColor);
             }
             return this;
         }

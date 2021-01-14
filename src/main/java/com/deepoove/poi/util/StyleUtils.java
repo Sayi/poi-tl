@@ -40,6 +40,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
@@ -49,6 +50,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
@@ -340,6 +342,14 @@ public final class StyleUtils {
             indent.setHangingChars(bi);
             if (indent.isSetHanging()) indent.unsetHanging();
         }
+
+        if (null != style.getBackgroundColor()) {
+            CTShd shd = pr.isSetShd() ? pr.getShd() : pr.addNewShd();
+            shd.setVal(STShd.CLEAR);
+            shd.setColor("auto");
+            shd.setFill(style.getBackgroundColor());
+        }
+
         if (-1 != style.getNumId()) {
             paragraph.setNumID(BigInteger.valueOf(style.getNumId()));
         }
