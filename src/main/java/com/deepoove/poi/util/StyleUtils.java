@@ -350,6 +350,30 @@ public final class StyleUtils {
             shd.setFill(style.getBackgroundColor());
         }
 
+        if (null != style.getStyleId()) {
+            paragraph.setStyle(style.getStyleId());
+        }
+
+        if (null != style.getKeepLines()) {
+            CTOnOff ctKeepLines = pr.isSetKeepLines() ? pr.getKeepLines() : pr.addNewKeepLines();
+            ctKeepLines.setVal(style.getKeepLines() ? STOnOff.TRUE : STOnOff.FALSE);
+        }
+        if (null != style.getKeepNext()) {
+            paragraph.setKeepNext(style.getKeepNext());
+        }
+        if (null != style.getPageBreakBefore()) {
+            paragraph.setPageBreak(style.getPageBreakBefore());
+        }
+        if (null != style.getWidowControl()) {
+            CTOnOff ctWC = pr.isSetWidowControl() ? pr.getWidowControl() : pr.addNewWidowControl();
+            ctWC.setVal(style.getWidowControl() ? STOnOff.TRUE : STOnOff.FALSE);
+        }
+        if (null != style.getWordWrap()) {
+//            paragraph.setWordWrapped(style.getWordWrap());
+            CTOnOff ctWW = pr.isSetWordWrap() ? pr.getWordWrap() : pr.addNewWordWrap();
+            ctWW.setVal(style.getWordWrap() ? STOnOff.X_0 : STOnOff.X_1);
+        }
+
         if (-1 != style.getNumId()) {
             paragraph.setNumID(BigInteger.valueOf(style.getNumId()));
         }

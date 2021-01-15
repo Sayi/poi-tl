@@ -66,7 +66,7 @@ public class Paragraphs {
             contents.add(text);
             return this;
         }
-        
+
         public ParagraphBuilder addTexts(List<TextRenderData> texts) {
             texts.forEach(this::addText);
             return this;
@@ -128,6 +128,38 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withBackgroundColor(backgroundColor).build();
             } else {
                 this.paragraphStyle.setBackgroundColor(backgroundColor);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder styleId(String styleId) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withStyleId(styleId).build();
+            } else {
+                this.paragraphStyle.setStyleId(styleId);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder wordWrap() {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withWordWrap(true).build();
+            } else {
+                this.paragraphStyle.setWordWrap(true);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder pageControl(Boolean widowControl, Boolean keepNext, Boolean keepLines,
+                Boolean pageBreakBefore) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withWidowControl(widowControl).withKeepNext(keepNext)
+                        .withKeepLines(keepLines).withPageBreakBefore(pageBreakBefore).build();
+            } else {
+                this.paragraphStyle.setWidowControl(widowControl);
+                this.paragraphStyle.setKeepNext(keepNext);
+                this.paragraphStyle.setKeepLines(keepLines);
+                this.paragraphStyle.setPageBreakBefore(pageBreakBefore);
             }
             return this;
         }

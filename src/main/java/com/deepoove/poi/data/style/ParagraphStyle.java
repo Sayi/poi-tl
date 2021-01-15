@@ -30,6 +30,12 @@ public class ParagraphStyle implements Serializable {
 
     private ParagraphAlignment align;
     private String backgroundColor;
+    private String styleId;
+    private Boolean widowControl; // 孤行控制
+    private Boolean keepLines; // 段中不分页
+    private Boolean keepNext; // 与下段同页
+    private Boolean pageBreakBefore; // 段前分页
+    private Boolean wordWrap; // 自动换行
 
     /**
      * Example: 1.5 spacing
@@ -49,6 +55,12 @@ public class ParagraphStyle implements Serializable {
         this.indentHangingChars = builder.indentHangingChars;
         this.align = builder.align;
         this.backgroundColor = builder.backgroundColor;
+        this.styleId = builder.styleId;
+        this.keepLines = builder.keepLines;
+        this.keepNext = builder.keepNext;
+        this.wordWrap = builder.wordWrap;
+        this.pageBreakBefore = builder.pageBreakBefore;
+        this.widowControl = builder.widowControl;
         this.spacing = builder.spacing;
         this.glyphStyle = builder.glyphStyle;
         this.numId = builder.numId;
@@ -97,6 +109,54 @@ public class ParagraphStyle implements Serializable {
 
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public String getStyleId() {
+        return styleId;
+    }
+
+    public void setStyleId(String styleId) {
+        this.styleId = styleId;
+    }
+
+    public Boolean getKeepLines() {
+        return keepLines;
+    }
+
+    public void setKeepLines(Boolean keepLines) {
+        this.keepLines = keepLines;
+    }
+
+    public Boolean getKeepNext() {
+        return keepNext;
+    }
+
+    public void setKeepNext(Boolean keepNext) {
+        this.keepNext = keepNext;
+    }
+
+    public Boolean getWordWrap() {
+        return wordWrap;
+    }
+
+    public void setWordWrap(Boolean wordWrap) {
+        this.wordWrap = wordWrap;
+    }
+
+    public Boolean getPageBreakBefore() {
+        return pageBreakBefore;
+    }
+
+    public void setPageBreakBefore(Boolean pageBreakBefore) {
+        this.pageBreakBefore = pageBreakBefore;
+    }
+
+    public Boolean getWidowControl() {
+        return widowControl;
+    }
+
+    public void setWidowControl(Boolean widowControl) {
+        this.widowControl = widowControl;
     }
 
     public double getSpacing() {
@@ -157,6 +217,12 @@ public class ParagraphStyle implements Serializable {
         private double indentHangingChars;
         private ParagraphAlignment align;
         private String backgroundColor;
+        private String styleId;
+        private Boolean keepLines;
+        private Boolean keepNext;
+        private Boolean wordWrap;
+        private Boolean pageBreakBefore;
+        private Boolean widowControl;
         private double spacing;
         private Style glyphStyle;
         private long numId = -1;
@@ -188,6 +254,36 @@ public class ParagraphStyle implements Serializable {
 
         public Builder withBackgroundColor(String backgroundColor) {
             this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        public Builder withStyleId(String styleId) {
+            this.styleId = styleId;
+            return this;
+        }
+
+        public Builder withKeepLines(Boolean keepLines) {
+            this.keepLines = keepLines;
+            return this;
+        }
+
+        public Builder withKeepNext(boolean keepNext) {
+            this.keepNext = keepNext;
+            return this;
+        }
+
+        public Builder withWordWrap(Boolean wordWrap) {
+            this.wordWrap = wordWrap;
+            return this;
+        }
+
+        public Builder withPageBreakBefore(Boolean pageBreakBefore) {
+            this.pageBreakBefore = pageBreakBefore;
+            return this;
+        }
+
+        public Builder withWidowControl(Boolean widowControl) {
+            this.widowControl = widowControl;
             return this;
         }
 
