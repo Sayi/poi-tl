@@ -119,9 +119,9 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(underLine)) {
             run.setUnderline(UnderlinePatterns.SINGLE);
         }
-        int twips = style.getCharacterSpacing();
+        int point = style.getCharacterSpacing();
         // in twentieths of a point
-        if (0 != twips && -1 != twips) run.setCharacterSpacing(20 * twips);
+        if (0 != point && -1 != point) run.setCharacterSpacing(UnitUtils.point2Twips(point));
         String vertAlign = style.getVertAlign();
         if (StringUtils.isNotBlank(vertAlign)) {
             run.setVerticalAlignment(vertAlign);
