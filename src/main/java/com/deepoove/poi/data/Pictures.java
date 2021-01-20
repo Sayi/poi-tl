@@ -19,8 +19,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
 
+import com.deepoove.poi.data.PictureRenderData.PictureAlign;
 import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.ByteUtils;
+import com.deepoove.poi.util.UnitUtils;
 
 /**
  * Factory method to build {@link PictureRenderData} instances.
@@ -74,8 +76,27 @@ public class Pictures {
             return this;
         }
 
+        public PictureBuilder sizeInCentimeters(double cmWidth, double cmHeight) {
+            return size(UnitUtils.cm2Pixel(cmWidth), UnitUtils.cm2Pixel(cmHeight));
+        }
+
         public PictureBuilder altMeta(String altMeta) {
             data.setAltMeta(altMeta);
+            return this;
+        }
+
+        public PictureBuilder left() {
+            data.setAlign(PictureAlign.LEFT);
+            return this;
+        }
+
+        public PictureBuilder center() {
+            data.setAlign(PictureAlign.CENTER);
+            return this;
+        }
+
+        public PictureBuilder right() {
+            data.setAlign(PictureAlign.RIGHT);
             return this;
         }
 

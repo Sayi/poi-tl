@@ -19,9 +19,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureRenderData.PictureAlign;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 
@@ -62,6 +65,10 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
             if (null == picture.getImage()) {
                 throw new IllegalStateException("Can't get input data from picture!");
+            }
+            PictureAlign align = picture.getAlign();
+            if (null != align && run.getParent() instanceof XWPFParagraph) {
+                ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
             }
             try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
                 run.addPicture(stream, picture.getPictureType().type(), "Generated",

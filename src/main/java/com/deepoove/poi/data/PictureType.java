@@ -113,8 +113,7 @@ public enum PictureType {
             format = EPS;
         else if (imgFile.endsWith(".bmp"))
             format = BMP;
-        else if (imgFile.endsWith(".wpg"))
-            format = WPG;
+        else if (imgFile.endsWith(".wpg")) format = WPG;
         else {
             throw new IllegalArgumentException(
                     "Unsupported picture: " + imgFile + ". Expected emf|wmf|pict|jpeg|png|dib|gif|tiff|eps|bmp|wpg");

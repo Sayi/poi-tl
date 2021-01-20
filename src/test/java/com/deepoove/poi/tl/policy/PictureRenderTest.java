@@ -55,7 +55,7 @@ public class PictureRenderTest {
         datas.put("bufferImagePicture", Pictures.ofBufferedImage(bufferImage, PictureType.PNG).size(100, 100).create());
         // alt attribute for not exist image
         datas.put("image", Pictures.ofLocal("not_exist_image.png").altMeta("No Image!").create());
-        datas.put("base64Image", Pictures.ofBase64(imageBase64, PictureType.PNG).size(100,100).create());
+        datas.put("base64Image", Pictures.ofBase64(imageBase64, PictureType.PNG).size(100,100).center().create());
 
         XWPFTemplate.compile("src/test/resources/template/render_picture.docx").render(datas)
                 .writeToFile("out_render_picture.docx");
