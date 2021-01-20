@@ -29,10 +29,12 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.SimpleValue;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
@@ -52,6 +54,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorAuto;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorRGB;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
@@ -64,6 +69,7 @@ import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.xwpf.XWPFHighlightColor;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
@@ -105,9 +111,10 @@ public final class StyleUtils {
             fonts.setCs(fontFamily);
             fonts.setEastAsia(fontFamily);
         }
-        String highlightColor = style.getHighlightColor();
+        XWPFHighlightColor highlightColor = style.getHighlightColor();
         if (null != highlightColor) {
-            run.setTextHighlightColor(highlightColor);
+            CTHighlight highlight = pr.isSetHighlight() ? pr.getHighlight() : pr.addNewHighlight();
+            highlight.setVal(STHighlightColor.Enum.forInt(highlightColor.getValue()));
         }
         Boolean bold = style.isBold();
         if (null != bold) run.setBold(bold);
@@ -115,9 +122,12 @@ public final class StyleUtils {
         if (null != italic) run.setItalic(italic);
         Boolean strike = style.isStrike();
         if (null != strike) run.setStrikeThrough(strike);
-        Boolean underLine = style.isUnderLine();
-        if (Boolean.TRUE.equals(underLine)) {
-            run.setUnderline(UnderlinePatterns.SINGLE);
+        UnderlinePatterns underlinePatern = style.getUnderlinePatterns();
+        if (null != underlinePatern) {
+            run.setUnderline(underlinePatern);
+            if (null != style.getUnderlineColor()) {
+                run.setUnderlineColor(style.getUnderlineColor());
+            }
         }
         int point = style.getCharacterSpacing();
         // in twentieths of a point
@@ -153,6 +163,7 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(src.isItalic())) dest.setItalic(src.isItalic());
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
+        if (null != src.getUnderlineColor()) dest.setUnderlineColor(src.getUnderlineColor());
     }
 
     /**
@@ -290,9 +301,24 @@ public final class StyleUtils {
             strike.setVal(style.isStrike() ? STOnOff.TRUE : STOnOff.FALSE);
         }
 
-        if (Boolean.TRUE.equals(style.isUnderLine())) {
+        UnderlinePatterns underlinePatern = style.getUnderlinePatterns();
+        if (null != underlinePatern) {
             CTUnderline underline = pr.isSetU() ? pr.getU() : pr.addNewU();
-            underline.setVal(STUnderline.SINGLE);
+            underline.setVal(STUnderline.Enum.forInt(underlinePatern.getValue()));
+            if (null != style.getUnderlineColor()) {
+                String color = style.getUnderlineColor();
+                SimpleValue svColor = null;
+                if (color.equals("auto")) {
+                    STHexColorAuto hexColor = STHexColorAuto.Factory.newInstance();
+                    hexColor.set(STHexColorAuto.Enum.forString(color));
+                    svColor = (SimpleValue) hexColor;
+                } else {
+                    STHexColorRGB rgbColor = STHexColorRGB.Factory.newInstance();
+                    rgbColor.setStringValue(color);
+                    svColor = (SimpleValue) rgbColor;
+                }
+                underline.setColor(svColor);
+            }
         }
 
         if (StringUtils.isNotBlank(style.getFontFamily())) {

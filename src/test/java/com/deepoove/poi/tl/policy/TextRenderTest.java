@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.xwpf.XWPFHighlightColor;
 
 @DisplayName("Text Render test case")
 public class TextRenderTest {
@@ -36,10 +38,10 @@ public class TextRenderTest {
                 style.setFontSize(48l);
                 style.setItalic(true);
                 style.setStrike(true);
-                style.setUnderLine(true);
+                style.setUnderlinePatterns(UnderlinePatterns.SINGLE);
                 style.setFontFamily("微软雅黑");
                 style.setCharacterSpacing(20);
-                style.setHighlightColor("darkGreen");
+                style.setHighlightColor(XWPFHighlightColor.DARK_GREEN);
                 put("word", Texts.of("just deepoove.").style(style).create());
 
                 // 换行

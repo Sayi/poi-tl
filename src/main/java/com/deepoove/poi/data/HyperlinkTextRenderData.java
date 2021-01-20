@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data;
 
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+
 import com.deepoove.poi.data.style.Style;
 
 /**
@@ -39,7 +41,7 @@ public class HyperlinkTextRenderData extends TextRenderData {
     public HyperlinkTextRenderData(String text, String url) {
         super(text);
         this.url = url;
-        this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
+        this.style = Style.builder().buildColor("0000FF").buildUnderlinePatterns(UnderlinePatterns.SINGLE).build();
     }
 
     public String getUrl() {

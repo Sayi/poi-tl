@@ -15,6 +15,8 @@
  */
 package com.deepoove.poi.data;
 
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+
 import com.deepoove.poi.data.style.Style;
 
 /**
@@ -117,7 +119,8 @@ public final class Texts {
             this.url = url;
             // default blue color and underline
             if (null == this.style) {
-                this.style = Style.builder().buildColor("0000FF").buildUnderLine().build();
+                this.style = Style.builder().buildColor("0000FF").buildUnderlinePatterns(UnderlinePatterns.SINGLE)
+                        .build();
             }
             return this;
         }

@@ -17,7 +17,9 @@ package com.deepoove.poi.data.style;
 
 import java.io.Serializable;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+
+import com.deepoove.poi.xwpf.XWPFHighlightColor;
 
 /**
  * Text Style
@@ -35,13 +37,9 @@ public class Style implements Serializable {
     private Boolean isBold;
     private Boolean isItalic;
     private Boolean isStrike;
-    private Boolean isUnderLine;
-
-    /**
-     * text background highlight color name
-     * {@link STHighlightColor.Enum}
-     */
-    private String highlightColor;
+    private UnderlinePatterns underlinePatterns;
+    private String underlineColor;
+    private XWPFHighlightColor highlightColor;
 
     /**
      * point unit(pt)
@@ -117,19 +115,27 @@ public class Style implements Serializable {
         this.isStrike = isStrike;
     }
 
-    public Boolean isUnderLine() {
-        return isUnderLine;
+    public UnderlinePatterns getUnderlinePatterns() {
+        return underlinePatterns;
     }
 
-    public void setUnderLine(Boolean isUnderLine) {
-        this.isUnderLine = isUnderLine;
+    public void setUnderlinePatterns(UnderlinePatterns underlinePatterns) {
+        this.underlinePatterns = underlinePatterns;
     }
 
-    public String getHighlightColor() {
+    public String getUnderlineColor() {
+        return underlineColor;
+    }
+
+    public void setUnderlineColor(String underlineColor) {
+        this.underlineColor = underlineColor;
+    }
+
+    public XWPFHighlightColor getHighlightColor() {
         return highlightColor;
     }
 
-    public void setHighlightColor(String highlightColor) {
+    public void setHighlightColor(XWPFHighlightColor highlightColor) {
         this.highlightColor = highlightColor;
     }
 
@@ -187,8 +193,13 @@ public class Style implements Serializable {
             return this;
         }
 
-        public StyleBuilder buildUnderLine() {
-            style.setUnderLine(true);
+        public StyleBuilder buildUnderlineColor(String color) {
+            style.setUnderlineColor(color);
+            return this;
+        }
+
+        public StyleBuilder buildUnderlinePatterns(UnderlinePatterns pattern) {
+            style.setUnderlinePatterns(pattern);
             return this;
         }
 
