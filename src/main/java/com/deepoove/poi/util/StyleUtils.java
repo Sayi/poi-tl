@@ -29,6 +29,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
@@ -36,6 +37,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -48,6 +50,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
@@ -60,6 +63,8 @@ import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
  * set style for run, paragraph, table...
@@ -321,7 +326,16 @@ public final class StyleUtils {
         }
 
         if (0 != style.getSpacing()) {
-            paragraph.setSpacingBetween(style.getSpacing(), LineSpacingRule.AUTO);
+            paragraph.setSpacingBetween(style.getSpacing(),
+                    null == style.getSpacingRule() ? LineSpacingRule.AUTO : style.getSpacingRule());
+        }
+        if (0 != style.getSpacingBeforeLines()) {
+            paragraph.setSpacingBeforeLines(
+                    new BigInteger(String.valueOf(Math.round(style.getSpacingBeforeLines() * 100.0))).intValue());
+        }
+        if (0 != style.getSpacingAfterLines()) {
+            paragraph.setSpacingAfterLines(
+                    new BigInteger(String.valueOf(Math.round(style.getSpacingAfterLines() * 100.0))).intValue());
         }
 
         CTP ctp = paragraph.getCTP();
@@ -342,10 +356,30 @@ public final class StyleUtils {
             indent.setHangingChars(bi);
             if (indent.isSetHanging()) indent.unsetHanging();
         }
+        if (0 != style.getIndentFirstLineChars()) {
+            BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentFirstLineChars() * 100.0)));
+            indent.setFirstLineChars(bi);
+            if (indent.isSetFirstLine()) indent.unsetFirstLine();
+        }
+
+        CTPBdr ct = pr.isSetPBdr() ? pr.getPBdr() : pr.addNewPBdr();
+        BorderStyle leftBorder = style.getLeftBorder();
+        if (null != leftBorder) {
+            CTBorder b = ct.isSetLeft() ? ct.getLeft() : ct.addNewLeft();
+            b.setVal(STBorder.Enum.forString(leftBorder.getType().toString().toLowerCase()));
+            b.setSz(BigInteger.valueOf(leftBorder.getSize()));
+            b.setSpace(BigInteger.valueOf(4));
+            b.setColor(leftBorder.getColor());
+        }
 
         if (null != style.getBackgroundColor()) {
             CTShd shd = pr.isSetShd() ? pr.getShd() : pr.addNewShd();
-            shd.setVal(STShd.CLEAR);
+            XWPFShadingPattern shadingPattern = style.getShadingPattern();
+            if (null == shadingPattern) {
+                shd.setVal(STShd.CLEAR);
+            } else {
+                shd.setVal(STShd.Enum.forInt(shadingPattern.getValue()));
+            }
             shd.setColor("auto");
             shd.setFill(style.getBackgroundColor());
         }

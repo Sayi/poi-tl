@@ -18,6 +18,8 @@ package com.deepoove.poi.util;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.poi.util.Units;
+
 /**
  * @author Sayi
  *
@@ -42,6 +44,16 @@ public final class UnitUtils {
      */
     public static int point2Twips(int pt) {
         return pt * 20;
+    }
+
+    /**
+     * cm to pixel
+     * 
+     * @param cm
+     * @return
+     */
+    public static int cm2Pixel(double cm) {
+        return Units.pointsToPixel(cm / 2.54 * 1440 / 20.0);
     }
 
     /**

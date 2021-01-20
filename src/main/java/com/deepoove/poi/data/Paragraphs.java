@@ -18,10 +18,13 @@ package com.deepoove.poi.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
  * Factory to create {@link ParagraphRenderData}
@@ -105,6 +108,15 @@ public class Paragraphs {
             return this;
         }
 
+        public ParagraphBuilder indentFirstLine(double lineChars) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withIndentFirstLineChars(lineChars).build();
+            } else {
+                this.paragraphStyle.setIndentFirstLineChars(lineChars);
+            }
+            return this;
+        }
+
         public ParagraphBuilder center() {
             if (null == this.paragraphStyle) {
                 this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
@@ -123,11 +135,37 @@ public class Paragraphs {
             return this;
         }
 
-        public ParagraphBuilder bgColor(String backgroundColor) {
+        public ParagraphBuilder borderLeft(BorderStyle borderStyle) {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withBackgroundColor(backgroundColor).build();
+                this.paragraphStyle = ParagraphStyle.builder().withLeftBorder(borderStyle).build();
+            } else {
+                this.paragraphStyle.setLeftBorder(borderStyle);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder spacing(double spacing, LineSpacingRule spacingRule) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withSpacing(spacing).withSpacingRule(spacingRule)
+                        .build();
+            } else {
+                this.paragraphStyle.setSpacing(spacing);
+                this.paragraphStyle.setSpacingRule(spacingRule);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder bgColor(String backgroundColor) {
+            return this.bgColor(backgroundColor, null);
+        }
+
+        public ParagraphBuilder bgColor(String backgroundColor, XWPFShadingPattern pattern) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withBackgroundColor(backgroundColor)
+                        .withShadingPattern(pattern).build();
             } else {
                 this.paragraphStyle.setBackgroundColor(backgroundColor);
+                this.paragraphStyle.setShadingPattern(pattern);
             }
             return this;
         }
