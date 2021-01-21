@@ -19,7 +19,7 @@ import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.policy.TableRenderPolicy;
 
 @DisplayName("Table Render test case")

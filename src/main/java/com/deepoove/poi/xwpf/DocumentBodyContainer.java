@@ -16,12 +16,18 @@
 
 package com.deepoove.poi.xwpf;
 
+import java.util.List;
+
 import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 public class DocumentBodyContainer implements BodyContainer {
 
@@ -64,6 +70,34 @@ public class DocumentBodyContainer implements BodyContainer {
             }
         }
         return table;
+    }
+
+    @Override
+    public XWPFSection closelySectPr(IBodyElement element) {
+        List<IBodyElement> bodyElements = doc.getBodyElements();
+        boolean isEncounter = false;
+        for (IBodyElement ele : bodyElements) {
+            if (isEncounter) {
+                if (ele instanceof XWPFParagraph) {
+                    XWPFParagraph para = (XWPFParagraph) ele;
+                    CTP ctp = para.getCTP();
+                    if (!ctp.isSetPPr()) continue;
+                    CTPPr pPr = ctp.getPPr();
+                    if (pPr.isSetSectPr()) {
+                        return new XWPFSection(pPr.getSectPr());
+                    }
+                }
+            } else {
+                if (ele == element) {
+                    isEncounter = true;
+                }
+            }
+        }
+        CTBody body = doc.getDocument().getBody();
+        if (body.isSetSectPr()) {
+            return new XWPFSection(body.getSectPr());
+        }
+        return null;
     }
 
 }

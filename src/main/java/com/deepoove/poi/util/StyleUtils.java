@@ -62,13 +62,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
@@ -186,8 +187,12 @@ public final class StyleUtils {
      */
     public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
-        String width = tableStyle.getWidth();
         ensureTblW(table);
+
+        String width = tableStyle.getWidth();
+        if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
+            width = PageTools.pageWidth(table);
+        }
         table.setWidth(width);
 
         int[] colWidths = tableStyle.getColWidths();

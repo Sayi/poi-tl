@@ -20,9 +20,10 @@ import java.util.Arrays;
 import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
 import com.deepoove.poi.data.Rows.RowBuilder;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.util.UnitUtils;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 
 /**
  * Factory method to create {@link TableRenderData}
@@ -35,8 +36,7 @@ public class Tables {
     }
 
     public static TableBuilder of(RowRenderData... row) {
-        // default A4
-        TableBuilder inst = ofA4Width();
+        TableBuilder inst = ofFitWidth();
         if (null != row) {
             Arrays.stream(row).forEach(inst::addRow);
         }
@@ -44,7 +44,7 @@ public class Tables {
     }
 
     public static TableBuilder of(String[][] strings) {
-        TableBuilder inst = ofA4Width();
+        TableBuilder inst = ofFitWidth();
         if (null != strings) {
             Arrays.stream(strings).map(string -> {
                 RowBuilder row = Rows.of();
@@ -75,6 +75,14 @@ public class Tables {
         return ofWidth(10.83f);
     }
 
+    public static TableBuilder ofFitWidth() {
+        TableBuilder inst = new TableBuilder();
+        TableStyle style = new TableStyle();
+        style.setWidthScalePattern(WidthScalePattern.FIT);
+        inst.data.setTableStyle(style);
+        return inst;
+    }
+
     public static TableBuilder ofWidth(double cmWidth, double[] colCmWidths) {
         TableBuilder inst = new TableBuilder();
         inst.width(cmWidth, colCmWidths);
@@ -89,12 +97,12 @@ public class Tables {
         return inst;
     }
 
-    public static TableRenderData create(RowRenderData... row) {
-        return of(row).create();
-    }
-
     public static TableBuilder ofAutoWidth() {
         return ofPercentWidth("auto");
+    }
+
+    public static TableRenderData create(RowRenderData... row) {
+        return of(row).create();
     }
 
     /**
@@ -116,6 +124,7 @@ public class Tables {
                 int[] colWidths = Arrays.stream(colCmWidths).mapToInt(UnitUtils::cm2Twips).toArray();
                 style.setColWidths(colWidths);
             }
+            style.setWidthScalePattern(WidthScalePattern.NONE);
             return this;
         }
 

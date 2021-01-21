@@ -217,4 +217,6 @@ public interface BodyContainer extends ParentContext {
         }
     }
 
+    XWPFSection closelySectPr(IBodyElement element);
+
 }

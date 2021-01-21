@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**

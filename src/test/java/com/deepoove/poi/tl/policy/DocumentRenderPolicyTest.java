@@ -23,8 +23,8 @@ import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.policy.DocumentRenderPolicy;
 import com.deepoove.poi.xwpf.NumFormat;
 
