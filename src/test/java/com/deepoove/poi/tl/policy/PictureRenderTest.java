@@ -50,7 +50,7 @@ public class PictureRenderTest {
                 .ofStream(new FileInputStream("src/test/resources/logo.png"), PictureType.PNG).size(100, 120).create());
         // network url
         datas.put("urlPicture",
-                Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).size(100, 100).create());
+                Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG).create());
         // java bufferedImage
         datas.put("bufferImagePicture", Pictures.ofBufferedImage(bufferImage, PictureType.PNG).size(100, 100).create());
         // alt attribute for not exist image

@@ -50,10 +50,20 @@ public final class UnitUtils {
      * cm to pixel
      * 
      * @param cm
-     * @return
+     * @return pixel
      */
     public static int cm2Pixel(double cm) {
         return Units.pointsToPixel(cm / 2.54 * 1440 / 20.0);
+    }
+
+    /**
+     * twips to pixel
+     * 
+     * @param twips
+     * @return pixel
+     */
+    public static int twips2Pixel(int twips) {
+        return Units.pointsToPixel(twips / 20);
     }
 
     /**

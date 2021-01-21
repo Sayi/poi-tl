@@ -15,10 +15,12 @@
  */
 package com.deepoove.poi.policy;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -27,6 +29,10 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureRenderData.PictureAlign;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
+import com.deepoove.poi.util.BufferedImageUtils;
+import com.deepoove.poi.util.PageTools;
+import com.deepoove.poi.util.UnitUtils;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 
 /**
  * picture render
@@ -70,10 +76,31 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
             if (null != align && run.getParent() instanceof XWPFParagraph) {
                 ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
             }
-            try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
-                run.addPicture(stream, picture.getPictureType().type(), "Generated",
-                        Units.pixelToEMU(picture.getWidth()), Units.pixelToEMU(picture.getHeight()));
+
+            int width = picture.getWidth();
+            int height = picture.getHeight();
+            if (!isSetSize(picture)) {
+                BufferedImage original = BufferedImageUtils.readBufferedImage(picture.getImage());
+                width = original.getWidth();
+                height = original.getHeight();
+                if (picture.getScalePattern() == WidthScalePattern.FIT) {
+                    int pageWidth = UnitUtils.twips2Pixel(PageTools.pageWidth((IBodyElement) run.getParent()));
+                    if (width > pageWidth) {
+                        double ratio = pageWidth / (double) width;
+                        width = pageWidth;
+                        height = (int) (height * ratio);
+                    }
+                }
             }
+            try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
+                run.addPicture(stream, picture.getPictureType().type(), "Generated", Units.pixelToEMU(width),
+                        Units.pixelToEMU(height));
+            }
+        }
+
+        private static boolean isSetSize(PictureRenderData picture) {
+            return (picture.getWidth() != 0 || picture.getHeight() != 0)
+                    && picture.getScalePattern() == WidthScalePattern.NONE;
         }
     }
 }

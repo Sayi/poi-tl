@@ -23,13 +23,13 @@ import com.deepoove.poi.xwpf.XWPFSection;
 
 public final class PageTools {
 
-    public static String pageWidth(IBodyElement element) {
+    public static int pageWidth(IBodyElement element) {
         BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(element.getBody());
         XWPFSection section = bodyContainer.closelySectPr(element);
         if (null == section) {
             throw new IllegalAccessError("Unable to read the page where the element is located.");
         }
-        return section.getPaeContentWidth().toString();
+        return section.getPaeContentWidth().intValue();
     }
 
 }

@@ -191,7 +191,7 @@ public final class StyleUtils {
 
         String width = tableStyle.getWidth();
         if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
-            width = PageTools.pageWidth(table);
+            width = String.valueOf(PageTools.pageWidth(table));
         }
         table.setWidth(width);
 

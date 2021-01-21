@@ -21,6 +21,7 @@ import java.io.InputStream;
 
 import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.ByteUtils;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 
 /**
  * Picture structure
@@ -43,6 +44,10 @@ public class PictureRenderData implements RenderData {
     private byte[] image;
     private PictureType pictureType;
     private PictureAlign align;
+    /**
+     * FIT：scale fit(Original size exceeds page width) or keep original size
+     */
+    private WidthScalePattern scalePattern = WidthScalePattern.NONE;
 
     /**
      * When the picture does not exist, the altMeta displayed
@@ -184,6 +189,14 @@ public class PictureRenderData implements RenderData {
 
     public void setAlign(PictureAlign align) {
         this.align = align;
+    }
+
+    public WidthScalePattern getScalePattern() {
+        return scalePattern;
+    }
+
+    public void setScalePattern(WidthScalePattern scalePattern) {
+        this.scalePattern = scalePattern;
     }
 
 }

@@ -23,6 +23,7 @@ import com.deepoove.poi.data.PictureRenderData.PictureAlign;
 import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.ByteUtils;
 import com.deepoove.poi.util.UnitUtils;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 
 /**
  * Factory method to build {@link PictureRenderData} instances.
@@ -73,11 +74,17 @@ public class Pictures {
         public PictureBuilder size(int width, int height) {
             data.setWidth(width);
             data.setHeight(height);
+            data.setScalePattern(WidthScalePattern.NONE);
             return this;
         }
 
-        public PictureBuilder sizeInCentimeters(double cmWidth, double cmHeight) {
+        public PictureBuilder sizeInCm(double cmWidth, double cmHeight) {
             return size(UnitUtils.cm2Pixel(cmWidth), UnitUtils.cm2Pixel(cmHeight));
+        }
+
+        public PictureBuilder fitSize() {
+            data.setScalePattern(WidthScalePattern.FIT);
+            return this;
         }
 
         public PictureBuilder altMeta(String altMeta) {

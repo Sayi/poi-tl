@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.util.IOUtils;
@@ -53,9 +52,8 @@ public final class ByteUtils {
      * @return
      */
     public static byte[] getLocalByteArray(File res) {
-        Path path = res.toPath();
         try {
-            return Files.readAllBytes(path);
+            return Files.readAllBytes(res.toPath());
         } catch (IOException e) {
             logger.error("readAllBytes error", e);
         }
@@ -94,11 +92,7 @@ public final class ByteUtils {
         } catch (IOException e) {
             logger.error("toByteArray error", e);
         } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                logger.error("close stream error", e);
-            }
+            IOUtils.closeQuietly(is);
         }
         return null;
     }
