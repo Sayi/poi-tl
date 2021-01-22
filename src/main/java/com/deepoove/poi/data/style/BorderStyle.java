@@ -28,6 +28,9 @@ public class BorderStyle implements Serializable {
 
     private XWPFBorderType type;
 
+    public BorderStyle() {
+    }
+
     private BorderStyle(Builder builder) {
         this.size = builder.size;
         this.color = builder.color;
