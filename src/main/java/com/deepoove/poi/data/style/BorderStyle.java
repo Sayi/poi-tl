@@ -6,10 +6,10 @@ import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 
 public class BorderStyle implements Serializable {
 
-    public static final BorderStyle DEFAULT = new BorderStyle();
+    public static final BorderStyle DEFAULT = BorderStyle.builder().build();
 
     static {
-        DEFAULT.setSize(8*1/2);
+        DEFAULT.setSize(8 * 1 / 2);
         DEFAULT.setColor("auto");
         DEFAULT.setType(XWPFBorderType.SINGLE);
     }
@@ -27,6 +27,12 @@ public class BorderStyle implements Serializable {
     private String color;
 
     private XWPFBorderType type;
+
+    private BorderStyle(Builder builder) {
+        this.size = builder.size;
+        this.color = builder.color;
+        this.type = builder.type;
+    }
 
     public String getColor() {
         return color;
@@ -50,6 +56,46 @@ public class BorderStyle implements Serializable {
 
     public void setType(XWPFBorderType type) {
         this.type = type;
+    }
+
+    /**
+     * Creates builder to build {@link BorderStyle}.
+     * 
+     * @return created builder
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder to build {@link BorderStyle}.
+     */
+    public static final class Builder {
+        private int size;
+        private String color;
+        private XWPFBorderType type;
+
+        private Builder() {
+        }
+
+        public Builder withSize(int size) {
+            this.size = size;
+            return this;
+        }
+
+        public Builder withColor(String color) {
+            this.color = color;
+            return this;
+        }
+
+        public Builder withType(XWPFBorderType type) {
+            this.type = type;
+            return this;
+        }
+
+        public BorderStyle build() {
+            return new BorderStyle(this);
+        }
     }
 
 }
