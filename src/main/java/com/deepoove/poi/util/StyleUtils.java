@@ -18,11 +18,10 @@ package com.deepoove.poi.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.List;
+import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
-import org.apache.poi.xwpf.usermodel.TableWidthType;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -45,11 +44,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
@@ -59,7 +53,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorRGB;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
 import com.deepoove.poi.data.style.BorderStyle;
@@ -187,33 +180,20 @@ public final class StyleUtils {
      */
     public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
-        ensureTblW(table);
 
         String width = tableStyle.getWidth();
-        if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
-            width = String.valueOf(PageTools.pageWidth(table));
-        }
-        table.setWidth(width);
-
         int[] colWidths = tableStyle.getColWidths();
-        if (null == colWidths && table.getWidthType() == TableWidthType.DXA) {
-            colWidths = UnitUtils.average(Integer.valueOf(width), TableTools.obtainColumnSize(table));
-            // TODO support calc col width of pct and auto for Apple Pages!
-        }
-        if (null != colWidths) {
-            CTTblGrid tblGrid = TableTools.getTblGrid(table);
-            CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
-            tblLayout.setType(STTblLayoutType.FIXED);
-            for (int index = 0; index < colWidths.length; index++) {
-                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));
-
-                List<XWPFTableRow> rows = table.getRows();
-                for (XWPFTableRow row : rows) {
-                    row.getCell(index).setWidth(colWidths[index] + "");
+        if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
+            int pageWidth = PageTools.pageWidth(table);
+            width = String.valueOf(pageWidth);
+            if (null != colWidths) {
+                int sum = Arrays.stream(colWidths).sum();
+                if (sum == 100) {
+                    colWidths = Arrays.stream(colWidths).map(w -> w * pageWidth / 100).toArray();
                 }
             }
         }
+        TableTools.setWidth(table, width, colWidths);
 
         TableTools.setBorder(table::setLeftBorder, tableStyle.getLeftBorder());
         TableTools.setBorder(table::setRightBorder, tableStyle.getRightBorder());
@@ -226,12 +206,6 @@ public final class StyleUtils {
             table.setTableAlignment(tableStyle.getAlign());
         }
 
-    }
-
-    private static void ensureTblW(XWPFTable table) {
-        CTTbl ctTbl = table.getCTTbl();
-        CTTblPr tblPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
-        if (!tblPr.isSetTblW()) tblPr.addNewTblW();
     }
 
     /**

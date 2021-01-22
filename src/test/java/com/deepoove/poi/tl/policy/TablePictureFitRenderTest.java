@@ -12,7 +12,6 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.style.BorderStyle;
 
 @DisplayName("Width Fit Render test case")
 public class TablePictureFitRenderTest {
@@ -20,8 +19,10 @@ public class TablePictureFitRenderTest {
     @Test
     public void testFit() throws Exception {
         // table
-        TableRenderData table = Tables.of(new String[][] { new String[] { "00", "01", "02", "03", "04" },
-                new String[] { "10", "11", "12", "13", "14" } }).border(BorderStyle.DEFAULT).create();
+        TableRenderData table = Tables
+                .of(new String[][] { new String[] { "00", "01", "02", "03", "04" },
+                        new String[] { "10", "11", "12", "13", "14" } })
+                .fitWidth(new int[] { 10, 20, 10, 20, 40 }).create();
 
         // picture
         PictureRenderData picture = Pictures.ofLocal("src/test/resources/large.png").fitSize().create();

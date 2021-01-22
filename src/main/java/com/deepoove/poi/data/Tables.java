@@ -76,29 +76,23 @@ public class Tables {
     }
 
     public static TableBuilder ofFitWidth() {
-        TableBuilder inst = new TableBuilder();
-        TableStyle style = new TableStyle();
-        style.setWidthScalePattern(WidthScalePattern.FIT);
-        inst.data.setTableStyle(style);
-        return inst;
+        return ofFitWidth(null);
+    }
+
+    public static TableBuilder ofFitWidth(int[] colPercentWidths) {
+        return new TableBuilder().fitWidth(colPercentWidths);
     }
 
     public static TableBuilder ofWidth(double cmWidth, double[] colCmWidths) {
-        TableBuilder inst = new TableBuilder();
-        inst.width(cmWidth, colCmWidths);
-        return inst;
+        return new TableBuilder().width(cmWidth, colCmWidths);
     }
 
     public static TableBuilder ofPercentWidth(String percent) {
-        TableBuilder inst = new TableBuilder();
-        TableStyle style = new TableStyle();
-        style.setWidth(percent);
-        inst.data.setTableStyle(style);
-        return inst;
+        return new TableBuilder().percentOrAutoWidth(percent);
     }
 
     public static TableBuilder ofAutoWidth() {
-        return ofPercentWidth("auto");
+        return new TableBuilder().percentOrAutoWidth("auto");
     }
 
     public static TableRenderData create(RowRenderData... row) {
@@ -115,6 +109,7 @@ public class Tables {
 
         private TableBuilder() {
             data = new TableRenderData();
+            border(BorderStyle.DEFAULT);
         }
 
         public TableBuilder width(double cmWidth, double[] colCmWidths) {
@@ -125,6 +120,26 @@ public class Tables {
                 style.setColWidths(colWidths);
             }
             style.setWidthScalePattern(WidthScalePattern.NONE);
+            return this;
+        }
+
+        public TableBuilder fitWidth(int[] colPercentWidths) {
+            TableStyle style = getTableStyle();
+            if (null != colPercentWidths) {
+                int sum = Arrays.stream(colPercentWidths).sum();
+                if (sum != 100) {
+                    throw new IllegalArgumentException("The sum of the percentages must be 100");
+                }
+            }
+            style.setWidthScalePattern(WidthScalePattern.FIT);
+            style.setColWidths(colPercentWidths);
+            return this;
+        }
+
+        public TableBuilder percentOrAutoWidth(String percentOrAutoWidth) {
+            TableStyle style = getTableStyle();
+            style.setWidthScalePattern(WidthScalePattern.NONE);
+            style.setWidth(percentOrAutoWidth);
             return this;
         }
 
