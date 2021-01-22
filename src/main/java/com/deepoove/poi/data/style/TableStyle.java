@@ -35,6 +35,11 @@ public class TableStyle implements Serializable {
     private BorderStyle insideHBorder;
     private BorderStyle insideVBorder;
 
+    private int leftCellMargin;
+    private int topCellMargin;
+    private int rightCellMargin;
+    private int bottomCellMargin;
+
     /**
      * auto, xx% or xx in twips
      * 
@@ -48,7 +53,7 @@ public class TableStyle implements Serializable {
     private WidthScalePattern widthScalePattern = WidthScalePattern.NONE;
 
     /**
-     * in twips
+     * in twips for none pattern or percent for fit
      * 
      * @see #{@link UnitUtils#cm2Twips()}
      */
@@ -137,7 +142,40 @@ public class TableStyle implements Serializable {
     }
 
     public void setWidthScalePattern(WidthScalePattern widthScalePattern) {
+
         this.widthScalePattern = widthScalePattern;
+    }
+
+    public int getLeftCellMargin() {
+        return leftCellMargin;
+    }
+
+    public void setLeftCellMargin(int leftCellMargin) {
+        this.leftCellMargin = leftCellMargin;
+    }
+
+    public int getTopCellMargin() {
+        return topCellMargin;
+    }
+
+    public void setTopCellMargin(int topCellMargin) {
+        this.topCellMargin = topCellMargin;
+    }
+
+    public int getRightCellMargin() {
+        return rightCellMargin;
+    }
+
+    public void setRightCellMargin(int rightCellMargin) {
+        this.rightCellMargin = rightCellMargin;
+    }
+
+    public int getBottomCellMargin() {
+        return bottomCellMargin;
+    }
+
+    public void setBottomCellMargin(int bottomCellMargin) {
+        this.bottomCellMargin = bottomCellMargin;
     }
 
 }

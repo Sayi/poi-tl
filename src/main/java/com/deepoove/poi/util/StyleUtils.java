@@ -44,6 +44,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
@@ -206,6 +208,9 @@ public final class StyleUtils {
             table.setTableAlignment(tableStyle.getAlign());
         }
 
+        table.setCellMargins(tableStyle.getTopCellMargin(), tableStyle.getLeftCellMargin(),
+                tableStyle.getBottomCellMargin(), tableStyle.getRightCellMargin());
+
     }
 
     /**
@@ -242,7 +247,17 @@ public final class StyleUtils {
             cell.setVerticalAlignment(cellStyle.getVertAlign());
         }
         if (null != cellStyle.getBackgroundColor()) {
-            cell.setColor(cellStyle.getBackgroundColor());
+            CTTc ctTc = cell.getCTTc();
+            CTTcPr pr = ctTc.isSetTcPr() ? ctTc.getTcPr() : ctTc.addNewTcPr();
+            CTShd shd = pr.isSetShd() ? pr.getShd() : pr.addNewShd();
+            XWPFShadingPattern shadingPattern = cellStyle.getShadingPattern();
+            if (null == shadingPattern) {
+                shd.setVal(STShd.CLEAR);
+            } else {
+                shd.setVal(STShd.Enum.forInt(shadingPattern.getValue()));
+            }
+            shd.setColor("auto");
+            shd.setFill(cellStyle.getBackgroundColor());
         }
     }
 

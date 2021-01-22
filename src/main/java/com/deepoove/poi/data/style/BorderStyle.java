@@ -9,7 +9,7 @@ public class BorderStyle implements Serializable {
     public static final BorderStyle DEFAULT = new BorderStyle();
 
     static {
-        DEFAULT.setSize(4);
+        DEFAULT.setSize(8*1/2);
         DEFAULT.setColor("auto");
         DEFAULT.setType(XWPFBorderType.SINGLE);
     }

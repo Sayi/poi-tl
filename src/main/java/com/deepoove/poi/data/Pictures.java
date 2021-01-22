@@ -78,8 +78,8 @@ public class Pictures {
             return this;
         }
 
-        public PictureBuilder sizeInCm(double cmWidth, double cmHeight) {
-            return size(UnitUtils.cm2Pixel(cmWidth), UnitUtils.cm2Pixel(cmHeight));
+        public PictureBuilder sizeInCm(double widthCm, double heightCm) {
+            return size(UnitUtils.cm2Pixel(widthCm), UnitUtils.cm2Pixel(heightCm));
         }
 
         public PictureBuilder fitSize() {

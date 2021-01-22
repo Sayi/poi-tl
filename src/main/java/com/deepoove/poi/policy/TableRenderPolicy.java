@@ -34,6 +34,7 @@ import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
@@ -88,13 +89,18 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
             int size = table.getRows().size();
             for (int i = 0; i < size; i++) {
-                renderRow(table.getRows().get(i), data.getRows().get(i));
+                RowRenderData rowRenderData = data.getRows().get(i);
+                renderRow(table.getRows().get(i), rowRenderData, StyleUtils.retriveStyle(run));
             }
 
             applyMergeRule(table, data.getMergeRule());
         }
 
         public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
+            renderRow(row, data, null);
+        }
+
+        public static void renderRow(XWPFTableRow row, RowRenderData data, Style defaultTextStyle) throws Exception {
             if (null == data) return;
             int size = row.getTableCells().size();
             if (size != data.obtainColSize()) {
@@ -104,20 +110,29 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
             CellStyle defaultCellStyle = null == data.getRowStyle() ? null : data.getRowStyle().getDefaultCellStyle();
             for (int i = 0; i < size; i++) {
-                renderCell(row.getCell(i), data.getCells().get(i), defaultCellStyle);
+                renderCell(row.getCell(i), data.getCells().get(i), defaultCellStyle, defaultTextStyle);
             }
         }
 
         public static void renderCell(XWPFTableCell cell, CellRenderData data, CellStyle defaultCellStyle)
                 throws Exception {
+            renderCell(cell, data, defaultCellStyle, null);
+        }
+
+        public static void renderCell(XWPFTableCell cell, CellRenderData data, CellStyle defaultCellStyle,
+                Style defaultTextStyle) throws Exception {
             if (null == data) return;
             StyleUtils.styleTableCell(cell, defaultCellStyle);
             StyleUtils.styleTableCell(cell, data.getCellStyle());
 
             List<ParagraphStyle> defaultParaStyles = new ArrayList<>();
+            if (null != defaultTextStyle) {
+                defaultParaStyles.add(ParagraphStyle.builder().withDefaultTextStyle(defaultTextStyle).build());
+            }
             if (null != defaultCellStyle) {
                 defaultParaStyles.add(defaultCellStyle.getDefaultParagraphStyle());
-            } else if (null != data.getCellStyle()) {
+            }
+            if (null != data.getCellStyle()) {
                 defaultParaStyles.add(data.getCellStyle().getDefaultParagraphStyle());
             }
 
