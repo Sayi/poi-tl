@@ -42,6 +42,7 @@ public final class Texts {
         private String text;
         private Style style;
         private String url;
+        private String bookmark;
 
         private TextBuilder(String text) {
             this.text = text;
@@ -125,6 +126,11 @@ public final class Texts {
             return this;
         }
 
+        public TextBuilder bookmark(String name) {
+            this.bookmark = name;
+            return this;
+        }
+
         public TextBuilder mailto(String address, String subject) {
             StringBuilder sb = new StringBuilder(128);
             sb.append("mailto:").append(address).append("?subject=").append(subject);
@@ -142,10 +148,12 @@ public final class Texts {
             TextRenderData data = null;
             if (null != url) {
                 data = new HyperlinkTextRenderData(text, url);
-                data.setStyle(style);
+            } else if (null != bookmark) {
+                data = new BookmarkTextRenderData(text, bookmark);
             } else {
-                data = new TextRenderData(text, style);
+                data = new TextRenderData(text);
             }
+            data.setStyle(style);
             return data;
         }
     }

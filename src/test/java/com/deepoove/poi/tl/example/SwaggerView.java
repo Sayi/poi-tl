@@ -2,6 +2,7 @@ package com.deepoove.poi.tl.example;
 
 import java.util.List;
 
+import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
 import io.swagger.models.ExternalDocs;
@@ -367,15 +368,15 @@ class Header {
 }
 
 class Definition {
-    private String name;
+    private BookmarkTextRenderData name;
     List<Property> properties;
     List<TextRenderData> codes;
 
-    public String getName() {
+    public BookmarkTextRenderData getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(BookmarkTextRenderData name) {
         this.name = name;
     }
 

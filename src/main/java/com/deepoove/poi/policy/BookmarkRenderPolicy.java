@@ -25,6 +25,7 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
  * Book mark plug-in
+ * @Deprecated use BookmarkTextRenderData instead.
  */
 public class BookmarkRenderPolicy extends TextRenderPolicy {
 
