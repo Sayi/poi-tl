@@ -37,6 +37,13 @@ public class StyleUtilsTest {
 
     }
 
+    @Test
+    public void testToRgb() {
+        assertEquals("11ff22", StyleUtils.toRgb("#1f2"));
+        assertEquals("01645a", StyleUtils.toRgb("rgb(1,100,90)"));
+        assertEquals("000000", StyleUtils.toRgb("black"));
+    }
+
     private double getFontSize(CTRPr pr) {
         BigDecimal fontSize = (pr != null && pr.isSetSz())
                 ? new BigDecimal(pr.getSz().getVal()).divide(BigDecimal.valueOf(2)).setScale(1, RoundingMode.HALF_UP)

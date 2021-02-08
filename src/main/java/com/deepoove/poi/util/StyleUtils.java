@@ -19,13 +19,16 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.SimpleValue;
@@ -60,10 +63,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.ParagraphStyle.Builder;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.xwpf.CssRgb;
 import com.deepoove.poi.xwpf.WidthScalePattern;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
@@ -160,6 +165,18 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
         if (null != src.getUnderlineColor()) dest.setUnderlineColor(src.getUnderlineColor());
+    }
+
+    /**
+     * set paragraph style by other run body
+     * 
+     * @param dest
+     * @param src
+     */
+    public static void styleParagraph(XWPFParagraph dest, IRunBody src) {
+        if (null == dest || null == src || !(src instanceof XWPFParagraph)) return;
+        XWPFParagraph srcParagraph = (XWPFParagraph) src;
+        styleParagraph(dest, retriveParagraphStyle(srcParagraph));
     }
 
     /**
@@ -383,13 +400,17 @@ public final class StyleUtils {
         }
 
         CTPBdr ct = pr.isSetPBdr() ? pr.getPBdr() : pr.addNewPBdr();
-        BorderStyle leftBorder = style.getLeftBorder();
-        if (null != leftBorder) {
-            CTBorder b = ct.isSetLeft() ? ct.getLeft() : ct.addNewLeft();
-            b.setVal(STBorder.Enum.forString(leftBorder.getType().toString().toLowerCase()));
-            b.setSz(BigInteger.valueOf(leftBorder.getSize()));
-            b.setSpace(BigInteger.valueOf(4));
-            b.setColor(leftBorder.getColor());
+        if (null != style.getLeftBorder()) {
+            styleCTBorder(ct.isSetLeft() ? ct.getLeft() : ct.addNewLeft(), style.getLeftBorder());
+        }
+        if (null != style.getTopBorder()) {
+            styleCTBorder(ct.isSetTop() ? ct.getTop() : ct.addNewTop(), style.getTopBorder());
+        }
+        if (null != style.getRightBorder()) {
+            styleCTBorder(ct.isSetRight() ? ct.getRight() : ct.addNewRight(), style.getRightBorder());
+        }
+        if (null != style.getBottomBorder()) {
+            styleCTBorder(ct.isSetBottom() ? ct.getBottom() : ct.addNewBottom(), style.getBottomBorder());
         }
 
         if (null != style.getBackgroundColor()) {
@@ -436,6 +457,13 @@ public final class StyleUtils {
         }
     }
 
+    public static void styleCTBorder(CTBorder b, BorderStyle style) {
+        if (null != style.getType()) b.setVal(STBorder.Enum.forString(style.getType().toString().toLowerCase()));
+        b.setSz(BigInteger.valueOf(style.getSize()));
+        b.setSpace(BigInteger.valueOf(4));
+        if (null != style.getColor()) b.setColor(style.getColor());
+    }
+
     public static Style retriveStyle(XWPFRun run) {
         if (null == run) return null;
         StyleBuilder builder = Style.builder().buildColor(run.getColor()).buildFontFamily(run.getFontFamily())
@@ -444,6 +472,122 @@ public final class StyleUtils {
         if (run.isItalic()) builder.buildItalic();
         if (run.isStrikeThrough()) builder.buildStrike();
         return builder.build();
+    }
+
+    public static ParagraphStyle retriveParagraphStyle(XWPFParagraph paragraph) {
+        if (null == paragraph) return null;
+        Builder builder = ParagraphStyle.builder();
+        paragraph.getAlignment();
+        CTP ctp = paragraph.getCTP();
+        CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+        if (pr.isSetWordWrap()) {
+            if (pr.getWordWrap().getVal() == STOnOff.X_0 || pr.getWordWrap().getVal() == STOnOff.TRUE) {
+                builder.withWordWrap(true);
+            }
+        }
+        if (pr.isSetPBdr()) {
+            CTPBdr ct = pr.getPBdr();
+            if (ct.isSetLeft()) {
+                builder.withLeftBorder(retriveBorderStyle(ct.getLeft()));
+            }
+            if (ct.isSetTop()) {
+                builder.withTopBorder(retriveBorderStyle(ct.getTop()));
+            }
+            if (ct.isSetRight()) {
+                builder.withRightBorder(retriveBorderStyle(ct.getRight()));
+            }
+            if (ct.isSetBottom()) {
+                builder.withBottomBorder(retriveBorderStyle(ct.getBottom()));
+            }
+        }
+        if (pr.isSetShd()) {
+            CTShd shd = pr.getShd();
+            builder.withShadingPattern(XWPFShadingPattern.valueOf(shd.getVal().intValue()));
+            if (shd.isSetFill()) builder.withBackgroundColor(shd.xgetFill().getStringValue());
+        }
+
+        return builder.build();
+    }
+
+    public static BorderStyle retriveBorderStyle(CTBorder border) {
+        BorderStyle.Builder borderBuilder = BorderStyle.builder();
+        if (border.isSetColor()) borderBuilder.withColor(border.xgetColor().getStringValue());
+        if (border.isSetSz()) borderBuilder.withSize(border.getSz().intValue());
+        if (border.getVal() != null)
+            borderBuilder.withType(XWPFBorderType.valueOf(border.getVal().toString().toUpperCase()));
+        return borderBuilder.build();
+    }
+
+    public static Style retriveStyleFromCss(Map<String, String> propertyValues) {
+        StyleBuilder builder = Style.builder();
+        if (propertyValues != null) {
+            String style = propertyValues.get("font-style");
+            String weight = propertyValues.get("font-weight");
+            String color = propertyValues.get("color");
+            String size = propertyValues.get("font-size");
+            if (StringUtils.isNotBlank(style) && "italic".equalsIgnoreCase(style)) {
+                builder.buildItalic();
+            }
+            if (StringUtils.isNotBlank(size)) {
+//                builder.buildFontSize(fontSize);
+            }
+            if (StringUtils.isNotBlank(weight)) {
+                builder.buildBold();
+            }
+            if (StringUtils.isNotBlank(color)) {
+                String rgb = toRgb(color);
+                builder.buildColor(rgb);
+            }
+        } else {
+            return null;
+        }
+        return builder.build();
+    }
+
+    public static ParagraphStyle retriveParagraphStyleFromCss(Map<String, String> propertyValues) {
+        Builder builder = ParagraphStyle.builder();
+        if (propertyValues != null) {
+            String background = propertyValues.get("background");
+            String color = propertyValues.get("color");
+            if (StringUtils.isNotBlank(background)) {
+                builder.withBackgroundColor(toRgb(background));
+            }
+            if (StringUtils.isNotBlank(color)) {
+                String rgb = toRgb(color);
+                builder.withDefaultTextStyle(Style.builder().buildColor(rgb).build());
+            }
+        } else {
+            return null;
+        }
+        return builder.build();
+    }
+
+    public static String toRgb(String color) {
+        // rgb() or rgba()
+        if (color.toUpperCase().startsWith("RGB")) {
+            String val = color.substring(color.indexOf("(") + 1, color.lastIndexOf(")"));
+            String[] rgbArr = val.split(",");
+            return String.format("%02x%02x%02x", Integer.valueOf(rgbArr[0]), Integer.valueOf(rgbArr[1]),
+                    Integer.valueOf(rgbArr[2]));
+        }
+        // css color name
+        try {
+            CssRgb valueOf = CssRgb.valueOf(color.toUpperCase());
+            if (null != valueOf) return valueOf.getRgb().substring(1);
+        } catch (Exception e) {
+        }
+        if (!color.startsWith("#")) {
+            // throw new IllegalArgumentException("Unable to Rgb color:" + color);
+            return null;
+        }
+        // #RRGGBB
+        if (color.length() == 7) return color.substring(1);
+        // #RGB
+        if (color.length() == 4) {
+            return String.format("%c%c%c%c%c%c", color.charAt(1), color.charAt(1), color.charAt(2), color.charAt(2),
+                    color.charAt(3), color.charAt(3));
+        }
+        return color.length() > 7 ? color.substring(1, 7) : color.substring(1);
     }
 
     private static CTRPr getRunProperties(XWPFRun run) {

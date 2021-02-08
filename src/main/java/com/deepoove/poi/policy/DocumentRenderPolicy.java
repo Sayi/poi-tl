@@ -60,6 +60,7 @@ public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderDat
             for (RenderData item : contents) {
                 XWPFParagraph paragraph = bodyContainer.insertNewParagraph(run);
                 XWPFRun createRun = paragraph.createRun();
+                StyleUtils.styleParagraph(paragraph, run.getParent());
                 StyleUtils.styleRun(createRun, run);
                 if (item instanceof ParagraphRenderData) {
                     ParagraphRenderPolicy.Helper.renderParagraph(createRun, (ParagraphRenderData) item);

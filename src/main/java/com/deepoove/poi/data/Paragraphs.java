@@ -85,6 +85,11 @@ public class Paragraphs {
             return this;
         }
 
+        public ParagraphBuilder addParagraph(ParagraphRenderData paragraph) {
+            contents.addAll(paragraph.getContents());
+            return this;
+        }
+
         public ParagraphBuilder paraStyle(ParagraphStyle style) {
             this.paragraphStyle = style;
             return this;
@@ -95,6 +100,15 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
             } else {
                 this.paragraphStyle.setGlyphStyle(style);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder defaultTextStyle(Style style) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withDefaultTextStyle(style).build();
+            } else {
+                this.paragraphStyle.setDefaultTextStyle(style);
             }
             return this;
         }
