@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy;
+package com.deepoove.poi.plugin.table;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
+import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.render.processor.DocumentProcessor;
 import com.deepoove.poi.resolver.TemplateResolver;

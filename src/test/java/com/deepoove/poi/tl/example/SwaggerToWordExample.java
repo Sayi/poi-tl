@@ -18,7 +18,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.deepoove.poi.plugin.table.HackLoopTableRenderPolicy;
 import com.deepoove.poi.tl.policy.JSONRenderPolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

@@ -10,7 +10,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.policy.BookmarkRenderPolicy;
+import com.deepoove.poi.plugin.bookmark.BookmarkRenderPolicy;
 
 @DisplayName("Bookmark Render test case")
 public class BookmarkRenderPolicyTest {
