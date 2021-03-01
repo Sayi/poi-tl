@@ -27,10 +27,12 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureRenderData.PictureAlign;
+import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.BufferedImageUtils;
 import com.deepoove.poi.util.PageTools;
+import com.deepoove.poi.util.SVGConvertor;
 import com.deepoove.poi.util.UnitUtils;
 import com.deepoove.poi.xwpf.WidthScalePattern;
 
@@ -69,18 +71,21 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            if (null == picture.getImage()) {
+            byte[] imageBytes = picture.getImage();
+            if (null == imageBytes) {
                 throw new IllegalStateException("Can't get input data from picture!");
-            }
-            PictureAlign align = picture.getAlign();
-            if (null != align && run.getParent() instanceof XWPFParagraph) {
-                ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
             }
 
             int width = picture.getWidth();
             int height = picture.getHeight();
+
+            PictureType pictureType = picture.getPictureType();
+            if (pictureType == PictureType.SVG) {
+                imageBytes = SVGConvertor.toPNG(imageBytes, (float) width, (float) height);
+                pictureType = PictureType.PNG;
+            }
             if (!isSetSize(picture)) {
-                BufferedImage original = BufferedImageUtils.readBufferedImage(picture.getImage());
+                BufferedImage original = BufferedImageUtils.readBufferedImage(imageBytes);
                 width = original.getWidth();
                 height = original.getHeight();
                 if (picture.getScalePattern() == WidthScalePattern.FIT) {
@@ -92,8 +97,12 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                     }
                 }
             }
-            try (InputStream stream = new ByteArrayInputStream(picture.getImage())) {
-                run.addPicture(stream, picture.getPictureType().type(), "Generated", Units.pixelToEMU(width),
+            try (InputStream stream = new ByteArrayInputStream(imageBytes)) {
+                PictureAlign align = picture.getAlign();
+                if (null != align && run.getParent() instanceof XWPFParagraph) {
+                    ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
+                }
+                run.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
                         Units.pixelToEMU(height));
             }
         }

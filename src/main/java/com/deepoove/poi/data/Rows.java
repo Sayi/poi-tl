@@ -161,6 +161,11 @@ public class Rows {
             return this;
         }
 
+        public RowBuilder rowStyle(RowStyle rowStyle) {
+            data.setRowStyle(rowStyle);
+            return this;
+        }
+
         private CellStyle getDefaultCellStyle() {
             RowStyle rowStyle = getRowStyle();
             CellStyle defaultCellStyle = rowStyle.getDefaultCellStyle();

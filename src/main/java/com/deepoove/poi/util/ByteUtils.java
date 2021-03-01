@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 
 import org.apache.commons.codec.binary.Base64;
@@ -97,8 +98,50 @@ public final class ByteUtils {
         return null;
     }
 
+    /**
+     * url to stream
+     * 
+     * @param urlPath
+     * @return
+     * @throws IOException
+     */
     public static InputStream getUrlStream(String urlPath) throws IOException {
         URL url = new URL(urlPath);
-        return url.openConnection().getInputStream();
+        URLConnection connection = url.openConnection();
+        connection.addRequestProperty("User-Agent", "Mozilla/4.0");
+        return connection.getInputStream();
+    }
+
+    /**
+     * Tests if the bytes starts with the specified prefix.
+     * 
+     * @param bytes
+     * @param prefix
+     * @return
+     */
+    public static boolean startsWith(byte[] bytes, byte[] prefix) {
+        if (bytes == prefix) return true;
+        if (null == prefix || null == bytes || bytes.length < prefix.length) return false;
+        for (int i = 0; i < prefix.length; i++) {
+            if (bytes[i] != prefix[i]) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Tests if the bytes ends with the specified suffix.
+     * 
+     * @param bytes
+     * @param suffix
+     * @return
+     */
+    public static boolean endsWith(byte[] bytes, byte[] suffix) {
+        if (bytes == suffix) return true;
+        if (null == suffix || null == bytes || bytes.length < suffix.length) return false;
+        int length = bytes.length - suffix.length;
+        for (int i = suffix.length - 1; i >= 0; i--) {
+            if (bytes[length + i] != suffix[i]) return false;
+        }
+        return true;
     }
 }

@@ -54,11 +54,11 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
         } catch (Exception e) {
             throw new IllegalArgumentException("Illegal highlight theme:" + theme, e);
         }
+        of = Paragraphs.of();
+        style();
     }
 
-    @Override
-    public void onStart() {
-        of = Paragraphs.of();
+    private void style() {
         Map<String, String> pv = new HashMap<String, String>();
         for (SelectorStyle css : cssStyle) {
             if (".hljs".equals(css.getSelectorName())) {
@@ -76,6 +76,10 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
             defaultTextStyle.setFontSize(fontSize);
         }
         of.paraStyle(paragraphStyle);
+    }
+
+    @Override
+    public void onStart() {
         styleStack = new LinkedList<String>();
         blockResult = "";
     }
