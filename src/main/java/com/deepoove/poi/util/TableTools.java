@@ -16,6 +16,7 @@
 package com.deepoove.poi.util;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.BodyType;
@@ -134,21 +135,42 @@ public final class TableTools {
     public static void setWidth(XWPFTable table, String width, int[] colWidths) {
         ensureTblW(table);
         table.setWidth(width);
-        if (null == colWidths && table.getWidthType() == TableWidthType.DXA) {
-            colWidths = UnitUtils.average(Integer.valueOf(width), TableTools.obtainColumnSize(table));
-            // TODO support calc col width of pct and auto for Apple Pages!
+        if (null == colWidths) {
+            int columnSize = TableTools.obtainColumnSize(table);
+            if (table.getWidthType() == TableWidthType.DXA) {
+                colWidths = UnitUtils.average(Integer.valueOf(width), columnSize);
+            } else if (table.getWidthType() == TableWidthType.PCT) {
+                int sum = 0;
+                colWidths = new int[columnSize];
+                for (int i = 0; i < columnSize - 1; i++) {
+                    colWidths[i] = 100 / columnSize;
+                    sum += colWidths[i];
+                }
+                colWidths[columnSize - 1] = 100 - sum;
+            }
         }
         if (null != colWidths) {
+            BigInteger[] gridCol = null;
+            String[] cellWidth = null;
+            if (table.getWidthType() == TableWidthType.DXA) {
+                cellWidth = Arrays.stream(colWidths).mapToObj(String::valueOf).toArray(String[]::new);
+                gridCol = Arrays.stream(colWidths).mapToObj(BigInteger::valueOf).toArray(BigInteger[]::new);
+            } else if (table.getWidthType() == TableWidthType.PCT) {
+                cellWidth = Arrays.stream(colWidths).mapToObj(w -> w + "%").toArray(String[]::new);
+                int pageWidth = PageTools.pageWidth(table);
+                int tableWidth = pageWidth * Integer.valueOf(width.substring(0, width.length() - 1)) / 100;
+                gridCol = Arrays.stream(colWidths).mapToObj(w -> BigInteger.valueOf(w * tableWidth / 100))
+                        .toArray(BigInteger[]::new);
+            }
             CTTblGrid tblGrid = TableTools.getTblGrid(table);
             CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
             tblLayout.setType(STTblLayoutType.FIXED);
             for (int index = 0; index < colWidths.length; index++) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));
-
+                addNewGridCol.setW(gridCol[index]);
                 List<XWPFTableRow> rows = table.getRows();
                 for (XWPFTableRow row : rows) {
-                    row.getCell(index).setWidth(colWidths[index] + "");
+                    row.getCell(index).setWidth(cellWidth[index]);
                 }
             }
         }

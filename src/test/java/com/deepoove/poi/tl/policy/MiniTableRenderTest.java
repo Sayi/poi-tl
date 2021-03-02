@@ -49,7 +49,7 @@ public class MiniTableRenderTest {
                 // 有表格头 有数据，宽度自适应
                 put("table", Tables.create(header, row0, row1, row2, row3));
                 // 没有表格头 没有数据，最终不会渲染这个table
-                put("no_table", Tables.ofFitWidth().create());
+                put("no_table", Tables.ofPercentWidth("100%").create());
                 // 有数据，没有表格头
                 put("no_header_table", Tables.create(row0, row1, row2, row3));
                 // 有表格头 没有数据

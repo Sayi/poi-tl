@@ -22,7 +22,7 @@ public class TablePictureFitRenderTest {
         TableRenderData table = Tables
                 .of(new String[][] { new String[] { "00", "01", "02", "03", "04" },
                         new String[] { "10", "11", "12", "13", "14" } })
-                .fitWidth(new int[] { 10, 20, 10, 20, 40 }).create();
+                .percentWidth("100%", new int[] { 10, 20, 10, 20, 40 }).create();
 
         // picture
         PictureRenderData picture = Pictures.ofLocal("src/test/resources/large.png").fitSize().create();

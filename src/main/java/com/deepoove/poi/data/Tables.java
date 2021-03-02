@@ -23,7 +23,6 @@ import com.deepoove.poi.data.Rows.RowBuilder;
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.util.UnitUtils;
-import com.deepoove.poi.xwpf.WidthScalePattern;
 
 /**
  * Factory method to create {@link TableRenderData}
@@ -36,7 +35,7 @@ public class Tables {
     }
 
     public static TableBuilder of(RowRenderData... row) {
-        TableBuilder inst = ofFitWidth();
+        TableBuilder inst = ofPercentWidth("100%");
         if (null != row) {
             Arrays.stream(row).forEach(inst::addRow);
         }
@@ -44,7 +43,7 @@ public class Tables {
     }
 
     public static TableBuilder of(String[][] strings) {
-        TableBuilder inst = ofFitWidth();
+        TableBuilder inst = ofPercentWidth("100%");
         if (null != strings) {
             Arrays.stream(strings).map(string -> {
                 RowBuilder row = Rows.of();
@@ -53,10 +52,6 @@ public class Tables {
             }).forEach(inst::addRow);
         }
         return inst;
-    }
-
-    public static TableBuilder ofWidth(double cm) {
-        return ofWidth(cm, null);
     }
 
     public static TableBuilder ofA4Width() {
@@ -75,24 +70,24 @@ public class Tables {
         return ofWidth(10.83f);
     }
 
-    public static TableBuilder ofFitWidth() {
-        return ofFitWidth(null);
+    public static TableBuilder ofWidth(double cm) {
+        return ofWidth(cm, null);
     }
 
-    public static TableBuilder ofFitWidth(int[] colWidthsPercent) {
-        return new TableBuilder().fitWidth(colWidthsPercent);
-    }
-
-    public static TableBuilder ofWidth(double widthCm, double[] colWidthsCm) {
-        return new TableBuilder().width(widthCm, colWidthsCm);
+    public static TableBuilder ofWidth(double cm, double[] colWidthsCm) {
+        return new TableBuilder().width(cm, colWidthsCm);
     }
 
     public static TableBuilder ofPercentWidth(String percent) {
-        return new TableBuilder().percentOrAutoWidth(percent);
+        return ofPercentWidth(percent, null);
+    }
+
+    public static TableBuilder ofPercentWidth(String percent, int[] colWidthsPercent) {
+        return new TableBuilder().percentWidth(percent, colWidthsPercent);
     }
 
     public static TableBuilder ofAutoWidth() {
-        return new TableBuilder().percentOrAutoWidth("auto");
+        return new TableBuilder().autoWidth();
     }
 
     public static TableRenderData create(RowRenderData... row) {
@@ -120,11 +115,10 @@ public class Tables {
                 int[] colWidths = Arrays.stream(colWidthsCm).mapToInt(UnitUtils::cm2Twips).toArray();
                 style.setColWidths(colWidths);
             }
-            style.setWidthScalePattern(WidthScalePattern.NONE);
             return this;
         }
 
-        public TableBuilder fitWidth(int[] colWidthsPercent) {
+        public TableBuilder percentWidth(String percent, int[] colWidthsPercent) {
             TableStyle style = getTableStyle();
             if (null != colWidthsPercent) {
                 int sum = Arrays.stream(colWidthsPercent).sum();
@@ -132,15 +126,14 @@ public class Tables {
                     throw new IllegalArgumentException("The sum of the percentages must be 100");
                 }
             }
-            style.setWidthScalePattern(WidthScalePattern.FIT);
+            style.setWidth(percent);
             style.setColWidths(colWidthsPercent);
             return this;
         }
 
-        public TableBuilder percentOrAutoWidth(String percentOrAutoWidth) {
+        public TableBuilder autoWidth() {
             TableStyle style = getTableStyle();
-            style.setWidthScalePattern(WidthScalePattern.NONE);
-            style.setWidth(percentOrAutoWidth);
+            style.setWidth("auto");
             return this;
         }
 

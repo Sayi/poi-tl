@@ -18,7 +18,6 @@ package com.deepoove.poi.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +68,6 @@ import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.xwpf.CssRgb;
-import com.deepoove.poi.xwpf.WidthScalePattern;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
@@ -200,19 +198,7 @@ public final class StyleUtils {
     public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
 
-        String width = tableStyle.getWidth();
-        int[] colWidths = tableStyle.getColWidths();
-        if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
-            int pageWidth = PageTools.pageWidth(table);
-            width = String.valueOf(pageWidth);
-            if (null != colWidths) {
-                int sum = Arrays.stream(colWidths).sum();
-                if (sum == 100) {
-                    colWidths = Arrays.stream(colWidths).map(w -> w * pageWidth / 100).toArray();
-                }
-            }
-        }
-        TableTools.setWidth(table, width, colWidths);
+        TableTools.setWidth(table, tableStyle.getWidth(), tableStyle.getColWidths());
 
         TableTools.setBorder(table::setLeftBorder, tableStyle.getLeftBorder());
         TableTools.setBorder(table::setRightBorder, tableStyle.getRightBorder());

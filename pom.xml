@@ -15,7 +15,7 @@
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
-	<description>rending docx template</description>
+	<description>Generate word(docx) with template</description>
 	<url>http://deepoove.com/poi-tl</url>
 
 	<licenses>
@@ -77,14 +77,14 @@
 			<version>4.1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>com.deepoove</groupId>
-			<artifactId>codehighlight</artifactId>
-			<version>1.0.3</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>ooxml-schemas</artifactId>
 			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.deepoove</groupId>
+			<artifactId>codehighlight</artifactId>
+			<version>1.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.atlassian.commonmark</groupId>

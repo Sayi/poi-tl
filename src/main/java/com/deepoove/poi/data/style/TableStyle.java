@@ -20,7 +20,6 @@ import java.io.Serializable;
 import org.apache.poi.xwpf.usermodel.TableRowAlign;
 
 import com.deepoove.poi.util.UnitUtils;
-import com.deepoove.poi.xwpf.WidthScalePattern;
 
 public class TableStyle implements Serializable {
 
@@ -46,11 +45,6 @@ public class TableStyle implements Serializable {
      * @see #{@link UnitUtils#cm2Twips()}
      */
     private String width;
-
-    /**
-     * fit table width to current document page or not
-     */
-    private WidthScalePattern widthScalePattern = WidthScalePattern.NONE;
 
     /**
      * in twips for none pattern or percent for fit
@@ -135,15 +129,6 @@ public class TableStyle implements Serializable {
      */
     public void setColWidths(int[] colWidths) {
         this.colWidths = colWidths;
-    }
-
-    public WidthScalePattern getWidthScalePattern() {
-        return widthScalePattern;
-    }
-
-    public void setWidthScalePattern(WidthScalePattern widthScalePattern) {
-
-        this.widthScalePattern = widthScalePattern;
     }
 
     public int getLeftCellMargin() {
