@@ -135,4 +135,9 @@ public class CellBodyContainer implements BodyContainer {
                 || (pos > 0 && cell.getBodyElements().get(pos - 1).getElementType() == BodyElementType.PARAGRAPH);
     }
 
+    @Override
+    public XWPFSection closelySectPr(IBodyElement element) {
+        throw new UnsupportedOperationException();
+    }
+
 }

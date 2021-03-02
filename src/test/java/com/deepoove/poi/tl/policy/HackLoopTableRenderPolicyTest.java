@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
-import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.deepoove.poi.plugin.table.HackLoopTableRenderPolicy;
 
 @DisplayName("Example for HackLoop Table")
 public class HackLoopTableRenderPolicyTest {

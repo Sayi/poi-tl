@@ -24,7 +24,6 @@ import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.ParagraphStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.policy.DocumentRenderPolicy;
 import com.deepoove.poi.xwpf.NumFormat;
 
@@ -48,7 +47,7 @@ public class DocumentRenderPolicyTest {
                 "Templates, not just templates, but also style templates").create();
         // create table
         RowRenderData row = Rows.of("row", "row", "row").create();
-        TableRenderData table = Tables.of(row, row, row).width(10.0f, null).border(BorderStyle.DEFAULT).create();
+        TableRenderData table = Tables.of(row, row, row).width(10.0f, null).create();
 
         BigInteger numId = template.getXWPFDocument().addNewMultiLevelNumberingId(NumberingFormat.DECIMAL,
                 new NumberingFormat(NumFormat.UPPER_LETTER, "%2)."));

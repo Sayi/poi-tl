@@ -18,15 +18,17 @@ package com.deepoove.poi.util;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
-import org.apache.poi.xwpf.usermodel.TableWidthType;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.SimpleValue;
@@ -45,11 +47,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLayoutType;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
@@ -59,16 +58,18 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorRGB;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.data.style.ParagraphStyle.Builder;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.xwpf.CssRgb;
+import com.deepoove.poi.xwpf.WidthScalePattern;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
@@ -167,6 +168,18 @@ public final class StyleUtils {
     }
 
     /**
+     * set paragraph style by other run body
+     * 
+     * @param dest
+     * @param src
+     */
+    public static void styleParagraph(XWPFParagraph dest, IRunBody src) {
+        if (null == dest || null == src || !(src instanceof XWPFParagraph)) return;
+        XWPFParagraph srcParagraph = (XWPFParagraph) src;
+        styleParagraph(dest, retriveParagraphStyle(srcParagraph));
+    }
+
+    /**
      * set paragraph style
      * 
      * @param paragraph
@@ -186,29 +199,20 @@ public final class StyleUtils {
      */
     public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
+
         String width = tableStyle.getWidth();
-        ensureTblW(table);
-        table.setWidth(width);
-
         int[] colWidths = tableStyle.getColWidths();
-        if (null == colWidths && table.getWidthType() == TableWidthType.DXA) {
-            colWidths = UnitUtils.average(Integer.valueOf(width), TableTools.obtainColumnSize(table));
-            // TODO support calc col width of pct and auto for Apple Pages!
-        }
-        if (null != colWidths) {
-            CTTblGrid tblGrid = TableTools.getTblGrid(table);
-            CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
-            tblLayout.setType(STTblLayoutType.FIXED);
-            for (int index = 0; index < colWidths.length; index++) {
-                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));
-
-                List<XWPFTableRow> rows = table.getRows();
-                for (XWPFTableRow row : rows) {
-                    row.getCell(index).setWidth(colWidths[index] + "");
+        if (tableStyle.getWidthScalePattern() == WidthScalePattern.FIT) {
+            int pageWidth = PageTools.pageWidth(table);
+            width = String.valueOf(pageWidth);
+            if (null != colWidths) {
+                int sum = Arrays.stream(colWidths).sum();
+                if (sum == 100) {
+                    colWidths = Arrays.stream(colWidths).map(w -> w * pageWidth / 100).toArray();
                 }
             }
         }
+        TableTools.setWidth(table, width, colWidths);
 
         TableTools.setBorder(table::setLeftBorder, tableStyle.getLeftBorder());
         TableTools.setBorder(table::setRightBorder, tableStyle.getRightBorder());
@@ -221,12 +225,9 @@ public final class StyleUtils {
             table.setTableAlignment(tableStyle.getAlign());
         }
 
-    }
+        table.setCellMargins(tableStyle.getTopCellMargin(), tableStyle.getLeftCellMargin(),
+                tableStyle.getBottomCellMargin(), tableStyle.getRightCellMargin());
 
-    private static void ensureTblW(XWPFTable table) {
-        CTTbl ctTbl = table.getCTTbl();
-        CTTblPr tblPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
-        if (!tblPr.isSetTblW()) tblPr.addNewTblW();
     }
 
     /**
@@ -263,7 +264,17 @@ public final class StyleUtils {
             cell.setVerticalAlignment(cellStyle.getVertAlign());
         }
         if (null != cellStyle.getBackgroundColor()) {
-            cell.setColor(cellStyle.getBackgroundColor());
+            CTTc ctTc = cell.getCTTc();
+            CTTcPr pr = ctTc.isSetTcPr() ? ctTc.getTcPr() : ctTc.addNewTcPr();
+            CTShd shd = pr.isSetShd() ? pr.getShd() : pr.addNewShd();
+            XWPFShadingPattern shadingPattern = cellStyle.getShadingPattern();
+            if (null == shadingPattern) {
+                shd.setVal(STShd.CLEAR);
+            } else {
+                shd.setVal(STShd.Enum.forInt(shadingPattern.getValue()));
+            }
+            shd.setColor("auto");
+            shd.setFill(cellStyle.getBackgroundColor());
         }
     }
 
@@ -389,13 +400,17 @@ public final class StyleUtils {
         }
 
         CTPBdr ct = pr.isSetPBdr() ? pr.getPBdr() : pr.addNewPBdr();
-        BorderStyle leftBorder = style.getLeftBorder();
-        if (null != leftBorder) {
-            CTBorder b = ct.isSetLeft() ? ct.getLeft() : ct.addNewLeft();
-            b.setVal(STBorder.Enum.forString(leftBorder.getType().toString().toLowerCase()));
-            b.setSz(BigInteger.valueOf(leftBorder.getSize()));
-            b.setSpace(BigInteger.valueOf(4));
-            b.setColor(leftBorder.getColor());
+        if (null != style.getLeftBorder()) {
+            styleCTBorder(ct.isSetLeft() ? ct.getLeft() : ct.addNewLeft(), style.getLeftBorder());
+        }
+        if (null != style.getTopBorder()) {
+            styleCTBorder(ct.isSetTop() ? ct.getTop() : ct.addNewTop(), style.getTopBorder());
+        }
+        if (null != style.getRightBorder()) {
+            styleCTBorder(ct.isSetRight() ? ct.getRight() : ct.addNewRight(), style.getRightBorder());
+        }
+        if (null != style.getBottomBorder()) {
+            styleCTBorder(ct.isSetBottom() ? ct.getBottom() : ct.addNewBottom(), style.getBottomBorder());
         }
 
         if (null != style.getBackgroundColor()) {
@@ -442,6 +457,13 @@ public final class StyleUtils {
         }
     }
 
+    public static void styleCTBorder(CTBorder b, BorderStyle style) {
+        if (null != style.getType()) b.setVal(STBorder.Enum.forString(style.getType().toString().toLowerCase()));
+        b.setSz(BigInteger.valueOf(style.getSize()));
+        b.setSpace(BigInteger.valueOf(4));
+        if (null != style.getColor()) b.setColor(style.getColor());
+    }
+
     public static Style retriveStyle(XWPFRun run) {
         if (null == run) return null;
         StyleBuilder builder = Style.builder().buildColor(run.getColor()).buildFontFamily(run.getFontFamily())
@@ -450,6 +472,122 @@ public final class StyleUtils {
         if (run.isItalic()) builder.buildItalic();
         if (run.isStrikeThrough()) builder.buildStrike();
         return builder.build();
+    }
+
+    public static ParagraphStyle retriveParagraphStyle(XWPFParagraph paragraph) {
+        if (null == paragraph) return null;
+        Builder builder = ParagraphStyle.builder();
+        paragraph.getAlignment();
+        CTP ctp = paragraph.getCTP();
+        CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
+        if (pr.isSetWordWrap()) {
+            if (pr.getWordWrap().getVal() == STOnOff.X_0 || pr.getWordWrap().getVal() == STOnOff.TRUE) {
+                builder.withWordWrap(true);
+            }
+        }
+        if (pr.isSetPBdr()) {
+            CTPBdr ct = pr.getPBdr();
+            if (ct.isSetLeft()) {
+                builder.withLeftBorder(retriveBorderStyle(ct.getLeft()));
+            }
+            if (ct.isSetTop()) {
+                builder.withTopBorder(retriveBorderStyle(ct.getTop()));
+            }
+            if (ct.isSetRight()) {
+                builder.withRightBorder(retriveBorderStyle(ct.getRight()));
+            }
+            if (ct.isSetBottom()) {
+                builder.withBottomBorder(retriveBorderStyle(ct.getBottom()));
+            }
+        }
+        if (pr.isSetShd()) {
+            CTShd shd = pr.getShd();
+            builder.withShadingPattern(XWPFShadingPattern.valueOf(shd.getVal().intValue()));
+            if (shd.isSetFill()) builder.withBackgroundColor(shd.xgetFill().getStringValue());
+        }
+
+        return builder.build();
+    }
+
+    public static BorderStyle retriveBorderStyle(CTBorder border) {
+        BorderStyle.Builder borderBuilder = BorderStyle.builder();
+        if (border.isSetColor()) borderBuilder.withColor(border.xgetColor().getStringValue());
+        if (border.isSetSz()) borderBuilder.withSize(border.getSz().intValue());
+        if (border.getVal() != null)
+            borderBuilder.withType(XWPFBorderType.valueOf(border.getVal().toString().toUpperCase()));
+        return borderBuilder.build();
+    }
+
+    public static Style retriveStyleFromCss(Map<String, String> propertyValues) {
+        StyleBuilder builder = Style.builder();
+        if (propertyValues != null) {
+            String style = propertyValues.get("font-style");
+            String weight = propertyValues.get("font-weight");
+            String color = propertyValues.get("color");
+            String size = propertyValues.get("font-size");
+            if (StringUtils.isNotBlank(style) && "italic".equalsIgnoreCase(style)) {
+                builder.buildItalic();
+            }
+            if (StringUtils.isNotBlank(size)) {
+//                builder.buildFontSize(fontSize);
+            }
+            if (StringUtils.isNotBlank(weight)) {
+                builder.buildBold();
+            }
+            if (StringUtils.isNotBlank(color)) {
+                String rgb = toRgb(color);
+                builder.buildColor(rgb);
+            }
+        } else {
+            return null;
+        }
+        return builder.build();
+    }
+
+    public static ParagraphStyle retriveParagraphStyleFromCss(Map<String, String> propertyValues) {
+        Builder builder = ParagraphStyle.builder();
+        if (propertyValues != null) {
+            String background = propertyValues.get("background");
+            String color = propertyValues.get("color");
+            if (StringUtils.isNotBlank(background)) {
+                builder.withBackgroundColor(toRgb(background));
+            }
+            if (StringUtils.isNotBlank(color)) {
+                String rgb = toRgb(color);
+                builder.withDefaultTextStyle(Style.builder().buildColor(rgb).build());
+            }
+        } else {
+            return null;
+        }
+        return builder.build();
+    }
+
+    public static String toRgb(String color) {
+        // rgb() or rgba()
+        if (color.toUpperCase().startsWith("RGB")) {
+            String val = color.substring(color.indexOf("(") + 1, color.lastIndexOf(")"));
+            String[] rgbArr = val.split(",");
+            return String.format("%02x%02x%02x", Integer.valueOf(rgbArr[0]), Integer.valueOf(rgbArr[1]),
+                    Integer.valueOf(rgbArr[2]));
+        }
+        // css color name
+        try {
+            CssRgb valueOf = CssRgb.valueOf(color.toUpperCase());
+            if (null != valueOf) return valueOf.getRgb().substring(1);
+        } catch (Exception e) {
+        }
+        if (!color.startsWith("#")) {
+            // throw new IllegalArgumentException("Unable to Rgb color:" + color);
+            return null;
+        }
+        // #RRGGBB
+        if (color.length() == 7) return color.substring(1);
+        // #RGB
+        if (color.length() == 4) {
+            return String.format("%c%c%c%c%c%c", color.charAt(1), color.charAt(1), color.charAt(2), color.charAt(2),
+                    color.charAt(3), color.charAt(3));
+        }
+        return color.length() > 7 ? color.substring(1, 7) : color.substring(1);
     }
 
     private static CTRPr getRunProperties(XWPFRun run) {

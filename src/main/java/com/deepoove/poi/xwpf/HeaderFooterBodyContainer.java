@@ -21,13 +21,19 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 import com.deepoove.poi.util.ReflectionUtils;
 
@@ -35,8 +41,8 @@ public class HeaderFooterBodyContainer implements BodyContainer {
 
     private XWPFHeaderFooter headerFooter;
 
-    public HeaderFooterBodyContainer(XWPFHeaderFooter cell) {
-        this.headerFooter = cell;
+    public HeaderFooterBodyContainer(XWPFHeaderFooter hf) {
+        this.headerFooter = hf;
     }
 
     @Override
@@ -96,6 +102,37 @@ public class HeaderFooterBodyContainer implements BodyContainer {
             }
         }
         return table;
+    }
+
+    @Override
+    public XWPFSection closelySectPr(IBodyElement element) {
+        XWPFDocument doc = headerFooter.getXWPFDocument();
+        String relationId = doc.getRelationId(this.headerFooter);
+        if (null != relationId) {
+            List<IBodyElement> bodyElements = doc.getBodyElements();
+            for (IBodyElement ele : bodyElements) {
+                if (ele instanceof XWPFParagraph) {
+                    XWPFParagraph para = (XWPFParagraph) ele;
+                    CTP ctp = para.getCTP();
+                    if (!ctp.isSetPPr()) continue;
+                    CTPPr pPr = ctp.getPPr();
+                    if (pPr.isSetSectPr()) {
+                        XWPFSection xwpfSection = new XWPFSection(pPr.getSectPr());
+                        if (headerFooter instanceof XWPFHeader) {
+                            if (xwpfSection.haveHeader(relationId)) return xwpfSection;
+                        } else if (headerFooter instanceof XWPFFooter) {
+                            if (xwpfSection.haveFooter(relationId)) return xwpfSection;
+                        }
+                    }
+                }
+            }
+        }
+
+        CTBody body = doc.getDocument().getBody();
+        if (body.isSetSectPr()) {
+            return new XWPFSection(body.getSectPr());
+        }
+        return null;
     }
 
 }

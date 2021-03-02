@@ -59,4 +59,9 @@ public class TextBoxBodyContainer implements BodyContainer {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public XWPFSection closelySectPr(IBodyElement element) {
+        throw new UnsupportedOperationException();
+    }
+
 }

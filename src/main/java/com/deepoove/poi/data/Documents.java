@@ -57,6 +57,11 @@ public class Documents {
             return this;
         }
 
+        public DocumentBuilder addDocument(DocumentRenderData document) {
+            data.getContents().addAll(document.getContents());
+            return this;
+        }
+
         @Override
         public DocumentRenderData create() {
             return data;

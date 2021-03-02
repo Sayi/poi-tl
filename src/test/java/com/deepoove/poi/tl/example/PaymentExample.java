@@ -14,7 +14,7 @@ import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.data.style.BorderStyle;
 
 @DisplayName("Example for Table")
 public class PaymentExample {

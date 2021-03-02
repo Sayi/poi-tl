@@ -16,6 +16,7 @@
 package com.deepoove.poi.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,6 +25,7 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,11 +54,13 @@ public final class BufferedImageUtils {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, formatName, os);
+            return os.toByteArray();
         } catch (Exception e) {
             logger.error("getBufferByteArray error", e);
             return null;
+        } finally {
+            IOUtils.closeQuietly(os);
         }
-        return os.toByteArray();
     }
 
     /**
@@ -66,12 +70,9 @@ public final class BufferedImageUtils {
      * @return
      */
     public static BufferedImage getUrlBufferedImage(String urlPath) {
-        URL url = null;
-        BufferedImage bufferImage = null;
         try {
-            url = new URL(urlPath);
-            bufferImage = ImageIO.read(url);
-            return bufferImage;
+            URL url = new URL(urlPath);
+            return ImageIO.read(url);
         } catch (Exception e) {
             logger.error("getUrlBufferedImage error, {}, {}", urlPath, e);
         }
@@ -87,8 +88,7 @@ public final class BufferedImageUtils {
      */
     public static BufferedImage getLocalBufferedImage(File res) {
         try {
-            BufferedImage read = ImageIO.read(res);
-            return read;
+            return ImageIO.read(res);
         } catch (FileNotFoundException e) {
             logger.error("FileNotFound", e);
         } catch (IOException e) {
@@ -105,8 +105,26 @@ public final class BufferedImageUtils {
      * @return
      */
     public static BufferedImage newBufferImage(int width, int height) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
-        return image;
+        return new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+    }
+
+    /**
+     * read byte
+     * 
+     * @param image
+     * @return
+     */
+    public static BufferedImage readBufferedImage(byte[] image) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(image);
+        try {
+            return ImageIO.read(inputStream);
+        } catch (IOException e) {
+            logger.error("readBufferedImage IO error", e);
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+
     }
 
 }

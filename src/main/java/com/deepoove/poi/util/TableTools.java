@@ -16,6 +16,7 @@
 package com.deepoove.poi.util;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.TableWidthType;
@@ -25,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
@@ -34,12 +36,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblLayoutType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.TableStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 
 /**
  * XWPFTable Tools
@@ -121,40 +124,40 @@ public final class TableTools {
         }
     }
 
-    public static void widthTable(XWPFTable table, float[] colWidths) {
-        float widthCM = 0;
-        for (float w : colWidths) {
-            widthCM += w;
+    /**
+     * set table width
+     * 
+     * @param table
+     * @param width
+     * @param colWidths
+     */
+    public static void setWidth(XWPFTable table, String width, int[] colWidths) {
+        ensureTblW(table);
+        table.setWidth(width);
+        if (null == colWidths && table.getWidthType() == TableWidthType.DXA) {
+            colWidths = UnitUtils.average(Integer.valueOf(width), TableTools.obtainColumnSize(table));
+            // TODO support calc col width of pct and auto for Apple Pages!
         }
-        int width = UnitUtils.cm2Twips(widthCM);
-        CTTblPr tblPr = getTblPr(table);
-        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
-        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
-        tblW.setW(BigInteger.valueOf(width));
-
-        if (0 != width) {
-            CTTblGrid tblGrid = getTblGrid(table);
-            for (float w : colWidths) {
+        if (null != colWidths) {
+            CTTblGrid tblGrid = TableTools.getTblGrid(table);
+            CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
+            tblLayout.setType(STTblLayoutType.FIXED);
+            for (int index = 0; index < colWidths.length; index++) {
                 CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(UnitUtils.cm2Twips(w)));
+                addNewGridCol.setW(BigInteger.valueOf(colWidths[index]));
+
+                List<XWPFTableRow> rows = table.getRows();
+                for (XWPFTableRow row : rows) {
+                    row.getCell(index).setWidth(colWidths[index] + "");
+                }
             }
         }
     }
 
-    public static void widthTable(XWPFTable table, float widthCM, int cols) {
-        int width = UnitUtils.cm2Twips(widthCM);
-        CTTblPr tblPr = getTblPr(table);
-        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
-        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
-        tblW.setW(BigInteger.valueOf(width));
-
-        if (0 != width) {
-            CTTblGrid tblGrid = getTblGrid(table);
-            for (int j = 0; j < cols; j++) {
-                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(BigInteger.valueOf(width / cols));
-            }
-        }
+    private static void ensureTblW(XWPFTable table) {
+        CTTbl ctTbl = table.getCTTbl();
+        CTTblPr tblPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
+        if (!tblPr.isSetTblW()) tblPr.addNewTblW();
     }
 
     public static void borderTable(XWPFTable table, BorderStyle borderStyle) {
@@ -256,6 +259,44 @@ public final class TableTools {
     public static CTTcPr getTcPr(XWPFTableCell cell) {
         CTTcPr tcPr = cell.getCTTc().isSetTcPr() ? cell.getCTTc().getTcPr() : cell.getCTTc().addNewTcPr();
         return tcPr;
+    }
+
+    @Deprecated
+    public static void widthTable(XWPFTable table, float[] colWidths) {
+        float widthCM = 0;
+        for (float w : colWidths) {
+            widthCM += w;
+        }
+        int width = UnitUtils.cm2Twips(widthCM);
+        CTTblPr tblPr = getTblPr(table);
+        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
+        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
+        tblW.setW(BigInteger.valueOf(width));
+
+        if (0 != width) {
+            CTTblGrid tblGrid = getTblGrid(table);
+            for (float w : colWidths) {
+                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                addNewGridCol.setW(BigInteger.valueOf(UnitUtils.cm2Twips(w)));
+            }
+        }
+    }
+
+    @Deprecated
+    public static void widthTable(XWPFTable table, float widthCM, int cols) {
+        int width = UnitUtils.cm2Twips(widthCM);
+        CTTblPr tblPr = getTblPr(table);
+        CTTblWidth tblW = tblPr.isSetTblW() ? tblPr.getTblW() : tblPr.addNewTblW();
+        tblW.setType(0 == width ? STTblWidth.AUTO : STTblWidth.DXA);
+        tblW.setW(BigInteger.valueOf(width));
+
+        if (0 != width) {
+            CTTblGrid tblGrid = getTblGrid(table);
+            for (int j = 0; j < cols; j++) {
+                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                addNewGridCol.setW(BigInteger.valueOf(width / cols));
+            }
+        }
     }
 
 }

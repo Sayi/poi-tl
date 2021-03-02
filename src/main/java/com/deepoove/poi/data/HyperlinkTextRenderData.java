@@ -33,7 +33,7 @@ public class HyperlinkTextRenderData extends TextRenderData {
      * mail format:mailto:sayi@xx.xx?subject=poi-tl <br/>
      * anchor format：anchor:AnchorName
      */
-    private String url;
+    protected String url;
 
     HyperlinkTextRenderData() {
     }

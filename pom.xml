@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.9.1</version>
+	<version>1.10.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
@@ -77,9 +77,34 @@
 			<version>4.1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>com.deepoove</groupId>
+			<artifactId>codehighlight</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-schemas</artifactId>
-			<version>4.1.2</version>
+			<artifactId>ooxml-schemas</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>0.16.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.atlassian.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-tables</artifactId>
+			<version>0.16.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-transcoder</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>batik-codec</artifactId>
+			<version>1.14</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -108,6 +133,12 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-parser</artifactId>
 			<version>1.0.50</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.13.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

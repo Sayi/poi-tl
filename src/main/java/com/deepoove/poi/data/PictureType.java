@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 package com.deepoove.poi.data;
+import static com.deepoove.poi.util.ByteUtils.endsWith;
+import static com.deepoove.poi.util.ByteUtils.startsWith;
 
 /**
  * @author Sayi
@@ -73,7 +75,12 @@ public enum PictureType {
     /**
      * WordPerfect graphics (.wpg)
      */
-    WPG(12);
+    WPG(12),
+
+    /**
+     * .svg
+     */
+    SVG(13);
 
     private int type;
 
@@ -113,13 +120,40 @@ public enum PictureType {
             format = EPS;
         else if (imgFile.endsWith(".bmp"))
             format = BMP;
-        else if (imgFile.endsWith(".wpg"))
-            format = WPG;
+        else if (imgFile.endsWith(".wpg")) format = WPG;
         else {
             throw new IllegalArgumentException(
                     "Unsupported picture: " + imgFile + ". Expected emf|wmf|pict|jpeg|png|dib|gif|tiff|eps|bmp|wpg");
         }
         return format;
+    }
+
+    /**
+     * https://en.wikipedia.org/wiki/Magic_number_%28programming%29
+     */
+    public static PictureType suggestFileType(byte[] bytes) {
+        if (startsWith(bytes, "GIF89a".getBytes()) || startsWith(bytes, "GIF87a".getBytes())) {
+            return GIF;
+        }
+        if (startsWith(bytes, new byte[] { (byte) 0xFF, (byte) 0xD8 })
+                || endsWith(bytes, new byte[] { (byte) 0xFF, (byte) 0xD9 })) {
+            return JPEG;
+        }
+        if (startsWith(bytes, new byte[] { (byte) 0x89, (byte) 0x50, (byte) 0x4E, (byte) 0x47 })) {
+            return PNG;
+        }
+        if (startsWith(bytes, new byte[] { (byte) 0x49, (byte) 0x49, (byte) 0x2A, (byte) 0x00 })
+                || startsWith(bytes, new byte[] { (byte) 0x4D, (byte) 0x4D, (byte) 0x00, (byte) 0x2A })) {
+            return TIFF;
+        }
+        if (startsWith(bytes, "BM".getBytes())) {
+            return BMP;
+        }
+        String str = new String(bytes);
+        if (str.toLowerCase().indexOf("<svg") != -1) {
+            return SVG;
+        }
+        throw new IllegalArgumentException("Unable to identify the picture type from byte");
     }
 
 }

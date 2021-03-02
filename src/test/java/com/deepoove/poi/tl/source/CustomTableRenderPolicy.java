@@ -3,7 +3,7 @@ package com.deepoove.poi.tl.source;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.TableTools;

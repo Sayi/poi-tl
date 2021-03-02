@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
@@ -85,6 +85,11 @@ public class Paragraphs {
             return this;
         }
 
+        public ParagraphBuilder addParagraph(ParagraphRenderData paragraph) {
+            contents.addAll(paragraph.getContents());
+            return this;
+        }
+
         public ParagraphBuilder paraStyle(ParagraphStyle style) {
             this.paragraphStyle = style;
             return this;
@@ -95,6 +100,15 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withGlyphStyle(style).build();
             } else {
                 this.paragraphStyle.setGlyphStyle(style);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder defaultTextStyle(Style style) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withDefaultTextStyle(style).build();
+            } else {
+                this.paragraphStyle.setDefaultTextStyle(style);
             }
             return this;
         }

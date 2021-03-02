@@ -20,7 +20,6 @@ import java.io.Serializable;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**

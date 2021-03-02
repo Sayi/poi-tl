@@ -15,8 +15,8 @@ import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.Texts;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
-import com.deepoove.poi.data.style.TableStyle.BorderStyle;
 import com.deepoove.poi.policy.ParagraphRenderPolicy;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 

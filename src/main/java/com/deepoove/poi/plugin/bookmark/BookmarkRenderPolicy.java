@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy;
+package com.deepoove.poi.plugin.bookmark;
 
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.policy.TextRenderPolicy.Helper;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
  * Book mark plug-in
+ * @Deprecated use BookmarkTextRenderData instead.
  */
 public class BookmarkRenderPolicy extends TextRenderPolicy {
 

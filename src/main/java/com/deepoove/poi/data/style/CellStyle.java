@@ -19,10 +19,13 @@ import java.io.Serializable;
 
 import org.apache.poi.xwpf.usermodel.XWPFTableCell.XWPFVertAlign;
 
+import com.deepoove.poi.xwpf.XWPFShadingPattern;
+
 public class CellStyle implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private String backgroundColor;
+    private XWPFShadingPattern shadingPattern;
     /**
      * vertical align in cell
      */
@@ -38,6 +41,14 @@ public class CellStyle implements Serializable {
 
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public XWPFShadingPattern getShadingPattern() {
+        return shadingPattern;
+    }
+
+    public void setShadingPattern(XWPFShadingPattern shadingPattern) {
+        this.shadingPattern = shadingPattern;
     }
 
     public XWPFVertAlign getVertAlign() {

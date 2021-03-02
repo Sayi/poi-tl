@@ -18,7 +18,9 @@ package com.deepoove.poi.policy;
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 
+import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
@@ -72,6 +74,9 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
                     textRun.setText(fragment[i]);
                 }
             }
+            if (data instanceof BookmarkTextRenderData) {
+                createBookmark(textRun, ((BookmarkTextRenderData) data).getBookmark());
+            }
         }
 
         private static TextRenderData wrapper(Object obj) {
@@ -86,6 +91,13 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             StyleUtils.styleRun(hyperlink, run);
             run.setText("", 0);
             return hyperlink;
+        }
+
+        private static void createBookmark(XWPFRun textRun, String name) {
+            XWPFParagraphWrapper wapper = new XWPFParagraphWrapper((XWPFParagraph) textRun.getParent());
+            CTBookmark bookmarkStart = wapper.insertNewBookmark(textRun);
+            bookmarkStart.setName(name);
+//                bookmarkStart.setName(Base64.getEncoder().encodeToString(text.getBytes()));
         }
     }
 }
