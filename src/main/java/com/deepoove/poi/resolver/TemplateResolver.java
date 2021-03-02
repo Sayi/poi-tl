@@ -15,43 +15,28 @@
  */
 package com.deepoove.poi.resolver;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.exception.ResolverException;
+import com.deepoove.poi.template.*;
+import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.util.ReflectionUtils;
+import com.deepoove.poi.xwpf.CTDrawingWrapper;
+import com.deepoove.poi.xwpf.XWPFRunWrapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTD;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTF;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMathArg;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTOMathPara;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.exception.ResolverException;
-import com.deepoove.poi.template.BlockTemplate;
-import com.deepoove.poi.template.ChartTemplate;
-import com.deepoove.poi.template.ElementTemplate;
-import com.deepoove.poi.template.IterableTemplate;
-import com.deepoove.poi.template.MetaTemplate;
-import com.deepoove.poi.template.PictureTemplate;
-import com.deepoove.poi.template.run.RunTemplate;
-import com.deepoove.poi.util.ReflectionUtils;
-import com.deepoove.poi.xwpf.CTDrawingWrapper;
-import com.deepoove.poi.xwpf.XWPFRunWrapper;
+import java.util.*;
 
 /**
  * Resolver
@@ -99,9 +84,15 @@ public class TemplateResolver extends AbstractResolver {
             if (element == null) continue;
             if (element.getElementType() == BodyElementType.PARAGRAPH) {
                 XWPFParagraph paragraph = (XWPFParagraph) element;
-                new RunningRunParagraph(paragraph, templatePattern).refactorRun();
-                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
-            } else if (element.getElementType() == BodyElementType.TABLE) {
+				new RunningRunParagraph(paragraph, templatePattern).refactorRun();  // 将runs合并
+				resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
+				if(!paragraph.getCTP().getOMathParaList().isEmpty()){ // 解析公式
+					List<MetaTemplate> mathTemplates = resolveCTOMathParas(paragraph.getCTP().getOMathParaList());
+					if(!mathTemplates.isEmpty()){
+						addNewMeta(metaTemplates, stack, mathTemplates);
+					}
+				}
+			} else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
                 List<XWPFTableRow> rows = table.getRows();
                 if (null == rows) continue;
@@ -194,6 +185,62 @@ public class TemplateResolver extends AbstractResolver {
                 : (ChartTemplate) template;
     }
 
+	private List<MetaTemplate> resolveCTOMathParas(List<CTOMathPara> mathParaList){
+		List<MetaTemplate> metaTemplates = new ArrayList<>();
+		mathParaList.forEach(mathPara -> {
+			mathPara.getOMathList().forEach(math -> {
+				resolveMathCTR(math.getRList(), metaTemplates);
+				resolveMathCTF(math.getFList(), metaTemplates);
+				resolveMathCTD(math.getDList(), metaTemplates);
+			});
+		});
+		return metaTemplates;
+	}
+
+	private void resolveMathArgs(List<CTOMathArg> maths, List<MetaTemplate> metaTemplates){
+		maths.forEach(math -> {
+			resolveMathCTR(math.getRList(), metaTemplates);
+			resolveMathCTF(math.getFList(), metaTemplates);
+			resolveMathCTD(math.getDList(), metaTemplates);
+		});
+	}
+
+	private void resolveMathCTF(List<CTF> ctfs, List<MetaTemplate> metaTemplates){
+		ctfs.forEach(ctf -> {
+			CTOMathArg math = ctf.getDen();
+			if(math != null){
+				resolveMathCTR(math.getRList(), metaTemplates);
+				resolveMathCTF(math.getFList(), metaTemplates);
+				resolveMathCTD(math.getDList(), metaTemplates);
+			}
+
+			math = ctf.getNum();
+			if(math != null){
+				resolveMathCTR(math.getRList(), metaTemplates);
+				resolveMathCTF(math.getFList(), metaTemplates);
+				resolveMathCTD(math.getDList(), metaTemplates);
+			}
+		});
+	}
+
+	private void resolveMathCTD(List<CTD> ctds, List<MetaTemplate> metaTemplates){
+		ctds.forEach(ctd -> {
+			resolveMathArgs(ctd.getEList(), metaTemplates);
+		});
+	}
+
+	private void resolveMathCTR(List<org.openxmlformats.schemas.officeDocument.x2006.math.CTR> ctrList, List<MetaTemplate> metaTemplates){
+		ctrList.forEach(ctr -> {
+			ctr.getTList();
+			ctr.getT2List().forEach(t2 -> {
+				ElementTemplate elementTemplate = parseTemplateFactory(t2.getStringValue(), t2, null);
+				if(elementTemplate != null){
+					metaTemplates.add(elementTemplate);
+				}
+			});
+		});
+	}
+
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
         List<PictureTemplate> metaTemplates = new ArrayList<>();
         if (embeddedPictures == null) return metaTemplates;
@@ -273,9 +320,10 @@ public class TemplateResolver extends AbstractResolver {
                 return (PictureTemplate) elementTemplateFactory.createPicureTemplate(config, tag, (XWPFPicture) obj);
             } else if (obj.getClass() == XWPFChart.class) {
                 return (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag, (XWPFChart) obj, run);
-            }
+            } else if(obj.getClass() == org.openxmlformats.schemas.officeDocument.x2006.math.impl.CTTextImpl.class){
+            	return elementTemplateFactory.createMathTemplate(config, tag, (org.openxmlformats.schemas.officeDocument.x2006.math.CTText)obj);
+			}
         }
         return null;
     }
-
 }
