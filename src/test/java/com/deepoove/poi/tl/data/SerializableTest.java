@@ -74,8 +74,8 @@ public class SerializableTest {
                 .size(100, 200).altMeta("NO IMAGE").create();
         PictureRenderData result = write(data).getResult(PictureRenderData.class);
 
-        assertEquals(result.getWidth(), data.getWidth());
-        assertEquals(result.getHeight(), data.getHeight());
+        assertEquals(result.getPictureStyle().getWidth(), data.getPictureStyle().getWidth());
+        assertEquals(result.getPictureStyle().getHeight(), data.getPictureStyle().getHeight());
         assertEquals(result.getPictureType(), data.getPictureType());
         assertEquals(result.getAltMeta(), data.getAltMeta());
         assertArrayEquals(result.getImage(), data.getImage());

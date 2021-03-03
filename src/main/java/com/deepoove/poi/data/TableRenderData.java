@@ -30,9 +30,9 @@ public class TableRenderData implements RenderData {
     private static final long serialVersionUID = 1L;
 
     private List<RowRenderData> rows = new ArrayList<>();
-    private TableStyle tableStyle;
-
     private MergeCellRule mergeRule;
+
+    private TableStyle tableStyle;
 
     public List<RowRenderData> getRows() {
         return rows;
