@@ -30,6 +30,11 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTTitle;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTTx;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTRegularTextRun;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextBody;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextParagraph;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
@@ -127,14 +132,46 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             method.invoke(chart, sheet, series.getCategoryData(), series.getValuesData());
         }
     }
-    
+
     protected void setTitle(XWPFChart chart, String title) {
         if (null == title && chart.getCTChart().isSetTitle()) {
             chart.getCTChart().unsetTitle();
             return;
         }
-        chart.setTitleText(title);
-        chart.setTitleOverlay(false);
+        boolean isSet = false;
+        CTTitle ctTitle = chart.getCTChart().getTitle();
+        if (null != ctTitle) {
+            if (!ctTitle.isSetTx()) {
+                ctTitle.addNewTx();
+            }
+            CTTx tx = ctTitle.getTx();
+            if (tx.isSetStrRef()) {
+                tx.unsetStrRef();
+            }
+            if (!tx.isSetRich()) {
+                tx.addNewRich();
+            }
+            CTTextBody body = tx.getRich();
+            if (body.sizeOfPArray() > 0) {
+                // remove all but first paragraph
+                for (int i = body.sizeOfPArray() - 1; i > 0; i--) {
+                    body.removeP(i);
+                }
+                CTTextParagraph pArray = body.getPArray(0);
+                if (pArray.sizeOfRArray() > 0) {
+                    for (int i = pArray.sizeOfRArray() - 1; i > 0; i--) {
+                        pArray.removeR(i);
+                    }
+                    CTRegularTextRun rArray = pArray.getRArray(0);
+                    rArray.setT(title);
+                    isSet = true;
+                }
+            }
+        }
+        if (!isSet) {
+            chart.setTitleText(title);
+            chart.setTitleOverlay(false);
+        }
     }
 
 }
