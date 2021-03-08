@@ -26,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFRun.FontCharRange;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -101,14 +102,19 @@ public final class StyleUtils {
             CTHpsMeasure ctSize = pr.isSetSz() ? pr.getSz() : pr.addNewSz();
             ctSize.setVal(bd.multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).toBigInteger());
         }
+        CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
         String fontFamily = style.getFontFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
-            run.setFontFamily(fontFamily);
-            CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
+            fonts.setEastAsia(fontFamily);
             fonts.setAscii(fontFamily);
             fonts.setHAnsi(fontFamily);
             fonts.setCs(fontFamily);
-            fonts.setEastAsia(fontFamily);
+        }
+        String westernFontFamily = style.getWesternFontFamily();
+        if (StringUtils.isNotBlank(westernFontFamily)) {
+            fonts.setAscii(westernFontFamily);
+            fonts.setHAnsi(westernFontFamily);
+            fonts.setCs(westernFontFamily);
         }
         XWPFHighlightColor highlightColor = style.getHighlightColor();
         if (null != highlightColor) {
@@ -149,7 +155,14 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(src.isBold())) dest.setBold(src.isBold());
         if (StringUtils.isNotBlank(src.getColor())) dest.setColor(src.getColor());
         if (0 != src.getCharacterSpacing()) dest.setCharacterSpacing(src.getCharacterSpacing());
-        if (StringUtils.isNotBlank(src.getFontFamily())) dest.setFontFamily(src.getFontFamily());
+        if (StringUtils.isNotBlank(src.getFontFamily(FontCharRange.ascii)))
+            dest.setFontFamily(src.getFontFamily(), FontCharRange.ascii);
+        if (StringUtils.isNotBlank(src.getFontFamily(FontCharRange.eastAsia)))
+            dest.setFontFamily(src.getFontFamily(), FontCharRange.eastAsia);
+        if (StringUtils.isNotBlank(src.getFontFamily(FontCharRange.hAnsi)))
+            dest.setFontFamily(src.getFontFamily(), FontCharRange.hAnsi);
+        if (StringUtils.isNotBlank(src.getFontFamily(FontCharRange.cs)))
+            dest.setFontFamily(src.getFontFamily(), FontCharRange.cs);
         CTRPr pr = src.getCTR().getRPr();
         BigDecimal fontSize = (pr != null && pr.isSetSz())
                 ? new BigDecimal(pr.getSz().getVal()).divide(BigDecimal.valueOf(2)).setScale(1, RoundingMode.HALF_UP)
@@ -318,19 +331,19 @@ public final class StyleUtils {
             }
         }
 
-        if (StringUtils.isNotBlank(style.getFontFamily())) {
-            CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
-            String fontFamily = style.getFontFamily();
+        CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
+        String fontFamily = style.getFontFamily();
+        if (StringUtils.isNotBlank(fontFamily)) {
+            fonts.setEastAsia(fontFamily);
             fonts.setAscii(fontFamily);
-            if (!fonts.isSetHAnsi()) {
-                fonts.setHAnsi(fontFamily);
-            }
-            if (!fonts.isSetCs()) {
-                fonts.setCs(fontFamily);
-            }
-            if (!fonts.isSetEastAsia()) {
-                fonts.setEastAsia(fontFamily);
-            }
+            fonts.setHAnsi(fontFamily);
+            fonts.setCs(fontFamily);
+        }
+        String westernFontFamily = style.getWesternFontFamily();
+        if (StringUtils.isNotBlank(westernFontFamily)) {
+            fonts.setAscii(westernFontFamily);
+            fonts.setHAnsi(westernFontFamily);
+            fonts.setCs(westernFontFamily);
         }
     }
 
@@ -452,7 +465,10 @@ public final class StyleUtils {
 
     public static Style retriveStyle(XWPFRun run) {
         if (null == run) return null;
-        StyleBuilder builder = Style.builder().buildColor(run.getColor()).buildFontFamily(run.getFontFamily())
+        StyleBuilder builder = Style.builder()
+                .buildColor(run.getColor())
+                .buildFontFamily(run.getFontFamily(FontCharRange.eastAsia))
+                .buildWesternFontFamily(run.getFontFamily(FontCharRange.ascii))
                 .buildFontSize(run.getFontSize());
         if (run.isBold()) builder.buildBold();
         if (run.isItalic()) builder.buildItalic();

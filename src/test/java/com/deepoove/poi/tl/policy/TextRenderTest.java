@@ -34,15 +34,16 @@ public class TextRenderTest {
 
                 // 指定文本样式
                 Style style = new Style("FF5722");
-                style.setBold(true);
+                style.setBold(true); 
                 style.setFontSize(48l);
                 style.setItalic(true);
                 style.setStrike(true);
                 style.setUnderlinePatterns(UnderlinePatterns.SINGLE);
                 style.setFontFamily("微软雅黑");
+                style.setWesternFontFamily("Monaco");
                 style.setCharacterSpacing(20);
                 style.setHighlightColor(XWPFHighlightColor.DARK_GREEN);
-                put("word", Texts.of("just deepoove.").style(style).create());
+                put("word", Texts.of("深爱你所爱；just deepoove.").style(style).create());
 
                 // 换行
                 put("newline", "hi\n\n\n\n\nhello");

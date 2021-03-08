@@ -32,7 +32,8 @@ public class Style implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String color;
-    private String fontFamily;
+    private String fontFamily; // east Asia font
+    private String westernFontFamily; // western font
     private double fontSize;
     private Boolean isBold;
     private Boolean isItalic;
@@ -155,6 +156,14 @@ public class Style implements Serializable {
         this.vertAlign = vertAlign;
     }
 
+    public String getWesternFontFamily() {
+        return westernFontFamily;
+    }
+
+    public void setWesternFontFamily(String westernFontFamily) {
+        this.westernFontFamily = westernFontFamily;
+    }
+
     public static final class StyleBuilder {
 
         private Style style;
@@ -170,6 +179,11 @@ public class Style implements Serializable {
 
         public StyleBuilder buildFontFamily(String fontFamily) {
             style.setFontFamily(fontFamily);
+            return this;
+        }
+
+        public StyleBuilder buildWesternFontFamily(String fontFamily) {
+            style.setWesternFontFamily(fontFamily);
             return this;
         }
 
