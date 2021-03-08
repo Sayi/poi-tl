@@ -16,6 +16,7 @@
 package com.deepoove.poi.util;
 
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
@@ -24,12 +25,16 @@ import com.deepoove.poi.xwpf.XWPFSection;
 public final class PageTools {
 
     public static int pageWidth(IBodyElement element) {
+        if (element.getBody() instanceof XWPFTableCell) {
+            return ((XWPFTableCell) element.getBody()).getWidth();
+        }
+        // TODO text box width
         BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(element.getBody());
         XWPFSection section = bodyContainer.closelySectPr(element);
         if (null == section) {
             throw new IllegalAccessError("Unable to read the page where the element is located.");
         }
-        return section.getPaeContentWidth().intValue();
+        return section.getPageContentWidth().intValue();
     }
 
 }

@@ -17,6 +17,7 @@ package com.deepoove.poi.data;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import com.deepoove.poi.util.ByteUtils;
@@ -58,6 +59,10 @@ public class Includes {
         public IncludeBuilder setRenderModel(List<?> models) {
             this.data.setDataModels(models);
             return this;
+        }
+
+        public IncludeBuilder setRenderModel(Object model) {
+            return setRenderModel(Arrays.asList(model));
         }
 
         @Override

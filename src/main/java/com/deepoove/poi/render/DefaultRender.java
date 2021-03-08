@@ -84,8 +84,10 @@ public class DefaultRender implements Render {
 
     private void renderInclude(XWPFTemplate template, RenderDataCompute renderDataCompute) throws IOException {
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
-        long docxCount = elementTemplates.stream().filter(meta -> (meta instanceof RunTemplate
-                && ((RunTemplate) meta).findPolicy(template.getConfig()) instanceof DocxRenderPolicy)).count();
+        long docxCount = elementTemplates.stream()
+                .filter(meta -> (meta instanceof RunTemplate
+                        && ((RunTemplate) meta).findPolicy(template.getConfig()) instanceof DocxRenderPolicy))
+                .count();
         if (docxCount >= 1) {
             template.reload(template.getXWPFDocument().generate());
             applyDocxPolicy(template, renderDataCompute, docxCount);
@@ -93,16 +95,13 @@ public class DefaultRender implements Render {
     }
 
     private void applyDocxPolicy(XWPFTemplate template, RenderDataCompute renderDataCompute, long docxItems) {
-        List<MetaTemplate> elementTemplates = null;
         RenderPolicy policy = null;
         NiceXWPFDocument current = template.getXWPFDocument();
-        for (long i = 0; i < docxItems; i++) {
-            elementTemplates = template.getElementTemplates();
-            if (elementTemplates.isEmpty()) {
-                break;
-            }
-
-            for (MetaTemplate metaTemplate : elementTemplates) {
+        List<MetaTemplate> elementTemplates = template.getElementTemplates();
+        int k = 0;
+        while (k < elementTemplates.size()) {
+            for (k = 0; k < elementTemplates.size(); k++) {
+                MetaTemplate metaTemplate = elementTemplates.get(k);
                 if (!(metaTemplate instanceof RunTemplate)) continue;
                 RunTemplate runTemplate = (RunTemplate) metaTemplate;
                 policy = runTemplate.findPolicy(template.getConfig());
@@ -114,10 +113,9 @@ public class DefaultRender implements Render {
                         runTemplate.getSign(), ClassUtils.getShortClassName(policy.getClass()));
                 policy.render(runTemplate, renderDataCompute.compute(runTemplate.getTagName()), template);
 
-                if (current == template.getXWPFDocument()) {
-                    i++;
-                } else {
+                if (current != template.getXWPFDocument()) {
                     current = template.getXWPFDocument();
+                    elementTemplates = template.getElementTemplates();
                     break;
                 }
             }

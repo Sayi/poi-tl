@@ -74,7 +74,7 @@ public class XWPFSection {
         return pageSize.getHeight();
     }
 
-    public BigInteger getPaeContentWidth() {
+    public BigInteger getPageContentWidth() {
         return BigInteger
                 .valueOf(getPageWidth() - pageMargin.getLeft().longValue() - pageMargin.getRight().longValue());
     }
