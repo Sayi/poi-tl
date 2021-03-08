@@ -952,13 +952,15 @@ builder.useSpringEL();
 {{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <4>
 {{price/10000 + '万元'}} <5>
 {{dogs[0].name}} <6>
+{{localDate.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy年MM月dd日'))}} <7>
 ----
-<1> 方法调用，转大写
-<2> 条件
+<1> 类方法调用，转大写
+<2> 判断条件
 <3> 三目运算符
-<4> 方法调用，时间格式化
+<4> 类方法调用，时间格式化
 <5> 运算符
 <6> 数组列表使用下标访问
+<7> 使用静态类方法
 --
 
 ==== SpringEL作为区块对的条件
