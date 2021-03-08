@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class SpELTest {
     public void init() throws ParseException, NoSuchMethodException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", "Sayi");
+        map.put("localDate", LocalDate.parse("2021-03-08"));
         map.put("data", new HashMap<String, Object>() {
             {
                 put("hello", "poi-tl");
@@ -71,6 +73,10 @@ public class SpELTest {
         // map accessor
         assertEquals(spelForMap.compute("name"), "Sayi");
         assertEquals(spelForMap.compute("data.hello"), "poi-tl");
+        // static class method
+        assertEquals(
+                spelForMap.compute("localDate.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy年MM月dd日'))"),
+                "2021年03月08日");
 
         assertEquals(spelForBean.compute("name"), "poi-tl");
         assertEquals(spelForBean.compute("name == 'poi-tl'"), true);
