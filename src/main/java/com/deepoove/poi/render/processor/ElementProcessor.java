@@ -18,6 +18,7 @@ package com.deepoove.poi.render.processor;
 
 import java.util.Objects;
 
+import com.deepoove.poi.template.MathTemplate;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,11 @@ public class ElementProcessor extends DefaultTemplateProcessor {
     public void visit(RunTemplate runTemplate) {
         visit((ElementTemplate) runTemplate);
     }
+
+	@Override
+	public void visit(MathTemplate mathTemplate) {
+		visit((ElementTemplate) mathTemplate);
+	}
 
     void visit(ElementTemplate eleTemplate) {
         RenderPolicy policy = eleTemplate.findPolicy(template.getConfig());

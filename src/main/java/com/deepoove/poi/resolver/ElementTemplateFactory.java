@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.resolver;
 
+import com.deepoove.poi.template.MathTemplate;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -37,5 +38,7 @@ public interface ElementTemplateFactory {
     PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic);
 
     ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run);
+
+	MathTemplate createMathTemplate(Configure config, String tag, org.openxmlformats.schemas.officeDocument.x2006.math.CTText text);
 
 }

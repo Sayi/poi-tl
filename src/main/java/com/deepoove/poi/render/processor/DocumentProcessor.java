@@ -19,18 +19,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.deepoove.poi.template.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
-import com.deepoove.poi.template.BlockTemplate;
-import com.deepoove.poi.template.ChartTemplate;
-import com.deepoove.poi.template.InlineIterableTemplate;
-import com.deepoove.poi.template.IterableTemplate;
-import com.deepoove.poi.template.MetaTemplate;
-import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.XWPFTextboxContent;
 
@@ -103,5 +98,10 @@ public class DocumentProcessor implements Visitor {
     public void visit(ChartTemplate chartTemplate) {
         chartTemplate.accept(elementProcessor);
     }
+
+	@Override
+	public void visit(MathTemplate mathTemplate) {
+		mathTemplate.accept(elementProcessor);
+	}
 
 }

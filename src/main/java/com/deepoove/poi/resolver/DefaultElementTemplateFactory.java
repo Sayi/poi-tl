@@ -18,6 +18,7 @@ package com.deepoove.poi.resolver;
 
 import java.util.Set;
 
+import com.deepoove.poi.template.MathTemplate;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -26,6 +27,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTText;
 
 /**
  * @author Sayi
@@ -75,5 +77,13 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
         template.setSign(EMPTY_CHAR);
         return template;
     }
+
+	@Override
+	public MathTemplate createMathTemplate(Configure config, String tag, CTText text) {
+		MathTemplate template = new MathTemplate(tag, text);
+		template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+		template.setSign(EMPTY_CHAR);
+		return template;
+	}
 
 }

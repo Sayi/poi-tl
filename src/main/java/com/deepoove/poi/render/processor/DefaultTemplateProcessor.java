@@ -18,11 +18,7 @@ package com.deepoove.poi.render.processor;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
-import com.deepoove.poi.template.ChartTemplate;
-import com.deepoove.poi.template.InlineIterableTemplate;
-import com.deepoove.poi.template.IterableTemplate;
-import com.deepoove.poi.template.MetaTemplate;
-import com.deepoove.poi.template.PictureTemplate;
+import com.deepoove.poi.template.*;
 import com.deepoove.poi.template.run.RunTemplate;
 
 public abstract class DefaultTemplateProcessor implements Visitor {
@@ -62,6 +58,11 @@ public abstract class DefaultTemplateProcessor implements Visitor {
     public void visit(IterableTemplate iterableTemplate) {
         visitOther(iterableTemplate);
     }
+
+	@Override
+	public void visit(MathTemplate mathTemplate) {
+		visitOther(mathTemplate);
+	}
 
     protected void visitOther(MetaTemplate template) {
         // no-op

@@ -1,30 +1,21 @@
 package com.deepoove.poi.tl.render;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.*;
+import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.deepoove.poi.tl.source.XWPFTestSupport;
+import com.google.common.primitives.Chars;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperlinkTextRenderData;
-import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.Rows;
-import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.data.style.Style;
-import com.deepoove.poi.tl.source.XWPFTestSupport;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Foreach template test case")
 public class IterableTemplateTest {
@@ -98,7 +89,7 @@ public class IterableTemplateTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach.docx");
-        template.render(datas);
+        template.render(datas).writeToFile("out_iterable_foreach.docx");
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
         assertEquals("Hi, poi-tl", document.getParagraphArray(0).getText());
         assertEquals("My perfect Sayi.My perfect Deepoove.", document.getParagraphArray(1).getText());
@@ -116,7 +107,7 @@ public class IterableTemplateTest {
         assertEquals("Deepoove", table1.getRow(1).getCell(2).getText());
         assertEquals("", table1.getRow(2).getCell(1).getText());
 
-        document.close();
+		document.close();
 
     }
 
@@ -144,7 +135,7 @@ public class IterableTemplateTest {
         Map<String, Object> datas = Collections.singletonMap("users", users);
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_hyperlink.docx");
-        template.render(datas);
+        template.render(datas).writeToFile("out_iterable_hyperlink.docx");;
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
         assertEquals("开始，", document.getParagraphArray(0).getText());
         assertEquals("结束。", document.getParagraphArray(1).getText());
@@ -221,5 +212,4 @@ public class IterableTemplateTest {
         template.render(datas);
         template.writeToFile("out_iterable_foreach_all.docx");
     }
-
 }

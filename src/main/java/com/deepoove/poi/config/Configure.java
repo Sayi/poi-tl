@@ -22,6 +22,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.reference.*;
+import com.deepoove.poi.template.MathTemplate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
 
@@ -32,10 +34,6 @@ import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
-import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
-import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
-import com.deepoove.poi.policy.reference.MultiSeriesChartTemplateRenderPolicy;
-import com.deepoove.poi.policy.reference.SingleSeriesChartTemplateRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.render.compute.DefaultELRenderDataCompute;
 import com.deepoove.poi.render.compute.RenderDataComputeFactory;
@@ -147,6 +145,7 @@ public class Configure implements Cloneable {
 
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
         plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
+		plugin(MathTemplate.class, new DefaultMathTemplateRenderPolicy());
     }
 
     /**
