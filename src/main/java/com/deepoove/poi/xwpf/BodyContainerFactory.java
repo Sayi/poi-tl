@@ -22,6 +22,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
+import com.deepoove.poi.plugin.comment.XWPFComment;
 import com.deepoove.poi.template.IterableTemplate;
 
 /**
@@ -36,6 +37,8 @@ public class BodyContainerFactory {
             return new HeaderFooterBodyContainer((XWPFHeaderFooter) body);
         } else if (body instanceof XWPFTextboxContent) {
             return new TextBoxBodyContainer((XWPFTextboxContent) body);
+        } else if (body instanceof XWPFComment) {
+            return new CommentBodyContainer((XWPFComment) body);
         } else {
             return new DocumentBodyContainer((NiceXWPFDocument) body);
         }

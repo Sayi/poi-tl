@@ -140,4 +140,9 @@ public class CellBodyContainer implements BodyContainer {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public int elementPageWidth(IBodyElement element) {
+        return cell.getWidth();
+    }
+
 }

@@ -21,7 +21,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.TextRenderPolicy;
-import com.deepoove.poi.policy.TextRenderPolicy.Helper;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 

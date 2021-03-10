@@ -44,6 +44,8 @@ import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.RowStyle;
 import com.deepoove.poi.data.style.TableStyle;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * XWPFTable Tools
@@ -157,17 +159,21 @@ public final class TableTools {
                 gridCol = Arrays.stream(colWidths).mapToObj(BigInteger::valueOf).toArray(BigInteger[]::new);
             } else if (table.getWidthType() == TableWidthType.PCT) {
                 cellWidth = Arrays.stream(colWidths).mapToObj(w -> w + "%").toArray(String[]::new);
-                int pageWidth = PageTools.pageWidth(table);
+                BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(table.getBody());
+                int pageWidth = bodyContainer.elementPageWidth(table);
                 int tableWidth = pageWidth * Integer.valueOf(width.substring(0, width.length() - 1)) / 100;
-                gridCol = Arrays.stream(colWidths).mapToObj(w -> BigInteger.valueOf(w * tableWidth / 100))
+                gridCol = Arrays.stream(colWidths)
+                        .mapToObj(w -> BigInteger.valueOf(w * tableWidth / 100))
                         .toArray(BigInteger[]::new);
             }
             CTTblGrid tblGrid = TableTools.getTblGrid(table);
             CTTblLayoutType tblLayout = TableTools.getTblLayout(table);
             tblLayout.setType(STTblLayoutType.FIXED);
             for (int index = 0; index < colWidths.length; index++) {
-                CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
-                addNewGridCol.setW(gridCol[index]);
+                if (null != gridCol) {
+                    CTTblGridCol addNewGridCol = tblGrid.addNewGridCol();
+                    addNewGridCol.setW(gridCol[index]);
+                }
                 List<XWPFTableRow> rows = table.getRows();
                 for (XWPFTableRow row : rows) {
                     row.getCell(index).setWidth(cellWidth[index]);

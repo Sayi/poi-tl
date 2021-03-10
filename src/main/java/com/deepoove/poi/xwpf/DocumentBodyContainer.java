@@ -100,4 +100,12 @@ public class DocumentBodyContainer implements BodyContainer {
         return null;
     }
 
+    public int elementPageWidth(IBodyElement element) {
+        XWPFSection section = closelySectPr(element);
+        if (null == section) {
+            throw new IllegalAccessError("Unable to read the page where the element is located.");
+        }
+        return section.getPageContentWidth().intValue();
+    }
+
 }

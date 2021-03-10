@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
+import com.deepoove.poi.plugin.comment.CommentRenderData;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
@@ -51,6 +52,10 @@ public class Paragraphs {
 
     public static ParagraphBuilder of(PictureRenderData picture) {
         return of().addPicture(picture);
+    }
+
+    public static ParagraphBuilder of(CommentRenderData comment) {
+        return of().addComment(comment);
     }
 
     /**
@@ -87,6 +92,16 @@ public class Paragraphs {
 
         public ParagraphBuilder addParagraph(ParagraphRenderData paragraph) {
             contents.addAll(paragraph.getContents());
+            return this;
+        }
+
+        public ParagraphBuilder addComment(CommentRenderData comment) {
+            contents.add(comment);
+            return this;
+        }
+
+        public ParagraphBuilder addList(List<RenderData> datas) {
+            contents.addAll(datas);
             return this;
         }
 
@@ -160,7 +175,9 @@ public class Paragraphs {
 
         public ParagraphBuilder spacing(double spacing, LineSpacingRule spacingRule) {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withSpacing(spacing).withSpacingRule(spacingRule)
+                this.paragraphStyle = ParagraphStyle.builder()
+                        .withSpacing(spacing)
+                        .withSpacingRule(spacingRule)
                         .build();
             } else {
                 this.paragraphStyle.setSpacing(spacing);
@@ -175,8 +192,10 @@ public class Paragraphs {
 
         public ParagraphBuilder bgColor(String backgroundColor, XWPFShadingPattern pattern) {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withBackgroundColor(backgroundColor)
-                        .withShadingPattern(pattern).build();
+                this.paragraphStyle = ParagraphStyle.builder()
+                        .withBackgroundColor(backgroundColor)
+                        .withShadingPattern(pattern)
+                        .build();
             } else {
                 this.paragraphStyle.setBackgroundColor(backgroundColor);
                 this.paragraphStyle.setShadingPattern(pattern);
@@ -205,8 +224,12 @@ public class Paragraphs {
         public ParagraphBuilder pageControl(Boolean widowControl, Boolean keepNext, Boolean keepLines,
                 Boolean pageBreakBefore) {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withWidowControl(widowControl).withKeepNext(keepNext)
-                        .withKeepLines(keepLines).withPageBreakBefore(pageBreakBefore).build();
+                this.paragraphStyle = ParagraphStyle.builder()
+                        .withWidowControl(widowControl)
+                        .withKeepNext(keepNext)
+                        .withKeepLines(keepLines)
+                        .withPageBreakBefore(pageBreakBefore)
+                        .build();
             } else {
                 this.paragraphStyle.setWidowControl(widowControl);
                 this.paragraphStyle.setKeepNext(keepNext);
@@ -223,6 +246,7 @@ public class Paragraphs {
             data.setParagraphStyle(paragraphStyle);
             return data;
         }
+
     }
 
 }

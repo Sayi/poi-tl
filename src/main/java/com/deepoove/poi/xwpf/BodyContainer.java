@@ -217,6 +217,20 @@ public interface BodyContainer extends ParentContext {
         }
     }
 
+    /**
+     * Get closely SectPr
+     * 
+     * @param element
+     * @return
+     */
     XWPFSection closelySectPr(IBodyElement element);
+
+    /**
+     * Get width of the element page
+     * 
+     * @param element
+     * @return
+     */
+    int elementPageWidth(IBodyElement element);
 
 }

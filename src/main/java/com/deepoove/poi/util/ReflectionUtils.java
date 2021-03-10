@@ -16,10 +16,15 @@
 
 package com.deepoove.poi.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.poi.ooxml.POIXMLRelation;
+import org.apache.poi.ooxml.POIXMLRelation.NoArgConstructor;
+import org.apache.poi.ooxml.POIXMLRelation.PackagePartConstructor;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
 
 import com.deepoove.poi.exception.ReflectionException;
 
@@ -56,6 +61,12 @@ public class ReflectionUtils {
             searchType = searchType.getSuperclass();
         }
         return null;
+    }
+
+    public static <T> Constructor<T> findConstructor(Class<T> clazz, Class<?>... parametersTypes) throws Exception {
+        Constructor<T> constructor = clazz.getDeclaredConstructor(parametersTypes);
+        constructor.setAccessible(true);
+        return constructor;
     }
 
 }

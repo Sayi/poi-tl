@@ -32,10 +32,12 @@ import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.BufferedImageUtils;
-import com.deepoove.poi.util.PageTools;
 import com.deepoove.poi.util.SVGConvertor;
 import com.deepoove.poi.util.UnitUtils;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.WidthScalePattern;
+import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
  * picture render
@@ -92,7 +94,9 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                 width = original.getWidth();
                 height = original.getHeight();
                 if (style.getScalePattern() == WidthScalePattern.FIT) {
-                    int pageWidth = UnitUtils.twips2Pixel(PageTools.pageWidth((IBodyElement) run.getParent()));
+                    BodyContainer bodyContainer = BodyContainerFactory
+                            .getBodyContainer(((IBodyElement) run.getParent()).getBody());
+                    int pageWidth = UnitUtils.twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
                     if (width > pageWidth) {
                         double ratio = pageWidth / (double) width;
                         width = pageWidth;
@@ -105,7 +109,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                 if (null != align && run.getParent() instanceof XWPFParagraph) {
                     ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
                 }
-                run.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
+                XWPFRunWrapper wrapper = new XWPFRunWrapper(run, false);
+                wrapper.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
                         Units.pixelToEMU(height));
             }
         }

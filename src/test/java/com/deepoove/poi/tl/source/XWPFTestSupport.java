@@ -3,8 +3,10 @@ package com.deepoove.poi.tl.source;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
 
@@ -31,6 +33,15 @@ public class XWPFTestSupport {
         doc.close();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(stream.toByteArray());
         return inputStream;
+    }
+
+    public static InputStream generateTemplate() throws IOException {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFRun run = doc.createParagraph().createRun();
+        run.setFontFamily("微软雅黑");
+        run.setFontSize(14);
+        run.setText("{{var}}");
+        return readInputStream(doc);
     }
 
 }

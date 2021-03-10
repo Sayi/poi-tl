@@ -64,4 +64,9 @@ public class TextBoxBodyContainer implements BodyContainer {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public int elementPageWidth(IBodyElement element) {
+        return 8295;
+    }
+
 }

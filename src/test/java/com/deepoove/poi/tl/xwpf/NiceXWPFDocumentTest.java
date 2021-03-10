@@ -7,14 +7,22 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.deepoove.poi.plugin.comment.XWPFComment;
+import com.deepoove.poi.plugin.comment.XWPFComments;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 @DisplayName("Merge word test case")
@@ -102,6 +110,42 @@ public class NiceXWPFDocumentTest {
         target.close();
         result.close();
 
+    }
+
+    @Test
+    public void testMergeSect() throws Exception {
+        NiceXWPFDocument source = new NiceXWPFDocument(
+                new FileInputStream(new File("src/test/resources/template/render_text.docx")));
+        NiceXWPFDocument target = new NiceXWPFDocument(
+                new FileInputStream(new File("src/test/resources/template/render_include_sect.docx")));
+        source = source.merge(target);
+
+        source.write(new FileOutputStream("out_merge_sect.docx"));
+        source.close();
+    }
+
+    @Test
+    public void testCreateComments() throws FileNotFoundException, IOException {
+        NiceXWPFDocument document = new NiceXWPFDocument();
+        XWPFComments docComments = document.createComments();
+        XWPFComment addComment = docComments.addComment();
+        BigInteger cId = addComment.getId();
+
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.getCTP().addNewCommentRangeStart().setId(cId); // comment range start is set before text run
+        XWPFRun run = paragraph.createRun();
+        run.setText("Paragraph with the first comment.");
+        paragraph.getCTP().addNewCommentRangeEnd().setId(cId); // comment range end is set after text run
+
+        paragraph.getCTP().addNewR().addNewCommentReference().setId(cId);
+
+        addComment.setAuthor("Sayi");
+        addComment.setInitials("s");
+        addComment.setDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+        addComment.createParagraph().createRun().setText("The first comment.");
+
+        document.write(new FileOutputStream("out_comments_new.docx"));
+        document.close();
     }
 
 }

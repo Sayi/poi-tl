@@ -60,6 +60,10 @@ public class XWPFParagraphWrapper {
             "bookmarkStart");
     static final QName BOOKMARK_END_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
             "bookmarkEnd");
+    static final QName COMMENT_START_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "commentRangeStart");
+    static final QName COMMENT_END_QNAME = new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+            "commentRangeEnd");
 
     static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME, FLDSIMPLE_QNAME, R_QNAME });
 
@@ -100,8 +104,9 @@ public class XWPFParagraphWrapper {
         if (pos >= 0 && pos <= paragraph.getRuns().size()) {
             CTHyperlink hyperlink = insertNewHyperlink(pos);
             // hyperlink.setAnchor(link.substring("anchor:".length()));
-            PackageRelationship relationship = paragraph.getPart().getPackagePart().addExternalRelationship(link,
-                    XWPFRelation.HYPERLINK.getRelation());
+            PackageRelationship relationship = paragraph.getPart()
+                    .getPackagePart()
+                    .addExternalRelationship(link, XWPFRelation.HYPERLINK.getRelation());
             hyperlink.setId(relationship.getId());
 
             CTR ctr = hyperlink.addNewR();
@@ -117,8 +122,8 @@ public class XWPFParagraphWrapper {
         synchronized (ctp.monitor()) {
             // check_orphaned();
             CTHyperlink localCTHyperlink = null;
-            localCTHyperlink = (CTHyperlink) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, HYPER_QNAME,
-                    paramInt);
+            localCTHyperlink = (CTHyperlink) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, HYPER_QNAME, paramInt);
             return localCTHyperlink;
         }
     }
@@ -147,8 +152,8 @@ public class XWPFParagraphWrapper {
         synchronized (ctp.monitor()) {
             // check_orphaned();
             CTMarkupRange local = null;
-            local = (CTMarkupRange) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, BOOKMARK_END_QNAME,
-                    paramInt);
+            local = (CTMarkupRange) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, BOOKMARK_END_QNAME, paramInt);
             return local;
         }
     }
@@ -158,9 +163,31 @@ public class XWPFParagraphWrapper {
         synchronized (ctp.monitor()) {
             // check_orphaned();
             CTBookmark local = null;
-            local = (CTBookmark) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET, BOOKMARK_START_QNAME,
-                    paramInt);
+            local = (CTBookmark) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, BOOKMARK_START_QNAME, paramInt);
             return local;
+        }
+    }
+
+    public void insertNewCommentRangeStart(XWPFRun run, BigInteger cId) {
+        int pos = getPosOfRun(run);
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTMarkupRange mark = (CTMarkupRange) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, COMMENT_START_QNAME, pos);
+            mark.setId(cId);
+        }
+    }
+
+    public void insertNewCommentRangeEnd(XWPFRun run, BigInteger cId) {
+        int pos = getPosOfRun(run);
+        CTP ctp = paragraph.getCTP();
+        synchronized (ctp.monitor()) {
+            // check_orphaned();
+            CTMarkupRange mark = (CTMarkupRange) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, COMMENT_END_QNAME, pos);
+            mark.setId(cId);
         }
     }
 
@@ -189,8 +216,8 @@ public class XWPFParagraphWrapper {
         synchronized (ctp.monitor()) {
             // check_orphaned();
             CTSimpleField localCTSimpleField = null;
-            localCTSimpleField = (CTSimpleField) ((CTPImpl) ctp).get_store().insert_element_user(RUN_QNAME_SET,
-                    FLDSIMPLE_QNAME, paramInt);
+            localCTSimpleField = (CTSimpleField) ((CTPImpl) ctp).get_store()
+                    .insert_element_user(RUN_QNAME_SET, FLDSIMPLE_QNAME, paramInt);
             return localCTSimpleField;
         }
     }

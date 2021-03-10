@@ -26,6 +26,8 @@ import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.data.style.ParagraphStyle;
+import com.deepoove.poi.plugin.comment.CommentRenderData;
+import com.deepoove.poi.plugin.comment.CommentRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.ParagraphUtils;
 import com.deepoove.poi.util.StyleUtils;
@@ -79,6 +81,8 @@ public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderD
                     TextRenderPolicy.Helper.renderTextRun(fragment, content);
                 } else if (content instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(fragment, (PictureRenderData) content);
+                } else if (content instanceof CommentRenderData) {
+                    CommentRenderPolicy.Helper.renderComment(fragment, (CommentRenderData) content);
                 }
             }
 
@@ -95,7 +99,8 @@ public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderD
         private static void styleParagraphWithDefaultStyle(XWPFParagraph paragraph,
                 List<ParagraphStyle> defaultControlStyles) {
             if (null != defaultControlStyles) {
-                defaultControlStyles.stream().filter(Objects::nonNull)
+                defaultControlStyles.stream()
+                        .filter(Objects::nonNull)
                         .forEach(style -> StyleUtils.styleParagraph(paragraph, style));
             }
         }

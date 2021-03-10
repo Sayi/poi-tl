@@ -21,28 +21,22 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTComment;
 
+import com.deepoove.poi.plugin.comment.XWPFComment;
 import com.deepoove.poi.util.ReflectionUtils;
 
-public class HeaderFooterBodyContainer implements BodyContainer {
+public class CommentBodyContainer implements BodyContainer {
 
-    private XWPFHeaderFooter headerFooter;
+    private XWPFComment comment;
 
-    public HeaderFooterBodyContainer(XWPFHeaderFooter hf) {
-        this.headerFooter = hf;
+    public CommentBodyContainer(XWPFComment hf) {
+        this.comment = hf;
     }
 
     @Override
@@ -51,10 +45,10 @@ public class HeaderFooterBodyContainer implements BodyContainer {
         if (pos >= 0 && pos < bodyElements.size()) {
             BodyElementType type = bodyElements.get(pos).getElementType();
             if (type == BodyElementType.TABLE) {
-                headerFooter.removeTable((XWPFTable) bodyElements.get(pos));
+                comment.removeTable((XWPFTable) bodyElements.get(pos));
             }
             if (type == BodyElementType.PARAGRAPH) {
-                headerFooter.removeParagraph((XWPFParagraph) bodyElements.get(pos));
+                comment.removeParagraph((XWPFParagraph) bodyElements.get(pos));
             }
         }
     }
@@ -62,25 +56,25 @@ public class HeaderFooterBodyContainer implements BodyContainer {
     @SuppressWarnings("unchecked")
     @Override
     public void setParagraph(XWPFParagraph p, int paraPos) {
-        List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", headerFooter);
+        List<XWPFParagraph> paragraphs = (List<XWPFParagraph>) ReflectionUtils.getValue("paragraphs", comment);
         paragraphs.set(paraPos, p);
-        CTHdrFtr ctTc = headerFooter._getHdrFtr();
-        ctTc.setPArray(paraPos, p.getCTP());
+        CTComment ctc = comment.getCtComment();
+        ctc.setPArray(paraPos, p.getCTP());
 
     }
 
     @Override
     public IBody getTarget() {
-        return headerFooter;
+        return comment;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void setTable(int pos, XWPFTable table) {
         // cell.getTables().set(pos, table);
-        List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", headerFooter);
+        List<XWPFTable> tables = (List<XWPFTable>) ReflectionUtils.getValue("tables", comment);
         tables.set(pos, table);
-        headerFooter._getHdrFtr().setTblArray(pos, table.getCTTbl());
+        comment.getCtComment().setTblArray(pos, table.getCTTbl());
 
     }
 
@@ -106,42 +100,12 @@ public class HeaderFooterBodyContainer implements BodyContainer {
 
     @Override
     public XWPFSection closelySectPr(IBodyElement element) {
-        XWPFDocument doc = headerFooter.getXWPFDocument();
-        String relationId = doc.getRelationId(this.headerFooter);
-        if (null != relationId) {
-            List<IBodyElement> bodyElements = doc.getBodyElements();
-            for (IBodyElement ele : bodyElements) {
-                if (ele instanceof XWPFParagraph) {
-                    XWPFParagraph para = (XWPFParagraph) ele;
-                    CTP ctp = para.getCTP();
-                    if (!ctp.isSetPPr()) continue;
-                    CTPPr pPr = ctp.getPPr();
-                    if (pPr.isSetSectPr()) {
-                        XWPFSection xwpfSection = new XWPFSection(pPr.getSectPr());
-                        if (headerFooter instanceof XWPFHeader) {
-                            if (xwpfSection.haveHeader(relationId)) return xwpfSection;
-                        } else if (headerFooter instanceof XWPFFooter) {
-                            if (xwpfSection.haveFooter(relationId)) return xwpfSection;
-                        }
-                    }
-                }
-            }
-        }
-
-        CTBody body = doc.getDocument().getBody();
-        if (body.isSetSectPr()) {
-            return new XWPFSection(body.getSectPr());
-        }
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int elementPageWidth(IBodyElement element) {
-        XWPFSection section = closelySectPr(element);
-        if (null == section) {
-            throw new IllegalAccessError("Unable to read the page where the element is located.");
-        }
-        return section.getPageContentWidth().intValue();
+        return 8295;
     }
 
 }
