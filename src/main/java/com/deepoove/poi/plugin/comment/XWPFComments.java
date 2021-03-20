@@ -49,7 +49,6 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * specifies all of the comments defined in the current document
  * 
  * @author Sayi
- *
  */
 public class XWPFComments extends POIXMLDocumentPart {
 
@@ -122,8 +121,8 @@ public class XWPFComments extends POIXMLDocumentPart {
             return getRelationId(xwpfPicData);
         } else if (!getRelations().contains(xwpfPicData)) {
             /*
-             * Part already existed, but was not related so far. Create relationship to the
-             * already existing part and update POIXMLDocumentPart data.
+             * Part already existed, but was not related so far. Create relationship to the already existing part and
+             * update POIXMLDocumentPart data.
              */
             // TODO add support for TargetMode.EXTERNAL relations.
             RelationPart rp = addRelation(null, XWPFRelation.IMAGES, xwpfPicData);
@@ -173,10 +172,10 @@ public class XWPFComments extends POIXMLDocumentPart {
     }
 
     public XWPFComment addComment() {
-        return addComment(getMaxId().add(BigInteger.ONE));
+        return createComment(getMaxId().add(BigInteger.ONE));
     }
 
-    public XWPFComment addComment(BigInteger cid) {
+    public XWPFComment createComment(BigInteger cid) {
         CTComment ctComment = ctComments.addNewComment();
         ctComment.setId(cid);
         XWPFComment comment = new XWPFComment(ctComment, this);
@@ -187,7 +186,7 @@ public class XWPFComments extends POIXMLDocumentPart {
     public BigInteger getMaxId() {
         BigInteger max = BigInteger.ZERO;
         for (XWPFComment comment : comments) {
-            BigInteger id = comment.getId();
+            BigInteger id = comment.getCtComment().getId();
             if (null != id && id.compareTo(max) == 1) {
                 max = id;
             }

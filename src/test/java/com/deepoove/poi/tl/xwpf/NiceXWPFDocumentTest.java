@@ -129,7 +129,7 @@ public class NiceXWPFDocumentTest {
         NiceXWPFDocument document = new NiceXWPFDocument();
         XWPFComments docComments = document.createComments();
         XWPFComment addComment = docComments.addComment();
-        BigInteger cId = addComment.getId();
+        BigInteger cId = addComment.getCtComment().getId();
 
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.getCTP().addNewCommentRangeStart().setId(cId); // comment range start is set before text run

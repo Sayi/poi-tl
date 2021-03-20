@@ -15,7 +15,6 @@
  */
 package com.deepoove.poi.plugin.comment;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -42,19 +41,15 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 
 /**
  * Sketch of XWPF comment class
- * 
- * @author Sayi
- *
  */
 public class XWPFComment implements IBody {
-
-    private List<XWPFParagraph> paragraphs = new ArrayList<>();
-    private List<XWPFTable> tables = new ArrayList<>();
-    private List<IBodyElement> bodyElements = new ArrayList<>();
 
     protected CTComment ctComment;
     protected XWPFComments comments;
     protected XWPFDocument document;
+    private List<XWPFParagraph> paragraphs = new ArrayList<>();
+    private List<XWPFTable> tables = new ArrayList<>();
+    private List<IBodyElement> bodyElements = new ArrayList<>();
 
     public XWPFComment(CTComment ctComment, XWPFComments comments) {
         this.comments = comments;
@@ -85,32 +80,32 @@ public class XWPFComment implements IBody {
         cursor.dispose();
     }
 
-    public CTComment getCtComment() {
-        return ctComment;
-    }
-
-    public XWPFComments getComments() {
-        return comments;
-    }
-
-    public XWPFDocument getDocument() {
-        return document;
-    }
-
+    /**
+     * Get the Part to which the comment belongs, which you need for adding relationships to other parts
+     *
+     * @return {@link POIXMLDocumentPart} that contains the comment.
+     * @see org.apache.poi.xwpf.usermodel.IBody#getPart()
+     */
     @Override
     public POIXMLDocumentPart getPart() {
         return comments;
     }
 
+    /**
+     * Get the part type {@link BodyType} of the comment.
+     *
+     * @return The {@link BodyType} value.
+     * @see org.apache.poi.xwpf.usermodel.IBody#getPartType()
+     */
     @Override
     public BodyType getPartType() {
-        // comment
+        // return BodyType.COMMENT;
         return null;
     }
 
     /**
      * Gets the body elements ({@link IBodyElement}) of the comment.
-     * 
+     *
      * @return List of body elements.
      */
     @Override
@@ -128,7 +123,7 @@ public class XWPFComment implements IBody {
 
     /**
      * Get the list of {@link XWPFTable}s in the comment.
-     * 
+     *
      * @return List of tables
      */
     @Override
@@ -292,38 +287,25 @@ public class XWPFComment implements IBody {
         return tableRow.getTableCell(cell);
     }
 
+    /**
+     * Get the {@link XWPFDocument} the comment is part of.
+     *
+     * @see org.apache.poi.xwpf.usermodel.IBody#getXWPFDocument()
+     */
     @Override
     public XWPFDocument getXWPFDocument() {
         return document;
     }
 
     public String getText() {
-        StringBuilder t = new StringBuilder(64);
-        // TODO: simplify this to get ibody elements in order
-        for (int i = 0; i < paragraphs.size(); i++) {
-            if (!paragraphs.get(i).isEmpty()) {
-                String text = paragraphs.get(i).getText();
-                if (text != null && text.length() > 0) {
-                    t.append(text);
-                    t.append('\n');
-                }
+        StringBuilder text = new StringBuilder();
+        for (XWPFParagraph p : paragraphs) {
+            if (text.length() > 0) {
+                text.append("\n");
             }
+            text.append(p.getText());
         }
-
-        for (int i = 0; i < tables.size(); i++) {
-            String text = tables.get(i).getText();
-            if (text != null && text.length() > 0) {
-                t.append(text);
-                t.append('\n');
-            }
-        }
-
-        for (IBodyElement bodyElement : getBodyElements()) {
-            if (bodyElement instanceof XWPFSDT) {
-                t.append(((XWPFSDT) bodyElement).getContent().getText() + '\n');
-            }
-        }
-        return t.toString();
+        return text.toString();
     }
 
     public XWPFParagraph createParagraph() {
@@ -363,19 +345,36 @@ public class XWPFComment implements IBody {
     }
 
     /**
-     * Get a unique identifier for the current comment. The restrictions on the id
-     * attribute, if any, are defined by the parent XML element. If this attribute
-     * is omitted, then the document is non-conformant.
-     * 
-     * @return
+     * Gets the underlying CTComment object for the comment.
+     *
+     * @return CTComment object
      */
-    public BigInteger getId() {
-        return ctComment.getId();
+    public CTComment getCtComment() {
+        return ctComment;
+    }
+
+    /**
+     * The owning object for this comment
+     *
+     * @return The {@link XWPFComments} object that contains this comment.
+     */
+    public XWPFComments getComments() {
+        return comments;
+    }
+
+    /**
+     * Get a unique identifier for the current comment. The restrictions on the id attribute, if any, are defined by the
+     * parent XML element. If this attribute is omitted, then the document is non-conformant.
+     *
+     * @return string id
+     */
+    public String getId() {
+        return ctComment.getId().toString();
     }
 
     /**
      * Get the author of the current comment
-     * 
+     *
      * @return author of the current comment
      */
     public String getAuthor() {
@@ -383,9 +382,9 @@ public class XWPFComment implements IBody {
     }
 
     /**
-     * Specifies the author for the current comment If this attribute is omitted,
-     * then no author shall be associated with the parent annotation type.
-     * 
+     * Specifies the author for the current comment If this attribute is omitted, then no author shall be associated
+     * with the parent annotation type.
+     *
      * @param author author of the current comment
      */
     public void setAuthor(String author) {
@@ -393,17 +392,8 @@ public class XWPFComment implements IBody {
     }
 
     /**
-     * Specifies the initials of the author of the current comment
-     * 
-     * @param initials the initials of the author of the current comment
-     */
-    public void setInitials(String initials) {
-        ctComment.setInitials(initials);
-    }
-
-    /**
      * Get the initials of the author of the current comment
-     * 
+     *
      * @return initials the initials of the author of the current comment
      */
     public String getInitials() {
@@ -411,23 +401,30 @@ public class XWPFComment implements IBody {
     }
 
     /**
-     * Specifies the date information for the current comment. If this attribute is
-     * omitted, then no date information shall be associated with the parent
-     * annotation type.
-     * 
-     * @param date the date information for the current comment.
+     * Specifies the initials of the author of the current comment
+     *
+     * @param initials the initials of the author of the current comment
      */
-    public void setDate(Calendar date) {
-        ctComment.setDate(date);
+    public void setInitials(String initials) {
+        ctComment.setInitials(initials);
     }
 
     /**
      * Get the date information of the current comment
-     * 
+     *
      * @return the date information for the current comment.
      */
     public Calendar getDate() {
         return ctComment.getDate();
     }
 
+    /**
+     * Specifies the date information for the current comment. If this attribute is omitted, then no date information
+     * shall be associated with the parent annotation type.
+     *
+     * @param date the date information for the current comment.
+     */
+    public void setDate(Calendar date) {
+        ctComment.setDate(date);
+    }
 }

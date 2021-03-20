@@ -72,7 +72,7 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
                 newComment.setDate(commentContent.getDate());
                 newComment.setInitials(commentContent.getInitials());
                 renderDocument(newComment.createParagraph().createRun(), commentContent.getContent());
-                cId = newComment.getId();
+                cId = newComment.getCtComment().getId();
                 parentContext.insertNewCommentRangeStart(run, cId);
             }
             renderParagraph(run, Paragraphs.of().addList(data.getContents()).create());
