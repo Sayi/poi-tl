@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.util.PoitlIOUtils;
 
 public class XWPFTestSupport {
 
@@ -27,21 +27,8 @@ public class XWPFTestSupport {
         return new XWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
     }
 
-    public static ByteArrayInputStream readInputStream(XWPFDocument doc) throws IOException {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        doc.write(stream);
-        doc.close();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(stream.toByteArray());
-        return inputStream;
-    }
-
-    public static InputStream generateTemplate() throws IOException {
-        XWPFDocument doc = new XWPFDocument();
-        XWPFRun run = doc.createParagraph().createRun();
-        run.setFontFamily("微软雅黑");
-        run.setFontSize(14);
-        run.setText("{{var}}");
-        return readInputStream(doc);
+    public static InputStream readInputStream(XWPFDocument doc) throws IOException {
+        return PoitlIOUtils.docToInputStream(doc);
     }
 
 }

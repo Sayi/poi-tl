@@ -2,8 +2,8 @@ package com.deepoove.poi.tl.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class RenderDataComputeFactoryTest {
 
         XWPFDocument doc = new XWPFDocument();
         doc.createParagraph().createRun().setText("{{name}}");
-        ByteArrayInputStream inputStream = XWPFTestSupport.readInputStream(doc);
+        InputStream inputStream = XWPFTestSupport.readInputStream(doc);
 
         XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(Maps.newHashMap());
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);
