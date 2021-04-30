@@ -18,6 +18,7 @@ package com.deepoove.poi.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
@@ -30,22 +31,21 @@ import com.deepoove.poi.xwpf.WidthScalePattern;
  * Factory method to build {@link PictureRenderData} instances.
  * 
  * @author Sayi
- *
  */
 public class Pictures {
     private Pictures() {
     }
 
     public static PictureBuilder ofLocal(String path) {
-        return ofBytes(ByteUtils.getLocalByteArray(new File(path)), PictureType.suggestFileType(path));
+        return of(() -> ByteUtils.getLocalByteArray(new File(path)), PictureType.suggestFileType(path));
     }
 
     public static PictureBuilder ofUrl(String url, PictureType pictureType) {
-        return ofBytes(ByteUtils.getUrlByteArray(url), pictureType);
+        return of(() -> ByteUtils.getUrlByteArray(url), pictureType);
     }
 
     public static PictureBuilder ofUrl(String url) {
-        return ofBytes(ByteUtils.getUrlByteArray(url));
+        return of(() -> ByteUtils.getUrlByteArray(url));
     }
 
     public static PictureBuilder ofStream(InputStream inputStream, PictureType pictureType) {
@@ -57,31 +57,38 @@ public class Pictures {
     }
 
     public static PictureBuilder ofBufferedImage(BufferedImage image, PictureType pictureType) {
-        return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
+        return of(() -> BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
 
     public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
-        return ofBytes(ByteUtils.getBase64ByteArray(base64), pictureType);
-    }
-
-    public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
-        return new PictureBuilder(pictureType, bytes);
+        return of(() -> ByteUtils.getBase64ByteArray(base64), pictureType);
     }
 
     public static PictureBuilder ofBytes(byte[] bytes) {
-        return new PictureBuilder(PictureType.suggestFileType(bytes), bytes);
+        return ofBytes(bytes, null);
+    }
+
+    public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
+        return new PictureBuilder(pictureType, () -> bytes);
+    }
+
+    public static PictureBuilder of(Supplier<byte[]> supplier) {
+        return of(supplier, null);
+    }
+
+    public static PictureBuilder of(Supplier<byte[]> supplier, PictureType pictureType) {
+        return new PictureBuilder(pictureType, supplier);
     }
 
     /**
      * Builder to build {@link PictureRenderData} instances.
-     *
      */
     public static class PictureBuilder implements RenderDataBuilder<PictureRenderData> {
 
         private PictureRenderData data;
 
-        private PictureBuilder(PictureType pictureType, byte[] bytes) {
-            data = new PictureRenderData(0, 0, pictureType, bytes);
+        private PictureBuilder(PictureType pictureType, Supplier<byte[]> supplier) {
+            data = new PictureRenderData(0, 0, pictureType, supplier);
         }
 
         public PictureBuilder size(int width, int height) {

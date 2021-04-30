@@ -18,6 +18,7 @@ package com.deepoove.poi.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -54,9 +55,10 @@ public final class ByteUtils {
      */
     public static byte[] getLocalByteArray(File res) {
         try {
+            logger.info("Read contents from local path:{}", res.toPath());
             return Files.readAllBytes(res.toPath());
         } catch (IOException e) {
-            logger.error("readAllBytes error", e);
+            logger.error("Read all bytes error", e);
         }
         return null;
     }
@@ -106,10 +108,18 @@ public final class ByteUtils {
      * @throws IOException
      */
     public static InputStream getUrlStream(String urlPath) throws IOException {
+        logger.info("Read contents from remote uri:{}", urlPath);
         URL url = new URL(urlPath);
         URLConnection connection = url.openConnection();
         connection.addRequestProperty("User-Agent", "Mozilla/4.0");
-        return connection.getInputStream();
+        InputStream inputStream = connection.getInputStream();
+        if (connection instanceof HttpURLConnection) {
+            if (200 != ((HttpURLConnection) connection).getResponseCode()) {
+                throw new IOException("get url " + urlPath + " content error, response status: "
+                        + ((HttpURLConnection) connection).getResponseCode());
+            }
+        }
+        return inputStream;
     }
 
     /**

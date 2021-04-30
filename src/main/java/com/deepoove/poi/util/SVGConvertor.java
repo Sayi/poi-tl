@@ -19,16 +19,40 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.apache.batik.transcoder.ErrorHandler;
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.deepoove.poi.exception.RenderException;
 
 public class SVGConvertor {
 
-    public static byte[] toPNG(byte[] svgs, float width, float maxHeight) throws TranscoderException, IOException {
+    private static Logger logger = LoggerFactory.getLogger(SVGConvertor.class);
+
+    public static byte[] toPng(byte[] svgs, float width, float maxHeight) throws TranscoderException, IOException {
         Transcoder t = new PNGTranscoder();
+        t.setErrorHandler(new ErrorHandler() {
+
+            @Override
+            public void warning(TranscoderException ex) throws TranscoderException {
+                logger.warn("WARNING: " + ex.getMessage());
+            }
+
+            @Override
+            public void fatalError(TranscoderException ex) throws TranscoderException {
+                throw ex;
+            }
+
+            @Override
+            public void error(TranscoderException ex) throws TranscoderException {
+                throw ex;
+            }
+        });
         if (0 != width) t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width);
         if (0 != maxHeight) t.addTranscodingHint(PNGTranscoder.KEY_MAX_HEIGHT, maxHeight);
         try (ByteArrayInputStream instream = new ByteArrayInputStream(svgs);
@@ -38,6 +62,9 @@ public class SVGConvertor {
             t.transcode(input, output);
             ostream.flush();
             return ostream.toByteArray();
+        } catch (Exception e) {
+            throw new RenderException("Unable transcode from svg to png, possibly some svg attribute is not supported.",
+                    e);
         }
     }
 
