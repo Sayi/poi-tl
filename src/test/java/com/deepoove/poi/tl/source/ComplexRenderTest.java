@@ -10,6 +10,7 @@ import java.util.Map;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.Rows;
 import com.deepoove.poi.data.Tables;
@@ -51,7 +52,7 @@ public class ComplexRenderTest {
                 put("s_antiWord", "没有安全问题");
 
                 put("brakePicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
-                put("treadPicture", new PictureRenderData(220, 135, ".png", ByteUtils
+                put("treadPicture", new PictureRenderData(220, 135, PictureType.PNG, ByteUtils
                         .getLocalByteArray(new File("src/test/resources/logo.png"))));
                 put("fluidPicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
                 put("antiPicture", new PictureRenderData(75, 170, "src/test/resources/logo.png"));
