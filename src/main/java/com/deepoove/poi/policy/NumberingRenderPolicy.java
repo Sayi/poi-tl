@@ -22,8 +22,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.data.NumberingFormat;
+import com.deepoove.poi.data.NumberingItemRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
@@ -55,16 +56,21 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderD
     public static class Helper {
 
         public static void renderNumbering(XWPFRun run, NumberingRenderData data) throws Exception {
-            List<ParagraphRenderData> items = data.getItems();
-            BigInteger numID = ((NiceXWPFDocument) run.getParent().getDocument()).addNewNumberingId(data.getFormat());
+            List<NumberingItemRenderData> items = data.getItems();
+            NumberingFormat[] array = data.getFormats().toArray(new NumberingFormat[] {});
+            BigInteger numID = ((NiceXWPFDocument) run.getParent().getDocument()).addNewMultiLevelNumberingId(array);
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
-            for (ParagraphRenderData item : items) {
+            for (NumberingItemRenderData item : items) {
                 XWPFParagraph paragraph = bodyContainer.insertNewParagraph(run);
-                paragraph.setNumID(numID);
+                int level = item.getLevel();
+                if (NumberingItemRenderData.LEVEL_NORMAL != level) {
+                    paragraph.setNumID(numID);
+                    paragraph.setNumILvl(BigInteger.valueOf(level));
+                }
                 XWPFRun createRun = paragraph.createRun();
-                StyleUtils.styleParaRpr(paragraph, StyleUtils.retriveStyle(run));
+//                 StyleUtils.styleParaRpr(paragraph, StyleUtils.retriveStyle(run));
                 StyleUtils.styleRun(createRun, run);
-                ParagraphRenderPolicy.Helper.renderParagraph(createRun, item);
+                ParagraphRenderPolicy.Helper.renderParagraph(createRun, item.getItem());
             }
         }
 

@@ -18,7 +18,6 @@ package com.deepoove.poi.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.function.Supplier;
 
 import com.deepoove.poi.data.style.PictureStyle;

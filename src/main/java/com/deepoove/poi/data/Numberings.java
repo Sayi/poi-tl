@@ -22,7 +22,6 @@ import java.util.Arrays;
  * Factory to create {@link NumberingRenderData}
  * 
  * @author Sayi
- *
  */
 public class Numberings {
 
@@ -67,7 +66,6 @@ public class Numberings {
 
     /**
      * Builder to build {@link NumberingRenderData}
-     *
      */
     public static class NumberingBuilder implements RenderDataBuilder<NumberingRenderData> {
 
@@ -78,17 +76,17 @@ public class Numberings {
         }
 
         public NumberingBuilder addItem(ParagraphRenderData item) {
-            data.getItems().add(item);
+            data.getItems().add(new NumberingItemRenderData(0, item));
             return this;
         }
 
         public NumberingBuilder addItem(TextRenderData item) {
-            data.getItems().add(Paragraphs.of(item).create());
+            data.getItems().add(new NumberingItemRenderData(0, Paragraphs.of(item).create()));
             return this;
         }
 
         public NumberingBuilder addItem(PictureRenderData item) {
-            data.getItems().add(Paragraphs.of(item).create());
+            data.getItems().add(new NumberingItemRenderData(0, Paragraphs.of(item).create()));
             return this;
         }
 
