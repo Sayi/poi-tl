@@ -22,7 +22,6 @@ import com.deepoove.poi.data.style.ParagraphStyle;
 
 /**
  * @author Sayi
- *
  */
 public class ParagraphRenderData implements RenderData {
 
@@ -60,6 +59,11 @@ public class ParagraphRenderData implements RenderData {
 
     public void setParagraphStyle(ParagraphStyle style) {
         this.paragraphStyle = style;
+    }
+
+    @Override
+    public String toString() {
+        return "ParagraphRenderData [contents=" + contents + "]";
     }
 
 }

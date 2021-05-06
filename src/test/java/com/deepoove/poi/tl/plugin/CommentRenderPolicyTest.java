@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.util.LocaleUtil;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -18,12 +19,11 @@ import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.plugin.comment.CommentRenderData;
 import com.deepoove.poi.plugin.comment.CommentRenderPolicy;
 import com.deepoove.poi.plugin.comment.Comments;
 import com.deepoove.poi.plugin.comment.Comments.CommentBuilder;
-import com.deepoove.poi.policy.DocumentRenderPolicy;
-import com.deepoove.poi.tl.source.XWPFTestSupport;
 
 public class CommentRenderPolicyTest {
 
@@ -88,16 +88,15 @@ public class CommentRenderPolicyTest {
         documentBuilder.addParagraph(Paragraphs.of("鹅，鹅，鹅，").addComment(comment2).addText("向天歌。").center().create());
         documentBuilder.addParagraph(Paragraphs.of("白毛浮绿水，红掌").addComment(comment3).addText("清波。").center().create());
         Map<String, Object> data = new HashMap<>();
-        data.put("var", documentBuilder.create());
+        data.put(XWPFTemplate.DEFAULT_TEMPLATE_TAG_NAME, documentBuilder.create());
 
-        Configure config = Configure.builder().bind("var", new DocumentRenderPolicy()).build();
-        XWPFTemplate.compile(XWPFTestSupport.generateTemplate(), config)
+        XWPFTemplate.create(Style.builder().buildFontFamily("微软雅黑").buildFontSize(14f).build())
                 .render(data)
                 .writeToFile("out_render_comment_YONG.docx");
     }
 
     private CommentBuilder newCommentBuilder() {
-        return Comments.of().signature("Sayi", "s", Calendar.getInstance());
+        return Comments.of().signature("Sayi", "s", LocaleUtil.getLocaleCalendar());
     }
 
 }

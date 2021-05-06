@@ -2,8 +2,8 @@ package com.deepoove.poi.tl.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -41,7 +41,7 @@ public class ElementTemplateFactoryTest {
 
         XWPFDocument doc = new XWPFDocument();
         doc.createParagraph().createRun().setText("{{name?a=1&b=2}}");
-        ByteArrayInputStream inputStream = XWPFTestSupport.readInputStream(doc);
+        InputStream inputStream = XWPFTestSupport.readInputStream(doc);
         XWPFTemplate template = XWPFTemplate.compile(inputStream, config)
                 .render(Collections.singletonMap("name", "123"));
         XWPFDocument document = XWPFTestSupport.readNewDocument(template);

@@ -18,6 +18,7 @@ package com.deepoove.poi.policy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -43,17 +44,12 @@ import com.deepoove.poi.xwpf.XWPFRunWrapper;
  * picture render
  * 
  * @author Sayi
- *
  */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
     @Override
     protected boolean validate(PictureRenderData data) {
-        if (null == data) return false;
-        if (null == data.getPictureType()) {
-            throw new RenderException("PictureRenderData must set picture type!");
-        }
-        return true;
+        return null != data && null != data.getPictureSupplier();
     }
 
     @Override
@@ -74,9 +70,17 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            byte[] imageBytes = picture.getImage();
+            Supplier<byte[]> supplier = picture.getPictureSupplier();
+            byte[] imageBytes = supplier.get();
             if (null == imageBytes) {
                 throw new IllegalStateException("Can't get input data from picture!");
+            }
+            PictureType pictureType = picture.getPictureType();
+            if (null == pictureType) {
+                pictureType = PictureType.suggestFileType(imageBytes);
+            }
+            if (null == pictureType) {
+                throw new RenderException("PictureRenderData must set picture type!");
             }
 
             PictureStyle style = picture.getPictureStyle();
@@ -84,9 +88,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
             int width = style.getWidth();
             int height = style.getHeight();
 
-            PictureType pictureType = picture.getPictureType();
             if (pictureType == PictureType.SVG) {
-                imageBytes = SVGConvertor.toPNG(imageBytes, (float) width, (float) height);
+                imageBytes = SVGConvertor.toPng(imageBytes, (float) width, (float) height);
                 pictureType = PictureType.PNG;
             }
             if (!isSetSize(style)) {
@@ -96,7 +99,8 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                 if (style.getScalePattern() == WidthScalePattern.FIT) {
                     BodyContainer bodyContainer = BodyContainerFactory
                             .getBodyContainer(((IBodyElement) run.getParent()).getBody());
-                    int pageWidth = UnitUtils.twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
+                    int pageWidth = UnitUtils
+                            .twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
                     if (width > pageWidth) {
                         double ratio = pageWidth / (double) width;
                         width = pageWidth;

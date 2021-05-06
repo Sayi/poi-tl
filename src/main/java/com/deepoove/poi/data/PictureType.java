@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package com.deepoove.poi.data;
+
 import static com.deepoove.poi.util.ByteUtils.endsWith;
 import static com.deepoove.poi.util.ByteUtils.startsWith;
 
@@ -100,26 +101,16 @@ public enum PictureType {
         PictureType format = null;
 
         imgFile = imgFile.toLowerCase();
-        if (imgFile.endsWith(".emf"))
-            format = EMF;
-        else if (imgFile.endsWith(".wmf"))
-            format = WMF;
-        else if (imgFile.endsWith(".pict"))
-            format = PICT;
-        else if (imgFile.endsWith(".jpeg") || imgFile.endsWith(".jpg"))
-            format = JPEG;
-        else if (imgFile.endsWith(".png"))
-            format = PNG;
-        else if (imgFile.endsWith(".dib"))
-            format = DIB;
-        else if (imgFile.endsWith(".gif"))
-            format = GIF;
-        else if (imgFile.endsWith(".tiff"))
-            format = TIFF;
-        else if (imgFile.endsWith(".eps"))
-            format = EPS;
-        else if (imgFile.endsWith(".bmp"))
-            format = BMP;
+        if (imgFile.endsWith(".emf")) format = EMF;
+        else if (imgFile.endsWith(".wmf")) format = WMF;
+        else if (imgFile.endsWith(".pict")) format = PICT;
+        else if (imgFile.endsWith(".jpeg") || imgFile.endsWith(".jpg")) format = JPEG;
+        else if (imgFile.endsWith(".png")) format = PNG;
+        else if (imgFile.endsWith(".dib")) format = DIB;
+        else if (imgFile.endsWith(".gif")) format = GIF;
+        else if (imgFile.endsWith(".tiff")) format = TIFF;
+        else if (imgFile.endsWith(".eps")) format = EPS;
+        else if (imgFile.endsWith(".bmp")) format = BMP;
         else if (imgFile.endsWith(".wpg")) format = WPG;
         else {
             throw new IllegalArgumentException(
@@ -150,7 +141,8 @@ public enum PictureType {
             return BMP;
         }
         String str = new String(bytes);
-        if (str.toLowerCase().indexOf("<svg") != -1) {
+        // TODO better compare
+        if (str.substring(0, 100).indexOf("<svg") != -1) {
             return SVG;
         }
         throw new IllegalArgumentException("Unable to identify the picture type from byte");

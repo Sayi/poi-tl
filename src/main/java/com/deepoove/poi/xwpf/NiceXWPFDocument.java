@@ -34,35 +34,13 @@ import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.util.IOUtils;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFactory;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTChartSpace;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CommentsDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +56,6 @@ import com.deepoove.poi.util.UnitUtils;
  * Enhanced XWPFDocument
  * 
  * @author Sayi
- *
  */
 public class NiceXWPFDocument extends XWPFDocument {
 
@@ -207,7 +184,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         // if we have an existing document, we must determine the next
         // free number first.
         cTAbstractNum.setAbstractNumId(numberingWrapper.getNextAbstractNumID());
-        // CTMultiLevelType.setVal(STMultiLevelType.HYBRID_MULTILEVEL);
+        // CTMultiLevelType addNewMultiLevelType = cTAbstractNum.addNewMultiLevelType();
+        // addNewMultiLevelType.setVal(STMultiLevelType.HYBRID_MULTILEVEL);
         for (int i = 0; i < numFmts.length; i++) {
             NumberingFormat numFmt = numFmts[i];
             CTLvl cTLvl = cTAbstractNum.addNewLvl();
@@ -223,6 +201,11 @@ public class NiceXWPFDocument extends XWPFDocument {
             cTLvl.setIlvl(BigInteger.valueOf(i));
             if (fmt == STNumberFormat.BULLET) {
                 cTLvl.addNewLvlJc().setVal(STJc.LEFT);
+                CTRPr addNewRPr = cTLvl.addNewRPr();
+                CTFonts ctFonts = addNewRPr.addNewRFonts();
+                ctFonts.setAscii("Wingdings");
+                ctFonts.setHAnsi("Wingdings");
+                ctFonts.setHint(STHint.DEFAULT);
             }
         }
 

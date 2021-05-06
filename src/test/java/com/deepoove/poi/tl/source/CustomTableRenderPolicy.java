@@ -7,6 +7,7 @@ import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.TableTools;
+import com.deepoove.poi.util.UnitUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
@@ -40,7 +41,7 @@ public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
         XWPFTable table = bodyContainer.insertNewTable(run, row, col);
 
         // 表格宽度
-        TableTools.widthTable(table, 14.63f, col);
+        TableTools.setWidth(table, UnitUtils.cm2Twips(14.63f) + "", null);
         // 边框和样式
         TableTools.borderTable(table, BorderStyle.DEFAULT);
 

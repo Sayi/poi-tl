@@ -27,11 +27,16 @@ import java.util.List;
 
 import org.apache.poi.Version;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.exception.ResolverException;
+import com.deepoove.poi.policy.DocumentRenderPolicy;
 import com.deepoove.poi.render.DefaultRender;
 import com.deepoove.poi.render.Render;
 import com.deepoove.poi.resolver.Resolver;
@@ -39,20 +44,22 @@ import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.util.Preconditions;
+import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * The facade of word(docx) template
- * 
  * <p>
- * It works by expanding tags in a template using values provided in a Map or
- * Object.
+ * It works by expanding tags in a template using values provided in a Map or Object.
  * </p>
  * 
  * @author Sayi
- * @since 0.0.1
  */
 public class XWPFTemplate implements Closeable {
+
+    public static final String DEFAULT_TEMPLATE_TAG_NAME = "template";
+    public static final String TEMPLATE_TAG = "{{" + DEFAULT_TEMPLATE_TAG_NAME + "}}";
+
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
     private static final String SUPPORT_MINIMUM_VERSION = "4.1.2";
 
@@ -76,30 +83,94 @@ public class XWPFTemplate implements Closeable {
     private XWPFTemplate() {
     }
 
-    public static XWPFTemplate compile(String path) {
-        return compile(new File(path));
+    /**
+     * Compile template from absolute file path
+     * 
+     * @param absolutePath template path
+     * @return
+     */
+    public static XWPFTemplate compile(String absolutePath) {
+        return compile(new File(absolutePath));
     }
 
-    public static XWPFTemplate compile(File file) {
-        return compile(file, Configure.createDefault());
+    /**
+     * Compile template from file
+     * 
+     * @param templateFile template file
+     * @return
+     */
+    public static XWPFTemplate compile(File templateFile) {
+        return compile(templateFile, Configure.createDefault());
     }
 
+    /**
+     * Compile template from template input stream
+     * 
+     * @param inputStream template input
+     * @return
+     */
     public static XWPFTemplate compile(InputStream inputStream) {
         return compile(inputStream, Configure.createDefault());
     }
 
-    public static XWPFTemplate compile(String path, Configure config) {
-        return compile(new File(path), config);
+    /**
+     * Compile template from document
+     * 
+     * @param document template document
+     * @return
+     */
+    public static XWPFTemplate compile(XWPFDocument document) {
+        return compile(document, Configure.createDefault());
     }
 
-    public static XWPFTemplate compile(File file, Configure config) {
+    /**
+     * Compile template from absolute file path with configure
+     * 
+     * @param absolutePath absolute template file path
+     * @param config
+     * @return
+     */
+    public static XWPFTemplate compile(String absolutePath, Configure config) {
+        return compile(new File(absolutePath), config);
+    }
+
+    /**
+     * Compile template from file with configure
+     * 
+     * @param templateFile template file
+     * @param config
+     * @return
+     */
+    public static XWPFTemplate compile(File templateFile, Configure config) {
         try {
-            return compile(new FileInputStream(file), config);
+            return compile(new FileInputStream(templateFile), config);
         } catch (FileNotFoundException e) {
-            throw new ResolverException("Cannot find the file [" + file.getPath() + "]", e);
+            throw new ResolverException("Cannot find the file [" + templateFile.getPath() + "]", e);
         }
     }
 
+    /**
+     * Compile template from document with configure
+     * 
+     * @param document template document
+     * @param config
+     * @return
+     */
+    public static XWPFTemplate compile(XWPFDocument document, Configure config) {
+        try {
+            return compile(PoitlIOUtils.docToInputStream(document), config);
+        } catch (IOException e) {
+            throw new ResolverException("Cannot compile document", e);
+        }
+    }
+
+    /**
+     * Compile template from template input stream with configure
+     * 
+     * @param inputStream template input
+     * @param config
+     * @return
+     */
     public static XWPFTemplate compile(InputStream inputStream, Configure config) {
         try {
             XWPFTemplate template = new XWPFTemplate();
@@ -118,6 +189,32 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
+     * Create new template with tag {@link XWPFTemplate#TEMPLATE_TAG}
+     * 
+     * @return template
+     * @since 1.10.0
+     */
+    public static XWPFTemplate create() {
+        return create(null);
+    }
+
+    /**
+     * Create new template with styled tag {@link XWPFTemplate#TEMPLATE_TAG}
+     * 
+     * @param templateTagStyle the tag text style
+     * @return template
+     * @since 1.10.0
+     */
+    public static XWPFTemplate create(Style templateTagStyle) {
+        XWPFDocument document = new NiceXWPFDocument();
+        XWPFRun run = document.createParagraph().createRun();
+        run.setText(TEMPLATE_TAG);
+        StyleUtils.styleRun(run, templateTagStyle);
+        ConfigureBuilder builder = Configure.builder().bind(DEFAULT_TEMPLATE_TAG_NAME, new DocumentRenderPolicy());
+        return compile(document, builder.build());
+    }
+
+    /**
      * Render the template by data model
      * 
      * @param model render data
@@ -129,8 +226,8 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * Render the template by data model and write to OutputStream, do'not forget
-     * invoke {@link XWPFTemplate#close()}, {@link OutputStream#close()}
+     * Render the template by data model and write to OutputStream, do'not forget invoke {@link XWPFTemplate#close()},
+     * {@link OutputStream#close()}
      * 
      * @param model render data
      * @param out   output
@@ -144,8 +241,7 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * write to output stream, do'not forget invoke {@link XWPFTemplate#close()},
-     * {@link OutputStream#close()} finally
+     * write to output stream, do'not forget invoke {@link XWPFTemplate#close()}, {@link OutputStream#close()} finally
      * 
      * @param out eg.ServletOutputStream
      * @throws IOException
@@ -209,6 +305,11 @@ public class XWPFTemplate implements Closeable {
         return eleTemplates;
     }
 
+    /**
+     * Get document
+     * 
+     * @return
+     */
     public NiceXWPFDocument getXWPFDocument() {
         return this.doc;
     }

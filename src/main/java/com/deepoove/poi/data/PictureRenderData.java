@@ -18,6 +18,7 @@ package com.deepoove.poi.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.util.function.Supplier;
 
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.util.BufferedImageUtils;
@@ -27,13 +28,12 @@ import com.deepoove.poi.util.ByteUtils;
  * Picture structure
  * 
  * @author Sayi
- *
  */
 public class PictureRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
 
-    private byte[] image;
+    private Supplier<byte[]> pictureSupplier;
     private PictureType pictureType;
     private PictureStyle pictureStyle;
     /**
@@ -63,7 +63,7 @@ public class PictureRenderData implements RenderData {
      * @param picture Local file
      */
     public PictureRenderData(int width, int height, File picture) {
-        this(width, height, PictureType.suggestFileType(picture.getPath()), ByteUtils.getLocalByteArray(picture));
+        this(width, height, PictureType.suggestFileType(picture.getPath()), () -> ByteUtils.getLocalByteArray(picture));
     }
 
     /**
@@ -87,7 +87,7 @@ public class PictureRenderData implements RenderData {
      * @param image
      */
     public PictureRenderData(int width, int height, PictureType pictureType, BufferedImage image) {
-        this(width, height, pictureType, BufferedImageUtils.getBufferByteArray(image, pictureType.format()));
+        this(width, height, pictureType, () -> BufferedImageUtils.getBufferByteArray(image, pictureType.format()));
     }
 
     /**
@@ -103,33 +103,15 @@ public class PictureRenderData implements RenderData {
         this.pictureStyle.setWidth(width);
         this.pictureStyle.setHeight(height);
         this.pictureType = pictureType;
-        this.image = data;
+        this.pictureSupplier = () -> data;
     }
 
-    @Deprecated
-    public PictureRenderData(int width, int height, String format, InputStream input) {
-        this(width, height, format, ByteUtils.toByteArray(input));
-    }
-
-    @Deprecated
-    public PictureRenderData(int width, int height, String format, BufferedImage image) {
-        this(width, height, format, BufferedImageUtils.getBufferByteArray(image, format));
-    }
-
-    /**
-     * 
-     * @param width
-     * @param height
-     * @param format .png、.jpg
-     * @param data
-     */
-    @Deprecated
-    public PictureRenderData(int width, int height, String format, byte[] data) {
+    public PictureRenderData(int width, int height, PictureType pictureType, Supplier<byte[]> supplier) {
         this.pictureStyle = new PictureStyle();
         this.pictureStyle.setWidth(width);
         this.pictureStyle.setHeight(height);
-        this.pictureType = PictureType.suggestFileType(format);
-        this.image = data;
+        this.pictureType = pictureType;
+        this.pictureSupplier = supplier;
     }
 
     public PictureStyle getPictureStyle() {
@@ -140,12 +122,12 @@ public class PictureRenderData implements RenderData {
         this.pictureStyle = pictureStyle;
     }
 
-    public byte[] getImage() {
-        return image;
+    public Supplier<byte[]> getPictureSupplier() {
+        return pictureSupplier;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setPictureSupplier(Supplier<byte[]> pictureSupplier) {
+        this.pictureSupplier = pictureSupplier;
     }
 
     public String getAltMeta() {

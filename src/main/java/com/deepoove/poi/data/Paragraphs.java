@@ -31,7 +31,6 @@ import com.deepoove.poi.xwpf.XWPFShadingPattern;
  * Factory to create {@link ParagraphRenderData}
  * 
  * @author Sayi
- *
  */
 public class Paragraphs {
 
@@ -60,7 +59,6 @@ public class Paragraphs {
 
     /**
      * Builder to build {@link ParagraphRenderData}
-     *
      */
     public static class ParagraphBuilder implements RenderDataBuilder<ParagraphRenderData> {
 
@@ -142,6 +140,15 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withIndentFirstLineChars(lineChars).build();
             } else {
                 this.paragraphStyle.setIndentFirstLineChars(lineChars);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder indentLeft(double lineChars) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withIndentLeftChars(lineChars).build();
+            } else {
+                this.paragraphStyle.setIndentLeftChars(lineChars);
             }
             return this;
         }

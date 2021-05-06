@@ -16,15 +16,29 @@
 
 package com.deepoove.poi.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PoitlIOUtils {
 
     private static Logger logger = LoggerFactory.getLogger(PoitlIOUtils.class);
+
+    public static InputStream docToInputStream(XWPFDocument doc) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            doc.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } finally {
+            closeQuietlyMulti(doc, out);
+        }
+    }
 
     public static void closeLoggerQuietly(final Closeable c) {
         if (c != null) {
@@ -46,7 +60,8 @@ public class PoitlIOUtils {
         if (c != null) {
             try {
                 c.close();
-            } catch (final IOException ignored) {}
+            } catch (final IOException ignored) {
+            }
         }
     }
 

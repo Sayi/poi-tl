@@ -15,6 +15,7 @@
  */
 package com.deepoove.poi.data;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +30,14 @@ public class NumberingRenderData implements RenderData {
     /**
      * format for numbering
      */
-    private NumberingFormat format;
+    private List<NumberingFormat> multiFormats = new ArrayList<>();
+
     /**
      * each item in numbering
      */
-    private List<ParagraphRenderData> items;
+    private List<NumberingItemRenderData> items = new ArrayList<>();
 
-    NumberingRenderData() {
+    public NumberingRenderData() {
     }
 
     public NumberingRenderData(List<ParagraphRenderData> items) {
@@ -43,8 +45,10 @@ public class NumberingRenderData implements RenderData {
     }
 
     public NumberingRenderData(NumberingFormat format, List<ParagraphRenderData> items) {
-        this.format = format;
-        this.items = items;
+        this.multiFormats.add(format);
+        if (null != items) {
+            items.forEach(item -> this.items.add(new NumberingItemRenderData(0, item)));
+        }
     }
 
     public NumberingRenderData(TextRenderData... text) {
@@ -52,14 +56,15 @@ public class NumberingRenderData implements RenderData {
     }
 
     public NumberingRenderData(NumberingFormat format, TextRenderData... text) {
-        this.format = format;
+        this.multiFormats.add(format);
         if (null != text) {
             this.items = Arrays.stream(text).map(data -> {
-                return Paragraphs.of(data).create();
+                return new NumberingItemRenderData(0, Paragraphs.of(data).create());
             }).collect(Collectors.toList());
         }
     }
 
+    @Deprecated
     public static NumberingRenderData build(String... text) {
         if (null != text) {
             return new NumberingRenderData(Arrays.stream(text).map(TextRenderData::new).map(data -> {
@@ -73,20 +78,20 @@ public class NumberingRenderData implements RenderData {
         return new NumberingRenderData(NumberingFormat.BULLET, text);
     }
 
-    public List<ParagraphRenderData> getItems() {
+    public List<NumberingFormat> getFormats() {
+        return multiFormats;
+    }
+
+    public void setFormats(List<NumberingFormat> formats) {
+        this.multiFormats = formats;
+    }
+
+    public List<NumberingItemRenderData> getItems() {
         return items;
     }
 
-    public void setItems(List<ParagraphRenderData> items) {
+    public void setItems(List<NumberingItemRenderData> items) {
         this.items = items;
-    }
-
-    public NumberingFormat getFormat() {
-        return format;
-    }
-
-    public void setFormat(NumberingFormat format) {
-        this.format = format;
     }
 
 }

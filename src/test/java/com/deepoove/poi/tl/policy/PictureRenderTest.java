@@ -65,7 +65,8 @@ public class PictureRenderTest {
         // alt attribute for not exist image
         datas.put("image", Pictures.ofLocal("not_exist_image.png").altMeta("No Image!").create());
 
-        XWPFTemplate.compile("src/test/resources/template/render_picture.docx").render(datas)
+        XWPFTemplate.compile("src/test/resources/template/render_picture.docx")
+                .render(datas)
                 .writeToFile("out_render_picture.docx");
 
     }

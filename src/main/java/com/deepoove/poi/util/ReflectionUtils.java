@@ -21,10 +21,6 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.poi.ooxml.POIXMLRelation;
-import org.apache.poi.ooxml.POIXMLRelation.NoArgConstructor;
-import org.apache.poi.ooxml.POIXMLRelation.PackagePartConstructor;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
 
 import com.deepoove.poi.exception.ReflectionException;
 
