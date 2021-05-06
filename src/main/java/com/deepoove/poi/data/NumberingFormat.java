@@ -27,41 +27,56 @@ public class NumberingFormat implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static interface Builders {
-        /**
-         * 1. 2. 3.
-         */
-        Builder DECIMAL_BUILDER = builder("%{0}.").withNumFmt(NumFormat.DECIMAL);
-        /**
-         * 1) 2) 3)
-         */
-        Builder DECIMAL_PARENTHESES_BUILDER = builder("%{0})").withNumFmt(NumFormat.DECIMAL);
-
-        /**
-         * a. b. c.
-         */
-        Builder LOWER_LETTER_BUILDER = builder("%{0}.").withNumFmt(NumFormat.LOWER_LETTER);
-        /**
-         * i ⅱ ⅲ
-         */
-        Builder LOWER_ROMAN_BUILDER = builder("%{0}.").withNumFmt(NumFormat.LOWER_ROMAN);
-        /**
-         * A. B. C.
-         */
-        Builder UPPER_LETTER_BUILDER = builder("%{0}.").withNumFmt(NumFormat.UPPER_LETTER);
-        /**
-         * Ⅰ Ⅱ Ⅲ
-         */
-        Builder UPPER_ROMAN_BUILDER = builder("%{0}.").withNumFmt(NumFormat.UPPER_ROMAN);
-    }
-
     public static final NumberingFormat BULLET = new NumberingFormat(NumFormat.BULLET, "●");
-    public static final NumberingFormat DECIMAL = Builders.DECIMAL_BUILDER.build(0);
-    public static final NumberingFormat DECIMAL_PARENTHESES = Builders.DECIMAL_PARENTHESES_BUILDER.build(0);
-    public static final NumberingFormat LOWER_LETTER = Builders.LOWER_LETTER_BUILDER.build(0);
-    public static final NumberingFormat LOWER_ROMAN = Builders.LOWER_ROMAN_BUILDER.build(0);
-    public static final NumberingFormat UPPER_LETTER = Builders.UPPER_LETTER_BUILDER.build(0);
-    public static final NumberingFormat UPPER_ROMAN = Builders.UPPER_ROMAN_BUILDER.build(0);
+    public static final NumberingFormat DECIMAL;
+    public static final NumberingFormat DECIMAL_PARENTHESES;
+    public static final NumberingFormat LOWER_LETTER;
+    public static final NumberingFormat LOWER_ROMAN;
+    public static final NumberingFormat UPPER_LETTER;
+    public static final NumberingFormat UPPER_ROMAN;
+
+    /**
+     * 1. 2. 3.
+     */
+    public static final Builder DECIMAL_BUILDER;
+    /**
+     * 1) 2) 3)
+     */
+    public static final Builder DECIMAL_PARENTHESES_BUILDER;
+
+    /**
+     * a. b. c.
+     */
+    public static final Builder LOWER_LETTER_BUILDER;
+    /**
+     * i ⅱ ⅲ
+     */
+    public static final Builder LOWER_ROMAN_BUILDER;
+    /**
+     * A. B. C.
+     */
+    public static final Builder UPPER_LETTER_BUILDER;
+    /**
+     * Ⅰ Ⅱ Ⅲ
+     */
+    public static final Builder UPPER_ROMAN_BUILDER;
+
+    static {
+        DECIMAL_BUILDER = builder("%{0}.").withNumFmt(NumFormat.DECIMAL);
+        DECIMAL_PARENTHESES_BUILDER = builder("%{0})").withNumFmt(NumFormat.DECIMAL);
+
+        LOWER_LETTER_BUILDER = builder("%{0}.").withNumFmt(NumFormat.LOWER_LETTER);
+        LOWER_ROMAN_BUILDER = builder("%{0}.").withNumFmt(NumFormat.LOWER_ROMAN);
+        UPPER_LETTER_BUILDER = builder("%{0}.").withNumFmt(NumFormat.UPPER_LETTER);
+        UPPER_ROMAN_BUILDER = builder("%{0}.").withNumFmt(NumFormat.UPPER_ROMAN);
+
+        DECIMAL = DECIMAL_BUILDER.build(0);
+        DECIMAL_PARENTHESES = DECIMAL_PARENTHESES_BUILDER.build(0);
+        LOWER_LETTER = LOWER_LETTER_BUILDER.build(0);
+        LOWER_ROMAN = LOWER_ROMAN_BUILDER.build(0);
+        UPPER_LETTER = UPPER_LETTER_BUILDER.build(0);
+        UPPER_ROMAN = UPPER_ROMAN_BUILDER.build(0);
+    }
 
     private int numFmt;
     private String lvlText;

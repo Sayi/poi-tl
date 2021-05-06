@@ -104,7 +104,7 @@ public class NumberingRenderTest {
     private NumberingRenderData getMultiLevel() {
         NumberingRenderData multiNumbering = new NumberingRenderData();
         multiNumbering.getFormats().add(NumberingFormat.BULLET);
-        multiNumbering.getFormats().add(NumberingFormat.Builders.DECIMAL_PARENTHESES_BUILDER.build(1));
+        multiNumbering.getFormats().add(NumberingFormat.DECIMAL_PARENTHESES_BUILDER.build(1));
 
         List<NumberingItemRenderData> items = multiNumbering.getItems();
 
