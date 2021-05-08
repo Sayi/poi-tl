@@ -361,7 +361,7 @@ public final class StyleUtils {
             paragraph.setAlignment(style.getAlign());
         }
 
-        if (0 != style.getSpacing()) {
+        if (-1 != style.getSpacing()) {
             paragraph.setSpacingBetween(style.getSpacing(),
                     null == style.getSpacingRule() ? LineSpacingRule.AUTO : style.getSpacingRule());
         }
@@ -459,7 +459,7 @@ public final class StyleUtils {
     public static void styleCTBorder(CTBorder b, BorderStyle style) {
         if (null != style.getType()) b.setVal(STBorder.Enum.forString(style.getType().toString().toLowerCase()));
         b.setSz(BigInteger.valueOf(style.getSize()));
-        b.setSpace(BigInteger.valueOf(4));
+        b.setSpace(BigInteger.valueOf(0));
         if (null != style.getColor()) b.setColor(style.getColor());
     }
 

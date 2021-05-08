@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.policy;
+package com.deepoove.poi.tl.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,19 +11,16 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
-import com.deepoove.poi.plugin.table.LoopColumnTableRenderPolicy;
-import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.plugin.table.HackLoopTableRenderPolicy;
 
 @DisplayName("Example for HackLoop Table")
-public class LoopColumnTableRenderPolicyTest {
+public class HackLoopTableRenderPolicyTest {
 
-    String resource = "src/test/resources/template/render_loopcolumn.docx";
+    String resource = "src/test/resources/template/render_hackloop.docx";
     PaymentHackData data = new PaymentHackData();
 
     @BeforeEach
     public void init() {
-        data.setTotal("总共：7200");
-
         List<Goods> goods = new ArrayList<>();
         Goods good = new Goods();
         good.setCount(4);
@@ -34,7 +31,6 @@ public class LoopColumnTableRenderPolicyTest {
         good.setTax(new Random().nextInt(10) + 20);
         good.setTotalPrice(1600);
         good.setPicture(Pictures.ofLocal("src/test/resources/earth.png").size(24, 24).create());
-        goods.add(good);
         goods.add(good);
         goods.add(good);
         goods.add(good);
@@ -49,8 +45,9 @@ public class LoopColumnTableRenderPolicyTest {
         labors.add(labor);
         labors.add(labor);
         labors.add(labor);
-        labors.add(labor);
         data.setLabors(labors);
+
+        data.setTotal("1024");
 
         // same line
         data.setGoods2(goods);
@@ -60,13 +57,13 @@ public class LoopColumnTableRenderPolicyTest {
 
     @Test
     public void testPaymentHackExample() throws Exception {
-        LoopColumnTableRenderPolicy hackLoopTableRenderPolicy = new LoopColumnTableRenderPolicy();
-        RenderPolicy hackLoopSameLineTableRenderPolicy = new LoopColumnTableRenderPolicy(true);
+        HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+        HackLoopTableRenderPolicy hackLoopSameLineTableRenderPolicy = new HackLoopTableRenderPolicy(true);
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).bind("goods2", hackLoopSameLineTableRenderPolicy)
                 .bind("labors2", hackLoopSameLineTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("out_render_loopcolumn.docx");
+        template.writeToFile("out_render_looprow.docx");
     }
 
 }

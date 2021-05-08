@@ -20,14 +20,12 @@ import java.util.List;
 
 /**
  * @author Sayi
- *
  */
 public class DocumentRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
     /**
-     * {@link ParagraphRenderData} {@link NumberingRenderData}
-     * {@link TableRenderData}
+     * {@link ParagraphRenderData} {@link NumberingRenderData} {@link TableRenderData}
      */
     private List<RenderData> contents = new ArrayList<>();
 

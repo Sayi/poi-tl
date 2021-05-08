@@ -22,7 +22,6 @@ import com.deepoove.poi.data.style.CellStyle;
 
 /**
  * @author Sayi
- *
  */
 public class CellRenderData implements RenderData {
 
@@ -49,6 +48,13 @@ public class CellRenderData implements RenderData {
 
     public void setCellStyle(CellStyle cellStyle) {
         this.cellStyle = cellStyle;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CellRenderData [").append(paragraphs).append("]");
+        return builder.toString();
     }
 
 }

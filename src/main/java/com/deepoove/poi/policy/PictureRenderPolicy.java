@@ -73,7 +73,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
             Supplier<byte[]> supplier = picture.getPictureSupplier();
             byte[] imageBytes = supplier.get();
             if (null == imageBytes) {
-                throw new IllegalStateException("Can't get input data from picture!");
+                throw new IllegalStateException("Can't read picture byte arrays!");
             }
             PictureType pictureType = picture.getPictureType();
             if (null == pictureType) {

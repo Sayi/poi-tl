@@ -73,4 +73,11 @@ public class TableRenderData implements RenderData {
         return rows.size();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TableRenderData [rows=").append(rows).append("]");
+        return builder.toString();
+    }
+
 }
