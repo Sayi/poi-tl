@@ -54,7 +54,7 @@ public class ParagraphStyle implements Serializable {
     /**
      * Example: 1.5 spacing
      */
-    private double spacing;
+    private double spacing = -1;
     private LineSpacingRule spacingRule;
 
     // TODO ADD numbering style Class
@@ -327,7 +327,7 @@ public class ParagraphStyle implements Serializable {
         private Boolean wordWrap;
         private double spacingBeforeLines;
         private double spacingAfterLines;
-        private double spacing;
+        private double spacing = -1;
         private LineSpacingRule spacingRule;
         private Style glyphStyle;
         private long numId = -1;

@@ -52,4 +52,11 @@ public class RowRenderData implements RenderData {
         return cells.size();
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("RowRenderData [cells=").append(cells).append("]");
+        return builder.toString();
+    }
+
 }
