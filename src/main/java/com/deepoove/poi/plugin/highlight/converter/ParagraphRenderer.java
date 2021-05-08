@@ -20,12 +20,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.codewaves.codehighlight.core.StyleRenderer;
 import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.Paragraphs.ParagraphBuilder;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.Texts.TextBuilder;
+import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.plugin.highlight.HighlightStyle;
@@ -33,13 +38,15 @@ import com.deepoove.poi.util.StyleUtils;
 
 /**
  * @author Sayi
- *
  */
 public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
+
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ParagraphRenderer.class);
 
     private ParagraphBuilder of;
     private LinkedList<String> styleStack;
     private String blockResult;
+    private String abortResult;
 
     private String fontFamily;
     private double fontSize;
@@ -50,7 +57,7 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
         try {
             cssStyle = StylesheetParser.parse("highlightcss/" + theme + ".css");
             this.fontFamily = null == style ? null : style.getFontFamily();
-            this.fontSize = null == style ? null : style.getFontSize();
+            this.fontSize = null == style ? 0f : style.getFontSize();
         } catch (Exception e) {
             throw new IllegalArgumentException("Illegal highlight theme:" + theme, e);
         }
@@ -75,7 +82,18 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
             defaultTextStyle.setFontFamily(fontFamily);
             defaultTextStyle.setFontSize(fontSize);
         }
-        of.paraStyle(paragraphStyle);
+        if (null != paragraphStyle.getBackgroundColor()) {
+            BorderStyle borderStyle = BorderStyle.builder()
+                    .withColor(paragraphStyle.getBackgroundColor())
+                    .withType(XWPFBorderType.SINGLE)
+                    .withSize(48)
+                    .build();
+            paragraphStyle.setLeftBorder(borderStyle);
+            paragraphStyle.setRightBorder(borderStyle);
+            paragraphStyle.setBottomBorder(borderStyle);
+            paragraphStyle.setTopBorder(borderStyle);
+        }
+        of.paraStyle(paragraphStyle).wordWrap().left();
     }
 
     @Override
@@ -136,13 +154,18 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
 
     @Override
     public void onAbort(CharSequence code, Exception e) {
-        // e.printStackTrace();
-        // of.addText(Texts.of(code.toString()).create());
-        throw new RuntimeException("Abort highlight code:" + code, e);
+        LOGGER.debug("Unable parse highlight code", e);
+        abortResult = code.toString();
+//         of.addText(Texts.of(code.toString()).create());
     }
 
     public ParagraphRenderData getResult() {
-        return of.create();
+        ParagraphRenderData data = of.create();
+        if (null != abortResult) {
+            data.getContents().clear();
+            data.getContents().add(Texts.of(abortResult).create());
+        }
+        return data;
     }
 
 }
