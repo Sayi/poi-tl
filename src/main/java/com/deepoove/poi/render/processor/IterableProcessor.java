@@ -90,7 +90,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
         NumberingContinue numbringContinue = NumberingContinue.of(bodyContainer, startPos, endPos, iterableTemplate);
         IterableContext context = new IterableContext(startPos, endPos, numbringContinue);
 
-        foreach(iterableTemplate, bodyContainer, context, compute.iterator());
+        EnvIterator.foreach(compute.iterator(), model -> next(iterableTemplate, bodyContainer, context, model));
 
         // clear self iterable template
         for (int i = endPos - 1; i > startPos; i--) {

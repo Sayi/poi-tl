@@ -16,23 +16,18 @@
 
 package com.deepoove.poi.render.processor;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.render.compute.EnvModel;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
-import com.deepoove.poi.xwpf.ParentContext;
 
 public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor implements Iteration {
 
@@ -71,24 +66,6 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
 
     protected abstract void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer,
             Iterable<?> compute);
-    
-    protected void foreach(IterableTemplate iterableTemplate, ParentContext parentContext, IterableContext context,
-            Iterator<?> iterator) {
-        Map<String, Object> env = new HashMap<>();
-        int index = 0;
-        boolean hasNext = iterator.hasNext();
-        while (hasNext) {
-            Object root = iterator.next();
-            hasNext = iterator.hasNext();
-            env.put("_is_first", index == 0);
-            env.put("_is_last", !hasNext);
-            env.put("_has_next", hasNext);
-            env.put("_is_even_item", index % 2 == 1);
-            env.put("_is_odd_item", index % 2 == 0);
-            env.put("_index", index++);
-            next(iterableTemplate, parentContext, context, EnvModel.of(root, env));
-        }
-    }
 
     protected void handleOnce(IterableTemplate iterableTemplate, Object compute) {
         process(iterableTemplate.getTemplates(), compute);
