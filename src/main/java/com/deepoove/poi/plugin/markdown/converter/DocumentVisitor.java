@@ -165,7 +165,7 @@ public class DocumentVisitor extends AbstractVisitor {
         highlight.setStyle(style.getHighlightStyle());
         try {
             DocumentRenderData apply = highlightConverter.convert(highlight);
-            apply.getContents().forEach(doc -> {
+            for (RenderData doc : apply.getContents()) {
                 if (doc instanceof ParagraphRenderData) {
                     ParagraphStyle paragraphStyle = ((ParagraphRenderData) doc).getParagraphStyle();
                     if (null == paragraphStyle) {
@@ -176,7 +176,7 @@ public class DocumentVisitor extends AbstractVisitor {
 //                       paragraphStyle.setSpacing(0.0f);
 //                       paragraphStyle.setSpacingRule(LineSpacingRule.AT_LEAST);
                 }
-            });
+            }
             return apply;
         } catch (Exception e) {
             throw new RenderException("Error Parse Code", e);

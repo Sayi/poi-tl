@@ -48,9 +48,13 @@ public class MarkdownStyle {
                 .withFontSize(9.0f)
                 .build());
         style.setQuoteStyle(ParagraphStyle.builder()
-                .withIndentLeftChars(0.5f)
-                .withLeftBorder(
-                        BorderStyle.builder().withColor("70ad47").withSize(48).withType(XWPFBorderType.SINGLE).build())
+                .withIndentLeftChars(1.0f)
+                .withLeftBorder(BorderStyle.builder()
+                        .withColor("70ad47")
+                        .withSize(48)
+                        .withSpace(8)
+                        .withType(XWPFBorderType.SINGLE)
+                        .build())
                 .build());
 
         style.setTableBorderStyle(
