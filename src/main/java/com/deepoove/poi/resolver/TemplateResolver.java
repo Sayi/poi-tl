@@ -24,18 +24,9 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +38,12 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.CTDrawingWrapper;
+import com.deepoove.poi.xwpf.CTPictWrapper;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
@@ -146,12 +139,21 @@ public class TemplateResolver extends AbstractResolver {
                     continue;
                 }
 
+                // picture
                 List<PictureTemplate> pictureTemplates = resolveXWPFPictures(run.getEmbeddedPictures());
                 if (!pictureTemplates.isEmpty()) {
                     addNewMeta(metaTemplates, stack, pictureTemplates);
                     continue;
                 }
 
+                // w:pict v:imagedata
+                PictImageTemplate pictImageTemplate = resolvePictImage(run);
+                if (null != pictImageTemplate) {
+                    addNewMeta(metaTemplates, stack, pictImageTemplate);
+                    continue;
+                }
+
+                // chart
                 ChartTemplate chartTemplate = resolveXWPFChart(run);
                 if (null != chartTemplate) {
                     addNewMeta(metaTemplates, stack, chartTemplate);
@@ -196,6 +198,14 @@ public class TemplateResolver extends AbstractResolver {
         ElementTemplate template = parseTemplateFactory(wrapper.getTitle(), (XWPFChart) documentPart, run);
         return null == template ? (ChartTemplate) parseTemplateFactory(wrapper.getDesc(), (XWPFChart) documentPart, run)
                 : (ChartTemplate) template;
+    }
+
+    private PictImageTemplate resolvePictImage(XWPFRun run) {
+        CTR ctr = run.getCTR();
+        CTPicture ctPicture = CollectionUtils.isNotEmpty(ctr.getPictList()) ? ctr.getPictArray(0) : null;
+        if (null == ctPicture) return null;
+        CTPictWrapper wrapper = new CTPictWrapper(ctPicture);
+        return (PictImageTemplate) parseTemplateFactory(wrapper.getShapeAlt(), wrapper, run);
     }
 
     private List<PictureTemplate> resolveXWPFPictures(List<XWPFPicture> embeddedPictures) {
@@ -275,6 +285,9 @@ public class TemplateResolver extends AbstractResolver {
                 return (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);
             } else if (obj.getClass() == XWPFPicture.class) {
                 return (PictureTemplate) elementTemplateFactory.createPicureTemplate(config, tag, (XWPFPicture) obj);
+            } else if (obj.getClass() == CTPictWrapper.class) {
+                return (PictImageTemplate) elementTemplateFactory.createPictImageTemplate(config, tag,
+                        (CTPictWrapper) obj, run);
             } else if (obj.getClass() == XWPFChart.class) {
                 return (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag, (XWPFChart) obj, run);
             }

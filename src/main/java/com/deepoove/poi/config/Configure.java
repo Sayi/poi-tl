@@ -33,6 +33,7 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
+import com.deepoove.poi.policy.reference.DefaultPictImageTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.MultiSeriesChartTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.SingleSeriesChartTemplateRenderPolicy;
@@ -43,6 +44,7 @@ import com.deepoove.poi.resolver.DefaultElementTemplateFactory;
 import com.deepoove.poi.resolver.ElementTemplateFactory;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.RegexUtils;
 
@@ -146,6 +148,7 @@ public class Configure implements Cloneable {
         plugin(ChartTypes.DOUGHNUT, singleSeriesRenderPolicy);
 
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
+        plugin(PictImageTemplate.class, new DefaultPictImageTemplateRenderPolicy());
         plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
     }
 

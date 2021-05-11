@@ -25,6 +25,7 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -59,6 +60,11 @@ public class LogProcessor implements Visitor {
     @Override
     public void visit(PictureTemplate pictureTemplate) {
         log.info("{}{}", indentState, pictureTemplate);
+    }
+
+    @Override
+    public void visit(PictImageTemplate pictImageTemplate) {
+        log.info("{}{}", indentState, pictImageTemplate);
     }
 
     @Override
