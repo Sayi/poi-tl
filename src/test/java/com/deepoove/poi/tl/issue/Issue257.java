@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
-import com.deepoove.poi.xwpf.NumberingWrapper;
+import com.deepoove.poi.xwpf.XWPFNumberingWrapper;
 
 @DisplayName("Issue257 列表序号合并重新开始编号")
 public class Issue257 {
@@ -39,7 +39,7 @@ public class Issue257 {
 
         XWPFDocument document = XWPFTestSupport.readNewDocument(doc);
         XWPFNumbering numbering = document.getNumbering();
-        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper numberingWrapper = new XWPFNumberingWrapper(numbering);
         List<XWPFNum> nums = numberingWrapper.getNums();
         Set<BigInteger> abstracNumSet = new HashSet<>();
         for (XWPFNum num : nums) {

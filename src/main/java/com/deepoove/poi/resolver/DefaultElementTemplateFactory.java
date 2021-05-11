@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,10 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.CTPictWrapper;
 
 /**
  * @author Sayi
@@ -73,6 +75,17 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
         ChartTemplate template = new ChartTemplate(tag, chart, run);
         template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
         template.setSign(EMPTY_CHAR);
+        return template;
+    }
+
+    @Override
+    public PictImageTemplate createPictImageTemplate(Configure config, String tag, CTPictWrapper pic, XWPFRun run) {
+        PictImageTemplate template = new PictImageTemplate();
+        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setTagName(tag);
+        template.setSign(EMPTY_CHAR);
+        template.setPicture(pic);
+        template.setRun(run);
         return template;
     }
 

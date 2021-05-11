@@ -21,5 +21,6 @@ merge_all
 /doc/*
 
 #private
+**/**/mk.md
 complex.docx
 ~$*.docx

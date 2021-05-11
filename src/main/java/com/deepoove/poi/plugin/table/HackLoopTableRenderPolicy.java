@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
+import com.deepoove.poi.render.compute.EnvModel;
 import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.render.processor.DocumentProcessor;
+import com.deepoove.poi.render.processor.EnvIterator;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.MetaTemplate;
@@ -46,7 +48,6 @@ import com.deepoove.poi.util.TableTools;
  * Hack for loop table row
  * 
  * @author Sayi
- *
  */
 public class HackLoopTableRenderPolicy implements RenderPolicy {
 
@@ -57,7 +58,7 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
     public HackLoopTableRenderPolicy() {
         this(false);
     }
-    
+
     public HackLoopTableRenderPolicy(boolean onSameLine) {
         this("[", "]", onSameLine);
     }
@@ -93,7 +94,12 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
 
                 TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
                 boolean firstFlag = true;
-                while (iterator.hasNext()) {
+                int index = 0;
+                boolean hasNext = iterator.hasNext();
+                while (hasNext) {
+                    Object root = iterator.next();
+                    hasNext = iterator.hasNext();
+
                     insertPosition = templateRowIndex++;
                     XWPFTableRow nextRow = table.insertNewTableRow(insertPosition);
                     setTableRow(table, templateRow, insertPosition);
@@ -119,8 +125,9 @@ public class HackLoopTableRenderPolicy implements RenderPolicy {
                     }
                     setTableRow(table, nextRow, insertPosition);
 
-                    RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory()
-                            .newCompute(iterator.next());
+                    RenderDataCompute dataCompute = template.getConfig()
+                            .getRenderDataComputeFactory()
+                            .newCompute(EnvModel.of(root, EnvIterator.makeEnv(index++, hasNext)));
                     List<XWPFTableCell> cells = nextRow.getTableCells();
                     cells.forEach(cell -> {
                         List<MetaTemplate> templates = resolver.resolveBodyElements(cell.getBodyElements());

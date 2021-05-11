@@ -7,7 +7,6 @@ import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ooxml.POIXMLFactory;
 import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
 
 public final class XWPFChartFactory extends POIXMLFactory {
@@ -25,11 +24,8 @@ public final class XWPFChartFactory extends POIXMLFactory {
     // compatible 4.1.1+
     @Override
     public POIXMLDocumentPart newDocumentPart(POIXMLRelation descriptor) {
-        Constructor<? extends POIXMLDocumentPart> constructor;
         try {
-            constructor = XWPFChart.class.getDeclaredConstructor(PackagePart.class);
-            constructor.setAccessible(true);
-            return constructor.newInstance(new Object[] { part });
+            return new EnhancedXWPFChart(part);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +35,7 @@ public final class XWPFChartFactory extends POIXMLFactory {
     protected POIXMLDocumentPart createDocumentPart(Class<? extends POIXMLDocumentPart> cls, Class<?>[] classes,
             Object[] values) throws SecurityException, NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
-        Constructor<? extends POIXMLDocumentPart> constructor = XWPFChart.class
+        Constructor<? extends POIXMLDocumentPart> constructor = EnhancedXWPFChart.class
                 .getDeclaredConstructor(PackagePart.class);
         constructor.setAccessible(true);
         return constructor.newInstance(new Object[] { part });

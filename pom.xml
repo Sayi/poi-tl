@@ -77,9 +77,9 @@
 			<version>4.1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>ooxml-schemas</artifactId>
-			<version>1.4</version>
+			<groupId>com.deepoove</groupId>
+			<artifactId>poi-ooxml-schemas-extra</artifactId>
+			<version>4.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.deepoove</groupId>

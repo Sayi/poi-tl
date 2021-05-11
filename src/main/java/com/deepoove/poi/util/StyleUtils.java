@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -292,12 +292,12 @@ public final class StyleUtils {
 
         if (null != style.isItalic()) {
             CTOnOff italic = pr.isSetI() ? pr.getI() : pr.addNewI();
-            italic.setVal(style.isItalic() ? STOnOff.TRUE : STOnOff.FALSE);
+            italic.setVal(style.isItalic() ? STOnOff.ON : STOnOff.OFF);
         }
 
         if (null != style.isBold()) {
             CTOnOff bold = pr.isSetB() ? pr.getB() : pr.addNewB();
-            bold.setVal(style.isBold() ? STOnOff.TRUE : STOnOff.FALSE);
+            bold.setVal(style.isBold() ? STOnOff.ON : STOnOff.OFF);
         }
 
         if (0 != style.getFontSize() && -1 != style.getFontSize()) {
@@ -308,7 +308,7 @@ public final class StyleUtils {
 
         if (null != style.isStrike()) {
             CTOnOff strike = pr.isSetStrike() ? pr.getStrike() : pr.addNewStrike();
-            strike.setVal(style.isStrike() ? STOnOff.TRUE : STOnOff.FALSE);
+            strike.setVal(style.isStrike() ? STOnOff.ON : STOnOff.OFF);
         }
 
         UnderlinePatterns underlinePatern = style.getUnderlinePatterns();
@@ -430,7 +430,7 @@ public final class StyleUtils {
 
         if (null != style.getKeepLines()) {
             CTOnOff ctKeepLines = pr.isSetKeepLines() ? pr.getKeepLines() : pr.addNewKeepLines();
-            ctKeepLines.setVal(style.getKeepLines() ? STOnOff.TRUE : STOnOff.FALSE);
+            ctKeepLines.setVal(style.getKeepLines() ? STOnOff.ON : STOnOff.OFF);
         }
         if (null != style.getKeepNext()) {
             paragraph.setKeepNext(style.getKeepNext());
@@ -440,12 +440,12 @@ public final class StyleUtils {
         }
         if (null != style.getWidowControl()) {
             CTOnOff ctWC = pr.isSetWidowControl() ? pr.getWidowControl() : pr.addNewWidowControl();
-            ctWC.setVal(style.getWidowControl() ? STOnOff.TRUE : STOnOff.FALSE);
+            ctWC.setVal(style.getWidowControl() ? STOnOff.ON : STOnOff.OFF);
         }
-        if (null != style.getWordWrap()) {
+        if (null != style.getAllowWordBreak()) {
 //            paragraph.setWordWrapped(style.getWordWrap());
             CTOnOff ctWW = pr.isSetWordWrap() ? pr.getWordWrap() : pr.addNewWordWrap();
-            ctWW.setVal(style.getWordWrap() ? STOnOff.X_0 : STOnOff.X_1);
+            ctWW.setVal(style.getAllowWordBreak() ? STOnOff.OFF : STOnOff.ON);
         }
 
         if (-1 != style.getNumId()) {
@@ -459,7 +459,7 @@ public final class StyleUtils {
     public static void styleCTBorder(CTBorder b, BorderStyle style) {
         if (null != style.getType()) b.setVal(STBorder.Enum.forString(style.getType().toString().toLowerCase()));
         b.setSz(BigInteger.valueOf(style.getSize()));
-        b.setSpace(BigInteger.valueOf(0));
+        b.setSpace(BigInteger.valueOf(style.getSpace()));
         if (null != style.getColor()) b.setColor(style.getColor());
     }
 
@@ -483,8 +483,8 @@ public final class StyleUtils {
         CTP ctp = paragraph.getCTP();
         CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
         if (pr.isSetWordWrap()) {
-            if (pr.getWordWrap().getVal() == STOnOff.X_0 || pr.getWordWrap().getVal() == STOnOff.TRUE) {
-                builder.withWordWrap(true);
+            if (pr.getWordWrap().getVal() == STOnOff.X_1 || pr.getWordWrap().getVal() == STOnOff.FALSE || pr.getWordWrap().getVal() == STOnOff.OFF) {
+                builder.withAllowWordBreak(true);
             }
         }
         if (pr.isSetPBdr()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -276,13 +276,13 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         Map<String, String> numIdsMap = new HashMap<String, String>();
         XWPFNumbering numberingMerge = merged.getNumbering();
         if (null == numberingMerge) return numIdsMap;
-        NumberingWrapper wrapperMerge = new NumberingWrapper(numberingMerge);
+        XWPFNumberingWrapper wrapperMerge = new XWPFNumberingWrapper(numberingMerge);
         List<XWPFNum> nums = wrapperMerge.getNums();
         if (null == nums) return numIdsMap;
 
         XWPFNumbering numbering = source.getNumbering();
         if (null == numbering) numbering = source.createNumbering();
-        NumberingWrapper wrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper wrapper = new XWPFNumberingWrapper(numbering);
 
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;

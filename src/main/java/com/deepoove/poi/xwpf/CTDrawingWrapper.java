@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class CTDrawingWrapper {
         return null == docPr ? null : docPr.getDescr();
     }
 
-    public String getCharId() {
+    public String getChartId() {
         CTGraphicalObjectData graphicData = null;
         if (ctDrawing.sizeOfAnchorArray() > 0) {
             CTAnchor anchorArray = ctDrawing.getAnchorArray(0);

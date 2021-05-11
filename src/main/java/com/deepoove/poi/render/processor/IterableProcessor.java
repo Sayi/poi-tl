@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class IterableProcessor extends AbstractIterableProcessor {
         NumberingContinue numbringContinue = NumberingContinue.of(bodyContainer, startPos, endPos, iterableTemplate);
         IterableContext context = new IterableContext(startPos, endPos, numbringContinue);
 
-        foreach(iterableTemplate, bodyContainer, context, compute.iterator());
+        EnvIterator.foreach(compute.iterator(), model -> next(iterableTemplate, bodyContainer, context, model));
 
         // clear self iterable template
         for (int i = endPos - 1; i > startPos; i--) {

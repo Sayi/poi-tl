@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,6 @@ import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTChartSpace;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -179,7 +178,7 @@ public class NiceXWPFDocument extends XWPFDocument {
             numbering = this.createNumbering();
         }
 
-        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper numberingWrapper = new XWPFNumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
         // free number first.
@@ -189,7 +188,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         for (int i = 0; i < numFmts.length; i++) {
             NumberingFormat numFmt = numFmts[i];
             CTLvl cTLvl = cTAbstractNum.addNewLvl();
-            CTPPr ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
+            CTPPrBase ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
             CTInd ind = ppr.isSetInd() ? ppr.getInd() : ppr.addNewInd();
             ind.setLeft(BigInteger.valueOf(UnitUtils.cm2Twips(0.74f) * i));
 
@@ -224,8 +223,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
         xwpfChart.setChartIndex(chartNumber);
-        CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
-        ctChartSpace.unsetExternalData();
+        // CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
+        // ctChartSpace.unsetExternalData();
         xwpfChart.setWorkbook(chart.getWorkbook());
 
         // add chart object to chart list

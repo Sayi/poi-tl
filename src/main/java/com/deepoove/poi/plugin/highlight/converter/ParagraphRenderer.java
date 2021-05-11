@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
             paragraphStyle.setBottomBorder(borderStyle);
             paragraphStyle.setTopBorder(borderStyle);
         }
-        of.paraStyle(paragraphStyle).wordWrap().left();
+        of.paraStyle(paragraphStyle).allowWordBreak().left();
     }
 
     @Override

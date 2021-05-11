@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.deepoove.poi.render.processor;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -54,6 +55,13 @@ public interface Visitor {
      * @param pictureTemplate
      */
     void visit(PictureTemplate pictureTemplate);
+
+    /**
+     * visit pictImage template
+     * 
+     * @param pictImageTemplate
+     */
+    void visit(PictImageTemplate pictImageTemplate);
 
     /**
      * visit chart template

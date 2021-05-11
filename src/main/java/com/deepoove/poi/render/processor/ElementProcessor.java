@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import com.deepoove.poi.render.compute.RenderDataCompute;
 import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -49,6 +50,11 @@ public class ElementProcessor extends DefaultTemplateProcessor {
     @Override
     public void visit(PictureTemplate pictureTemplate) {
         visit((ElementTemplate) pictureTemplate);
+    }
+
+    @Override
+    public void visit(PictImageTemplate pictImageTemplate) {
+        visit((ElementTemplate) pictImageTemplate);
     }
 
     @Override

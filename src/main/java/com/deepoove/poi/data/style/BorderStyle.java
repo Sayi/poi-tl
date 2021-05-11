@@ -21,12 +21,13 @@ public class BorderStyle implements Serializable {
      */
     private int size;
     /**
-     * A value of auto is also permitted and will allow the consuming word processor
-     * to determine the color.
+     * A value of auto is also permitted and will allow the consuming word processor to determine the color.
      */
     private String color;
 
     private XWPFBorderType type;
+
+    private int space = 0;
 
     public BorderStyle() {
     }
@@ -35,6 +36,7 @@ public class BorderStyle implements Serializable {
         this.size = builder.size;
         this.color = builder.color;
         this.type = builder.type;
+        this.space = builder.space;
     }
 
     public String getColor() {
@@ -61,6 +63,14 @@ public class BorderStyle implements Serializable {
         this.type = type;
     }
 
+    public int getSpace() {
+        return space;
+    }
+
+    public void setSpace(int space) {
+        this.space = space;
+    }
+
     /**
      * Creates builder to build {@link BorderStyle}.
      * 
@@ -77,6 +87,7 @@ public class BorderStyle implements Serializable {
         private int size;
         private String color;
         private XWPFBorderType type;
+        private int space;
 
         private Builder() {
         }
@@ -93,6 +104,11 @@ public class BorderStyle implements Serializable {
 
         public Builder withType(XWPFBorderType type) {
             this.type = type;
+            return this;
+        }
+
+        public Builder withSpace(int space) {
+            this.space = space;
             return this;
         }
 

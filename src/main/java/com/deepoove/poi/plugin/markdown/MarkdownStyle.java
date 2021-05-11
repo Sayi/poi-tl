@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,13 @@ public class MarkdownStyle {
                 .withFontSize(9.0f)
                 .build());
         style.setQuoteStyle(ParagraphStyle.builder()
-                .withIndentLeftChars(0.5f)
-                .withLeftBorder(
-                        BorderStyle.builder().withColor("70ad47").withSize(48).withType(XWPFBorderType.SINGLE).build())
+                .withIndentLeftChars(1.0f)
+                .withLeftBorder(BorderStyle.builder()
+                        .withColor("70ad47")
+                        .withSize(48)
+                        .withSpace(8)
+                        .withType(XWPFBorderType.SINGLE)
+                        .build())
                 .build());
 
         style.setTableBorderStyle(

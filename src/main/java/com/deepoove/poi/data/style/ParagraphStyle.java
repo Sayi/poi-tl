@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ public class ParagraphStyle implements Serializable {
     private Boolean keepLines; // 段中不分页
     private Boolean keepNext; // 与下段同页
     private Boolean pageBreakBefore; // 段前分页
-    private Boolean wordWrap; // 自动换行
+    private Boolean allowWordBreak; // 单词断行
 
     private double spacingBeforeLines; // 间距-段前
     private double spacingAfterLines; // 间距-断后
@@ -81,7 +81,7 @@ public class ParagraphStyle implements Serializable {
         this.keepLines = builder.keepLines;
         this.keepNext = builder.keepNext;
         this.pageBreakBefore = builder.pageBreakBefore;
-        this.wordWrap = builder.wordWrap;
+        this.allowWordBreak = builder.allowWordBreak;
         this.spacingBeforeLines = builder.spacingBeforeLines;
         this.spacingAfterLines = builder.spacingAfterLines;
         this.spacing = builder.spacing;
@@ -223,12 +223,12 @@ public class ParagraphStyle implements Serializable {
         this.keepNext = keepNext;
     }
 
-    public Boolean getWordWrap() {
-        return wordWrap;
+    public Boolean getAllowWordBreak() {
+        return allowWordBreak;
     }
 
-    public void setWordWrap(Boolean wordWrap) {
-        this.wordWrap = wordWrap;
+    public void setAllowWordBreak(Boolean allowWordBreak) {
+        this.allowWordBreak = allowWordBreak;
     }
 
     public Boolean getPageBreakBefore() {
@@ -324,7 +324,7 @@ public class ParagraphStyle implements Serializable {
         private Boolean keepLines;
         private Boolean keepNext;
         private Boolean pageBreakBefore;
-        private Boolean wordWrap;
+        private Boolean allowWordBreak;
         private double spacingBeforeLines;
         private double spacingAfterLines;
         private double spacing = -1;
@@ -417,8 +417,8 @@ public class ParagraphStyle implements Serializable {
             return this;
         }
 
-        public Builder withWordWrap(Boolean wordWrap) {
-            this.wordWrap = wordWrap;
+        public Builder withAllowWordBreak(Boolean allowWordBreak) {
+            this.allowWordBreak = allowWordBreak;
             return this;
         }
 

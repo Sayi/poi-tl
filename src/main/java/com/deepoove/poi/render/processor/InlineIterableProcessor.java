@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
         Integer endRunPos = end.getRunPos();
         IterableContext context = new IterableContext(startRunPos, endRunPos);
 
-        foreach(iterableTemplate, parentContext, context, compute.iterator());
+        EnvIterator.foreach(compute.iterator(), model -> next(iterableTemplate, parentContext, context, model));
 
         // clear self iterable template
         for (int i = endRunPos - 1; i > startRunPos; i--) {

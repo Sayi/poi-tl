@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,20 +21,23 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.CTPictWrapper;
 
 /**
  * Factory to create Element template
  * 
  * @author Sayi
- *
  */
 public interface ElementTemplateFactory {
 
     RunTemplate createRunTemplate(Configure config, String tag, XWPFRun run);
 
     PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic);
+
+    PictImageTemplate createPictImageTemplate(Configure config, String tag, CTPictWrapper pic, XWPFRun run);
 
     ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run);
 

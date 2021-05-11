@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -219,11 +219,11 @@ public class Paragraphs {
             return this;
         }
 
-        public ParagraphBuilder wordWrap() {
+        public ParagraphBuilder allowWordBreak() {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withWordWrap(true).build();
+                this.paragraphStyle = ParagraphStyle.builder().withAllowWordBreak(true).build();
             } else {
-                this.paragraphStyle.setWordWrap(true);
+                this.paragraphStyle.setAllowWordBreak(true);
             }
             return this;
         }

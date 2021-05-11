@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.template.InlineIterableTemplate;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
@@ -51,6 +52,11 @@ public abstract class DefaultTemplateProcessor implements Visitor {
     @Override
     public void visit(PictureTemplate pictureTemplate) {
         visitOther(pictureTemplate);
+    }
+
+    @Override
+    public void visit(PictImageTemplate pictImageTemplate) {
+        visitOther(pictImageTemplate);
     }
 
     @Override

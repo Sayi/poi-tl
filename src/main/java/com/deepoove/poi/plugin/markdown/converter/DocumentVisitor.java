@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2020 Sayi
+ * Copyright 2014-2021 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ public class DocumentVisitor extends AbstractVisitor {
         int level = heading.getLevel();
         resetHeaderNumberArray(level);
 
-        ParagraphBuilder paraOf = Paragraphs.of().styleId(String.valueOf(level)).left().wordWrap();
+        ParagraphBuilder paraOf = Paragraphs.of().styleId(String.valueOf(level)).left().allowWordBreak();
         if (style.isShowHeaderNumber()) {
             paraOf.addText(getHeaderNumber(level));
         }
@@ -165,7 +165,7 @@ public class DocumentVisitor extends AbstractVisitor {
         highlight.setStyle(style.getHighlightStyle());
         try {
             DocumentRenderData apply = highlightConverter.convert(highlight);
-            apply.getContents().forEach(doc -> {
+            for (RenderData doc : apply.getContents()) {
                 if (doc instanceof ParagraphRenderData) {
                     ParagraphStyle paragraphStyle = ((ParagraphRenderData) doc).getParagraphStyle();
                     if (null == paragraphStyle) {
@@ -176,7 +176,7 @@ public class DocumentVisitor extends AbstractVisitor {
 //                       paragraphStyle.setSpacing(0.0f);
 //                       paragraphStyle.setSpacingRule(LineSpacingRule.AT_LEAST);
                 }
-            });
+            }
             return apply;
         } catch (Exception e) {
             throw new RenderException("Error Parse Code", e);
