@@ -191,7 +191,7 @@ public class TemplateResolver extends AbstractResolver {
         CTDrawing ctDrawing = getCTDrawing(run);
         if (null == ctDrawing) return null;
         CTDrawingWrapper wrapper = new CTDrawingWrapper(ctDrawing);
-        String rid = wrapper.getCharId();
+        String rid = wrapper.getChartId();
         if (null == rid) return null;
         POIXMLDocumentPart documentPart = run.getDocument().getRelationById(rid);
         if (null == documentPart || !(documentPart instanceof XWPFChart)) return null;

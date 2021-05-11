@@ -67,7 +67,7 @@ public class CTDrawingWrapper {
         return null == docPr ? null : docPr.getDescr();
     }
 
-    public String getCharId() {
+    public String getChartId() {
         CTGraphicalObjectData graphicData = null;
         if (ctDrawing.sizeOfAnchorArray() > 0) {
             CTAnchor anchorArray = ctDrawing.getAnchorArray(0);
