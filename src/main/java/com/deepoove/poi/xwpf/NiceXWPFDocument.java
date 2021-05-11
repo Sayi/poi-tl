@@ -179,7 +179,7 @@ public class NiceXWPFDocument extends XWPFDocument {
             numbering = this.createNumbering();
         }
 
-        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper numberingWrapper = new XWPFNumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
         // free number first.

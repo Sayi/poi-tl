@@ -276,13 +276,13 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         Map<String, String> numIdsMap = new HashMap<String, String>();
         XWPFNumbering numberingMerge = merged.getNumbering();
         if (null == numberingMerge) return numIdsMap;
-        NumberingWrapper wrapperMerge = new NumberingWrapper(numberingMerge);
+        XWPFNumberingWrapper wrapperMerge = new XWPFNumberingWrapper(numberingMerge);
         List<XWPFNum> nums = wrapperMerge.getNums();
         if (null == nums) return numIdsMap;
 
         XWPFNumbering numbering = source.getNumbering();
         if (null == numbering) numbering = source.createNumbering();
-        NumberingWrapper wrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper wrapper = new XWPFNumberingWrapper(numbering);
 
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;

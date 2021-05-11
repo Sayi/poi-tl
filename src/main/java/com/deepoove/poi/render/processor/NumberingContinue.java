@@ -36,7 +36,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
-import com.deepoove.poi.xwpf.NumberingWrapper;
+import com.deepoove.poi.xwpf.XWPFNumberingWrapper;
 
 public class NumberingContinue {
 
@@ -116,7 +116,7 @@ public class NumberingContinue {
             return;
         }
 
-        NumberingWrapper wrapper = new NumberingWrapper(numbering);
+        XWPFNumberingWrapper wrapper = new XWPFNumberingWrapper(numbering);
         XWPFNum num = numbering.getNum(numID);
         if (null == num) return;
         XWPFAbstractNum abstractNum = numbering.getAbstractNum(num.getCTNum().getAbstractNumId().getVal());

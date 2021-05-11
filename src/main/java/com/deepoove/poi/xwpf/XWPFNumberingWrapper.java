@@ -31,7 +31,7 @@ import com.deepoove.poi.exception.ReflectionException;
  * This is a utility class so that I can get access to the protected fields
  * within XWPFNumbering.
  */
-public class NumberingWrapper {
+public class XWPFNumberingWrapper {
 
     private final XWPFNumbering numbering;
 
@@ -39,7 +39,7 @@ public class NumberingWrapper {
 
     private List<XWPFAbstractNum> abstractNums;
 
-    public NumberingWrapper(XWPFNumbering numbering) {
+    public XWPFNumberingWrapper(XWPFNumbering numbering) {
         this.numbering = numbering;
         this.nums = tryGetNums();
         this.abstractNums = tryGetAbstractNums();
