@@ -37,7 +37,6 @@ import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.chart.CTChartSpace;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -224,8 +223,8 @@ public class NiceXWPFDocument extends XWPFDocument {
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
         xwpfChart.setChartIndex(chartNumber);
-        CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
-        ctChartSpace.unsetExternalData();
+        // CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
+        // ctChartSpace.unsetExternalData();
         xwpfChart.setWorkbook(chart.getWorkbook());
 
         // add chart object to chart list

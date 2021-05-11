@@ -288,7 +288,7 @@ public class TemplateResolver extends AbstractResolver {
             } else if (obj.getClass() == CTPictWrapper.class) {
                 return (PictImageTemplate) elementTemplateFactory.createPictImageTemplate(config, tag,
                         (CTPictWrapper) obj, run);
-            } else if (obj.getClass() == XWPFChart.class) {
+            } else if (obj instanceof XWPFChart) {
                 return (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag, (XWPFChart) obj, run);
             }
         }
