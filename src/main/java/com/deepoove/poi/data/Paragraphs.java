@@ -219,11 +219,11 @@ public class Paragraphs {
             return this;
         }
 
-        public ParagraphBuilder wordWrap() {
+        public ParagraphBuilder allowWordBreak() {
             if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withWordWrap(true).build();
+                this.paragraphStyle = ParagraphStyle.builder().withAllowWordBreak(true).build();
             } else {
-                this.paragraphStyle.setWordWrap(true);
+                this.paragraphStyle.setAllowWordBreak(true);
             }
             return this;
         }

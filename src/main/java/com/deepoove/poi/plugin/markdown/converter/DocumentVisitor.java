@@ -73,7 +73,7 @@ public class DocumentVisitor extends AbstractVisitor {
         int level = heading.getLevel();
         resetHeaderNumberArray(level);
 
-        ParagraphBuilder paraOf = Paragraphs.of().styleId(String.valueOf(level)).left().wordWrap();
+        ParagraphBuilder paraOf = Paragraphs.of().styleId(String.valueOf(level)).left().allowWordBreak();
         if (style.isShowHeaderNumber()) {
             paraOf.addText(getHeaderNumber(level));
         }

@@ -188,7 +188,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         for (int i = 0; i < numFmts.length; i++) {
             NumberingFormat numFmt = numFmts[i];
             CTLvl cTLvl = cTAbstractNum.addNewLvl();
-            CTPPr ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
+            CTPPrBase ppr = cTLvl.isSetPPr() ? cTLvl.getPPr() : cTLvl.addNewPPr();
             CTInd ind = ppr.isSetInd() ? ppr.getInd() : ppr.addNewInd();
             ind.setLeft(BigInteger.valueOf(UnitUtils.cm2Twips(0.74f) * i));
 

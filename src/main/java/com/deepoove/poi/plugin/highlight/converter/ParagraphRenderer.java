@@ -93,7 +93,7 @@ public class ParagraphRenderer implements StyleRenderer<ParagraphRenderData> {
             paragraphStyle.setBottomBorder(borderStyle);
             paragraphStyle.setTopBorder(borderStyle);
         }
-        of.paraStyle(paragraphStyle).wordWrap().left();
+        of.paraStyle(paragraphStyle).allowWordBreak().left();
     }
 
     @Override
