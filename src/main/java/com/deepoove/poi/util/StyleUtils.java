@@ -77,19 +77,18 @@ public final class StyleUtils {
             CTHpsMeasure ctSize = pr.isSetSz() ? pr.getSz() : pr.addNewSz();
             ctSize.setVal(bd.multiply(BigDecimal.valueOf(2)).setScale(0, RoundingMode.HALF_UP).toBigInteger());
         }
-        CTFonts fonts = pr.isSetRFonts() ? pr.getRFonts() : pr.addNewRFonts();
         String fontFamily = style.getFontFamily();
         if (StringUtils.isNotBlank(fontFamily)) {
-            fonts.setEastAsia(fontFamily);
-            fonts.setAscii(fontFamily);
-            fonts.setHAnsi(fontFamily);
-            fonts.setCs(fontFamily);
+            run.setFontFamily(fontFamily, FontCharRange.eastAsia);
+            run.setFontFamily(fontFamily, FontCharRange.ascii);
+            run.setFontFamily(fontFamily, FontCharRange.hAnsi);
+            run.setFontFamily(fontFamily, FontCharRange.cs);
         }
         String westernFontFamily = style.getWesternFontFamily();
         if (StringUtils.isNotBlank(westernFontFamily)) {
-            fonts.setAscii(westernFontFamily);
-            fonts.setHAnsi(westernFontFamily);
-            fonts.setCs(westernFontFamily);
+            run.setFontFamily(westernFontFamily, FontCharRange.ascii);
+            run.setFontFamily(westernFontFamily, FontCharRange.hAnsi);
+            run.setFontFamily(westernFontFamily, FontCharRange.cs);
         }
         XWPFHighlightColor highlightColor = style.getHighlightColor();
         if (null != highlightColor) {
