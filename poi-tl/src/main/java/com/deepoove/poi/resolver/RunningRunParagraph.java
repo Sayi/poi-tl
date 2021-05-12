@@ -27,6 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.QNameSet;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -146,7 +147,7 @@ public class RunningRunParagraph {
             if ((sizeOfBrArray + sizeOfCrArray) > 0) {
                 synchronized (ctrimpl.monitor()) {
                     // ctrimpl.check_orphaned();
-                    ArrayList<Object> localArrayList = new ArrayList<Object>();
+                    List<? extends XmlObject> localArrayList = new ArrayList<XmlObject>();
                     ctrimpl.get_store().find_all_element_users(qname, localArrayList);
                     int size = localArrayList.size();
                     for (int j = size - 1; j >= 0; j--) {

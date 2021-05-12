@@ -19,12 +19,12 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.XWPFOnOff;
 
 /**
  * Experimental: Table of contents
@@ -41,7 +41,7 @@ public class TOCRenderPolicy implements RenderPolicy {
 
         CTSimpleField toc = ctP.addNewFldSimple();
         toc.setInstr("TOC \\o");
-        toc.setDirty(STOnOff.TRUE);
+        toc.setDirty(XWPFOnOff.ON);
     }
 
 }

@@ -33,23 +33,13 @@ import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
 import org.apache.poi.openxml4j.opc.TargetMode;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFNum;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.apache.poi.xwpf.usermodel.XWPFStyles;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
@@ -341,7 +331,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 
                 // fix github issue 499
                 CTStyle ctStyle = xwpfStyle.getCTStyle();
-                if (ctStyle.isSetDefault() && ctStyle.getDefault() == STOnOff.X_1
+                if (ctStyle.isSetDefault() && ctStyle.getDefault() == XWPFOnOff.X_1
                         && ctStyle.getType() == STStyleType.PARAGRAPH) {
                     defaultParaStyleId = ctStyle.getStyleId();
                 }

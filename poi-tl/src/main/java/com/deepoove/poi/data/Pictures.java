@@ -72,6 +72,14 @@ public class Pictures {
         return new PictureBuilder(pictureType, () -> bytes);
     }
 
+    public static PictureBuilder of(String imgUri) {
+        if (imgUri.startsWith("http")) {
+            return Pictures.ofUrl(imgUri);
+        } else {
+            return Pictures.ofLocal(imgUri);
+        }
+    }
+
     public static PictureBuilder of(Supplier<byte[]> supplier) {
         return of(supplier, null);
     }
