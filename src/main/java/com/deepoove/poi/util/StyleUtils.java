@@ -32,33 +32,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.SimpleValue;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorAuto;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorRGB;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
@@ -70,6 +44,7 @@ import com.deepoove.poi.data.style.Style.StyleBuilder;
 import com.deepoove.poi.data.style.TableStyle;
 import com.deepoove.poi.xwpf.CssRgb;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
+import com.deepoove.poi.xwpf.XWPFOnOff;
 import com.deepoove.poi.xwpf.XWPFShadingPattern;
 
 /**
@@ -292,12 +267,12 @@ public final class StyleUtils {
 
         if (null != style.isItalic()) {
             CTOnOff italic = pr.isSetI() ? pr.getI() : pr.addNewI();
-            italic.setVal(style.isItalic() ? STOnOff.ON : STOnOff.OFF);
+            italic.setVal(style.isItalic() ? XWPFOnOff.ON : XWPFOnOff.OFF);
         }
 
         if (null != style.isBold()) {
             CTOnOff bold = pr.isSetB() ? pr.getB() : pr.addNewB();
-            bold.setVal(style.isBold() ? STOnOff.ON : STOnOff.OFF);
+            bold.setVal(style.isBold() ? XWPFOnOff.ON : XWPFOnOff.OFF);
         }
 
         if (0 != style.getFontSize() && -1 != style.getFontSize()) {
@@ -308,7 +283,7 @@ public final class StyleUtils {
 
         if (null != style.isStrike()) {
             CTOnOff strike = pr.isSetStrike() ? pr.getStrike() : pr.addNewStrike();
-            strike.setVal(style.isStrike() ? STOnOff.ON : STOnOff.OFF);
+            strike.setVal(style.isStrike() ? XWPFOnOff.ON : XWPFOnOff.OFF);
         }
 
         UnderlinePatterns underlinePatern = style.getUnderlinePatterns();
@@ -430,7 +405,7 @@ public final class StyleUtils {
 
         if (null != style.getKeepLines()) {
             CTOnOff ctKeepLines = pr.isSetKeepLines() ? pr.getKeepLines() : pr.addNewKeepLines();
-            ctKeepLines.setVal(style.getKeepLines() ? STOnOff.ON : STOnOff.OFF);
+            ctKeepLines.setVal(style.getKeepLines() ? XWPFOnOff.ON : XWPFOnOff.OFF);
         }
         if (null != style.getKeepNext()) {
             paragraph.setKeepNext(style.getKeepNext());
@@ -440,12 +415,12 @@ public final class StyleUtils {
         }
         if (null != style.getWidowControl()) {
             CTOnOff ctWC = pr.isSetWidowControl() ? pr.getWidowControl() : pr.addNewWidowControl();
-            ctWC.setVal(style.getWidowControl() ? STOnOff.ON : STOnOff.OFF);
+            ctWC.setVal(style.getWidowControl() ? XWPFOnOff.ON : XWPFOnOff.OFF);
         }
         if (null != style.getAllowWordBreak()) {
 //            paragraph.setWordWrapped(style.getWordWrap());
             CTOnOff ctWW = pr.isSetWordWrap() ? pr.getWordWrap() : pr.addNewWordWrap();
-            ctWW.setVal(style.getAllowWordBreak() ? STOnOff.OFF : STOnOff.ON);
+            ctWW.setVal(style.getAllowWordBreak() ? XWPFOnOff.OFF : XWPFOnOff.ON);
         }
 
         if (-1 != style.getNumId()) {
@@ -483,7 +458,7 @@ public final class StyleUtils {
         CTP ctp = paragraph.getCTP();
         CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
         if (pr.isSetWordWrap()) {
-            if (pr.getWordWrap().getVal() == STOnOff.X_1 || pr.getWordWrap().getVal() == STOnOff.FALSE || pr.getWordWrap().getVal() == STOnOff.OFF) {
+            if (pr.getWordWrap().getVal() == XWPFOnOff.X_1 || pr.getWordWrap().getVal() == XWPFOnOff.FALSE || pr.getWordWrap().getVal() == XWPFOnOff.OFF) {
                 builder.withAllowWordBreak(true);
             }
         }

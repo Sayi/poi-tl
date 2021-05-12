@@ -10,15 +10,16 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyles;
+import org.junit.jupiter.api.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
+import com.deepoove.poi.xwpf.XWPFOnOff;
 
 public class TocTest {
 
@@ -41,7 +42,7 @@ public class TocTest {
         CTP ctP = tocPara.getCTP();
         CTSimpleField toc = ctP.addNewFldSimple();
         toc.setInstr("TOC \\h");
-        toc.setDirty(STOnOff.TRUE);
+        toc.setDirty(XWPFOnOff.ON);
 
         System.out.println(doc.isEnforcedUpdateFields());
 
@@ -53,6 +54,7 @@ public class TocTest {
         doc.close();
     }
 
+    @Test
     public void testTOC() throws IOException {
         Configure config = Configure.builder().bind("toc", new RenderPolicy() {
 
@@ -66,7 +68,7 @@ public class TocTest {
 
                 CTSimpleField toc = ctP.addNewFldSimple();
                 toc.setInstr("TOC \\o");
-                toc.setDirty(STOnOff.TRUE);
+                toc.setDirty(XWPFOnOff.ON);
 
                 // XWPFRun createRun = tocPara.createRun();
                 // createRun.addBreak(BreakType.PAGE);
