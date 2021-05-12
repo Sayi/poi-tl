@@ -13,4 +13,7 @@ assignees: ''
 
 ### Minimal test code to reproduce the issue
 
+```java
+
+```
 ### Minimal Docx template file
