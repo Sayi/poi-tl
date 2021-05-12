@@ -1,0 +1,1714 @@
+= Poi-tl Documentation
+Sayi <sayi90@163.com>
+v1.9.1 
+:description: word模板引擎
+:keywords: poi,word,docx,template,模板,导出,图表,合并
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: left
+// :toclevels: 3
+:icons: font
+// :source-highlighter: rouge
+// :rouge-style: monokai
+:source-highlighter: highlightjs
+:highlightjs-theme: zenburn
+:highlightjs-languages: groovy
+:numbered:
+:nofooter:
+:sectlinks:
+:sectanchors:
+:imagesdir: ../
+// :stylesheet: asciidoctor.css
+// :linkcss:
+
+poi-tl（poi template language）是Word模板引擎，基于Word模板和数据生成新的文档。
+
+[quote]
+____
+在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
+____
+
+== Why poi-tl
+[options="header", stripes=none]
+|===
+| 方案 | 移植性 |  功能性  | 易用性
+| **Poi-tl** | Java跨平台 | Word模板引擎 | 基于Apache POI
+| Apache POI | Java跨平台 | Apache项目，功能丰富 | 文档不全，这里有一个教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
+| Freemarker | XML跨平台 | 仅支持文本，很大的局限性 | 不推荐，需要维护XML结构，代码后期不可维护
+| OpenOffice | 部署OpenOffice，移植性较差 | - | 需要了解OpenOffice的API
+| HTML浏览器导出 | 依赖浏览器的实现，移植性较差 | HTML不能很好的兼容Word的格式 | -
+| Jacob、winlib | Windows平台 | - | 复杂，完全不推荐使用
+|===
+
+Apache POI不仅封装了易用的文档API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作文档XML结构，**poi-tl**正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。
+
+[cols=",", options="header"]
+|===
+|引擎功能 |描述
+|icon:check-circle[role="green"]文本 |将标签渲染为文本
+|icon:check-circle[role="green"]图片 |将标签渲染为图片
+|icon:check-circle[role="green"]表格 |将标签渲染为表格
+|icon:check-circle[role="green"]列表 |将标签渲染为列表
+|icon:check-circle[role="green"]图表 |条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）等图表渲染
+|icon:check-circle[role="green"]If Condition判断 |隐藏或者显示某些文档内容（包括文本、段落、图片、表格、列表、图表等）
+|icon:check-circle[role="green"]Foreach Loop循环 |循环某些文档内容（包括文本、段落、图片、表格、列表、图表等）
+|icon:check-circle[role="green"]Loop表格行 |循环渲染表格的某一行
+|icon:check-circle[role="green"]Loop表格列 |循环渲染表格的某一列
+|icon:check-circle[role="green"]Loop有序列表 |支持有序列表的循环，同时支持多级列表
+|icon:check-circle[role="green"]图片替换 |将原有图片替换成另一张图片
+|icon:check-circle[role="green"]书签、锚点、超链接 |支持设置书签，文档内锚点和超链接功能
+|icon:check-circle[role="green"]强大的表达式 |完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL...
+|icon:check-circle[role="green"]标签定制 |支持自定义标签前后缀
+|icon:check-circle[role="green"]文本框 |文本框内标签支持
+|icon:check-circle[role="green"]样式 |模板即样式，同时代码也可以设置样式
+|icon:check-circle[role="green"]模板嵌套 |模板包含子模板，子模板再包含子模板
+|icon:check-circle[role="green"]合并 |Word合并Merge，也可以在指定位置进行合并
+|icon:check-circle[role="green"]用户自定义函数(插件) |在文档任何位置执行函数
+|===
+
+**poi-tl**是一个免费开源的Java类库，你可以非常方便的加入到你的Java项目中。
+
+== 软件要求
+* Apache POI 4.1.2+
+* JDK 1.8+
+
+== 历史版本
+点击下方链接查阅poi-tl历史版本文档，其中v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本：
+
+* link:http://deepoove.com/poi-tl/1.8.x/[1.8.x Documentation , window=_blank]
+* link:http://deepoove.com/poi-tl/1.7.x/[1.7.x Documentation , window=_blank]
+* link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]
+* link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]
+
+V1.9.x版本作了一些不兼容但更强大的改动，升级的时候需要注意以下几点：
+
+* 移除ELModel类，改用useSpringEL()和useDefaultEL(true)
+* 移除NumbericRenderData，改用NumberingRenderData
+* 移除MiniTableRenderData，改用TableRenderData
+* 移除MiniTableRenderPolicy，改用TableRenderPolicy
+* 移除Configure.newBuilder()，改用Configure.builder()
+
+
+== Getting Started
+=== Maven
+[source, xml]
+----
+<dependency>
+  <groupId>com.deepoove</groupId>
+  <artifactId>poi-tl</artifactId>
+  <version>1.9.1</version>
+</dependency>
+----
+
+=== Gradle 
+[source, groovy]
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.9.1'
+
+=== 2分钟快速入门
+新建Word文档template.docx，包含标签 `{{title}}` 
+[example]
+--
+.template.docx 
+{{title}}
+--
+
+[example]
+--
+.代码示例
+[source, java]
+----
+XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
+  new HashMap<String, Object>(){{
+    put("title", "Hi, poi-tl Word模板引擎");
+}}); <1> <2>
+template.writeAndClose(new FileOutputStream("output.docx")); <3>
+----
+<1> `compile` 编译模板
+<2> `render` 渲染数据
+<3> `write` 输出到流
+
+*TDO模式：Template + data-model = output*
+--
+
+[example]
+--
+.output.docx
+Hi, poi-tl Word模板引擎
+--
+
+=== Template：模板
+
+模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。
+
+所有的标签都是以``{{``开头，以``}}``结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。
+
+poi-tl模板遵循**“所见即所得”**的设计，模板和标签的样式会被完全保留。
+
+
+=== Data-model：数据
+
+数据类似于哈希或者字典，可以是Map结构（key是标签名称）：
+[source, java]
+----
+Map<String, Object> data = new HashMap<>();
+data.put("name", "Sayi");
+data.put("start_time", "2019-08-04");
+----
+
+可以是对象（属性名是标签名称）：
+[source, java]
+----
+public class Data {
+  private String name;
+  private String startTime;
+  private Author author;
+}
+----
+
+TIP: 数据可以是树结构，每级之间用点来分隔开，比如``{{author.name}}``标签对应的数据是author对象的name属性值。
+
+FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径、宽和高：
+[source, html]
+<img src="{{path}}" width="{{width}}" height="{{height}}">
+
+但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口RenderData，比如图片数据模型PictureRenderData包含图片路径、宽、高三个属性。
+
+=== Output：输出
+以流的方式进行输出：
+
+[source, java]
+----
+template.write(OutputStream stream);
+----
+
+可以写到任意输出流中，比如文件流或网络流：
+[source, java]
+----
+response.setContentType("application/octet-stream");
+response.setHeader("Content-disposition","attachment;filename=\""+"out_template.docx"+"\"");  
+
+// HttpServletResponse response
+OutputStream out = response.getOutputStream();
+BufferedOutputStream bos = new BufferedOutputStream(out);
+template.write(bos);
+bos.flush();
+out.flush();
+PoitlIOUtils.closeQuietlyMulti(template, bos, out);
+----
+**最后不要忘记关闭这些流。**
+
+== 标签
+poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成，{{title}}是标签，{{?title}}也是标签，title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。
+
+=== 文本
+[example]
+--
+{{var}}
+--
+
+数据模型：
+
+- `String` ：文本
+- `TextRenderData` ：有样式的文本
+- `HyperlinkTextRenderData` ：超链接文本
+- `Object` ：调用 toString() 方法转化为文本
+
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+put("name", "Sayi");
+put("author", new TextRenderData("000000", "Sayi"));
+put("link", new HyperlinkTextRenderData("website", "http://deepoove.com"));
+put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));
+----
+--
+
+除了new操作符，还提供了更加优雅的工厂 `Texts` 和链式调用的方式轻松构建文本模型。
+[sidebar]
+.链式代码示例
+--
+[source, java]
+----
+put("name", "Sayi");
+put("author", Texts.of("Sayi").color("000000").create());
+put("link", Texts.of("website").link("http://deepoove.com").create());
+put("anchor", Texts.of("anchortxt").anchor("appendix1").create());
+----
+--
+
+所见即所得，标签的样式会应用到替换后的文本上，也可以通过代码设定文本的样式。
+
+[sidebar]
+.TextRenderData的结构体
+--
+[source, json]
+----
+{
+  "text": "Sayi",
+  "style": {
+    "strike": false, <1>
+    "bold": true, <2>
+    "italic": false, <3>
+    "color": "00FF00", <4>
+    "underLine": false, <5>
+    "fontFamily": "微软雅黑", <6>
+    "fontSize": 12, <7>
+    "highlightColor": "green", <8>
+    "vertAlign": "superscript", <9>
+    "characterSpacing" : 20 <10>
+  }
+}
+----
+<1> 删除线
+<2> 粗体
+<3> 斜体
+<4> 颜色
+<5> 下划线
+<6> 字体
+<7> 字号
+<8> 背景高亮色
+<9> 上标或者下标
+<10> 间距
+--
+TIP: 文本换行使用 `\n` 字符。
+
+=== 图片
+[example]
+图片标签以@开始：{{@var}}
+
+数据模型：
+
+- `PictureRenderData`
+
+推荐使用工厂 `Pictures` 构建图片模型。
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+// 本地图片
+put("localImg", Pictures.ofLocal("sayi.png").size(120, 120).create());
+
+// 图片流
+put("streamImg", Pictures.ofStream(new FileInputStream("logo.jpeg"), PictureType.JPEG)
+  .size(100, 120).create());
+
+// 网络图片(注意网络耗时对系统可能的性能影响) 
+put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG)
+  .size(100, 100).create());
+
+// java 图片
+put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
+  .size(100, 100).create());
+----
+--
+图片支持BufferedImage，这意味着我们可以利用Java生成图表插入到word文档中。
+
+[sidebar]
+.PictureRenderData的结构体
+--
+[source, json]
+----
+{
+  "pictureType" : "PNG", <1>
+  "image": byte[], <2>
+  "altMeta": "图片不存在", <3>
+  "width": 100, <4>
+  "height": 100 <5>
+}
+----
+<1> 图片类型
+<2> 图片byte[]字节数组
+<3> 当无法获取图片时展示的文字
+<4> 宽度，单位是像素
+<5> 高度，单位是像素
+--
+
+=== 表格
+[example]
+表格标签以#开始：{{#var}}
+
+数据模型：
+
+- `TableRenderData`
+
+推荐使用工厂 `Tables` 、 `Rows` 和 `Cells` 构建表格模型。
+
+[example]
+.基础表格示例
+--
+[source, java]
+----
+// 一个2行2列的表格
+put("table0", Tables.of(new String[][] { 
+                new String[] { "00", "01" },
+                new String[] { "10", "11" }
+            }).border(BorderStyle.DEFAULT).create());
+----
+image::./table_simple.png[width=500]
+--
+
+[example]
+.表格样式示例
+--
+[source, java]
+----
+// 第0行居中且背景为蓝色的表格
+RowRenderData row0 = Rows.of("姓名", "学历").textColor("FFFFFF")
+      .bgColor("4472C4").center().create();
+RowRenderData row1 = Rows.create("李四", "博士");
+put("table1", Tables.create(row0, row1));
+----
+image::./table_header.png[width=500]
+--
+
+[example]
+.表格合并示例
+--
+[source, java]
+----
+// 合并第1行所有单元格的表格
+RowRenderData row0 = Rows.of("列0", "列1", "列2").center().bgColor("4472C4").create();
+RowRenderData row1 = Rows.create("没有数据", null, null);
+MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 2)).build();
+put("table3", Tables.of(row0, row1).mergeRule(rule).create());
+----
+image::./table_merge.png[width=500]
+--
+
+TableRenderData表格模型在单元格内可以展示文本和图片，同时也可以指定表格样式、行样式和单元格样式，而且在N行N列渲染完成后可以应用单元格合并规则 **MergeCellRule** ，从而实现更复杂的表格。
+
+[sidebar]
+.TableRenderData的结构体
+--
+[source, json]
+----
+{
+  "rows": [ <1>
+    {
+      "cells": [ <2>
+        {
+          "paragraphs": [ <3>
+            {
+              "contents": [
+                {
+                  [TextRenderData] <4>
+                },
+                {
+                  [PictureRenderData] <5>
+                }
+              ],
+              "paragraphStyle": null <6>
+            }
+          ],
+          "cellStyle": { <7>
+            "backgroundColor": "00000",
+            "vertAlign": "CENTER"
+          }
+        }
+      ],
+      "rowStyle": { <8>
+        "height": 2.0f
+      }
+    }
+  ],
+  "tableStyle": { <9>
+    "width": 14.63f, <10>
+    "colWidths": null
+  },
+  "mergeRule": { <11>
+    "mapping": {
+      "0-0": "1-2"
+    }
+  }
+}
+----
+<1> 行数据
+<2> 单元格数据
+<3> 单元格内段落
+<4> 单元格内文本
+<5> 单元格内图片
+<6> 单元格内段落文本的样式：对齐
+<7> 单元格样式：垂直对齐方式，背景色
+<8> 行样式：行高(单位cm)
+<9> 表格样式：表格对齐、边框样式
+<10> 表格宽度(单位cm)，表格的最大宽度 = 页面宽度 - 页边距宽度 * 2，页面宽度为A4(20.99 * 29.6，页边距为3.18 * 2.54)的文档最大表格宽度14.63cm。
+<11> 单元格合并规则，比如第0行第0列至第1行第2列单元格合并
+--
+
+[TIP]
+====
+现实需求中表格的布局和样式可能很复杂，可以尝试一些已有表格插件来解决，参见link:#plugin-list[可选插件列表]。
+
+我们也可以编写插件，完全由自己生成整个表格，这个方案需要你熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 link:#cus-policy-section[开发一个插件]。
+====
+
+=== 列表
+[example]
+列表标签以*开始：{{*var}}
+
+数据模型：
+
+- `NumberingRenderData`
+
+推荐使用工厂 `Numberings` 构建编号模型。
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+put("list", Numberings.create("Plug-in grammar",
+                    "Supports word text, pictures, table...",
+                    "Not just templates"));
+----
+--
+编号样式支持罗马字符、有序无序等，可以通过 `Numberings.of(NumberingFormat)` 来指定。
+[source, java]
+DECIMAL //1. 2. 3.
+DECIMAL_PARENTHESES //1) 2) 3)
+BULLET //● ● ●
+LOWER_LETTER //a. b. c.
+LOWER_ROMAN //i ⅱ ⅲ
+UPPER_LETTER //A. B. C.
+
+[TIP]
+====
+**如果列表的每一项不是简单的文本，而是包含很多文档内容，或者多级列表该怎么生成？**
+区块对的循环功能可以很好的循环列表，并且保持有序列表编号有序。
+====
+
+=== 区块对
+[example]
+区块对由前后两个标签组成，开始标签以?标识，结束标签以/标识：{{?sections}}{{/sections}}
+
+区块对开始和结束标签中间可以**包含多个图片、表格、段落、列表、图表**等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。
+
+区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素可以被渲染零次，一次或N次，这取决于区块对的取值。
+
+False或空集合:: 隐藏区块中的所有文档元素
+非False且不是集合:: 显示区块中的文档元素，渲染一次
+非空集合:: 根据集合的大小，循环渲染区块中的文档元素
+
+NOTE: 集合是根据值的类型是否实现了 `Iterable` 接口来判断。
+
+==== False或空集合
+如果区块对的值是 null 、false 或者空的集合，位于区块中的所有文档元素将不会显示，这就等同于if语句的条件为 false。
+
+[example]
+--
+.data-model
+[source, json]
+----
+{
+  "announce": false
+}
+----
+--
+
+[example]
+--
+.template.docx
+Made it,Ma!{{?announce}}Top of the world!{{/announce}}
+
+Made it,Ma!
+
+{{?announce}}
+
+Top of the world!🎋
+
+{{/announce}}
+--
+
+[example]
+--
+.output.docx
+Made it,Ma!
+
+Made it,Ma!
+--
+
+#### 非False且不是集合
+如果区块对的值不为 null 、 false ，且不是集合，位于区块中的所有文档元素会被渲染一次，这就等同于if语句的条件为 true。
+
+
+[example]
+--
+.data-model
+[source, json]
+----
+{
+  "person": { "name": "Sayi" }
+}
+----
+--
+
+[example]
+--
+.template.docx
+{{?person}}  
+
+Hi {{name}}!
+
+{{/person}}
+--
+
+[example]
+--
+.output.docx
+Hi Sayi!
+--
+
+IMPORTANT: 区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是``boolean``类型且为``true``时，这些标签作用域才不会改变。
+
+#### 非空集合
+如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染一次或者N次，这取决于集合的大小，类似于foreach语法。
+
+[example]
+--
+.data-model
+[source, json]
+----
+{
+  "songs": [
+    { "name": "Memories" },
+    { "name": "Sugar" },
+    { "name": "Last Dance" }
+  ]
+}
+----
+--
+
+[example]
+--
+.template.docx
+{{?songs}}
+
+{{name}}
+
+{{/songs}}
+--
+
+[example]
+--
+.output.docx
+Memories
+
+Sugar
+
+Last Dance
+--
+
+[sidebar]
+.循环内置变量
+--
+在循环中提供了一些内置变量，这些内置变量只能用于区块对中。
+[options="header", stripes=even]
+|===
+| 变量 | 类型 |  说明  
+| _index | int | 返回当前迭代从0开始的索引 
+| _is_first | boolean | 辨别循环项是否是当前迭代的第一项。 
+| _is_last | boolean | 辨别循环项是否是当前迭代的最后一项。 
+| _has_next | boolean | 辨别循环项是否是有下一项。 
+| _is_even_item | boolean | 辨别循环项是否是当前迭代间隔1的奇数项。 
+| _is_odd_item | boolean | 辨别循环项是否是当前迭代间隔1的偶数项。 
+| #this | object | 引用当前对象，由于#和已有表格标签标识冲突，所以在文本标签中需要使用=号标识来输出文本。 
+|===
+
+示例数据:
+```json
+{
+  "produces": [
+    "application/json",
+    "application/xml"
+  ]
+}
+```
+
+template.docx:
+
+```
+{{?produces}}
+{{_index}}. {{=#this}}
+{{/produces}}
+```
+
+output.docx:
+
+```html
+0. application/json
+1. application/xml
+```
+--
+
+=== 嵌套
+[example]
+嵌套又称为导入、包含或者合并，以+标识：{{+var}}
+
+数据模型：
+
+- `DocxRenderData`
+
+推荐使用工厂 `Includes` 构建嵌套模型。
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+List<SegmentData> subData = new ArrayList<SegmentData>();
+SegmentData s1 = new SegmentData();
+s1.setTitle("Monday");
+s1.setContent("Two parallel lines will intersect one day.");
+subData.add(s1);
+
+SegmentData s2 = new SegmentData();
+s2.setTitle("Friday");
+s2.setContent("Confidence is not necessarily successful.");
+subData.add(s2);
+
+put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create()); <1> <2>
+----
+<1> 主模板包含嵌套标签{{+docx_word}}
+<2> segment.docx是一个包含了{{title}}和{{content}}的子模板，使用subData集合渲染后合并到主模板
+--
+
+== 引用标签
+引用标签是一种特殊位置的特殊标签，提供了直接引用文档中的元素句柄的能力，**这个重要的特性在我们只想改变文档中某个元素极小一部分样式和属性的时候特别有用，因为其余样式和属性都可以在模板中预置好，真正的所见即所得**。
+
+[#ref-policy-section]
+=== 图片
+
+[example]
+引用图片标签是一个文本：{{var}}，标签位置在：设置图片格式--可选文字--标题（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
+
+image::./ref2.png[align='center']
+
+引用图片标签只会替换图片而不会改变图片尺寸和布局，数据模型和图片标签一致：`PictureRenderData` 。
+[example]
+--
+.代码示例
+[source, java]
+----
+put("img", Pictures.ofLocal("sayi.png").create());
+----
+--
+
+=== 多系列图表
+多系列图表指的是条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图等。
+
+[example]
+多系列图表的标签是一个文本：{{var}}，标签位置在：图表区格式--可选文字--标题（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
+
+image::./chartref.png[align='center']
+
+数据模型：
+
+- `ChartMultiSeriesRenderData`
+
+推荐使用工厂 `Charts` 构建图表模型。
+
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+ChartMultiSeriesRenderData chart = Charts
+                .ofMultiSeries("ChartTitle", new String[] { "中文", "English" })
+                .addSeries("countries", new Double[] { 15.0, 6.0 })
+                .addSeries("speakers", new Double[] { 223.0, 119.0 })
+                .create();
+
+put("barChart", chart);
+----
+--
+
+新的图表系列数据会完全替换原有图表数据，而原有图表的样式都会被保留。
+
+[sidebar]
+.ChartMultiSeriesRenderData的结构体
+--
+[source, json]
+----
+{
+  "chartTitle": "ChartTitle", <1>
+  "categories": [ <2>
+    "中文", "English"
+  ],
+  "seriesDatas": [ <3>
+    {
+      "name": "countries", <4>
+      "values": [ <5>
+        15, 6
+      ]
+    },
+    {
+      "name": "speakers",
+      "values": [
+        223, 119
+      ]
+    }
+  ]
+}
+----
+<1> 图表标题
+<2> 种类
+<3> 所有系列
+<4> 当前系列名称
+<5> 当前系列对应每个种类的值
+--
+
+=== 单系列图表
+单系列图表指的是饼图（3D饼图）、圆环图等。
+
+[example]
+单系列图表的标签是一个文本：{{var}}，标签位置在：图表区格式--可选文字--标题（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
+
+image::./piechartref.png[align='center']
+
+数据模型：
+
+- `ChartSingleSeriesRenderData`
+
+推荐使用工厂 `Charts` 构建图表模型。
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+ChartSingleSeriesRenderData pie = Charts
+                .ofSingleSeries("ChartTitle", new String[] { "美国", "中国" })
+                .series("countries", new Integer[] { 9826675, 9596961 })
+                .create();
+
+put("pieChart", pie);
+----
+--
+
+[sidebar]
+.ChartSingleSeriesRenderData的结构体
+--
+[source, json]
+----
+{
+  "chartTitle": "ChartTitle", <1>
+  "categories": [ <2>
+    "美国",
+    "中国"
+  ],
+  "seriesData": { <3>
+    "name": "countries", <4>
+    "values": [ <5>
+      9826675,
+      9596961
+    ]
+  }
+}
+----
+<1> 图表标题
+<2> 种类
+<3> 单系列
+<4> 单系列名称
+<5> 单系列对应每个种类的值
+--
+
+=== 组合图表
+组合图表指的是由多系列图表（柱形图、折线图、面积图）组合而成的图表。
+
+[example]
+组合图表的标签是一个文本：{{var}}，标签位置在：图表区格式--可选文字--标题（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
+
+image::./chart_combo.jpeg[align='center']
+
+同多系列图表 `ChartMultiSeriesRenderData` 数据模型。
+
+[sidebar]
+.代码示例
+--
+[source, java]
+----
+ChartSingleSeriesRenderData comb = Charts
+                .ofComboSeries("MyChart", new String[] { "中文", "English" })
+                .addBarSeries("countries", new Double[] { 15.0, 6.0 })
+                .addBarSeries("speakers", new Double[] { 223.0, 119.0 })
+                .addBarSeries("NewBar", new Double[] { 223.0, 119.0 })
+                .addLineSeries("youngs", new Double[] { 323.0, 89.0 })
+                .addLineSeries("NewLine", new Double[] { 123.0, 59.0 }).create();
+
+put("combChart", comb);
+----
+--
+
+[sidebar]
+.ChartMultiSeriesRenderData的结构体
+--
+[source, json]
+----
+{
+  "chartTitle": "MyChart", <1>
+  "categories": [ <2>
+    "中文", "English"
+  ],
+  "seriesDatas": [ <3>
+    {
+      "name": "countries", <4>
+      "comboType": "BAR", <5>
+      "values": [ <6>
+        15, 6
+      ]
+    },
+    {
+      "name": "speakers",
+      "comboType": "LINE",
+      "values": [
+        223, 119
+      ]
+    }
+  ]
+}
+----
+<1> 图表标题
+<2> 种类
+<3> 所有系列
+<4> 当前系列名称
+<5> 当前系列的图表类型comboType：柱形图BAR、折线图LINE、面积图AREA
+<6> 当前系列对应每个种类的值
+--
+
+== 配置
+poi-tl提供了配置类 `Configure` 来存储常用的设置，配置的使用方式如下：
+[source, java]
+ConfigureBuilder builder = Configure.builder();
+XWPFTemplate.compile("template.docx", builder.buid());
+
+=== 前后缀
+我一直使用 `{{}}` 的方式来致敬Google CTemplate，如果你更偏爱freemarker `${}` 的方式：
+[source, java]
+----
+builder.buildGramer("${", "}");
+----
+
+=== 标签类型
+默认的图片标签是以@开始，如果你希望使用%开始作为图片标签：
+[source, java]
+builder.addPlugin('%', new PictureRenderPolicy());
+
+如果你不是很喜欢默认的标签标识类型，你也可以自由更改：
+[source, java]
+builder.addPlugin('@', new TableRenderPolicy());
+builder.addPlugin('#', new PictureRenderPolicy());
+
+这样{{@var}}就变成了表格标签，{{#var}}变成了图片标签，虽然不建议改变默认标签标识，但是从中可以看到poi-tl插件的灵活度，在插件章节中我们将会看到如何自定义自己的标签。
+
+
+=== 标签正则
+标签默认支持**中文、字母、数字、下划线**的组合，我们可以通过正则表达式来配置标签的规则，比如不允许中文：
+[source, java]
+builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
+
+比如允许除了标签前后缀外的任意字符：
+[source, java]
+builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));
+
+=== 计算标签值
+计算标签值是指如何在数据中索引标签的值，你可以完全自定义计算的方式。
+[source, java]
+----
+builder.setRenderDataComputeFactory(new RenderDataComputeFactory());
+----
+
+TIP: RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂提供标签表达式计算接口 `RenderDataCompute` 的实现。
+
+我们可以通过此方式支持任何的表达式引擎，Spring表达式正是通过 `SpELRenderDataCompute` 实现。
+
+=== Spring表达式
+Spring Expression Language 是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用前需要引入相应的依赖：
+[source, xml]
+----
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-expression</artifactId>
+  <version>4.3.6.RELEASE</version>
+</dependency>
+----
+
+为了在模板标签中使用SpringEL表达式，需要将标签配置为SpringEL模式：
+[source, java]
+----
+builder.useSpringEL();
+----
+
+==== 基本使用
+关于SpringEL的写法可以参见link:https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/htmlsingle/#expressions[官方文档]，下面给出一些典型的示例。
+[example]
+--
+[source]
+----
+{{name}}
+{{name.toUpperCase()}} <1>
+{{name == 'poi-tl'}} <2>
+{{empty?:'这个字段为空'}}
+{{sex ? '男' : '女'}} <3>
+{{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <4>
+{{price/10000 + '万元'}} <5>
+{{dogs[0].name}} <6>
+{{localDate.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy年MM月dd日'))}} <7>
+----
+<1> 类方法调用，转大写
+<2> 判断条件
+<3> 三目运算符
+<4> 类方法调用，时间格式化
+<5> 运算符
+<6> 数组列表使用下标访问
+<7> 使用静态类方法
+--
+
+==== SpringEL作为区块对的条件
+Spring表达式与区块对结合可以实现更强大的功能。
+
+[example]
+--
+.data-model
+[source, json]
+----
+{
+  "desc": "",
+  "summary": "Find A Pet",
+  "produces": [
+    "application/xml"
+  ]
+}
+----
+--
+
+[example]
+--
+.template.docx
+{{?desc == null or desc == ''}}{{summary}}{{/}}
+
+{{?produces == null or produces.size() == 0}}无{{/}}
+--
+
+[example]
+--
+.output.docx
+Find A Pet
+--
+
+
+TIP: 使用SpringEL时区块对的结束标签可以是：{{/}}。
+
+=== 错误处理
+poi-tl支持在发生错误的时候定制引擎的行为。
+
+==== 标签无法被计算
+标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，如 `{{author.name}}` 中author的值为null，此时就无法计算name的值。
+
+poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为``null``。当我们需要严格校验模板是否有人为失误时，可以抛出异常：
+[source, java]
+----
+builder.useDefaultEL(true);
+----
+注意的是，如果使用SpringEL表达式，可以通过参数来配置异常处理的方式：
+[source, java]
+----
+builder.useSpringEL(true);
+----
+
+==== 标签数据类型不合法
+我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法（为空或者是一个错误的数据类型），可以配置模板标签的渲染行为。
+
+poi-tl默认的行为会清空标签，如果希望保留标签：
+[source, java]
+----
+builder.setValidErrorHandler(new DiscardHandler());
+----
+
+如果希望执行严格的校验，直接抛出异常：
+[source, java]
+----
+builder.setValidErrorHandler(new AbortHandler());
+----
+
+
+=== 模板生成模板
+模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们把原先的一个模板标签分成两个模板标签：
+
+[source, java]
+put("title", "{{title}}\n{{subtitle}}");
+
+=== 日志
+poi-tl使用slf4j作为日志门面，你可以自由选择日志实现，比如logback、log4j等。我们以logback为例：
+
+首先在项目中添加logback依赖：
+[source, xml]
+----
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-core</artifactId>
+  <version>1.2.3</version>
+</dependency>
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+----
+
+然后配置logback.xml文件，可以配置日志级别和格式：
+[source, xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.deepoove.poi" level="debug" additivity="false">
+    <appender-ref ref="STDOUT" />
+  </logger>
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+----
+
+debug级别的日志会打印解析渲染过程中的信息，有利于程序调试，另外在模板引擎执行结束后会打印耗时信息：
+[example]
+--
+Successfully Render the template file in 13 millis
+--
+
+== 插件
+插件，又称为**自定义函数**，它允许用户在模板标签位置处执行预先定义好的函数。由于插件机制的存在，我们几乎可以在模板的任何位置执行任何操作。
+
+*插件是poi-tl的核心*，默认的标签和引用标签都是通过插件加载。
+
+=== 默认插件
+poi-tl默认提供了八个策略插件，用来处理文本、图片、列表、表格、文档嵌套、引用图片、引用多系列图表、引用单系列图表等：
+
+* TextRenderPolicy
+* PictureRenderPolicy
+* NumberingRenderPolicy
+* TableRenderPolicy
+* DocxRenderPolicy
+* MultiSeriesChartTemplateRenderPolicy
+* SingleSeriesChartTemplateRenderPolicy
+* DefaultPictureTemplateRenderPolicy
+
+由于这八个插件如此通用，因此将这些插件注册为不同的标签类型，从而搭建了poi-tl的标签体系，也构筑了poi-tl高度自由的插件机制。
+
+[#cus-policy-section]
+=== 开发一个插件
+插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现``RenderPolicy``接口开发自己的插件：
+[source, java]
+----
+public interface RenderPolicy {
+  void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <1> <2> <3>
+}
+----
+<1> ElementTemplate是当前标签位置
+<2> data是数据模型
+<3> XWPFTemplate代表整个模板
+
+接下来我们写一个将标签替换为Hello, world的插件：
+[example]
+--
+[source, java]
+----
+public class HelloWorldRenderPolicy implements RenderPolicy {
+
+  @Override
+  public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
+    XWPFRun run = ((RunTemplate) eleTemplate).getRun(); <1>
+    // String thing = String.valueOf(data);
+    String thing = "Hello, world";
+    run.setText(thing, 0); <2>
+  }
+
+}
+----
+<1> XWPFRun是Apache POI的类，表示当前位置
+<2> 渲染文本hello, world
+--
+
+poi-tl提供了抽象模板类 `AbstractRenderPolicy` ，它定义了一些骨架步骤并且将数据模型的校验和渲染逻辑分开，使用泛型约束数据类型，让插件开发起来更简单，接下来我们再写一个更复杂的插件，在模板标签位置完完全全使用代码创建一个表格，这样我们就可以随心所欲的操作表格：
+[example]
+--
+[source, java]
+----
+public class CustomTableRenderPolicy extends AbstractRenderPolicy<Object> {
+
+  @Override
+  protected void afterRender(RenderContext<Object> context) {
+    // 清空标签
+    clearPlaceholder(context, true);
+  }
+
+  @Override
+  public void doRender(RenderContext<Object> context) throws Exception {
+    XWPFRun run = context.getRun();
+    BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
+    // 定义行列
+    int row = 10, col = 8;
+    // 插入表格
+    XWPFTable table = bodyContainer.insertNewTable(run, row, col);
+
+    // 表格宽度
+    TableTools.widthTable(table, 14.63f, col);
+    // 边框和样式
+    TableTools.borderTable(table, BorderStyle.DEFAULT);
+
+    // 1) 调用XWPFTable API操作表格
+    // 2) 调用TableRenderPolicy.Helper.renderRow方法快速方便的渲染一行数据
+    // 3) 调用TableTools类方法操作表格，比如合并单元格
+    // ......
+    TableTools.mergeCellsHorizonal(table, 0, 0, 7);
+    TableTools.mergeCellsVertically(table, 0, 1, 9);
+  }
+
+}
+----
+CustomTableRenderPolicy通过 `bodyContainer.insertNewTable` 在当前标签位置插入表格，使用XWPFTable API来操作表格。
+--
+NOTE: 随心所欲的意思是原则上Apache POI支持的操作，都可以在当前标签位置进行渲染，Apache POI不支持的操作也可以通过直接操纵底层XML来实现。
+
+=== 使用插件
+插件开发好后，为了让插件在某个标签处执行，我们需要将插件与标签绑定。
+
+==== 将插件应用到标签
+当我们有个模板标签为 `{{report}}`，默认是文本标签，如果希望在这个位置做些不一样或者更复杂的事情，我们可以将插件应用到这个模板标签：
+[source, java]
+ConfigureBuilder builder = Configure.builder();
+builder.bind("report", new CustomTableRenderPolicy());
+
+此时，`{{report}}` 将不再是一个文本标签，而是一个自定义标签。
+
+ConfigureBuilder采用了链式调用的方式，可以一次性设置多个标签的插件：
+[source, java]
+builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());
+
+==== 将插件注册为新标签类型
+当开发的插件具有一定的通用能力就可以将其注册为新的标签类型。比如增加%标识：`{{%var}}`，对应自定义的渲染策略 `HelloWorldRenderPolicy`：
+[source, java]
+builder.addPlugin('%', new HelloWorldRenderPolicy());
+
+此时，`{{%var}}` 将成为一种新的标签类型，它的执行函数是 `HelloWorldRenderPolicy`。
+
+=== Plugin Example
+我想用一个完整的代码示例向你展示 _Do Anything Anywhere_ 的想法，它不使用任何poi-tl的默认插件，完全使用匿名类创建新插件完成。
+
+插件是一个函数，它的入参是anywhere和anything，函数体就是do something。
+
+[example]
+--
+[source, java]
+----
+// where绑定policy
+Configure config = Configure.builder().bind("sea", new AbstractRenderPolicy<String>() {
+  @Override
+  public void doRender(RenderContext<String> context) throws Exception { <1>
+      // anywhere
+      XWPFRun where = context.getWhere();
+      // anything
+      String thing = context.getThing();
+      // do 文本
+      where.setText(thing, 0);
+  }
+}).bind("sea_img", new AbstractRenderPolicy<String>() {
+  @Override
+  public void doRender(RenderContext<String> context) throws Exception { <2>
+      // anywhere delegate
+      WhereDelegate where = context.getWhereDelegate();
+      // any thing
+      String thing = context.getThing();
+      // do 图片
+      FileInputStream stream = null;
+      try {
+          stream = new FileInputStream(thing);
+          where.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, 400, 450);
+      } finally {
+          IOUtils.closeQuietly(stream);
+      }
+      // clear
+      clearPlaceholder(context, false);
+  }
+}).bind("sea_feature", new AbstractRenderPolicy<List<String>>() {
+  @Override
+  public void doRender(RenderContext<List<String>> context) throws Exception { <3>
+      // anywhere delegate
+      WhereDelegate where = context.getWhereDelegate();
+      // anything
+      List<String> thing = context.getThing();
+      // do 列表
+      where.renderNumbering(Numberings.of(thing.toArray(new String[] {})).create());
+      // clear
+      clearPlaceholder(context, true);
+  }
+}).build();
+
+// 初始化where的数据
+HashMap<String, Object> args = new HashMap<String, Object>();
+args.put("sea", "Hello, world!");
+args.put("sea_img", "sea.jpg");
+args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
+args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
+
+// 一行代码
+XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx");
+
+----
+<1> 自定义文本插件
+<2> 自定义图片插件
+<3> 自定义列表插件
+--
+
+== 可选插件
+
+[#plugin-list]
+=== 插件列表
+除了八个通用的策略插件外，还内置了一些额外用途的插件。
+|===
+| `DynamicTableRenderPolicy` |动态表格插件，允许直接操作表格对象 |link:#plugin-dynamic-table[示例-动态表格]
+| `HackLoopTableRenderPolicy` |循环表格行，下文会详细介绍 | link:#hack-loop-table[示例-表格行循环]
+| `LoopColumnTableRenderPolicy` |循环表格列 |link:#loop-col-table[示例-表格列循环]
+| `BookmarkRenderPolicy` |书签和锚点 |link:#example-swagger[示例-Swagger文档]
+| `JSONRenderPolicy` |高亮显示JSON代码块 |link:#example-swagger[示例-Swagger文档]
+| `AbstractChartTemplateRenderPolicy` | 引用图表插件，允许直接操作图表对象 |
+| `ParagraphRenderPolicy` |渲染一个段落，可以包含不同样式文本，图片等 |
+| `DocumentRenderPolicy` |渲染多个段落和表格 |
+| `TOCRenderPolicy` |Beta实验功能：目录，打开文档时需要更新域 |
+|===
+
+NOTE: 如果你写了一个不错的插件，欢迎分享。
+
+[#hack-loop-table]
+=== 表格行循环
+`HackLoopTableRenderPolicy` 是一个特定场景的插件，根据集合数据循环表格行。
+
+[example]
+--
+.template.docx
+货物明细和人工费在同一个表格中，货物明细需要展示所有货物，人工费需要展示所有费用。`{{goods}}` 是个标准的标签，将 `{{goods}}` **置于循环行的上一行**，循环行设置要循环的标签和内容，注意此时的标签应该使用 `[]` ，以此来区别poi-tl的默认标签语法。同理，`{{labors}}` 也**置于循环行的上一行**。
+
+image::./example/example_looptable_template.png[width=650, align='center']
+--
+
+[example]
+--
+.代码示例
+`{{goods}}` 和 `{{labors}}` 标签对应的数据分别是货物集合和人工费集合，如果集合为空则会删除循环行。
+[source, java]
+----
+class Goods {
+  private int count;
+  private String name;
+  private String desc;
+  private int discount;
+  private int tax;
+  private int price;
+  private int totalPrice;
+  // getter setter
+}
+
+class Labor {
+  private String category;
+  private int people;
+  private int price;
+  private int totalPrice;
+  // getter setter
+}
+
+List<Goods> goods = new ArrayList<>();
+List<Labor> labors = new ArrayList<>();
+----
+
+接下来我们将插件应用到这两个标签。
+[source, java]
+----
+HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+
+Configure config = Configure.builder()
+        .bind("goods", policy).bind("labors", policy).build(); <1>
+
+XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
+  new HashMap<String, Object>() {{
+      put("goods", goods);
+      put("labors", labors);
+    }}
+);
+----
+<1> 绑定插件
+--
+
+[example]
+--
+.output.docx
+最终生成的文档列出了所有货物和人工费。
+
+image::./example/example_looptable_output.png[width=650, align='center']
+--
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/HackLoopTableRenderPolicyTest.java[JUnit HackLoopTableRenderPolicyTest]，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 `new HackLoopTableRenderPolicy(true)` 来构造插件。
+
+[#loop-col-table]
+=== 表格列循环
+`LoopColumnTableRenderPolicy` 是一个特定场景的插件，根据集合数据循环表格列。**要注意的是，由于文档宽度有限，因此模板列必须设置宽度，所有循环列将平分模板列的宽度。**
+
+[example]
+--
+.template.docx
+`LoopColumnTableRenderPolicy` 循环列的使用方式和插件 `HackLoopTableRenderPolicy` 是一样的，需要将占位标签放在循环列的前一列。
+
+image::./example/example_loopcol_template.png[width=650, align='center']
+--
+
+[example]
+--
+.代码示例
+[source, java]
+----
+LoopColumnTableRenderPolicy policy = new LoopColumnTableRenderPolicy();
+
+Configure config = Configure.builder().bind("goods", policy).build();
+
+XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
+  new HashMap<String, Object>() {{
+      put("goods", goods);
+    }}
+);
+----
+--
+
+[example]
+--
+.output.docx
+最终生成的文档列出了所有货物和人工费。
+
+image::./example/example_loopcol_output.png[width=650, align='center']
+--
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/LoopColumnTableRenderPolicyTest.java[JUnit LoopColumnTableRenderPolicyTest]
+
+[#plugin-dynamic-table]
+=== 动态表格
+当需求中的表格更加复杂的时候，我们完全可以设计好那些固定的部分，将需要动态渲染的部分单元格交给自定义模板渲染策略。poi-tl提供了抽象表格策略 `DynamicTableRenderPolicy` 来实现这样的功能。
+[source, java]
+----
+public abstract class DynamicTableRenderPolicy implements RenderPolicy {
+  public abstract void render(XWPFTable table, Object data);
+}
+----
+
+[example]
+--
+.template.docx
+{{detail_table}}标签可以在表格内的任意单元格内，DynamicTableRenderPolicy会获取XWPFTable对象进而获得操作整个表格的能力。
+
+
+image::./example/dynamic.png[width=650, align='center']
+--
+
+[example]
+--
+.代码示例
+首先新建渲染策略DetailTablePolicy，继承于抽象表格策略。
+[source, java]
+----
+public class DetailTablePolicy extends DynamicTableRenderPolicy {
+
+  // 货品填充数据所在行数
+  int goodsStartRow = 2;
+  // 人工费填充数据所在行数
+  int laborsStartRow = 5;
+
+  @Override
+  public void render(XWPFTable table, Object data) throws Exception {
+    if (null == data) return;
+    DetailData detailData = (DetailData) data;
+
+    // 人工费
+    List<RowRenderData> labors = detailData.getLabors();
+    if (null != labors) {
+      table.removeRow(laborsStartRow);
+      // 循环插入行
+      for (int i = 0; i < labors.size(); i++) {
+        XWPFTableRow insertNewTableRow = table.insertNewTableRow(laborsStartRow);
+        for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
+
+        // 合并单元格
+        TableTools.mergeCellsHorizonal(table, laborsStartRow, 0, 3);
+        // 单行渲染
+        TableRenderPolicy.Helper.renderRow(table.getRow(laborsStartRow), labors.get(i));
+      }
+    }
+
+    // 货物
+    List<RowRenderData> goods = detailData.getGoods();
+    if (null != goods) {
+      table.removeRow(goodsStartRow);
+      for (int i = 0; i < goods.size(); i++) {
+        XWPFTableRow insertNewTableRow = table.insertNewTableRow(goodsStartRow);
+        for (int j = 0; j < 7; j++) insertNewTableRow.createCell();
+        TableRenderPolicy.Helper.renderRow(table.getRow(goodsStartRow), goods.get(i));
+      }
+    }
+  }
+}
+----
+
+然后将模板标签{{detail_table}}设置成此策略。
+[source, java]
+----
+Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();
+----
+--
+
+[example]
+--
+.output.docx
+最终生成的文档列出了所有货物和人工费。
+
+image::./example/dynamic_output.png[width=650, align='center']
+--
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
+
+
+== 示例
+接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。
+
+=== 软件说明文档
+[example]
+--
+.output.docx
+需要生成这样的一份软件说明书：拥有封面和页眉，正文含有不同样式的文本，还有表格，列表和图片。link:./example/poi-tl.docx[poi_tl.docx]
+
+image::./example/example_poitl_output1.png[align='center']
+--
+
+[example]
+--
+.template.docx
+使用poi-tl标签制作模板，可以看到标签可以拥有样式。
+
+image::./example/example_poitl_template1.png[align='center']
+--
+
+这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型，所见即所得。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[JUnit XWPFTemplateTest]
+
+[#example-table]
+=== 付款通知书
+[example]
+--
+.output.docx
+需要生成这样的一份流行的通知书：大部分数据是由表格构成的，需要创建一个订单的表格(图中第一个表格)，还需要在一个已有表格中，填充货物明细和人工费数据(图中第二个表格)。下载最终生成的文件link:./example/payment.docx[payment.docx]
+
+image::./example/example_payment_output.png[align='center']
+--
+
+[example]
+--
+.template.docx
+使用{{#order}}生成poi-tl提供的默认样式的表格，设置{{detail_table}}为自定义模板渲染策略(继承抽象表格策略DynamicTableRenderPolicy)，自定义已有表格中部分单元格的渲染。
+
+image::./example/example_payment_template.png[align='center']
+--
+
+这个示例向我们展示了poi-tl在表格操作上的一些思考。示例中货物明细和人工费的表格就是一个相当复杂的表格，货物明细是由7列组成，行数不定，人工费是由4列组成，行数不定。
+
+这个示例主要用来展示link:#plugin-dynamic-table[DynamicTableRenderPolicy]的用法，货物明细和人工费仅仅是循环渲染表格行，使用link:#hack-loop-table[HackLoopTableRenderPolicy] 插件会更方便。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
+
+[#example-okr]
+=== 目标制定
+[example]
+--
+.output.docx
+需要制定一份OKR目标计划，业务目标和管理目标使用表格呈现，数量不等。下载最终生成的文件link:./example/okr.docx[okr.docx]
+
+image::./example/example_okr_output.png[align='center']
+--
+
+[example]
+--
+.template.docx
+将表格放到区块对中，当区块对取值为空集合或者null则不会展示目标表格，当区块对是一个非空集合则循环展示表格。
+
+image::./example/example_okr_template.png[align='center']
+--
+
+这个示例展示了区块对的功能，它可以对文档内容进行循环渲染。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/OKRExample.java[JUnit OKRExample]
+
+[#example-animal]
+=== 野生动物现状
+[example]
+--
+.output.docx
+针对野生动物出具一份现状的调查报告，野生动物种类不确定，调查报告包含图片、文字和图表。下载最终生成的文件link:./example/animal.docx[animal.docx]
+
+image::./example/example_animal_output.png[align='center']
+--
+
+[example]
+--
+.template.docx
+不确定动物种类使用区块对{{?animals}}的循环功能实现，图片和图表如模板所示，使用引用标签，在可选文字标题位置输入标签。
+
+image::./example/example_animal_template.png[align='center']
+--
+
+这个示例展示了区块对的循环功能，以及如何在循环中使用引用图片和引用图表的功能。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/AnimalExmample.java[JUnit AnimalExample]
+
+[#example-certificate]
+=== 证书奖状
+[example]
+--
+.output.docx
+颁发一张由特殊样式图片、姓名、日期构成的证书奖状。下载最终生成的文件link:./example/certificate.docx[certificate.docx]
+
+image::./example/example_certificate_output.png[align='center']
+--
+
+[example]
+--
+.template.docx
+图片格式和布局由模板指定，图片使用引用标签替换即可。
+
+image::./example/example_certificate_template.png[align='center']
+--
+
+这个示例展示了引用图片和文本框的功能。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/CertificateExample.java[JUnit CertificateExample]
+
+[#example-resume]
+=== 个人简历
+[example]
+--
+.output.docx
+需要生成这样的一份个人简历：左侧是个人的基本信息，技术栈是个典型的列表，右侧是个人的工作经历，数量不定。下载最终生成的文件link:./example/resume.docx[resume.docx]
+
+image::./example/example_resume_output.png[align='center']
+--
+
+==== 方案一：使用区块对标签
+[example]
+--
+.template.docx
+工作经历是一个循环显示的内容，我们使用区块对标签{{?experiences}}{{/experiences}}。
+
+image::./example/example_iterable_resume_template.png[align='center']
+--
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java[JUnit Iterable ResumeExample]
+
+==== 方案二：使用嵌套标签
+[example]
+--
+.template.docx
+工作经历可以使用嵌套标签，我们制作两个模板，一套主模板简历.docx(下图左侧)，一套为文档模板segment.docx(下图右侧)。
+
+image::./example/example_resume_template.png[align='center']
+--
+
+看起来很复杂的简历，其实对于模版引擎来说，和普通的Word文档没有什么区别，我们只需要制作好一份简历，将需要替换的内容用模版标签代替。
+
+因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[JUnit ResumeExample]
+
+[#example-swagger]
+=== Swagger文档
+[example]
+--
+.output.docx
+这是一份非常专业的Swagger Word文档，样式优雅且有着清晰完整的文档结构，API列表需要循环展示，接口的请求参数需要循环展示，接口的返回值需要循环展示，数据类型支持锚点到具体的模型，模型支持代码块高亮展示。下载最终生成的文件link:./example/swagger.docx[swagger.docx]
+
+image::./example/example_swagger_output.png[align='center']
+image::./example/example_swagger_output2.png[align='center']
+--
+
+[example]
+--
+.template.docx
+使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 `HackLoopTableRenderPolicy` 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。
+
+image::./example/example_swagger_template1.png[align='center']
+image::./example/example_swagger_template2.png[align='center']
+--
+
+[example]
+--
+.代码示例
+[source, java]
+----
+SwaggerParser swaggerParser = new SwaggerParser();
+Swagger swagger = swaggerParser.read("https://petstore.swagger.io/v2/swagger.json");
+SwaggerView viewData = convert(swagger); <1>
+
+HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+Configure config = Configure.builder()
+        .bind("parameters", hackLoopTableRenderPolicy)
+        .bind("responses", hackLoopTableRenderPolicy)
+        .bind("properties", hackLoopTableRenderPolicy)
+        .addPlugin('>', new BookmarkRenderPolicy())
+        .useSpringEL()
+        .build(); <2>
+
+XWPFTemplate template = XWPFTemplate.compile("swagger.docx", config).render(viewData); <3>
+template.writeToFile("out_example_swagger.docx");
+----
+<1> 解析Swagger.json
+<2> 配置模板引擎
+<3> Swagger导出Word
+--
+
+没错，一切都是如此简洁：简洁的导出代码 ，简洁的Word模板，甚至生成的Swagger文档都看起来那么简洁，愿一切如你所愿。
+
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
+
+== License
+Apache License 2.0
+
+== 源码
+link:https://github.com/Sayi/poi-tl[GitHub]
+
+== 打赏个小费
+poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎。
+
+如果你觉得它节省了你的时间，给你带来了方便和灵感，或者认同这个开源项目，可以为我的付出打赏点小费哦(**在备注留言中附上你的微信号，让我可以加个好友，说句感谢❤️**)。
+
+image::./pay.jpeg[width=256, height=280]
+
+[quote, Sayi]
+____
+poi-tl是给你的礼物！
+____
+
+== 常见问题
+[qanda]
+出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？::
+  poi-tl依赖的apache-poi版本是4.1.2+，如果你的项目引用了低版本，请升级或删除。
+是否支持Android客户端使用？::
+  参考link:https://github.com/Sayi/poi-tl/issues/227[issue227]。
+如何通过标签指定格式化函数？::
+  Spring表达式，应有尽有。
+如何在一行中显示不同样式的文本？::
+  可能你需要多个标签；或者使用区块对，区块对的集合数据是拥有不同样式的TextRenderData，还可以考虑使用ParagraphRenderPolicy插件。
+我不是很熟悉Apache POI，我该怎么编写插件？::
+  编写插件还是需要熟悉下POI，你可以参考现有插件的源码，或者Google下Apache POI的用法，这里有一个入门教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
+Apache POI不支持的功能，我该怎么编写插件？::
+  Apache POI底层的组件也是直接操作XML的，你可以使用POI背后的组件。
+有没有HTML转Word的插件？::
+  网上有一些这样的插件，我也很期待有人能Pull Request。
