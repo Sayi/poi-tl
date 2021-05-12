@@ -54,7 +54,6 @@ public class TocTest {
         doc.close();
     }
 
-    @Test
     public void testTOC() throws IOException {
         Configure config = Configure.builder().bind("toc", new RenderPolicy() {
 

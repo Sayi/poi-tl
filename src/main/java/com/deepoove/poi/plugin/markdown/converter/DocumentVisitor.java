@@ -37,7 +37,6 @@ import com.deepoove.poi.data.Cells.CellBuilder;
 import com.deepoove.poi.data.Documents.DocumentBuilder;
 import com.deepoove.poi.data.NumberingFormat.Builder;
 import com.deepoove.poi.data.Paragraphs.ParagraphBuilder;
-import com.deepoove.poi.data.Pictures.PictureBuilder;
 import com.deepoove.poi.data.Rows.RowBuilder;
 import com.deepoove.poi.data.Tables.TableBuilder;
 import com.deepoove.poi.data.Texts.TextBuilder;
@@ -139,14 +138,7 @@ public class DocumentVisitor extends AbstractVisitor {
     }
 
     private PictureRenderData parsePicture(Image image) {
-        PictureBuilder pictureOf = null;
-        String destination = image.getDestination();
-        if (destination.startsWith("http")) {
-            pictureOf = Pictures.ofUrl(destination);
-        } else {
-            pictureOf = Pictures.ofLocal(style.getImagesDir() + destination);
-        }
-        return pictureOf.altMeta(image.getTitle()).fitSize().create();
+        return Pictures.of(image.getDestination()).altMeta(image.getTitle()).fitSize().create();
     }
 
     private DocumentRenderData parseIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {

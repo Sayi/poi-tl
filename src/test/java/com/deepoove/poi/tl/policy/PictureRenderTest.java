@@ -55,7 +55,7 @@ public class PictureRenderTest {
         datas.put("localBytePicture",
                 Pictures.ofStream(new FileInputStream("src/test/resources/logo.png")).size(100, 120).create());
         // network url
-        datas.put("urlPicture", Pictures.ofUrl("http://deepoove.com/images/icecream.png").create());
+        datas.put("urlPicture", "http://deepoove.com/images/icecream.png");
         // java bufferedImage
         datas.put("bufferImagePicture", Pictures.ofBufferedImage(bufferImage, PictureType.PNG).size(100, 100).create());
         // base64
