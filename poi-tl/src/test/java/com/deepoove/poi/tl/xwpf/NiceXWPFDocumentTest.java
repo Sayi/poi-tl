@@ -144,7 +144,7 @@ public class NiceXWPFDocumentTest {
         addComment.setDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
         addComment.createParagraph().createRun().setText("The first comment.");
 
-        document.write(new FileOutputStream("out_comments_new.docx"));
+        document.write(new FileOutputStream("out_create_comments.docx"));
         document.close();
     }
 
