@@ -262,8 +262,12 @@ public class TemplateResolver extends AbstractResolver {
 
     private List<MetaTemplate> resolveTextbox(XWPFRun run) {
         XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
-        if (null == runWrapper.getWpstxbx()) return new ArrayList<>();
-        return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
+        if (null != runWrapper.getWpstxbx()) {
+            return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
+        } else if (null != runWrapper.getShapetxbx()) {
+            return resolveBodyElements(runWrapper.getShapetxbx().getBodyElements());
+        }
+        return new ArrayList<>();
     }
 
     <T extends IBody> List<MetaTemplate> resolveBodys(List<T> bodys) {

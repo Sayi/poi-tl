@@ -22,6 +22,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.ooxml.util.DocumentHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -33,18 +34,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlToken;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTBlip;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTBlipFillProperties;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualPictureProperties;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTPoint2D;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTPresetGeometry2D;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTShapeProperties;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTTransform2D;
-import org.openxmlformats.schemas.drawingml.x2006.main.STShapeType;
+import org.openxmlformats.schemas.drawingml.x2006.main.*;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPictureNonVisual;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
@@ -62,10 +52,13 @@ public class XWPFRunWrapper {
             + "        declare namespace mc='http://schemas.openxmlformats.org/markup-compatibility/2006' .//mc:Choice/*/w:txbxContent";
     public static final String XPATH_TEXTBOX_TXBXCONTENT = "declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' \n"
             + "        declare namespace mc='http://schemas.openxmlformats.org/markup-compatibility/2006' .//mc:Fallback/*/w:txbxContent";
+    public static final String XPATH_PICT_TEXTBOX_TXBXCONTENT = "declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' \n"
+            + "        declare namespace v='urn:schemas-microsoft-com:vml' ./v:shape/v:textbox/w:txbxContent";
 
     private final XWPFRun run;
     private XWPFTextboxContent wpstxbx;
     private XWPFTextboxContent vtextbox;
+    private XWPFTextboxContent shapetxbx;
 
     public XWPFRunWrapper(XWPFRun run) {
         this(run, true);
@@ -94,6 +87,24 @@ public class XWPFRunWrapper {
                 // no-op
             }
         }
+        org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture ctPicture = CollectionUtils
+                .isNotEmpty(r.getPictList()) ? r.getPictArray(0) : null;
+        if (null != ctPicture) {
+            xmlObjects = ctPicture.selectPath(XPATH_PICT_TEXTBOX_TXBXCONTENT);
+            if (xmlObjects != null && xmlObjects.length >= 1) {
+                try {
+                    CTTxbxContent ctTxbxContent = null;
+                    if (xmlObjects[0] instanceof CTTxbxContent) {
+                        ctTxbxContent = (CTTxbxContent) xmlObjects[0];
+                    } else {
+                        ctTxbxContent = CTTxbxContent.Factory.parse(xmlObjects[0].xmlText());
+                    }
+                    shapetxbx = new XWPFTextboxContent(ctTxbxContent, run, run.getParagraph().getBody(), xmlObjects[0]);
+                } catch (XmlException e) {
+                    // no-op
+                }
+            }
+        }
     }
 
     public XWPFRun getRun() {
@@ -106,6 +117,10 @@ public class XWPFRunWrapper {
 
     public XWPFTextboxContent getVtextbox() {
         return vtextbox;
+    }
+
+    public XWPFTextboxContent getShapetxbx() {
+        return shapetxbx;
     }
 
     public XWPFPicture addPicture(InputStream pictureData, int pictureType, String filename, int width, int height)
