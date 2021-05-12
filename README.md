@@ -2,20 +2,20 @@
 
 [![Build Status](https://travis-ci.org/Sayi/poi-tl.svg?branch=master)](https://travis-ci.org/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi4.0.0](https://img.shields.io/badge/apache--poi-4.0.0-blue.svg) [![Gitter](https://badges.gitter.im/Sayi/poi-tl.svg)](https://gitter.im/Sayi/poi-tl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-Word 模板引擎，基于Apache POI - the Java API for Microsoft Documents。
+A better way to generate word(docx) with template，based on Apache POI - the Java API for Microsoft Documents。
 
 ## What is poi-tl
-FreeMarker、Velocity基于文本模板和数据生成新的HTML页面、配置文件等，poi-tl是Word模板引擎，基于**Microsoft Word模板**和数据生成**新的文档**。
+FreeMarker or Velocity generates new html pages or configuration files based on text template and data. poi-tl is a Word template engine that generates **new documents** based on **Word template** and data.
 
-Word模板拥有丰富的样式，poi-tl在生成的文档中会完美保留模板中的样式，还可以为标签设置样式，标签的样式会被应用到替换后的文本上，因此你可以专注于模板设计。
+The Word template has rich styles. Poi-tl will perfectly retain the styles in the template in the generated documents. You can also set styles for the tags. The styles of the tags will be applied to the replaced text, so you can focus on the template design. 
 
-poi-tl是一种 *"logic-less"* 模板引擎，没有复杂的控制结构和变量赋值，只有**标签**，一些标签可以被替换为文本、图片、表格等，一些标签会隐藏某些文档内容，而另一些标签则会将一系列文档内容循环渲染。
+poi-tl is a *"logic-less"* template engine. There is no complicated control structure and variable assignment, only **tags**, some tags can be replaced with text, pictures, tables, etc., some tags will hide certain some document content, while other tags will loop a series of document content.
 
 > "Powerful" constructs like variable assignment or conditional statements make it easy to modify the look of an application within the template system exclusively... however, at the cost of separation, turning the templates themselves into part of the application logic.
 > 
 > [《Google CTemplate》](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)
 
-poi-tl支持自定义函数(插件)，函数可以在Word模板的任何位置执行，在文档的任何地方做任何事情(*Do Anything Anywhere*)是poi-tl的星辰大海。
+poi-tl supports custom functions (plug-ins), functions can be executed anywhere in the Word template, do anything anywhere in the document is the goal of poi-tl.
 
 ## Maven
 
@@ -23,74 +23,58 @@ poi-tl支持自定义函数(插件)，函数可以在Word模板的任何位置�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.9.1</version>
+  <version>1.10.0-beta</version>
 </dependency>
 ```
 
-## 2分钟快速入门
-从一个超级简单的例子开始：把`{{title}}`替换成"poi-tl 模板引擎"。
+## Quick start
+Start with a deadly simple example: replace `{{title}}` with "poi-tl template engine".
 
-1. 新建文档模板`template.docx`，包含标签`{{title}}`
-2. TDO模式：Template + data-model = output
+1. Create a new document `template.docx`, including the content `{{title}}`
+2. TDO mode: Template + data-model = output
 
 ```java
-//核心API采用了极简设计，只需要一行代码
+//The core API uses a minimalist design, only one line of code is required
 XWPFTemplate.compile("template.docx").render(new HashMap<String, Object>(){{
-        put("title", "poi-tl 模板引擎");
+         put("title", "poi-tl template engine");
 }}).writeToFile("out_template.docx");
 ```
-打开`out_template.docx`文档吧，一切如你所愿。
+Open the `out_template.docx` document, everything is as you wish.
 
-## 标签
-标签由前后两个大括号组成，`{{title}}`是标签，`{{?title}}`也是标签，`title`是这个标签的名称，`?`标识了标签类型，接下来我们来看看有哪些标签类型。
+## Tags
+The tag consists of two curly braces, `{{title}}` is a tag, `{{?title}}` is also a tag, `title` is the name of the tag, and `?` identifies the type of tag. Next, we Let’s see what tag types are there.
 
-### 文本
-文本标签是Word模板中最基本的标签类型，`{{name}}`会被数据模型中key为`name`的值替换，如果找不到默认会清空标签，可以配置是保留还是抛出异常。
+### Text
+The text tag is the most basic tag type in the Word template. `{{name}}` will be replaced by the value of key `name` in the data model. If the key is not exist, the tag will be cleared(The program can configure whether to keep the tag or throw an exception).
 
-文本标签的样式会应用到替换后的文本上，正如下面的例子所示。
+The style of the text tag will be applied to the replaced text, as shown in the following example.
 
-数据:
-```json
-{
-  "name": "Mama",
-  "thing": "chocolates"
-}
+Code:
+
+```java
+put("name", "Mama");
+put("thing", "chocolates");
 ```
 
-Word模板:
+Template:
 
 **{{name}}** always said life was like a box of {{thing}}.  
-~~{{name}}~~ always said life was like a box of {{thing}}.
 
-输出:
+Output:
 
 **Mama** always said life was like a box of chocolates.  
-~~Mama~~ always said life was like a box of chocolates.
 
-### 图片
-图片标签以`@`开始，如`{{@logo}}`会在数据中寻找key为`logo`的值，然后将标签替换成图片。由于Word文档中图片不是由字符串表示(在文本型模板中，比如HTML网页图片是由字符串`<img src="" />`表示)，所以图片标签对应的数据有一定的结构要求，这些结构都会有相应的Java类对应。
+### Picture
+The image tag starts with `@`, for example, `{{@logo}}` will look for the value with the key of `logo` in the data model, and then replace the tag with the image. The data corresponding to the image tag can be a simple URL or Path string, or a structure containing the width and height of the image.
 
-数据:
-```json
-{
-  "watermelon": {
-    "image": "assets/watermelon.png",
-    "pictureType" : "PNG"
-  },
-  "lemon": {
-    "image": "http://xxx/lemon.png",
-    "pictureType" : "PNG"
-  },
-  "banana": {
-    "image": "sob.png",
-    "pictureType" : "PNG",
-    "width": 24,
-    "height": 24
-  }
-}
+Code:
+```java
+put("watermelon", "assets/watermelon.png");
+put("watermelon", "http://x/lemon.png");
+put("lemon", Pictures.ofLocal("sob.jpeg", PictureType.JPEG).size(24, 24).create());
 ```
 
-Word模板:
+Template:
 
 ```
 Fruit Logo:
@@ -99,7 +83,7 @@ lemon {{@lemon}}
 banana {{@banana}}
 ```
 
-输出:
+Output:
 
 ```
 Fruit Logo:
@@ -108,110 +92,69 @@ lemon 🍋
 banana 🍌
 ```
 
-### 表格
-表格标签以`#`开始，如`{{#table}}`，它会被渲染成N行N列的Word表格，N的值取决于`table`标签的值。
+### Table
+The table tag starts with `#`, such as `{{#table}}`, it will be rendered as a Word table with N rows and N columns. The value of N depends on the data of the `table` tag.
 
-数据:
-```json
-{
-  "rows": [
-    {
-      "cells": [
-        {
-          "paragraphs": [
-            {
-              "contents": [
-                {
-                  "text": "Song name"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "paragraphs": [
-            {
-              "contents": [
-                {
-                  "text": "Artist"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
+Code:
+
+```java
+put("table", Tables.of(new String[][] {
+                new String[] { "Song name", "Artist" }
+            }).border(BorderStyle.DEFAULT).create());
 ```
 
-Word模板:
+Template:
 
 ```
-{{#song}}
+{{#table}}
 ```
 
-输出:
+Output:
 
 <table>
 <tr><td>Song name</td><td>Artist</td></tr>
 </table>
 
-### 列表
-列表标签对应Word的符号列表或者编号列表，以`*`开始，如`{{*number}}`。
+### List
+The list tag corresponds to Word's symbol list or numbered list, starting with `*`, such as `{{*number}}`.
 
-数据:
-```json
-{
-  "format" : {
-    "lvlText" : "●"
-  },
-  "items" : [ {
-    "contents" : [ {
-      "text" : "Plug-in grammar, add new grammar by yourself"
-    } ]
-  }, {
-    "contents" : [ {
-      "text" : "Supports word text, local pictures, web pictures, table, list, header, footer..."
-    } ]
-  }, {
-    "contents" : [ {
-      "text" : "Templates, not just templates, but also style templates"
-    } ]
-  } ]
-}
+Code:
+```java
+put("list", Numberings.create("Plug-in grammar",
+                  "Supports word text, pictures, table...",
+                  "Template, not just template, but also style template"));
 ```
 
-Word模板:
+Template:
 
 ```
-{{*feature}}
+{{*list}}
 ```
 
-输出:
+Output:
 
 ```
-● Plug-in function, define your own function
-● Supports text, pictures, table, list, if, foreach...
+● Plug-in grammar
+● Supports word text, pictures, table...
 ● Templates, not just templates, but also style templates
 ```
 
-### 区块对
-区块对由前后两个标签组成，开始标签以`?`标识，结束标签以`/`标识，如`{{?sections}}`作为sections区块的起始标签，`{{/sections}}`为结束标签，sections是这个区块对的名称。
+### Sections
+A section is composed of two tags before and after, the start tag is identified by `?`, and the end tag is identified by `/`, such as `{{?section}}` as the start tag of the sections block, `{{/section} }` is the end tag, and `section` is the name of this section.
 
-区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素(文本、图片、表格等)可以被渲染零次，一次或N次，这取决于区块对的取值。
+Sections are very useful when processing a series of document elements. Document elements (text, pictures, tables, etc.) located in a section can be rendered zero, one or N times, depending on the value of the section.
 
-#### False或空集合
-如果区块对的值是`null`、`false`或者空的集合，位于区块中的所有文档元素将**不会显示**，类似于if语句的条件为`false`。
+#### False Values or Empty collection
+If the value of the section is `null`, `false` or an empty collection, all document elements located in the section will **not be displayed**, similar to the condition of the if statement is `false`.
 
-数据:
+Datamodel:
 ```json
 {
   "announce": false
 }
 ```
 
-Word模板:
+Template:
 
 ```
 Made it,Ma!{{?announce}}Top of the world!{{/announce}}
@@ -221,24 +164,24 @@ Top of the world!🎋
 {{/announce}}
 ```
 
-输出:
+Output:
 
 ```
 Made it,Ma!
 Made it,Ma!
 ```
 
-#### 非False且不是集合
-如果区块对的值不为`null`、`false`，且不是集合，位于区块中的所有文档元素会被**渲染一次**，if语句的条件为`true`。
+#### Non-False Values and Not a collection
+If the value of the section is not `null`, `false`, and is not a collection, all document elements in the section will be **rendered once**, similar to the condition of the if statement is `true`.
 
-数据:
+Datamodel:
 ```json
 {
   "person": { "name": "Sayi" }
 }
 ```
 
-Word模板:
+Template:
 
 ```
 {{?person}}
@@ -246,27 +189,27 @@ Word模板:
 {{/person}}
 ```
 
-输出:
+Output:
 
 ```
   Hi Sayi!
 ```
 
-#### 非空集合
-如果区块对的值是一个非空集合，区块中的文档元素会被迭代渲染**一次或者N次**，这取决于集合的大小，类似于foreach语法。
+#### Non-Empty collection
+If the value of the section is a non-empty collection, the document elements in the section will be **looped once or N times**, depending on the size of the collection, similar to the foreach syntax.
 
-数据:
+Datamodel:
 ```json
 {
   "songs": [
     { "name": "Memories" },
     { "name": "Sugar" },
-    { "name": "Last Dance(伍佰)" }
+    { "name": "Last Dance" }
   ]
 }
 ```
 
-Word模板:
+Template:
 
 ```
 {{?songs}}
@@ -274,17 +217,17 @@ Word模板:
 {{/songs}}
 ```
 
-输出:
+Output:
 
 ```
 Memories
 Sugar
-Last Dance(伍佰)
+Last Dance
 ```
 
-在循环中可以通过一个特殊的标签`{{=#this}}`直接引用当前迭代的对象。
+In the loop, a special tag `{{=#this}}` can be used to directly refer to the object of the current iteration.
 
-数据:
+Datamodel:
 ```json
 {
   "produces": [
@@ -294,7 +237,7 @@ Last Dance(伍佰)
 }
 ```
 
-Word模板:
+Template:
 
 ```
 {{?produces}}
@@ -302,45 +245,48 @@ Word模板:
 {{/produces}}
 ```
 
-输出:
+Output:
 
 ```
 application/json
 application/xml
 ```
 
-### 嵌套
-嵌套是在Word模板中引入另一个Word模板，可以理解为import、include或者word文档合并，以`+`标识，如`{{+nested}}`。
+### Nesting
+Nesting is the merging of another Word template in a Word template, which can be understood as import, include or word document merging, marked with `+`, such as `{{+nested}}`.
 
-数据:
-```json
-{
-  "nested": {
-    "file": "template/sub.docx",
-    "dataModels": [
-      {
-        "addr": "Hangzhou,China"
-      },
-      {
-        "addr": "Shanghai,China"
-      }
-    ]
+Code:
+
+```java
+class AddrModel {
+  String addr;
+  AddrModel(String addr) {
+    this.addr = addr;
   }
 }
+
+List<AddrModel> subData = new ArrayList<>();
+subData.add(new AddrModel("Hangzhou,China"));
+subData.add(new AddrModel("Shanghai,China"));
+put("nested", Includes.ofLocal("sub.docx").setRenderModel(subData).create());
 ```
 
-给定两个WordWord模板:
+Two Word Template:
 
-```
 main.docx:
+
+```
 Hello, World
 {{+nested}}
+```
 
-template/sub.docx:
+sub.docx:
+
+```
 Address: {{addr}}
 ```
 
-输出:
+Output:
 
 ```
 Hello, World
@@ -348,31 +294,31 @@ Address: Hangzhou,China
 Address: Shanghai,China
 ```
 
-## 详细文档与示例
+## Documentation and examples
 
-[中文文档Documentation](http://deepoove.com/poi-tl)
+[中文文档](http://deepoove.com/poi-tl)
 
-* [基础(图片、文本、表格、列表)示例：软件说明文档](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
-* [表格示例：付款通知书](http://deepoove.com/poi-tl/#example-table)
-* [循环和图表示例：野生动物现状](http://deepoove.com/poi-tl/#example-animal)
-* [文本框示例：证书奖状](http://deepoove.com/poi-tl/#example-certificate)
-* [Example：个人简历创作](http://deepoove.com/poi-tl/#example-resume)
-* [Example：Swagger文档](http://deepoove.com/poi-tl/#example-swagger)
+* [Basic Example](http://deepoove.com/poi-tl/#_%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3)
+* [Table Example](http://deepoove.com/poi-tl/#example-table)
+* [Sections and chart Example](http://deepoove.com/poi-tl/#example-animal)
+* [Textbox Example](http://deepoove.com/poi-tl/#example-certificate)
+* [Example: Resume](http://deepoove.com/poi-tl/#example-resume)
+* [Example: Convert Swagger to word](http://deepoove.com/poi-tl/#example-swagger)
 
-更多的示例以及所有示例的源码参见JUnit单元测试。
+For more examples and the source code of all examples, see JUnit unit testcases.
 
 ![](http://deepoove.com/poi-tl/demo.png)
 ![](http://deepoove.com/poi-tl/demo_result.png)
 
-## Contributing贡献
-你可以有很多途径加入这个项目，不限于以下方式：
-* 反馈使用中遇到的问题
-* 分享成功的喜悦
-* 更新和完善文档
-* 解决和讨论Issue
+## Contributing
+You can join this project in many ways, not limited to the following ways:
+* Feedback problems encountered in use
+* Share the joy of success
+* Update and improve documentation
+* Solve and discuss issues
 
-## 建议和完善
-参见[常见问题](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)，欢迎在GitHub Issue中提问和交流。
+## FAQ
+See [FAQ](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98), welcome to issue on GitHub Questions and exchanges.
 
-社区交流讨论群：[Gitter频道](https://gitter.im/Sayi/poi-tl)
+Community exchange discussion group: [Gitter channel](https://gitter.im/Sayi/poi-tl)
 
