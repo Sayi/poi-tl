@@ -22,6 +22,11 @@ v1.9.1
 // :stylesheet: asciidoctor.css
 // :linkcss:
 
+[example]
+--
+关于文档：v1.9.x并非最新版本，推荐使用poi-tl最新版本：link:http://deepoove.com/poi-tl[poi-tl 最新文档, window=_blank]。
+--
+
 poi-tl（poi template language）是Word模板引擎，基于Word模板和数据生成新的文档。
 
 [quote]

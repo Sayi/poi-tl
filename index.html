@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="generator" content="Asciidoctor 2.0.12">
 <meta name="description" content="word模板引擎">
 <meta name="keywords" content="poi,word,docx,template,模板,导出,图表,合并">
 <meta name="author" content="Sayi">
@@ -51,7 +51,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*::before,*::after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -66,10 +66,8 @@ img{-ms-interpolation-mode:bicubic}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
-.center{margin-left:auto;margin-right:auto}
-.stretch{width:100%}
 .subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
-div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0;direction:ltr}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
 a{color:#2156a5;text-decoration:underline;line-height:inherit}
 a:hover,a:focus{color:#1d4b8f}
 a img{border:0}
@@ -109,19 +107,22 @@ h1{font-size:2.75em}
 h2{font-size:2.3125em}
 h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
 h4{font-size:1.4375em}}
-table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede}
+table{background:#fff;margin-bottom:1.25em;border:solid 1px #dedede;word-wrap:normal}
 table thead,table tfoot{background:#f7f8f7}
 table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt{background:#f8f8f7}
-table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
 .clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
 .clearfix::after,.float-group::after{clear:both}
-:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
-:not(pre)>code.nobreak{word-wrap:normal}
-:not(pre)>code.nowrap{white-space:nowrap}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
 pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
 pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
 pre>code{display:block}
@@ -186,7 +187,7 @@ body.toc2.toc-right{padding-left:0;padding-right:20em}}
 #content #toc{border-style:solid;border-width:1px;border-color:#e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;-webkit-border-radius:4px;border-radius:4px}
 #content #toc>:first-child{margin-top:0}
 #content #toc>:last-child{margin-bottom:0}
-#footer{max-width:100%;background:rgba(0,0,0,.8);padding:1.25em}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
 #footer-text{color:rgba(255,255,255,.8);line-height:1.44}
 #content{margin-bottom:.625em}
 .sect1{padding-bottom:.625em}
@@ -209,7 +210,7 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .admonitionblock>table td.icon{text-align:center;width:80px}
 .admonitionblock>table td.icon img{max-width:none}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
-.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6)}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
 .exampleblock>.content{border-style:solid;border-width:1px;border-color:#e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;-webkit-border-radius:4px;border-radius:4px}
 .exampleblock>.content>:first-child{margin-top:0}
@@ -219,7 +220,7 @@ table.tableblock #preamble>.sectionbody>[class="paragraph"]:first-of-type p{font
 .sidebarblock>:last-child{margin-bottom:0}
 .sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
 .exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
-.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;word-wrap:break-word;overflow-x:auto;padding:1em;font-size:.8125em}
+.literalblock pre,.listingblock>.content>pre{-webkit-border-radius:4px;border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
 @media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
 @media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
 .literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class="highlight"],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
@@ -265,21 +266,20 @@ pre.pygments .lineno::before{content:"";margin-right:-.125em}
 .quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
 .quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
 .quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;text-align:left;margin-right:0}
-table.tableblock{max-width:100%;border-collapse:separate}
 p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
 td.tableblock>.content>:last-child{margin-bottom:-1.25em}
-td.tableblock>.content>:last-child.sidebarblock{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
-table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
-table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
-table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px}
-table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0}
-table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
-table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
 table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
 table.frame-sides{border-width:0 1px}
-table.frame-topbot,table.frame-ends{border-width:1px 0}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
 table.stripes-all tr,table.stripes-odd tr:nth-of-type(odd),table.stripes-even tr:nth-of-type(even),table.stripes-hover tr:hover{background:#f8f8f7}
 th.halign-left,td.halign-left{text-align:left}
 th.halign-right,td.halign-right{text-align:right}
@@ -288,7 +288,7 @@ th.valign-top,td.valign-top{vertical-align:top}
 th.valign-bottom,td.valign-bottom{vertical-align:bottom}
 th.valign-middle,td.valign-middle{vertical-align:middle}
 table thead th,table tfoot th{font-weight:bold}
-tbody tr th{display:table-cell;line-height:1.6;background:#f7f8f7}
+tbody tr th{background:#f7f8f7}
 tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
 p.tableblock>code:only-child{background:none;padding:0}
 p.tableblock{font-size:1em}
@@ -317,6 +317,7 @@ ol.lowergreek{list-style-type:lower-greek}
 .hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
 .colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
 .colist td:not([class]):first-child img{max-width:none}
@@ -389,7 +390,7 @@ a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
 .admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
 .admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
-.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:100px;border-radius:100px;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);-webkit-border-radius:50%;border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
 .conum[data-value] *{color:#fff!important}
 .conum[data-value]+b{display:none}
 .conum[data-value]::after{content:attr(data-value)}
@@ -416,6 +417,7 @@ thead{display:table-header-group}
 svg{max-width:100%}
 p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
 h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
 #toc,.sidebarblock,.exampleblock>.content{background:none!important}
 #toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
 body.book #header{text-align:center}
@@ -440,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/styles/zenburn.min.css">
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
@@ -447,7 +450,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Sayi</span><br>
 <span id="email" class="email"><a href="mailto:sayi90@163.com">sayi90@163.com</a></span><br>
-<span id="revnumber">version 1.9.1</span>
+<span id="revnumber">version 1.10.0-beta</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -509,9 +512,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#hack-loop-table">9.2. 表格行循环</a></li>
 <li><a href="#loop-col-table">9.3. 表格列循环</a></li>
 <li><a href="#plugin-dynamic-table">9.4. 动态表格</a></li>
+<li><a href="#plugin-comment">9.5. 批注</a></li>
+<li><a href="#plugin-highlight">9.6. 代码高亮</a></li>
+<li><a href="#plugin-markdown">9.7. Markdown</a></li>
 </ul>
 </li>
-<li><a href="#_示例">10. 示例</a>
+<li><a href="#_示例_4">10. 示例</a>
 <ul class="sectlevel2">
 <li><a href="#_软件说明文档">10.1. 软件说明文档</a></li>
 <li><a href="#example-table">10.2. 付款通知书</a></li>
@@ -567,12 +573,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Poi-tl</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Word模板引擎</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">基于Apache POI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">基于Apache POI，更好的抽象</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache POI</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java跨平台</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache项目，功能丰富</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache项目，不仅封装了易用的文档API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作XML结构</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">文档不全，这里有一个教程：<a href="http://deepoove.com/poi-tl/apache-poi-guide.html" target="_blank" rel="noopener">Apache POI Word快速入门</a></p></td>
 </tr>
 <tr>
@@ -602,7 +608,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p>Apache POI不仅封装了易用的文档API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作文档XML结构，<strong>poi-tl</strong>正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。</p>
+<p><strong>poi-tl</strong>正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -646,15 +652,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Loop表格行</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">循环渲染表格的某一行</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">循环复制渲染表格的某一行</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Loop表格列</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">循环渲染表格的某一列</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">循环复制渲染表格的某一列</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Loop有序列表</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">支持有序列表的循环，同时支持多级列表</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>代码高亮</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">word中代码块高亮展示，支持26种语言和上百种着色样式</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Markdown</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将Markdown渲染为word文档</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Word批注</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">完整的批注功能，创建批注、修改批注等</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>图片替换</p></td>
@@ -665,7 +683,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">支持设置书签，文档内锚点和超链接功能</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>强大的表达式</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Expression Language</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL&#8230;&#8203;</p></td>
 </tr>
 <tr>
@@ -695,7 +713,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tbody>
 </table>
 <div class="paragraph">
-<p><strong>poi-tl</strong>是一个免费开源的Java类库，你可以非常方便的加入到你的Java项目中。</p>
+<p>poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你的项目中。</p>
 </div>
 </div>
 </div>
@@ -705,7 +723,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Apache POI 4.1.2+</p>
+<p>Apache POI 4.1.2</p>
 </li>
 <li>
 <p>JDK 1.8+</p>
@@ -718,10 +736,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_历史版本"><a class="anchor" href="#_历史版本"></a><a class="link" href="#_历史版本">3. 历史版本</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>点击下方链接查阅poi-tl历史版本文档，其中v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本：</p>
+<p>点击下方链接查阅poi-tl历史版本文档，其中v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本，适用于无法升级poi的古老项目。</p>
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p><a href="http://deepoove.com/poi-tl/1.9.x/" target="_blank" rel="noopener">1.9.x Documentation</a></p>
+</li>
 <li>
 <p><a href="http://deepoove.com/poi-tl/1.8.x/" target="_blank" rel="noopener">1.8.x Documentation</a></p>
 </li>
@@ -736,28 +757,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>V1.9.x版本作了一些不兼容但更强大的改动，升级的时候需要注意以下几点：</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>移除ELModel类，改用useSpringEL()和useDefaultEL(true)</p>
-</li>
-<li>
-<p>移除NumbericRenderData，改用NumberingRenderData</p>
-</li>
-<li>
-<p>移除MiniTableRenderData，改用TableRenderData</p>
-</li>
-<li>
-<p>移除MiniTableRenderPolicy，改用TableRenderPolicy</p>
-</li>
-<li>
-<p>移除Configure.newBuilder()，改用Configure.builder()</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -767,10 +766,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_maven"><a class="anchor" href="#_maven"></a><a class="link" href="#_maven">4.1. Maven</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
   &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-  &lt;version&gt;1.9.1&lt;/version&gt;
+  &lt;version&gt;1.10.0-beta&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -779,7 +778,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_gradle"><a class="anchor" href="#_gradle"></a><a class="link" href="#_gradle">4.2. Gradle</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="groovy" class="language-groovy hljs">compile group: 'com.deepoove', name: 'poi-tl', version: '1.9.1'</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">compile group: 'com.deepoove', name: 'poi-tl', version: '1.10.0-beta'</code></pre>
 </div>
 </div>
 </div>
@@ -801,7 +800,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="listingblock">
 <div class="title">代码示例</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">XWPFTemplate template = XWPFTemplate.compile("template.docx").render(
   new HashMap&lt;String, Object&gt;(){{
     put("title", "Hi, poi-tl Word模板引擎");
 }}); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -844,7 +843,7 @@ template.writeAndClose(new FileOutputStream("output.docx")); <i class="conum" da
 <p>模板是Docx格式的Word文档，你可以使用Microsoft office、WPS Office、Pages等任何你喜欢的软件制作模板。</p>
 </div>
 <div class="paragraph">
-<p>所有的标签都是以 <code>{{</code> 开头，以 <code>}}</code> 结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。</p>
+<p>所有的标签都是以<code>{{</code>开头，以<code>}}</code>结尾，标签可以出现在任何位置，包括页眉，页脚，表格内部，文本框等，表格布局可以设计出很多优秀专业的文档，推荐使用表格布局。</p>
 </div>
 <div class="paragraph">
 <p>poi-tl模板遵循<strong>“所见即所得”</strong>的设计，模板和标签的样式会被完全保留。</p>
@@ -857,7 +856,7 @@ template.writeAndClose(new FileOutputStream("output.docx")); <i class="conum" da
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
 data.put("name", "Sayi");
 data.put("start_time", "2019-08-04");</code></pre>
 </div>
@@ -867,7 +866,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class Data {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class Data {
   private String name;
   private String startTime;
   private Author author;
@@ -881,7 +880,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-数据可以是树结构，每级之间用点来分隔开，比如 <code>{{author.name}}</code> 标签对应的数据是author对象的name属性值。
+数据可以是树结构，每级之间用点来分隔开，比如<code>{{author.name}}</code>标签对应的数据是author对象的name属性值。
 </td>
 </tr>
 </table>
@@ -891,7 +890,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">&lt;img src="{{path}}" width="{{width}}" height="{{height}}"&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">&lt;img src="{{path}}" width="{{width}}" height="{{height}}"&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -905,7 +904,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">template.write(OutputStream stream)</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">template.write(OutputStream stream);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -913,7 +912,7 @@ data.put("start_time", "2019-08-04");</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">response.setContentType("application/octet-stream");
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">response.setContentType("application/octet-stream");
 response.setHeader("Content-disposition","attachment;filename=\""+"out_template.docx"+"\"");
 
 // HttpServletResponse response
@@ -935,7 +934,7 @@ PoitlIOUtils.closeQuietlyMulti(template, bos, out);</code></pre>
 <h2 id="_标签"><a class="anchor" href="#_标签"></a><a class="link" href="#_标签">5. 标签</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成， {{title}} 是标签， {{?title}} 也是标签， title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。</p>
+<p>poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成，{{title}}是标签，{{?title}}也是标签，title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。</p>
 </div>
 <div class="sect2">
 <h3 id="_文本"><a class="anchor" href="#_文本"></a><a class="link" href="#_文本">5.1. 文本</a></h3>
@@ -970,7 +969,7 @@ PoitlIOUtils.closeQuietlyMulti(template, bos, out);</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("name", "Sayi");
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("name", "Sayi");
 put("author", new TextRenderData("000000", "Sayi"));
 put("link", new HyperlinkTextRenderData("website", "http://deepoove.com"));
 put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));</code></pre>
@@ -986,7 +985,7 @@ put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));</co
 <div class="title">链式代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("name", "Sayi");
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("name", "Sayi");
 put("author", Texts.of("Sayi").color("000000").create());
 put("link", Texts.of("website").link("http://deepoove.com").create());
 put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
@@ -1002,7 +1001,7 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <div class="title">TextRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "text": "Sayi",
   "style": {
     "strike": false, <i class="conum" data-value="1"></i><b>(1)</b>
@@ -1091,6 +1090,9 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <div class="ulist">
 <ul>
 <li>
+<p><code>String</code> ：图片url或者本地路径，默认使用图片自身尺寸</p>
+</li>
+<li>
 <p><code>PictureRenderData</code></p>
 </li>
 </ul>
@@ -1103,19 +1105,24 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 本地图片
-put("localImg", Pictures.ofLocal("sayi.png").size(120, 120).create());
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 指定图片路径
+put("image", "logo.png");
+
+// 设置图片宽高
+put("image1", Pictures.ofLocal("logo.png").size(120, 120).create());
 
 // 图片流
 put("streamImg", Pictures.ofStream(new FileInputStream("logo.jpeg"), PictureType.JPEG)
   .size(100, 120).create());
 
 // 网络图片(注意网络耗时对系统可能的性能影响)
-put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png", PictureType.PNG)
-  .size(100, 100).create());
+put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png").size(100, 100).create());
 
-// java 图片
-put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
+// svg图片
+put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
+
+// java图片
+put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
   .size(100, 100).create());</code></pre>
 </div>
 </div>
@@ -1129,12 +1136,14 @@ put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 <div class="title">PictureRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "pictureType" : "PNG", <i class="conum" data-value="1"></i><b>(1)</b>
-  "image": byte[], <i class="conum" data-value="2"></i><b>(2)</b>
-  "altMeta": "图片不存在", <i class="conum" data-value="3"></i><b>(3)</b>
-  "width": 100, <i class="conum" data-value="4"></i><b>(4)</b>
-  "height": 100 <i class="conum" data-value="5"></i><b>(5)</b>
+  "pictureSupplier": () -&gt; byte[], <i class="conum" data-value="2"></i><b>(2)</b>
+  "pictureStyle": {
+    "width": 100, <i class="conum" data-value="3"></i><b>(3)</b>
+    "height": 100 <i class="conum" data-value="4"></i><b>(4)</b>
+  },
+  "altMeta": "图片不存在" <i class="conum" data-value="5"></i><b>(5)</b>
 }</code></pre>
 </div>
 </div>
@@ -1146,19 +1155,19 @@ put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>图片byte[]字节数组</td>
+<td>运行时获取图片byte[]字节数组的函数</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>当无法获取图片时展示的文字</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>宽度，单位是像素</td>
 </tr>
 <tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>高度，单位是像素</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>当无法获取图片时展示的文字</td>
 </tr>
 </table>
 </div>
@@ -1190,7 +1199,7 @@ put("bufferImg", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 一个2行2列的表格
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 一个2行2列的表格
 put("table0", Tables.of(new String[][] {
                 new String[] { "00", "01" },
                 new String[] { "10", "11" }
@@ -1209,7 +1218,7 @@ put("table0", Tables.of(new String[][] {
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 第0行居中且背景为蓝色的表格
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 第0行居中且背景为蓝色的表格
 RowRenderData row0 = Rows.of("姓名", "学历").textColor("FFFFFF")
       .bgColor("4472C4").center().create();
 RowRenderData row1 = Rows.create("李四", "博士");
@@ -1228,7 +1237,7 @@ put("table1", Tables.create(row0, row1));</code></pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// 合并第1行所有单元格的表格
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 合并第1行所有单元格的表格
 RowRenderData row0 = Rows.of("列0", "列1", "列2").center().bgColor("4472C4").create();
 RowRenderData row1 = Rows.create("没有数据", null, null);
 MergeCellRule rule = MergeCellRule.builder().map(Grid.of(1, 0), Grid.of(1, 2)).build();
@@ -1250,7 +1259,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 <div class="title">TableRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "rows": [ <i class="conum" data-value="1"></i><b>(1)</b>
     {
       "cells": [ <i class="conum" data-value="2"></i><b>(2)</b>
@@ -1352,7 +1361,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 <p>现实需求中表格的布局和样式可能很复杂，可以尝试一些已有表格插件来解决，参见<a href="#plugin-list">可选插件列表</a>。</p>
 </div>
 <div class="paragraph">
-<p>我们也可以编写插件，完全由自己生成整个表格，这个方案需要你熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 <a href="#cus-policy-section">开发一个插件</a>。</p>
+<p>我们也可以编写插件，完全由自己生成整个表格，前提是需要熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 <a href="#cus-policy-section">开发一个插件</a>。</p>
 </div>
 </td>
 </tr>
@@ -1384,7 +1393,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("list", Numberings.create("Plug-in grammar",
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("list", Numberings.create("Plug-in grammar",
                     "Supports word text, pictures, table...",
                     "Not just templates"));</code></pre>
 </div>
@@ -1396,7 +1405,7 @@ put("table3", Tables.of(row0, row1).mergeRule(rule).create());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">DECIMAL //1. 2. 3.
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">DECIMAL //1. 2. 3.
 DECIMAL_PARENTHESES //1) 2) 3)
 BULLET //● ● ●
 LOWER_LETTER //a. b. c.
@@ -1412,8 +1421,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p><strong>如果列表的每一项不是简单的文本，而是包含很多文档内容，或者多级列表该怎么生成？</strong>
-区块对的循环功能可以很好的循环列表，并且保持有序列表编号有序。</p>
+<p>NumberingRenderData可以创建多级列表，但是推荐使用区块对：区块对的循环功能可以很好的循环列表，并且保持有序列表编号有序。</p>
 </div>
 </td>
 </tr>
@@ -1428,7 +1436,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>区块对开始和结束标签中间可以 <strong>包含多个图片、表格、段落、列表、图表</strong> 等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。</p>
+<p>区块对开始和结束标签中间可以<strong>包含多个图片、表格、段落、列表、图表</strong>等，开始和结束标签可以跨多个段落，也可以在同一个段落，但是如果在表格中使用区块对，开始和结束标签必须在同一个单元格内，因为跨多个单元格的渲染行为是未知的。</p>
 </div>
 <div class="paragraph">
 <p>区块对在处理一系列文档元素的时候非常有用，位于区块对中的文档元素可以被渲染零次，一次或N次，这取决于区块对的取值。</p>
@@ -1471,7 +1479,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="listingblock">
 <div class="title">data-model</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "announce": false
 }</code></pre>
 </div>
@@ -1520,7 +1528,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="listingblock">
 <div class="title">data-model</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "person": { "name": "Sayi" }
 }</code></pre>
 </div>
@@ -1556,7 +1564,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 <i class="fa icon-important" title="Important"></i>
 </td>
 <td class="content">
-区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是 <code>boolean</code> 类型且为 <code>true</code> 时，这些标签作用域才不会改变。
+区块对中标签的作用域会被限定在当前区块对内，当且仅当区块对的值是<code>boolean</code>类型且为<code>true</code>时，这些标签作用域才不会改变。
 </td>
 </tr>
 </table>
@@ -1572,7 +1580,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="listingblock">
 <div class="title">data-model</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "songs": [
     { "name": "Memories" },
     { "name": "Sugar" },
@@ -1673,7 +1681,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "produces": [
     "application/json",
     "application/xml"
@@ -1696,7 +1704,7 @@ UPPER_LETTER //A. B. C.</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="html" class="language-html hljs">0. application/json
+<pre class="highlightjs highlight"><code class="language-html hljs" data-lang="html">0. application/json
 1. application/xml</code></pre>
 </div>
 </div>
@@ -1729,29 +1737,29 @@ UPPER_LETTER //A. B. C.</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">List&lt;SegmentData&gt; subData = new ArrayList&lt;SegmentData&gt;();
-SegmentData s1 = new SegmentData();
-s1.setTitle("Monday");
-s1.setContent("Two parallel lines will intersect one day.");
-subData.add(s1);
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class AddrModel {
+  private String addr;
+  public AddrModel(String addr) {
+    this.addr = addr;
+  }
+  // Getter/Setter
+}
 
-SegmentData s2 = new SegmentData();
-s2.setTitle("Friday");
-s2.setContent("Confidence is not necessarily successful.");
-subData.add(s2);
-
-put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create()); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+List&lt;AddrModel&gt; subData = new ArrayList&lt;&gt;();
+subData.add(new AddrModel("Hangzhou,China"));
+subData.add(new AddrModel("Shanghai,China"));
+put("nested", Includes.ofLocal("sub.docx").setRenderModel(subData).create()); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>主模板包含嵌套标签{{+docx_word}}</td>
+<td>主模板包含嵌套标签{{+nested}}</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>segment.docx是一个包含了{{title}}和{{content}}的子模板，使用subData集合渲染后合并到主模板</td>
+<td>sub.docx是一个包含了{{addr}}的子模板，使用subData集合渲染后合并到主模板</td>
 </tr>
 </table>
 </div>
@@ -1770,7 +1778,7 @@ put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create
 <h3 id="ref-policy-section"><a class="anchor" href="#ref-policy-section"></a><a class="link" href="#ref-policy-section">6.1. 图片</a></h3>
 <div class="exampleblock">
 <div class="content">
-引用图片标签是一个文本：{{var}}，标签位置在：设置图片格式&#8212;&#8203;可选文字&#8212;&#8203;标题（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
+引用图片标签是一个文本：{{var}}，标签位置在：设置图片格式&#8212;&#8203;可选文字&#8212;&#8203;标题或者说明（新版本Microsoft Office标签位置在：编辑替换文字-替换文字）。
 </div>
 </div>
 <div class="imageblock text-center">
@@ -1786,7 +1794,7 @@ put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create
 <div class="listingblock">
 <div class="title">代码示例</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("img", Pictures.ofLocal("sayi.png").create());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("img", Pictures.ofLocal("sayi.png").create());</code></pre>
 </div>
 </div>
 </div>
@@ -1825,7 +1833,7 @@ put("docx_word", Includes.ofLocal("segment.docx").setRenderModel(subData).create
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartMultiSeriesRenderData chart = Charts
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ChartMultiSeriesRenderData chart = Charts
                 .ofMultiSeries("ChartTitle", new String[] { "中文", "English" })
                 .addSeries("countries", new Double[] { 15.0, 6.0 })
                 .addSeries("speakers", new Double[] { 223.0, 119.0 })
@@ -1844,7 +1852,7 @@ put("barChart", chart);</code></pre>
 <div class="title">ChartMultiSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "chartTitle": "ChartTitle", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "中文", "English"
@@ -1926,7 +1934,7 @@ put("barChart", chart);</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartSingleSeriesRenderData pie = Charts
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ChartSingleSeriesRenderData pie = Charts
                 .ofSingleSeries("ChartTitle", new String[] { "美国", "中国" })
                 .series("countries", new Integer[] { 9826675, 9596961 })
                 .create();
@@ -1941,7 +1949,7 @@ put("pieChart", pie);</code></pre>
 <div class="title">ChartSingleSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "chartTitle": "ChartTitle", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "美国",
@@ -2007,7 +2015,7 @@ put("pieChart", pie);</code></pre>
 <div class="title">代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ChartSingleSeriesRenderData comb = Charts
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ChartSingleSeriesRenderData comb = Charts
                 .ofComboSeries("MyChart", new String[] { "中文", "English" })
                 .addBarSeries("countries", new Double[] { 15.0, 6.0 })
                 .addBarSeries("speakers", new Double[] { 223.0, 119.0 })
@@ -2025,7 +2033,7 @@ put("combChart", comb);</code></pre>
 <div class="title">ChartMultiSeriesRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "chartTitle": "MyChart", <i class="conum" data-value="1"></i><b>(1)</b>
   "categories": [ <i class="conum" data-value="2"></i><b>(2)</b>
     "中文", "English"
@@ -2090,7 +2098,7 @@ put("combChart", comb);</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ConfigureBuilder builder = Configure.builder();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ConfigureBuilder builder = Configure.builder();
 XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 </div>
@@ -2101,7 +2109,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGramer("${", "}");</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.buildGramer("${", "}");</code></pre>
 </div>
 </div>
 </div>
@@ -2112,7 +2120,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('%', new PictureRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.addPlugin('%', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2120,7 +2128,7 @@ XWPFTemplate.compile("template.docx", builder.buid());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('@', new TableRenderPolicy());
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.addPlugin('@', new TableRenderPolicy());
 builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 </div>
@@ -2135,7 +2143,7 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2143,18 +2151,18 @@ builder.addPlugin('#', new PictureRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_计算标签值"><a class="anchor" href="#_计算标签值"></a><a class="link" href="#_计算标签值">7.4. 计算标签值</a></h3>
 <div class="paragraph">
-<p>计算标签值是指如何在数据中索引标签的值，你可以完全自定义计算的方式。</p>
+<p>计算标签值是指如何在数据模型中索引标签Key的值，你可以完全自定义计算的方式。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.setRenderDataComputeFactory(new RenderDataComputeFactory());</code></pre>
 </div>
 </div>
 <div class="admonitionblock tip">
@@ -2176,11 +2184,11 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="sect2">
 <h3 id="_spring表达式"><a class="anchor" href="#_spring表达式"></a><a class="link" href="#_spring表达式">7.5. Spring表达式</a></h3>
 <div class="paragraph">
-<p>Spring Expression Language 是一个强大的表达式语言，支持在运行时查询和操作对象图。在使用前需要引入相应的依赖：</p>
+<p>Spring Expression Language 是一个强大的表达式语言，支持在运行时查询和操作对象图，可作为独立组件使用，需要引入相应的依赖：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
   &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
   &lt;version&gt;4.3.6.RELEASE&lt;/version&gt;
@@ -2192,7 +2200,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useSpringEL();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.useSpringEL();</code></pre>
 </div>
 </div>
 <div class="sect3">
@@ -2211,18 +2219,19 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 {{sex ? '男' : '女'}} <i class="conum" data-value="3"></i><b>(3)</b>
 {{new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(time)}} <i class="conum" data-value="4"></i><b>(4)</b>
 {{price/10000 + '万元'}} <i class="conum" data-value="5"></i><b>(5)</b>
-{{dogs[0].name}} <i class="conum" data-value="6"></i><b>(6)</b></code></pre>
+{{dogs[0].name}} <i class="conum" data-value="6"></i><b>(6)</b>
+{{localDate.format(T(java.time.format.DateTimeFormatter).ofPattern('yyyy年MM月dd日'))}} <i class="conum" data-value="7"></i><b>(7)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>方法调用，转大写</td>
+<td>类方法调用，转大写</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>条件</td>
+<td>判断条件</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -2230,7 +2239,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>方法调用，时间格式化</td>
+<td>类方法调用，时间格式化</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
@@ -2239,6 +2248,10 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
 <td>数组列表使用下标访问</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>使用静态类方法</td>
 </tr>
 </table>
 </div>
@@ -2255,7 +2268,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="listingblock">
 <div class="title">data-model</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="json" class="language-json hljs">{
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "desc": "",
   "summary": "Find A Pet",
   "produces": [
@@ -2310,19 +2323,19 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <p>标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，如 <code>{{author.name}}</code> 中author的值为null，此时就无法计算name的值。</p>
 </div>
 <div class="paragraph">
-<p>poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为 <code>null</code> 。当我们需要严格校验模板是否有人为失误时，可以抛出异常：</p>
+<p>poi-tl可以在发生这种错误时对计算结果进行配置，默认会认为标签值为<code>null</code>。当我们需要严格校验模板是否有人为失误时，可以抛出异常：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useDefaultEL(true);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.useDefaultEL(true);</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>注意的是，如果使用SpringEL表达式，可以通过参数来配置异常处理的方式：</p>
+<p>注意的是，如果使用SpringEL表达式，可以通过参数来配置是否抛出异常：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.useSpringEL(true);</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.useSpringEL(true);</code></pre>
 </div>
 </div>
 </div>
@@ -2336,7 +2349,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setValidErrorHandler(new DiscardHandler());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.setValidErrorHandler(new DiscardHandler());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2344,7 +2357,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.setValidErrorHandler(new AbortHandler());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.setValidErrorHandler(new AbortHandler());</code></pre>
 </div>
 </div>
 </div>
@@ -2352,11 +2365,19 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="sect2">
 <h3 id="_模板生成模板"><a class="anchor" href="#_模板生成模板"></a><a class="link" href="#_模板生成模板">7.7. 模板生成模板</a></h3>
 <div class="paragraph">
-<p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们把原先的一个模板标签分成两个模板标签：</p>
+<p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们把原先的一个文本标签分成一个文本标签和一个表格标签：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">put("title", "{{title}}\n{{subtitle}}");</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Configure config = Configure.builder().bind("title", new DocumentRenderPolicy()).build();
+
+Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+
+DocumentRenderData document = Documents.of()
+        .addParagraph(Paragraphs.of("{{title}}").create())
+        .addParagraph(Paragraphs.of("{{#table}}").create())
+        .create();
+data.put("title", document);</code></pre>
 </div>
 </div>
 </div>
@@ -2370,7 +2391,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dependency&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;ch.qos.logback&lt;/groupId&gt;
   &lt;artifactId&gt;logback-core&lt;/artifactId&gt;
   &lt;version&gt;1.2.3&lt;/version&gt;
@@ -2387,7 +2408,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;configuration&gt;
   &lt;appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"&gt;
     &lt;encoder&gt;
@@ -2421,7 +2442,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <h2 id="_插件"><a class="anchor" href="#_插件"></a><a class="link" href="#_插件">8. 插件</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>插件，又称为 <strong>自定义函数</strong>，它允许用户在模板标签位置处执行预先定义好的函数。由于插件机制的存在，我们几乎可以在模板的任何位置执行任何操作。</p>
+<p>插件，又称为<strong>自定义函数</strong>，它允许用户在模板标签位置处执行预先定义好的函数。由于插件机制的存在，我们几乎可以在模板的任何位置执行任何操作。</p>
 </div>
 <div class="paragraph">
 <p><strong>插件是poi-tl的核心</strong>，默认的标签和引用标签都是通过插件加载。</p>
@@ -2466,11 +2487,11 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="sect2">
 <h3 id="cus-policy-section"><a class="anchor" href="#cus-policy-section"></a><a class="link" href="#cus-policy-section">8.2. 开发一个插件</a></h3>
 <div class="paragraph">
-<p>插件的实现就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现 <code>RenderPolicy</code> 接口开发自己的插件：</p>
+<p>实现一个插件就是要告诉我们在模板的某个地方用某些数据做某些事情，我们可以通过实现<code>RenderPolicy</code>接口开发自己的插件：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public interface RenderPolicy {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public interface RenderPolicy {
   void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template); <i class="conum" data-value="1"></i><b>(1)</b> <i class="conum" data-value="2"></i><b>(2)</b> <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
@@ -2498,7 +2519,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class HelloWorldRenderPolicy implements RenderPolicy {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class HelloWorldRenderPolicy implements RenderPolicy {
 
   @Override
   public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
@@ -2532,7 +2553,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class CustomTableRenderPolicy extends AbstractRenderPolicy&lt;Object&gt; {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class CustomTableRenderPolicy extends AbstractRenderPolicy&lt;Object&gt; {
 
   @Override
   protected void afterRender(RenderContext&lt;Object&gt; context) {
@@ -2550,7 +2571,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
     XWPFTable table = bodyContainer.insertNewTable(run, row, col);
 
     // 表格宽度
-    TableTools.widthTable(table, 14.63f, col);
+    TableTools.setWidth(table, UnitUtils.cm2Twips(14.63f) + "", null);
     // 边框和样式
     TableTools.borderTable(table, BorderStyle.DEFAULT);
 
@@ -2595,7 +2616,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">ConfigureBuilder builder = Configure.builder();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">ConfigureBuilder builder = Configure.builder();
 builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 </div>
@@ -2607,7 +2628,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());</code></pre>
 </div>
 </div>
 </div>
@@ -2618,7 +2639,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">builder.addPlugin('%', new HelloWorldRenderPolicy());</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.addPlugin('%', new HelloWorldRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2629,7 +2650,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 <div class="sect2">
 <h3 id="_plugin_example"><a class="anchor" href="#_plugin_example"></a><a class="link" href="#_plugin_example">8.4. Plugin Example</a></h3>
 <div class="paragraph">
-<p>我想用一个完整的代码示例向你展示 <em>Do Anything Anywhere</em> 的想法，它不使用任何poi-tl的默认插件，完全使用匿名类创建新插件完成。</p>
+<p>接下来用一个完整的代码示例向你展示 <em>Do Anything Anywhere</em> 的想法，它不使用任何poi-tl的默认插件，完全使用自定义函数完成。</p>
 </div>
 <div class="paragraph">
 <p>插件是一个函数，它的入参是anywhere和anything，函数体就是do something。</p>
@@ -2638,7 +2659,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// where绑定policy
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// where绑定policy
 Configure config = Configure.builder().bind("sea", new AbstractRenderPolicy&lt;String&gt;() {
   @Override
   public void doRender(RenderContext&lt;String&gt; context) throws Exception { <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2719,7 +2740,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <div class="sect2">
 <h3 id="plugin-list"><a class="anchor" href="#plugin-list"></a><a class="link" href="#plugin-list">9.1. 插件列表</a></h3>
 <div class="paragraph">
-<p>除了八个通用的策略插件外，还内置了一些额外用途的插件。</p>
+<p>除了八个通用的策略插件外，还内置了一些非常有用的插件。</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -2729,12 +2750,22 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicTableRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">动态表格插件，允许直接操作表格对象</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-dynamic-table">示例-动态表格</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParagraphRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">渲染一个段落，可以包含不同样式文本，图片等</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HackLoopTableRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DocumentRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">渲染多个段落和表格</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommentRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">完整的批注功能</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-comment">示例-批注</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoopRowTableRenderPolicy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">循环表格行，下文会详细介绍</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#hack-loop-table">示例-表格行循环</a></p></td>
 </tr>
@@ -2742,6 +2773,11 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoopColumnTableRenderPolicy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">循环表格列</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#loop-col-table">示例-表格列循环</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DynamicTableRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">动态表格插件，允许直接操作表格对象</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-dynamic-table">示例-动态表格</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>BookmarkRenderPolicy</code></p></td>
@@ -2759,19 +2795,31 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParagraphRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">渲染一个段落，可以包含不同样式文本，图片等</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DocumentRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">渲染多个段落和表格</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>TOCRenderPolicy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Beta实验功能：目录，打开文档时需要更新域</p></td>
 <td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>同时有更多的独立插件可以使用（需要引入对应Maven依赖）：</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HighlightRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Word支持代码高亮</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-highlight">示例-代码高亮</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MarkdownRenderPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用Markdown来渲染word</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-markdown">示例-Markdown</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -2791,7 +2839,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <div class="sect2">
 <h3 id="hack-loop-table"><a class="anchor" href="#hack-loop-table"></a><a class="link" href="#hack-loop-table">9.2. 表格行循环</a></h3>
 <div class="paragraph">
-<p><code>HackLoopTableRenderPolicy</code> 是一个特定场景的插件，根据集合数据循环表格行。</p>
+<p><code>LoopRowTableRenderPolicy</code> 是一个特定场景的插件，根据集合数据循环表格行。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -2814,7 +2862,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">class Goods {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">class Goods {
   private int count;
   private String name;
   private String desc;
@@ -2842,7 +2890,7 @@ List&lt;Labor&gt; labors = new ArrayList&lt;&gt;();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">LoopRowTableRenderPolicy policy = new LoopRowTableRenderPolicy();
 
 Configure config = Configure.builder()
         .bind("goods", policy).bind("labors", policy).build(); <i class="conum" data-value="1"></i><b>(1)</b>
@@ -2885,7 +2933,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-源码参见 <a href="https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/HackLoopTableRenderPolicyTest.java">JUnit HackLoopTableRenderPolicyTest</a>，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 <code>new HackLoopTableRenderPolicy(true)</code> 来构造插件。
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/v1.9.0/src/test/java/com/deepoove/poi/tl/policy/LoopRowTableRenderPolicyTest.java">JUnit LoopRowTableRenderPolicyTest</a>，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 <code>new LoopRowTableRenderPolicy(true)</code> 来构造插件。
 </td>
 </tr>
 </table>
@@ -2900,7 +2948,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="content">
 <div class="paragraph">
 <div class="title">template.docx</div>
-<p><code>LoopColumnTableRenderPolicy</code> 循环列的使用方式和插件 <code>HackLoopTableRenderPolicy</code> 是一样的，需要将占位标签放在循环列的前一列。</p>
+<p><code>LoopColumnTableRenderPolicy</code> 循环列的使用方式和插件 <code>LoopRowTableRenderPolicy</code> 是一样的，需要将占位标签放在循环列的前一列。</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -2914,7 +2962,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="listingblock">
 <div class="title">代码示例</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">LoopColumnTableRenderPolicy policy = new LoopColumnTableRenderPolicy();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">LoopColumnTableRenderPolicy policy = new LoopColumnTableRenderPolicy();
 
 Configure config = Configure.builder().bind("goods", policy).build();
 
@@ -2960,7 +3008,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public abstract class DynamicTableRenderPolicy implements RenderPolicy {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public abstract class DynamicTableRenderPolicy implements RenderPolicy {
   public abstract void render(XWPFTable table, Object data);
 }</code></pre>
 </div>
@@ -2986,7 +3034,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">public class DetailTablePolicy extends DynamicTableRenderPolicy {
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">public class DetailTablePolicy extends DynamicTableRenderPolicy {
 
   // 货品填充数据所在行数
   int goodsStartRow = 2;
@@ -3033,7 +3081,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();</code></pre>
 </div>
 </div>
 </div>
@@ -3064,10 +3112,424 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="plugin-comment"><a class="anchor" href="#plugin-comment"></a><a class="link" href="#plugin-comment">9.5. 批注</a></h3>
+<div class="paragraph">
+<p><code>CommentRenderPolicy</code> 是内置插件，提供了对批注完整功能的支持。</p>
+</div>
+<div class="paragraph">
+<p>数据模型：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CommentRenderData</code></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">代码示例</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">CommentRenderData comment = Comments.of("鹅")
+                .signature("Sayi", "s", LocaleUtil.getLocaleCalendar())
+                .comment("鹅，是一种动物")
+                .create(); <i class="conum" data-value="1"></i><b>(1)</b>
+Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+data.put("comment", comment);
+Configure config = Configure.builder().bind("comment", new CommentRenderPolicy()).build(); <i class="conum" data-value="2"></i><b>(2)</b>
+
+XWPFTemplate.compile("comment_template.docx", config).render(data);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>批注内容</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>将批注插件和comment标签绑定</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">9.5.1. 示例</a></h4>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output.docx</div>
+<p>批注中支持添加文字、图片等文档内容。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./example/example_comment_output.png" alt="example comment output">
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/poi-tl/src/test/java/com/deepoove/poi/tl/plugin/CommentRenderPolicyTest.java">JUnit CommentRenderPolicyTest</a>。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="plugin-highlight"><a class="anchor" href="#plugin-highlight"></a><a class="link" href="#plugin-highlight">9.6. 代码高亮</a></h3>
+<div class="paragraph">
+<p><code>HighlightRenderPolicy</code> 插件对Word代码块进行高亮展示。</p>
+</div>
+<div class="sect3">
+<h4 id="_引入依赖"><a class="anchor" href="#_引入依赖"></a><a class="link" href="#_引入依赖">9.6.1. 引入依赖：</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
+  &lt;artifactId&gt;poi-tl-plugin-highlight&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_快速开始"><a class="anchor" href="#_快速开始"></a><a class="link" href="#_快速开始">9.6.2. 快速开始</a></h4>
+<div class="paragraph">
+<p>数据模型：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>HighlightRenderData</code></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">代码示例</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">HighlightRenderData code = new HighlightRenderData();
+code.setCode("/**\n"
+        + " * @author John Smith &lt;john.smith@example.com&gt;\n"
+        + "*/\n"
+        + "package l2f.gameserver.model;\n"
+        + "\n"
+        + "public abstract strictfp class L2Char extends L2Object {\n"
+        + "  public static final Short ERROR = 0x0001;\n"
+        + "\n"
+        + "  public void moveTo(int x, int y, int z) {\n"
+        + "    _ai = null;\n"
+        + "    log(\"Should not be called\");\n"
+        + "    if (1 &gt; 5) { // wtf!?\n"
+        + "      return;\n"
+        + "    }\n"
+        + "  }\n"
+        + "}");
+code.setLanguage("java"); <i class="conum" data-value="1"></i><b>(1)</b>
+code.setStyle(HighlightStyle.builder().withShowLine(true).withTheme("zenburn").build()); <i class="conum" data-value="2"></i><b>(2)</b>
+Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+data.put("code", code);
+
+Configure config = Configure.builder().bind("code", new HighlightRenderPolicy()).build(); <i class="conum" data-value="3"></i><b>(3)</b>
+XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>代码语言</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>设置主题样式</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>将代码高亮插件和code标签绑定</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_示例_2"><a class="anchor" href="#_示例_2"></a><a class="link" href="#_示例_2">9.6.3. 示例</a></h4>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output.docx</div>
+<p>示例展示了代码高亮插件支持20多种编程语言和几十种主题样式。</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./example/highlight.png" alt="highlight">
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/poi-tl-plugin-highlight/src/test/java/com/deepoove/poi/plugin/highlight/HighlightRenderPolicyTest.java">JUnit HighlightRenderPolicyTest</a>。
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_常用语言支持"><a class="anchor" href="#_常用语言支持"></a><a class="link" href="#_常用语言支持">9.6.4. 常用语言支持</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>apache</p>
+</li>
+<li>
+<p>bash</p>
+</li>
+<li>
+<p>cpp</p>
+</li>
+<li>
+<p>cs</p>
+</li>
+<li>
+<p>css</p>
+</li>
+<li>
+<p>diff</p>
+</li>
+<li>
+<p>go</p>
+</li>
+<li>
+<p>groovy</p>
+</li>
+<li>
+<p>http</p>
+</li>
+<li>
+<p>ini</p>
+</li>
+<li>
+<p>java</p>
+</li>
+<li>
+<p>javascript</p>
+</li>
+<li>
+<p>json</p>
+</li>
+<li>
+<p>makefile</p>
+</li>
+<li>
+<p>markdown</p>
+</li>
+<li>
+<p>objectivec</p>
+</li>
+<li>
+<p>perl</p>
+</li>
+<li>
+<p>php</p>
+</li>
+<li>
+<p>python</p>
+</li>
+<li>
+<p>ruby</p>
+</li>
+<li>
+<p>scala</p>
+</li>
+<li>
+<p>shell</p>
+</li>
+<li>
+<p>sql</p>
+</li>
+<li>
+<p>xml</p>
+</li>
+<li>
+<p>yaml</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_常用主题样式"><a class="anchor" href="#_常用主题样式"></a><a class="link" href="#_常用主题样式">9.6.5. 常用主题样式</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>github</p>
+</li>
+<li>
+<p>idea</p>
+</li>
+<li>
+<p>zenburn</p>
+</li>
+<li>
+<p>androidstudio</p>
+</li>
+<li>
+<p>solarized- light</p>
+</li>
+<li>
+<p>solarized- dark</p>
+</li>
+<li>
+<p>xcode</p>
+</li>
+<li>
+<p>vs</p>
+</li>
+<li>
+<p>agate</p>
+</li>
+<li>
+<p>darcula</p>
+</li>
+<li>
+<p>dark</p>
+</li>
+<li>
+<p>dracula</p>
+</li>
+<li>
+<p>foundation</p>
+</li>
+<li>
+<p>googlecode</p>
+</li>
+<li>
+<p>monokai</p>
+</li>
+<li>
+<p>mono- blue</p>
+</li>
+<li>
+<p>far</p>
+</li>
+<li>
+<p>gml</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="plugin-markdown"><a class="anchor" href="#plugin-markdown"></a><a class="link" href="#plugin-markdown">9.7. Markdown</a></h3>
+<div class="paragraph">
+<p><code>MarkdownRenderPolicy</code> 插件支持通过Markdown生成word文档。</p>
+</div>
+<div class="sect3">
+<h4 id="_引入依赖_2"><a class="anchor" href="#_引入依赖_2"></a><a class="link" href="#_引入依赖_2">9.7.1. 引入依赖：</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
+  &lt;artifactId&gt;poi-tl-plugin-markdown&lt;/artifactId&gt;
+  &lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_快速开始_2"><a class="anchor" href="#_快速开始_2"></a><a class="link" href="#_快速开始_2">9.7.2. 快速开始</a></h4>
+<div class="paragraph">
+<p>数据模型：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>MarkdownRenderData</code></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">代码示例</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">MarkdownRenderData code = new MarkdownRenderData();
+code.setMarkdown(new String(Files.readAllBytes(Paths.get("README.md"))));
+code.setStyle(MarkdownStyle.newStyle()); <i class="conum" data-value="1"></i><b>(1)</b>
+
+Map&lt;String, Object&gt; data = new HashMap&lt;&gt;();
+data.put("md", code);
+
+Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build(); <i class="conum" data-value="2"></i><b>(2)</b>
+XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>定制markdown转为word的样式</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>将Markdown插件和md标签绑定</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_示例_3"><a class="anchor" href="#_示例_3"></a><a class="link" href="#_示例_3">9.7.3. 示例</a></h4>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<div class="title">output.docx</div>
+<p>通过Markdown插件将poi-tl根目录下的README.md内容转为word文档的结果示例：<a href="./example/example_markdown_output.docx">markdown.docx</a></p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./example/example_markdown_output.png" alt="example markdown output">
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+源码参见 <a href="https://github.com/Sayi/poi-tl/blob/master/poi-tl-plugin-markdown/src/test/java/com/deepoove/poi/plugin/markdown/MarkdownRenderPolicyTest.java">JUnit MarkdownRenderPolicyTest</a>。
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">10. 示例</a></h2>
+<h2 id="_示例_4"><a class="anchor" href="#_示例_4"></a><a class="link" href="#_示例_4">10. 示例</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。</p>
@@ -3148,7 +3610,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <p>这个示例向我们展示了poi-tl在表格操作上的一些思考。示例中货物明细和人工费的表格就是一个相当复杂的表格，货物明细是由7列组成，行数不定，人工费是由4列组成，行数不定。</p>
 </div>
 <div class="paragraph">
-<p>这个示例主要用来展示<a href="#plugin-dynamic-table">DynamicTableRenderPolicy</a>的用法，货物明细和人工费仅仅是循环渲染表格行，使用<a href="#hack-loop-table">HackLoopTableRenderPolicy</a> 插件会更方便。</p>
+<p>这个示例主要用来展示<a href="#plugin-dynamic-table">DynamicTableRenderPolicy</a>的用法，货物明细和人工费仅仅是循环渲染表格行，使用<a href="#hack-loop-table">LoopRowTableRenderPolicy</a> 插件会更方便。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -3397,7 +3859,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="content">
 <div class="paragraph">
 <div class="title">template.docx</div>
-<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>HackLoopTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。</p>
+<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>LoopRowTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -3416,15 +3878,15 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 <div class="listingblock">
 <div class="title">代码示例</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">SwaggerParser swaggerParser = new SwaggerParser();
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">SwaggerParser swaggerParser = new SwaggerParser();
 Swagger swagger = swaggerParser.read("https://petstore.swagger.io/v2/swagger.json");
 SwaggerView viewData = convert(swagger); <i class="conum" data-value="1"></i><b>(1)</b>
 
-HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+LoopRowTableRenderPolicy LoopRowTableRenderPolicy = new LoopRowTableRenderPolicy();
 Configure config = Configure.builder()
-        .bind("parameters", hackLoopTableRenderPolicy)
-        .bind("responses", hackLoopTableRenderPolicy)
-        .bind("properties", hackLoopTableRenderPolicy)
+        .bind("parameters", LoopRowTableRenderPolicy)
+        .bind("responses", LoopRowTableRenderPolicy)
+        .bind("properties", LoopRowTableRenderPolicy)
         .addPlugin('&gt;', new BookmarkRenderPolicy())
         .useSpringEL()
         .build(); <i class="conum" data-value="2"></i><b>(2)</b>
@@ -3549,9 +4011,13 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/zenburn.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/groovy.min.js"></script>
-<script>hljs.initHighlighting()</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/languages/groovy.min.js"></script>
+<script>
+if (!hljs.initHighlighting.called) {
+  hljs.initHighlighting.called = true
+  ;[].slice.call(document.querySelectorAll('pre.highlight > code')).forEach(function (el) { hljs.highlightBlock(el) })
+}
+</script>
 </body>
 </html>
