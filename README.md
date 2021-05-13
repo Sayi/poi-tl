@@ -303,8 +303,8 @@ Address: Shanghai,China
 * [Sections and chart Example](http://deepoove.com/poi-tl/#example-animal)
 * [Textbox Example](http://deepoove.com/poi-tl/#example-certificate)
 * [Comment Example](http://deepoove.com/poi-tl/#plugin-comment)
-* [Example: Resume](http://deepoove.com/poi-tl/#example-resume)
-* [Example: Code highlight](http://deepoove.com/poi-tl/#plugin-highlight)
+* [Example: Write Resume](http://deepoove.com/poi-tl/#example-resume)
+* [Example: Highlighting Code](http://deepoove.com/poi-tl/#plugin-highlight)
 * [Example: Convert Markdown to word](http://deepoove.com/poi-tl/#plugin-markdown)
 * [Example: Convert Swagger to word](http://deepoove.com/poi-tl/#example-swagger)
 
@@ -324,4 +324,3 @@ You can join this project in many ways, not limited to the following ways:
 See [FAQ](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98), welcome to issue on GitHub Questions and exchanges.
 
 Community exchange discussion group: [Gitter channel](https://gitter.im/Sayi/poi-tl)
-
