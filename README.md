@@ -260,7 +260,7 @@ Code:
 ```java
 class AddrModel {
   String addr;
-  AddrModel(String addr) {
+  public AddrModel(String addr) {
     this.addr = addr;
   }
 }

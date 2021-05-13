@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
-import com.deepoove.poi.plugin.table.HackLoopTableRenderPolicy;
+import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 
 @DisplayName("Example for HackLoop Table")
 public class HackLoopTableRenderPolicyTest {
@@ -57,8 +57,8 @@ public class HackLoopTableRenderPolicyTest {
 
     @Test
     public void testPaymentHackExample() throws Exception {
-        HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
-        HackLoopTableRenderPolicy hackLoopSameLineTableRenderPolicy = new HackLoopTableRenderPolicy(true);
+        LoopRowTableRenderPolicy hackLoopTableRenderPolicy = new LoopRowTableRenderPolicy();
+        LoopRowTableRenderPolicy hackLoopSameLineTableRenderPolicy = new LoopRowTableRenderPolicy(true);
         Configure config = Configure.builder().bind("goods", hackLoopTableRenderPolicy)
                 .bind("labors", hackLoopTableRenderPolicy).bind("goods2", hackLoopSameLineTableRenderPolicy)
                 .bind("labors2", hackLoopSameLineTableRenderPolicy).build();
