@@ -20,10 +20,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.policy.ParagraphRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
@@ -66,6 +68,7 @@ public class JSONRenderPolicy extends AbstractRenderPolicy<String> {
         List<TextRenderData> codes = convert(jsonNode, 1);
 
         ParagraphRenderData paragraphRenderData = new ParagraphRenderData();
+        paragraphRenderData.setParagraphStyle(ParagraphStyle.builder().withSpacing(0).withSpacingRule(LineSpacingRule.AT_LEAST).build());
         codes.forEach(code -> {
             paragraphRenderData.addText(code);
         });
