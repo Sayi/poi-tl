@@ -24,7 +24,7 @@ public class MarkdownTest {
         data.put("md", code);
 
         Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build();
-        XWPFTemplate.compile("src/test/resources/markdown/markdown.docx", config)
+        XWPFTemplate.compile("src/test/resources/markdown/markdown_template.docx", config)
                 .render(data)
                 .writeToFile("out_markdown_" + name + ".docx");
     }
