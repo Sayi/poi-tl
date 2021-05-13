@@ -302,7 +302,10 @@ Address: Shanghai,China
 * [Table Example](http://deepoove.com/poi-tl/#example-table)
 * [Sections and chart Example](http://deepoove.com/poi-tl/#example-animal)
 * [Textbox Example](http://deepoove.com/poi-tl/#example-certificate)
+* [Comment Example](http://deepoove.com/poi-tl/#plugin-comment)
 * [Example: Resume](http://deepoove.com/poi-tl/#example-resume)
+* [Example: Code highlight](http://deepoove.com/poi-tl/#plugin-highlight)
+* [Example: Convert Markdown to word](http://deepoove.com/poi-tl/#plugin-markdown)
 * [Example: Convert Swagger to word](http://deepoove.com/poi-tl/#example-swagger)
 
 For more examples and the source code of all examples, see JUnit unit testcases.
