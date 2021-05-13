@@ -57,8 +57,8 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  */
 public class XWPFTemplate implements Closeable {
 
-    public static final String DEFAULT_TEMPLATE_TAG_NAME = "template";
-    public static final String TEMPLATE_TAG = "{{" + DEFAULT_TEMPLATE_TAG_NAME + "}}";
+    public static final String TEMPLATE_TAG_NAME = "template";
+    public static final String TEMPLATE_TAG = "{{" + TEMPLATE_TAG_NAME + "}}";
 
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
     private static final String SUPPORT_MINIMUM_VERSION = "4.1.2";
@@ -210,7 +210,7 @@ public class XWPFTemplate implements Closeable {
         XWPFRun run = document.createParagraph().createRun();
         run.setText(TEMPLATE_TAG);
         StyleUtils.styleRun(run, templateTagStyle);
-        ConfigureBuilder builder = Configure.builder().bind(DEFAULT_TEMPLATE_TAG_NAME, new DocumentRenderPolicy());
+        ConfigureBuilder builder = Configure.builder().bind(TEMPLATE_TAG_NAME, new DocumentRenderPolicy());
         return compile(document, builder.build());
     }
 
