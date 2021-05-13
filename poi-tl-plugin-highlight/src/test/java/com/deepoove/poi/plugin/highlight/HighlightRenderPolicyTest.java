@@ -10,9 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.plugin.highlight.HighlightRenderData;
-import com.deepoove.poi.plugin.highlight.HighlightRenderPolicy;
-import com.deepoove.poi.plugin.highlight.HighlightStyle;
 
 public class HighlightRenderPolicyTest {
 
@@ -40,11 +37,11 @@ public class HighlightRenderPolicyTest {
         code.setStyle(HighlightStyle.builder().withShowLine(true).build());
         
         List<Map<String, Object>> codes = new ArrayList<>();
-        String[] themes = new String[] { "github", "idea", "zenburn", "androidstudio", "solarized-light",
+        String[] themes = new String[] { "github", "idea", "zenburn", "far", "androidstudio", "solarized-light",
                 "solarized-dark", "xcode", "vs", "tomorrow", "agate", "arduino-light", "darcula", "dark", "default",
                 "docco", "dracula", "foundation", "googlecode", "monokai", "monokai-sublime", "mono-blue", "ocean",
                 "rainbow", "stackoverflow-dark", "stackoverflow-light", "tomorrow-night", "a11y-dark", "a11y-light",
-                "an-old-hope", "arta", "ascetic", "atom-one-dark", "atom-one-light", "far", "gml", "gradient-dark",
+                "an-old-hope", "arta", "ascetic", "atom-one-dark", "atom-one-light", "gml", "gradient-dark",
                 "magula", "nord" };
         for (String theme : themes) {
             HighlightRenderData source = new HighlightRenderData();
@@ -80,8 +77,8 @@ public class HighlightRenderPolicyTest {
         data.put("themes", codes);
 
         Configure config = Configure.builder().bind("code", new HighlightRenderPolicy()).build();
-        XWPFTemplate.compile("src/test/resources/hightlight/render_highlight.docx", config).render(data)
-                .writeToFile("out_render_highlight.docx");
+        XWPFTemplate.compile("src/test/resources/hightlight/highlight_template.docx", config).render(data)
+                .writeToFile("out_highlight.docx");
     }
 
 }

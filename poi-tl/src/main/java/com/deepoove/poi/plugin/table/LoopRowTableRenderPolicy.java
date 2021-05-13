@@ -48,29 +48,26 @@ import com.deepoove.poi.util.TableTools;
  * Hack for loop table row
  * 
  * @author Sayi
- * 
- * @deprecated use {@link LoopRowTableRenderPolicy} instead
  */
-@Deprecated
-public class HackLoopTableRenderPolicy implements RenderPolicy {
+public class LoopRowTableRenderPolicy implements RenderPolicy {
 
     private String prefix;
     private String suffix;
     private boolean onSameLine;
 
-    public HackLoopTableRenderPolicy() {
+    public LoopRowTableRenderPolicy() {
         this(false);
     }
 
-    public HackLoopTableRenderPolicy(boolean onSameLine) {
+    public LoopRowTableRenderPolicy(boolean onSameLine) {
         this("[", "]", onSameLine);
     }
 
-    public HackLoopTableRenderPolicy(String prefix, String suffix) {
+    public LoopRowTableRenderPolicy(String prefix, String suffix) {
         this(prefix, suffix, false);
     }
 
-    public HackLoopTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
+    public LoopRowTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
         this.prefix = prefix;
         this.suffix = suffix;
         this.onSameLine = onSameLine;

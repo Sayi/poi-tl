@@ -18,7 +18,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.plugin.table.HackLoopTableRenderPolicy;
+import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
 import com.deepoove.poi.tl.policy.JSONRenderPolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -62,7 +62,7 @@ public class SwaggerToWordExample {
         Swagger swagger = swaggerParser.read(location);
         SwaggerView viewData = convert(swagger);
 
-        HackLoopTableRenderPolicy hackLoopTableRenderPolicy = new HackLoopTableRenderPolicy();
+        LoopRowTableRenderPolicy hackLoopTableRenderPolicy = new LoopRowTableRenderPolicy();
         Configure config = Configure.builder().bind("parameters", hackLoopTableRenderPolicy)
                 .bind("responses", hackLoopTableRenderPolicy).bind("properties", hackLoopTableRenderPolicy)
                 .useSpringEL().build();

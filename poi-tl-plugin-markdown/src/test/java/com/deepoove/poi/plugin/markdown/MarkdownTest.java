@@ -7,9 +7,6 @@ import java.util.Map;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.plugin.markdown.MarkdownRenderData;
-import com.deepoove.poi.plugin.markdown.MarkdownRenderPolicy;
-import com.deepoove.poi.plugin.markdown.MarkdownStyle;
 
 public class MarkdownTest {
 
@@ -27,7 +24,7 @@ public class MarkdownTest {
         data.put("md", code);
 
         Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build();
-        XWPFTemplate.compile("src/test/resources/markdown/markdown.docx", config)
+        XWPFTemplate.compile("src/test/resources/markdown/markdown_template.docx", config)
                 .render(data)
                 .writeToFile("out_markdown_" + name + ".docx");
     }

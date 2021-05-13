@@ -18,6 +18,7 @@ package com.deepoove.poi.data;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.function.Supplier;
 
 import com.deepoove.poi.data.style.PictureStyle;
@@ -37,15 +38,15 @@ public class Pictures {
     }
 
     public static PictureBuilder ofLocal(String path) {
-        return of(() -> ByteUtils.getLocalByteArray(new File(path)), PictureType.suggestFileType(path));
+        return of(new LocalPictureSupplier(path), PictureType.suggestFileType(path));
     }
 
     public static PictureBuilder ofUrl(String url, PictureType pictureType) {
-        return of(() -> ByteUtils.getUrlByteArray(url), pictureType);
+        return of(new UrlPictureSupplier(url), pictureType);
     }
 
     public static PictureBuilder ofUrl(String url) {
-        return of(() -> ByteUtils.getUrlByteArray(url));
+        return of(new UrlPictureSupplier(url));
     }
 
     public static PictureBuilder ofStream(InputStream inputStream, PictureType pictureType) {
@@ -61,7 +62,7 @@ public class Pictures {
     }
 
     public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
-        return of(() -> ByteUtils.getBase64ByteArray(base64), pictureType);
+        return ofBytes(ByteUtils.getBase64ByteArray(base64), pictureType);
     }
 
     public static PictureBuilder ofBytes(byte[] bytes) {
@@ -69,7 +70,7 @@ public class Pictures {
     }
 
     public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
-        return new PictureBuilder(pictureType, () -> bytes);
+        return new PictureBuilder(pictureType, new PictureSupplier(bytes));
     }
 
     public static PictureBuilder of(String imgUri) {
@@ -86,6 +87,54 @@ public class Pictures {
 
     public static PictureBuilder of(Supplier<byte[]> supplier, PictureType pictureType) {
         return new PictureBuilder(pictureType, supplier);
+    }
+
+    public static class LocalPictureSupplier implements Supplier<byte[]>, Serializable {
+
+        private static final long serialVersionUID = 1L;
+        private String path;
+
+        public LocalPictureSupplier(String path) {
+            this.path = path;
+        }
+
+        @Override
+        public byte[] get() {
+            return ByteUtils.getLocalByteArray(new File(path));
+        }
+
+    }
+
+    public static class UrlPictureSupplier implements Supplier<byte[]>, Serializable {
+
+        private static final long serialVersionUID = 1L;
+        private String url;
+
+        public UrlPictureSupplier(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public byte[] get() {
+            return ByteUtils.getUrlByteArray(url);
+        }
+
+    }
+
+    public static class PictureSupplier implements Supplier<byte[]>, Serializable {
+
+        private static final long serialVersionUID = 1L;
+        private byte[] bytes;
+
+        public PictureSupplier(byte[] bytes) {
+            this.bytes = bytes;
+        }
+
+        @Override
+        public byte[] get() {
+            return bytes;
+        }
+
     }
 
     /**

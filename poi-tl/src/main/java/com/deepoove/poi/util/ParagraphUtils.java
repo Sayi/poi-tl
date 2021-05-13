@@ -61,4 +61,12 @@ public final class ParagraphUtils {
         return false;
     }
 
+    public static boolean havePageBreak(XWPFParagraph paragraph) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        for (XWPFRun run : runs) {
+            if (CollectionUtils.isNotEmpty(run.getCTR().getLastRenderedPageBreakList())) return true;
+        }
+        return false;
+    }
+
 }

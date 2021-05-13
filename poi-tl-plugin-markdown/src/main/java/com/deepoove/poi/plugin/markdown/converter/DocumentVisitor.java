@@ -286,9 +286,10 @@ public class DocumentVisitor extends AbstractVisitor {
 
     @Override
     public void visit(CustomBlock customBlock) {
-        super.visit(customBlock);
         if (customBlock instanceof TableBlock) {
             visitTable((TableBlock) customBlock);
+        } else {
+            super.visit(customBlock);
         }
     }
 
@@ -336,6 +337,10 @@ public class DocumentVisitor extends AbstractVisitor {
 
     @Override
     public void visit(Text text) {
+    }
+
+    @Override
+    public void visit(ThematicBreak thematicBreak) {
     }
 
     @Override

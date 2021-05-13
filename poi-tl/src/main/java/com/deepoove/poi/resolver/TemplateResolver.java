@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.*;
@@ -282,21 +283,28 @@ public class TemplateResolver extends AbstractResolver {
 
     ElementTemplate parseTemplateFactory(String text, Object obj, XWPFRun run) {
         if (null == text) return null;
+        ElementTemplate elementTemplate = null;
         if (templatePattern.matcher(text).matches()) {
-            logger.debug("Resolve where text: {}, and create ElementTemplate for {}", text, obj.getClass());
+            String shortClassName = ClassUtils.getShortClassName(obj.getClass());
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
             if (obj.getClass() == XWPFRun.class) {
-                return (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);
+                elementTemplate = (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);
             } else if (obj.getClass() == XWPFPicture.class) {
-                return (PictureTemplate) elementTemplateFactory.createPicureTemplate(config, tag, (XWPFPicture) obj);
+                elementTemplate = (PictureTemplate) elementTemplateFactory.createPicureTemplate(config, tag,
+                        (XWPFPicture) obj);
             } else if (obj.getClass() == CTPictWrapper.class) {
-                return (PictImageTemplate) elementTemplateFactory.createPictImageTemplate(config, tag,
+                elementTemplate = (PictImageTemplate) elementTemplateFactory.createPictImageTemplate(config, tag,
                         (CTPictWrapper) obj, run);
             } else if (obj instanceof XWPFChart) {
-                return (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag, (XWPFChart) obj, run);
+                elementTemplate = (ChartTemplate) elementTemplateFactory.createChartTemplate(config, tag,
+                        (XWPFChart) obj, run);
+            }
+            if (null != elementTemplate) {
+                logger.debug("Resolve where text: {}, and create {} for {}", text,
+                        ClassUtils.getShortClassName(elementTemplate.getClass()), shortClassName);
             }
         }
-        return null;
+        return elementTemplate;
     }
 
 }

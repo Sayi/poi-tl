@@ -15,7 +15,7 @@ public class MarkdownRenderPolicyTest {
     @Test
     public void testMarkdown() throws Exception {
         MarkdownRenderData code = new MarkdownRenderData();
-        byte[] bytes = Files.readAllBytes(Paths.get("src/test/resources/markdown/mk.md"));
+        byte[] bytes = Files.readAllBytes(Paths.get("src/test/resources/markdown/basic.md"));
         String mkdn = new String(bytes);
         code.setMarkdown(mkdn);
 
@@ -28,9 +28,9 @@ public class MarkdownRenderPolicyTest {
         data.put("md", code);
 
         Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build();
-        XWPFTemplate.compile("src/test/resources/markdown/markdown.docx", config)
+        XWPFTemplate.compile("src/test/resources/markdown/markdown_template.docx", config)
                 .render(data)
-                .writeToFile("out_render_markdown.docx");
+                .writeToFile("out_markdown.docx");
     }
 
 }
