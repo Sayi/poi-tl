@@ -36,8 +36,7 @@ public class DocxRenderData implements RenderData {
     private byte[] mergedDoc;
 
     /**
-     * Render data for the docx template to be merged. If the merged document is not
-     * a template, it can be empty
+     * Render data for the docx template to be merged. If the merged document is not a template, it can be empty
      */
     private List<?> dataModels;
 
@@ -52,10 +51,8 @@ public class DocxRenderData implements RenderData {
     }
 
     /**
-     * 
      * @param docx        file to be merged
-     * @param renderDatas Render data for the docx template, the size of the list
-     *                    indicates the number of cycles
+     * @param renderDatas Render data for the docx template, the size of the list indicates the number of cycles
      */
     public DocxRenderData(File docx, List<?> renderDatas) {
         this(ByteUtils.getLocalByteArray(docx), renderDatas);
@@ -70,8 +67,7 @@ public class DocxRenderData implements RenderData {
 
     /**
      * @param inputStream stream to be merged
-     * @param renderDatas Render data for the stream template, the size of the list
-     *                    indicates the number of cycles
+     * @param renderDatas Render data for the stream template, the size of the list indicates the number of cycles
      */
     public DocxRenderData(InputStream inputStream, List<?> renderDatas) {
         this(ByteUtils.toByteArray(inputStream), renderDatas);

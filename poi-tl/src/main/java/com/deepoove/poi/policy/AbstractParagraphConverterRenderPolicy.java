@@ -28,12 +28,12 @@ import com.deepoove.poi.render.RenderContext;
  */
 public abstract class AbstractParagraphConverterRenderPolicy<T> extends AbstractRenderPolicy<T> {
 
-    protected final ToRenderDataConverter<T, ParagraphRenderData> documentConverter;
+    protected final ToRenderDataConverter<T, ParagraphRenderData> paragraphConverter;
 
     public abstract ToRenderDataConverter<T, ParagraphRenderData> getParagraphRenderDataConverter();
 
     public AbstractParagraphConverterRenderPolicy() {
-        this.documentConverter = getParagraphRenderDataConverter();
+        this.paragraphConverter = getParagraphRenderDataConverter();
     }
 
     @Override
@@ -43,7 +43,7 @@ public abstract class AbstractParagraphConverterRenderPolicy<T> extends Abstract
 
     @Override
     public void doRender(RenderContext<T> context) throws Exception {
-        ParagraphRenderPolicy.Helper.renderParagraph(context.getRun(), documentConverter.convert(context.getData()));
+        ParagraphRenderPolicy.Helper.renderParagraph(context.getRun(), paragraphConverter.convert(context.getData()));
     }
 
 }
