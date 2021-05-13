@@ -15,7 +15,7 @@ public class MarkdownRenderPolicyTest {
     @Test
     public void testMarkdown() throws Exception {
         MarkdownRenderData code = new MarkdownRenderData();
-        byte[] bytes = Files.readAllBytes(Paths.get("src/test/resources/markdown/mk.md"));
+        byte[] bytes = Files.readAllBytes(Paths.get("src/test/resources/markdown/basic.md"));
         String mkdn = new String(bytes);
         code.setMarkdown(mkdn);
 

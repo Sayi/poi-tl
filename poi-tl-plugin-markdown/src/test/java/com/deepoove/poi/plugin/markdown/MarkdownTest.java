@@ -7,9 +7,6 @@ import java.util.Map;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.plugin.markdown.MarkdownRenderData;
-import com.deepoove.poi.plugin.markdown.MarkdownRenderPolicy;
-import com.deepoove.poi.plugin.markdown.MarkdownStyle;
 
 public class MarkdownTest {
 
