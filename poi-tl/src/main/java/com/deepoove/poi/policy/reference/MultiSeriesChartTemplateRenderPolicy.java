@@ -77,8 +77,8 @@ public class MultiSeriesChartTemplateRenderPolicy
 
                 XDDFChartData.Series currentSeries = null;
                 if (i < orignSize) {
-					valuesData.setFormatCode(chartData.getSeries(i).getValuesData().getFormatCode());
                     currentSeries = chartData.getSeries(i);
+                    valuesData.setFormatCode(currentSeries.getValuesData().getFormatCode());
                     currentSeries.replaceData(categoriesData, valuesData);
                 } else {
                     // add series, should copy series with style
