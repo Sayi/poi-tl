@@ -89,12 +89,9 @@ public class CommentRenderPolicyTest {
         documentBuilder.addParagraph(Paragraphs.of().addComment(comment1).center().create());
         documentBuilder.addParagraph(Paragraphs.of("鹅，鹅，鹅，").addComment(comment2).addText("向天歌。").center().create());
         documentBuilder.addParagraph(Paragraphs.of("白毛浮绿水，红掌").addComment(comment3).addText("清波。").center().create());
-        Map<String, Object> data = new HashMap<>();
-        data.put(XWPFTemplate.TEMPLATE_TAG_NAME, documentBuilder.create());
 
         // render
-        XWPFTemplate.create(Style.builder().buildFontFamily("微软雅黑").buildFontSize(14f).build())
-                .render(data)
+        XWPFTemplate.create(documentBuilder.create(), Style.builder().buildFontFamily("微软雅黑").buildFontSize(14f).build())
                 .writeToFile("out_render_comment_YONG.docx");
     }
 
