@@ -24,8 +24,8 @@ public class XWPFPageSize {
     private XWPFPageOrientation orient;
 
     public XWPFPageSize(CTPageSz pgSz) {
-        this.width = pgSz.getW().intValue();
-        this.height = pgSz.getH().intValue();
+        this.width = Integer.parseInt(pgSz.xgetW().getStringValue());
+        this.height = Integer.parseInt(pgSz.xgetH().getStringValue());
         if (pgSz.isSetOrient()) {
             orient = XWPFPageOrientation.valueOf(pgSz.getOrient().intValue());
         } else {

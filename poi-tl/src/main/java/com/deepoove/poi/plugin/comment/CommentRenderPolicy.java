@@ -20,6 +20,8 @@ import static com.deepoove.poi.policy.ParagraphRenderPolicy.Helper.renderParagra
 
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.usermodel.XWPFComment;
+import org.apache.poi.xwpf.usermodel.XWPFComments;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -27,6 +29,7 @@ import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
+import com.deepoove.poi.util.NextIDUtils;
 import com.deepoove.poi.util.ParagraphUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
@@ -35,7 +38,6 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  * comment render
  * 
  * @author Sayi
- *
  */
 public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData> {
 
@@ -67,7 +69,8 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
             CommentContent commentContent = data.getCommentContent();
             if (null != commentContent) {
                 XWPFComments comments = ((NiceXWPFDocument) paragraph.getDocument()).createComments();
-                XWPFComment newComment = comments.addComment();
+                XWPFComment newComment = comments
+                        .createComment(NextIDUtils.getCommentMaxId(comments).add(BigInteger.ONE));
                 newComment.setAuthor(commentContent.getAuthor());
                 newComment.setDate(commentContent.getDate());
                 newComment.setInitials(commentContent.getInitials());

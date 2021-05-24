@@ -39,7 +39,6 @@ import com.deepoove.poi.util.UnitUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.WidthScalePattern;
-import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
  * picture render
@@ -127,8 +126,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<Object> {
                 if (null != align && run.getParent() instanceof XWPFParagraph) {
                     ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
                 }
-                XWPFRunWrapper wrapper = new XWPFRunWrapper(run, false);
-                wrapper.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
+                run.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
                         Units.pixelToEMU(height));
             }
         }

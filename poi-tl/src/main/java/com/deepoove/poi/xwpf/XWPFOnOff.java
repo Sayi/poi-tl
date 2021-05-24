@@ -1,12 +1,10 @@
 package com.deepoove.poi.xwpf;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
 
 public interface XWPFOnOff {
 
-    STOnOff.Enum ON = STOnOff.ON;
-    STOnOff.Enum OFF = STOnOff.OFF;
-    STOnOff.Enum X_1 = STOnOff.X_1;
-    STOnOff.Enum FALSE = STOnOff.FALSE;
+    STOnOff1.Enum ON = STOnOff1.ON;
+    STOnOff1.Enum OFF = STOnOff1.OFF;
 
 }

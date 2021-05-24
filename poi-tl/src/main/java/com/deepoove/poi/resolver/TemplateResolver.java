@@ -45,7 +45,6 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.CTDrawingWrapper;
 import com.deepoove.poi.xwpf.CTPictWrapper;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.XWPFRunWrapper;
 
 /**
@@ -78,8 +77,9 @@ public class TemplateResolver extends AbstractResolver {
         metaTemplates.addAll(resolveBodys(doc.getFooterList()));
         metaTemplates.addAll(resolveBodys(doc.getFootnotes()));
         metaTemplates.addAll(resolveBodys(doc.getEndnotes()));
-        if (doc instanceof NiceXWPFDocument) {
-            metaTemplates.addAll(resolveBodys(((NiceXWPFDocument) doc).getAllComments()));
+        XWPFComments comments = doc.getDocComments();
+        if (null != comments) {
+            metaTemplates.addAll(resolveBodys(comments.getComments()));
         }
         logger.info("Resolve the document end, resolve and create {} MetaTemplates.", metaTemplates.size());
         return metaTemplates;

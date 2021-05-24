@@ -28,11 +28,11 @@ public class XWPFPageMargin {
     private BigInteger gutter;
 
     public XWPFPageMargin(CTPageMar pgMar) {
-        this.left = pgMar.getLeft();
-        this.top = pgMar.getTop();
-        this.bottom = pgMar.getBottom();
-        this.right = pgMar.getRight();
-        this.gutter = pgMar.getGutter();
+        this.left = new BigInteger(pgMar.xgetLeft().getStringValue());
+        this.top = new BigInteger(pgMar.xgetTop().getStringValue());
+        this.bottom = new BigInteger(pgMar.xgetBottom().getStringValue());
+        this.right = new BigInteger(pgMar.xgetRight().getStringValue());
+        this.gutter = new BigInteger(pgMar.xgetGutter().getStringValue());
     }
 
     public BigInteger getTop() {

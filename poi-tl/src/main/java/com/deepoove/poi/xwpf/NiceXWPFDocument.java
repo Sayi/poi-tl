@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,11 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -45,10 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.plugin.comment.XWPFComment;
-import com.deepoove.poi.plugin.comment.XWPFComments;
 import com.deepoove.poi.util.ParagraphUtils;
-import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
@@ -60,40 +53,12 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private static Logger logger = LoggerFactory.getLogger(NiceXWPFDocument.class);
 
-    protected XWPFComments comments;
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
     protected IdenifierManagerWrapper idenifierManagerWrapper;
     protected boolean adjustDoc = false;
 
     protected Map<XWPFChart, PackagePart> chartMappingPart = new HashMap<>();
-    protected static XWPFRelation COMMENTS;
-
-    static {
-        try {
-            Constructor<XWPFRelation> constructor = ReflectionUtils.findConstructor(XWPFRelation.class, String.class,
-                    String.class, String.class, POIXMLRelation.NoArgConstructor.class,
-                    POIXMLRelation.PackagePartConstructor.class);
-            COMMENTS = constructor.newInstance(
-                    new Object[] { "application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml",
-                            "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
-                            "/word/comments.xml", new POIXMLRelation.NoArgConstructor() {
-
-                                @Override
-                                public POIXMLDocumentPart init() {
-                                    return new XWPFComments();
-                                }
-                            }, new POIXMLRelation.PackagePartConstructor() {
-
-                                @Override
-                                public POIXMLDocumentPart init(PackagePart part) throws IOException, XmlException {
-                                    return new XWPFComments(part);
-                                }
-                            } });
-        } catch (Exception e) {
-            logger.warn("init comments releation error: {}", e.getMessage());
-        }
-    }
 
     public NiceXWPFDocument() {
         super();
@@ -145,15 +110,6 @@ public class NiceXWPFDocument extends XWPFDocument {
         read(this);
         this.getHeaderList().forEach(header -> read(header));
         this.getFooterList().forEach(header -> read(header));
-        // comments
-        for (RelationPart rp : getRelationParts()) {
-            POIXMLDocumentPart p = rp.getDocumentPart();
-            String relation = rp.getRelationship().getRelationshipType();
-            if (relation.equals(XWPFRelation.COMMENT.getRelation())) {
-                this.comments = (XWPFComments) p;
-                this.comments.onDocumentRead();
-            }
-        }
     }
 
     public List<XWPFPicture> getAllEmbeddedPictures() {
@@ -266,67 +222,6 @@ public class NiceXWPFDocument extends XWPFDocument {
             newRun = paragraph.createRun();
         }
         return new XmlXWPFDocumentMerge().merge(this, iterator, newRun);
-    }
-
-    public void niceRegisterPackagePictureData(XWPFPictureData picData) {
-        List<XWPFPictureData> list = packagePictures.computeIfAbsent(picData.getChecksum(), k -> new ArrayList<>(1));
-        if (!list.contains(picData)) {
-            list.add(picData);
-        }
-    }
-
-    public XWPFPictureData niceFindPackagePictureData(byte[] pictureData, int format) {
-        long checksum = IOUtils.calculateChecksum(pictureData);
-        XWPFPictureData xwpfPicData = null;
-        /*
-         * Try to find PictureData with this checksum. Create new, if none exists.
-         */
-        List<XWPFPictureData> xwpfPicDataList = packagePictures.get(checksum);
-        if (xwpfPicDataList != null) {
-            Iterator<XWPFPictureData> iter = xwpfPicDataList.iterator();
-            while (iter.hasNext() && xwpfPicData == null) {
-                XWPFPictureData curElem = iter.next();
-                if (Arrays.equals(pictureData, curElem.getData())) {
-                    xwpfPicData = curElem;
-                }
-            }
-        }
-        return xwpfPicData;
-    }
-
-    public XWPFComments createComments() {
-        if (comments == null) {
-            CommentsDocument commentsDoc = CommentsDocument.Factory.newInstance();
-
-            XWPFRelation relation = COMMENTS;
-//            XWPFRelation relation = XWPFRelation.COMMENT;
-            int i = getRelationIndex(relation);
-
-            XWPFComments wrapper = (XWPFComments) createRelationship(relation, XWPFFactory.getInstance(), i);
-            wrapper.setCtComments(commentsDoc.addNewComments());
-            wrapper.setXWPFDocument(getXWPFDocument());
-            comments = wrapper;
-        }
-
-        return comments;
-    }
-
-    private int getRelationIndex(XWPFRelation relation) {
-        int i = 1;
-        for (RelationPart rp : getRelationParts()) {
-            if (rp.getRelationship().getRelationshipType().equals(relation.getRelation())) {
-                i++;
-            }
-        }
-        return i;
-    }
-
-    public XWPFComments getDocComments() {
-        return comments;
-    }
-
-    public List<XWPFComment> getAllComments() {
-        return null == comments ? null : comments.getComments();
     }
 
     private void read(IBody body) {
