@@ -1941,6 +1941,8 @@ ____
   poi-tl依赖的apache-poi版本是4.1.2+，如果你的项目引用了低版本，请升级或删除。
 是否支持Android客户端使用？::
   参考link:https://github.com/Sayi/poi-tl/issues/227[issue227]。
+有没有HTML转Word的插件？::
+  参考link:https://github.com/Sayi/poi-tl/issues/219[issue219]。
 如何通过标签指定格式化函数？::
   Spring表达式，应有尽有。
 如何在一行中显示不同样式的文本？::
@@ -1949,5 +1951,3 @@ ____
   编写插件还是需要熟悉下POI，你可以参考现有插件的源码，或者Google下Apache POI的用法，这里有一个入门教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
 Apache POI不支持的功能，我该怎么编写插件？::
   Apache POI底层的组件也是直接操作XML的，你可以使用POI背后的组件。
-有没有HTML转Word的插件？::
-  网上有一些这样的插件，我也很期待有人能Pull Request。
