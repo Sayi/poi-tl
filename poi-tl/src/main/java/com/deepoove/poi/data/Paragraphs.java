@@ -135,24 +135,6 @@ public class Paragraphs {
             return this;
         }
 
-        public ParagraphBuilder indentFirstLine(double lineChars) {
-            if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withIndentFirstLineChars(lineChars).build();
-            } else {
-                this.paragraphStyle.setIndentFirstLineChars(lineChars);
-            }
-            return this;
-        }
-
-        public ParagraphBuilder indentLeft(double lineChars) {
-            if (null == this.paragraphStyle) {
-                this.paragraphStyle = ParagraphStyle.builder().withIndentLeftChars(lineChars).build();
-            } else {
-                this.paragraphStyle.setIndentLeftChars(lineChars);
-            }
-            return this;
-        }
-
         public ParagraphBuilder center() {
             if (null == this.paragraphStyle) {
                 this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.CENTER).build();
@@ -167,6 +149,24 @@ public class Paragraphs {
                 this.paragraphStyle = ParagraphStyle.builder().withAlign(ParagraphAlignment.RIGHT).build();
             } else {
                 this.paragraphStyle.setAlign(ParagraphAlignment.RIGHT);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder indentFirstLine(double lineChars) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withIndentFirstLineChars(lineChars).build();
+            } else {
+                this.paragraphStyle.setIndentFirstLineChars(lineChars);
+            }
+            return this;
+        }
+
+        public ParagraphBuilder indentLeft(double lineChars) {
+            if (null == this.paragraphStyle) {
+                this.paragraphStyle = ParagraphStyle.builder().withIndentLeftChars(lineChars).build();
+            } else {
+                this.paragraphStyle.setIndentLeftChars(lineChars);
             }
             return this;
         }

@@ -138,7 +138,11 @@ public class DocumentVisitor extends AbstractVisitor {
     }
 
     private PictureRenderData parsePicture(Image image) {
-        return Pictures.of(image.getDestination()).altMeta(image.getTitle()).fitSize().create();
+        String uri = image.getDestination();
+        if (!uri.startsWith("http")) {
+            uri = style.getImagesDir() + uri;
+        }
+        return Pictures.of(uri).altMeta(image.getTitle()).fitSize().create();
     }
 
     private DocumentRenderData parseIndentedCodeBlock(IndentedCodeBlock indentedCodeBlock) {

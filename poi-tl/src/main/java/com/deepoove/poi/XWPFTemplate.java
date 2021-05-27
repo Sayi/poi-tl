@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
@@ -32,7 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.ConfigureBuilder;
+import com.deepoove.poi.data.DocumentRenderData;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.policy.DocumentRenderPolicy;
@@ -55,8 +56,7 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  */
 public class XWPFTemplate implements Closeable {
 
-    public static final String TEMPLATE_TAG_NAME = "template";
-    public static final String TEMPLATE_TAG = "{{" + TEMPLATE_TAG_NAME + "}}";
+    public static final String TEMPLATE_TAG_NAME = "var";
 
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
 
@@ -175,29 +175,28 @@ public class XWPFTemplate implements Closeable {
     }
 
     /**
-     * Create new template with tag {@link XWPFTemplate#TEMPLATE_TAG}
+     * Create new document
      * 
      * @return template
      * @since 1.10.0
      */
-    public static XWPFTemplate create() {
-        return create(null);
+    public static XWPFTemplate create(DocumentRenderData data) {
+        return create(data, null);
     }
 
     /**
-     * Create new template with styled tag {@link XWPFTemplate#TEMPLATE_TAG}
+     * Create new document with styled tag
      * 
-     * @param templateTagStyle the tag text style
      * @return template
      * @since 1.10.0
      */
-    public static XWPFTemplate create(Style templateTagStyle) {
+    public static XWPFTemplate create(DocumentRenderData data, Style templateTagStyle) {
+        Configure configure = Configure.builder().bind(TEMPLATE_TAG_NAME, new DocumentRenderPolicy()).build();
         XWPFDocument document = new NiceXWPFDocument();
         XWPFRun run = document.createParagraph().createRun();
-        run.setText(TEMPLATE_TAG);
+        run.setText(configure.getGramerPrefix() + TEMPLATE_TAG_NAME + configure.getGramerSuffix());
         StyleUtils.styleRun(run, templateTagStyle);
-        ConfigureBuilder builder = Configure.builder().bind(TEMPLATE_TAG_NAME, new DocumentRenderPolicy());
-        return compile(document, builder.build());
+        return compile(document, configure).render(Collections.singletonMap(TEMPLATE_TAG_NAME, data));
     }
 
     /**

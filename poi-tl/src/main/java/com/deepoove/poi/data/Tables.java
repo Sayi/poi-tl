@@ -28,7 +28,6 @@ import com.deepoove.poi.util.UnitUtils;
  * Factory method to create {@link TableRenderData}
  * 
  * @author Sayi
- *
  */
 public class Tables {
     private Tables() {
@@ -96,7 +95,6 @@ public class Tables {
 
     /**
      * Builder to build {@link TableRenderData}
-     *
      */
     public static class TableBuilder implements RenderDataBuilder<TableRenderData> {
 
@@ -146,9 +144,21 @@ public class Tables {
             return style;
         }
 
+        public TableBuilder left() {
+            TableStyle style = getTableStyle();
+            style.setAlign(TableRowAlign.LEFT);
+            return this;
+        }
+
         public TableBuilder center() {
             TableStyle style = getTableStyle();
             style.setAlign(TableRowAlign.CENTER);
+            return this;
+        }
+
+        public TableBuilder right() {
+            TableStyle style = getTableStyle();
+            style.setAlign(TableRowAlign.RIGHT);
             return this;
         }
 

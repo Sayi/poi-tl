@@ -13,7 +13,7 @@ import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.data.Pictures;
 
 @DisplayName("AnimalExmample test case")
-public class AnimalExmample {
+public class AnimalExample {
 
     @SuppressWarnings("serial")
     @Test
