@@ -2813,11 +2813,6 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#example-swagger">示例-Swagger文档</a></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JSONRenderPolicy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">高亮显示JSON代码块</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#example-swagger">示例-Swagger文档</a></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>AbstractChartTemplateRenderPolicy</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">引用图表插件，允许直接操作图表对象</p></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -3887,7 +3882,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 <div class="content">
 <div class="paragraph">
 <div class="title">template.docx</div>
-<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>LoopRowTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。</p>
+<p>使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 <code>LoopRowTableRenderPolicy</code> 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮使用 <code>HighlightRenderPolicy</code> 插件。</p>
 </div>
 <div class="imageblock text-center">
 <div class="content">
@@ -3912,10 +3907,10 @@ SwaggerView viewData = convert(swagger); <i class="conum" data-value="1"></i><b>
 
 LoopRowTableRenderPolicy LoopRowTableRenderPolicy = new LoopRowTableRenderPolicy();
 Configure config = Configure.builder()
-        .bind("parameters", LoopRowTableRenderPolicy)
-        .bind("responses", LoopRowTableRenderPolicy)
-        .bind("properties", LoopRowTableRenderPolicy)
-        .addPlugin('&gt;', new BookmarkRenderPolicy())
+        .bind("parameters", hackLoopTableRenderPolicy)
+        .bind("responses", hackLoopTableRenderPolicy)
+        .bind("properties", hackLoopTableRenderPolicy)
+        .bind("definitionCode", new HighlightRenderPolicy())
         .useSpringEL()
         .build(); <i class="conum" data-value="2"></i><b>(2)</b>
 

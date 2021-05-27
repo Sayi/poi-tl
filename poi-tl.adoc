@@ -1311,7 +1311,6 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 | `LoopColumnTableRenderPolicy` |循环表格列 |link:#loop-col-table[示例-表格列循环]
 | `DynamicTableRenderPolicy` |动态表格插件，允许直接操作表格对象 |link:#plugin-dynamic-table[示例-动态表格]
 | `BookmarkRenderPolicy` |书签和锚点 |link:#example-swagger[示例-Swagger文档]
-| `JSONRenderPolicy` |高亮显示JSON代码块 |link:#example-swagger[示例-Swagger文档]
 | `AbstractChartTemplateRenderPolicy` | 引用图表插件，允许直接操作图表对象 |
 | `TOCRenderPolicy` |Beta实验功能：目录，打开文档时会提示更新域 |
 |===
@@ -1881,7 +1880,7 @@ image::./example/example_swagger_output2.png[align='center']
 [example]
 --
 .template.docx
-使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 `LoopRowTableRenderPolicy` 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮只需要使用拥有不同样式文本的集合循环展示即可。
+使用区块对标签完成所有循环功能，可以完美的支持有序和多级列表；表格使用 `LoopRowTableRenderPolicy` 插件的约定，可以非常方便的完成参数、返回值等表格的渲染；使用Spring表达式来支持丰富的条件判断；代码块高亮使用 `HighlightRenderPolicy` 插件。
 
 image::./example/example_swagger_template1.png[align='center']
 image::./example/example_swagger_template2.png[align='center']
@@ -1898,10 +1897,10 @@ SwaggerView viewData = convert(swagger); <1>
 
 LoopRowTableRenderPolicy LoopRowTableRenderPolicy = new LoopRowTableRenderPolicy();
 Configure config = Configure.builder()
-        .bind("parameters", LoopRowTableRenderPolicy)
-        .bind("responses", LoopRowTableRenderPolicy)
-        .bind("properties", LoopRowTableRenderPolicy)
-        .addPlugin('>', new BookmarkRenderPolicy())
+        .bind("parameters", hackLoopTableRenderPolicy)
+        .bind("responses", hackLoopTableRenderPolicy)
+        .bind("properties", hackLoopTableRenderPolicy)
+        .bind("definitionCode", new HighlightRenderPolicy())
         .useSpringEL()
         .build(); <2>
 
