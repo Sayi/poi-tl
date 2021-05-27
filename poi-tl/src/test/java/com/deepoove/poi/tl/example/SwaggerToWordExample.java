@@ -18,10 +18,11 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.plugin.highlight.HighlightRenderData;
+import com.deepoove.poi.plugin.highlight.HighlightRenderPolicy;
+import com.deepoove.poi.plugin.highlight.HighlightStyle;
 import com.deepoove.poi.plugin.table.LoopRowTableRenderPolicy;
-import com.deepoove.poi.tl.policy.JSONRenderPolicy;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.models.ArrayModel;
@@ -63,9 +64,13 @@ public class SwaggerToWordExample {
         SwaggerView viewData = convert(swagger);
 
         LoopRowTableRenderPolicy hackLoopTableRenderPolicy = new LoopRowTableRenderPolicy();
-        Configure config = Configure.builder().bind("parameters", hackLoopTableRenderPolicy)
-                .bind("responses", hackLoopTableRenderPolicy).bind("properties", hackLoopTableRenderPolicy)
-                .useSpringEL().build();
+        Configure config = Configure.builder()
+                .bind("parameters", hackLoopTableRenderPolicy)
+                .bind("responses", hackLoopTableRenderPolicy)
+                .bind("properties", hackLoopTableRenderPolicy)
+                .bind("definitionCode", new HighlightRenderPolicy())
+                .useSpringEL()
+                .build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config)
                 .render(viewData);
         template.writeToFile("out_example_swagger.docx");
@@ -175,9 +180,9 @@ public class SwaggerToWordExample {
             Resource resource = new Resource();
             resource.setName(tag.getName());
             resource.setDescription(tag.getDescription());
-            resource.setEndpoints(
-                    endpoints.stream().filter(path -> (null != path.getTag() && path.getTag().contains(tag.getName())))
-                            .collect(Collectors.toList()));
+            resource.setEndpoints(endpoints.stream()
+                    .filter(path -> (null != path.getTag() && path.getTag().contains(tag.getName())))
+                    .collect(Collectors.toList()));
             resources.add(resource);
         });
         view.setResources(resources);
@@ -201,9 +206,13 @@ public class SwaggerToWordExample {
                     definition.setProperties(properties);
                     Map map = valueOfModel(swagger.getDefinitions(), model, new HashSet<>());
                     try {
-                        String writeValueAsString = objectMapper.writeValueAsString(map);
-                        JsonNode readTree = objectMapper.readTree(writeValueAsString);
-                        definition.setCodes(new JSONRenderPolicy("ffffff").convert(readTree, 1));
+                        String writeValueAsString = objectMapper.writerWithDefaultPrettyPrinter()
+                                .writeValueAsString(map);
+                        HighlightRenderData code = new HighlightRenderData();
+                        code.setCode(writeValueAsString);
+                        code.setLanguage("json");
+                        code.setStyle(HighlightStyle.builder().withTheme("zenburn").build());
+                        definition.setDefinitionCode(code);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
