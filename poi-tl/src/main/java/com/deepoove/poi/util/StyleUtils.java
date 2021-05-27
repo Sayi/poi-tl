@@ -113,7 +113,7 @@ public final class StyleUtils {
         if (0 != point && -1 != point) run.setCharacterSpacing(UnitUtils.point2Twips(point));
         String vertAlign = style.getVertAlign();
         if (StringUtils.isNotBlank(vertAlign)) {
-            run.setVerticalAlignment(vertAlign);
+            run.setVerticalAlignment(vertAlign); 
         }
     }
 
@@ -335,15 +335,15 @@ public final class StyleUtils {
             paragraph.setAlignment(style.getAlign());
         }
 
-        if (-1 != style.getSpacing()) {
+        if (null != style.getSpacing()) {
             paragraph.setSpacingBetween(style.getSpacing(),
                     null == style.getSpacingRule() ? LineSpacingRule.AUTO : style.getSpacingRule());
         }
-        if (0 != style.getSpacingBeforeLines()) {
+        if (null != style.getSpacingBeforeLines()) {
             paragraph.setSpacingBeforeLines(
                     new BigInteger(String.valueOf(Math.round(style.getSpacingBeforeLines() * 100.0))).intValue());
         }
-        if (0 != style.getSpacingAfterLines()) {
+        if (null != style.getSpacingAfterLines()) {
             paragraph.setSpacingAfterLines(
                     new BigInteger(String.valueOf(Math.round(style.getSpacingAfterLines() * 100.0))).intValue());
         }
@@ -351,22 +351,22 @@ public final class StyleUtils {
         CTP ctp = paragraph.getCTP();
         CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
         CTInd indent = pr.isSetInd() ? pr.getInd() : pr.addNewInd();
-        if (0 != style.getIndentLeftChars()) {
+        if (null != style.getIndentLeftChars()) {
             BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentLeftChars() * 100.0)));
             indent.setLeftChars(bi);
             if (indent.isSetLeft()) indent.unsetLeft();
         }
-        if (0 != style.getIndentRightChars()) {
+        if (null != style.getIndentRightChars()) {
             BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentRightChars() * 100.0)));
             indent.setRightChars(bi);
             if (indent.isSetRight()) indent.unsetRight();
         }
-        if (0 != style.getIndentHangingChars()) {
+        if (null != style.getIndentHangingChars()) {
             BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentHangingChars() * 100.0)));
             indent.setHangingChars(bi);
             if (indent.isSetHanging()) indent.unsetHanging();
         }
-        if (0 != style.getIndentFirstLineChars()) {
+        if (null != style.getIndentFirstLineChars()) {
             BigInteger bi = new BigInteger(String.valueOf(Math.round(style.getIndentFirstLineChars() * 100.0)));
             indent.setFirstLineChars(bi);
             if (indent.isSetFirstLine()) indent.unsetFirstLine();
@@ -422,10 +422,10 @@ public final class StyleUtils {
             ctWW.setVal(style.getAllowWordBreak() ? XWPFOnOff.OFF : XWPFOnOff.ON);
         }
 
-        if (-1 != style.getNumId()) {
+        if (null != style.getNumId()) {
             paragraph.setNumID(BigInteger.valueOf(style.getNumId()));
         }
-        if (-1 != style.getLvl()) {
+        if (null != style.getLvl()) {
             paragraph.setNumILvl(BigInteger.valueOf(style.getLvl()));
         }
     }
