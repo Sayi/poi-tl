@@ -30,10 +30,10 @@ public class ParagraphStyle implements Serializable {
     private String styleId;
     private ParagraphAlignment align; // 对齐
 
-    private double indentLeftChars; // 缩进-左侧
-    private double indentRightChars;// 缩进-右侧
-    private double indentHangingChars;// 缩进-悬挂
-    private double indentFirstLineChars;// 缩进-首行
+    private Double indentLeftChars; // 缩进-左侧
+    private Double indentRightChars;// 缩进-右侧
+    private Double indentHangingChars;// 缩进-悬挂
+    private Double indentFirstLineChars;// 缩进-首行
 
     private BorderStyle leftBorder; // 边框-左
     private BorderStyle rightBorder;// 边框-右
@@ -49,18 +49,18 @@ public class ParagraphStyle implements Serializable {
     private Boolean pageBreakBefore; // 段前分页
     private Boolean allowWordBreak; // 单词断行
 
-    private double spacingBeforeLines; // 间距-段前
-    private double spacingAfterLines; // 间距-断后
+    private Double spacingBeforeLines; // 间距-段前
+    private Double spacingAfterLines; // 间距-断后
     /**
      * Example: 1.5 spacing
      */
-    private double spacing = -1;
+    private Double spacing;
     private LineSpacingRule spacingRule;
 
     // TODO ADD numbering style Class
     private Style glyphStyle;
-    private long numId = -1;
-    private long lvl = -1;
+    private Long numId;
+    private Long lvl;
 
     private Style defaultTextStyle;
 
@@ -75,8 +75,8 @@ public class ParagraphStyle implements Serializable {
         this.rightBorder = builder.rightBorder;
         this.topBorder = builder.topBorder;
         this.bottomBorder = builder.bottomBorder;
-        this.backgroundColor = builder.backgroundColor;
         this.shadingPattern = builder.shadingPattern;
+        this.backgroundColor = builder.backgroundColor;
         this.widowControl = builder.widowControl;
         this.keepLines = builder.keepLines;
         this.keepNext = builder.keepNext;
@@ -95,52 +95,52 @@ public class ParagraphStyle implements Serializable {
     public ParagraphStyle() {
     }
 
-    public double getIndentLeftChars() {
+    public String getStyleId() {
+        return styleId;
+    }
+
+    public void setStyleId(String styleId) {
+        this.styleId = styleId;
+    }
+
+    public ParagraphAlignment getAlign() {
+        return align;
+    }
+
+    public void setAlign(ParagraphAlignment align) {
+        this.align = align;
+    }
+
+    public Double getIndentLeftChars() {
         return indentLeftChars;
     }
 
-    public void setIndentLeftChars(double indentLeftChars) {
+    public void setIndentLeftChars(Double indentLeftChars) {
         this.indentLeftChars = indentLeftChars;
     }
 
-    public double getIndentRightChars() {
+    public Double getIndentRightChars() {
         return indentRightChars;
     }
 
-    public void setIndentRightChars(double indentRightChars) {
+    public void setIndentRightChars(Double indentRightChars) {
         this.indentRightChars = indentRightChars;
     }
 
-    public double getIndentHangingChars() {
+    public Double getIndentHangingChars() {
         return indentHangingChars;
     }
 
-    public void setIndentHangingChars(double indentHangingChars) {
+    public void setIndentHangingChars(Double indentHangingChars) {
         this.indentHangingChars = indentHangingChars;
     }
 
-    public double getIndentFirstLineChars() {
+    public Double getIndentFirstLineChars() {
         return indentFirstLineChars;
     }
 
-    public void setIndentFirstLineChars(double indentFirstLineChars) {
+    public void setIndentFirstLineChars(Double indentFirstLineChars) {
         this.indentFirstLineChars = indentFirstLineChars;
-    }
-
-    public double getSpacingBeforeLines() {
-        return spacingBeforeLines;
-    }
-
-    public void setSpacingBeforeLines(double spacingBeforeLines) {
-        this.spacingBeforeLines = spacingBeforeLines;
-    }
-
-    public double getSpacingAfterLines() {
-        return spacingAfterLines;
-    }
-
-    public void setSpacingAfterLines(double spacingAfterLines) {
-        this.spacingAfterLines = spacingAfterLines;
     }
 
     public BorderStyle getLeftBorder() {
@@ -175,12 +175,12 @@ public class ParagraphStyle implements Serializable {
         this.bottomBorder = bottomBorder;
     }
 
-    public ParagraphAlignment getAlign() {
-        return align;
+    public XWPFShadingPattern getShadingPattern() {
+        return shadingPattern;
     }
 
-    public void setAlign(ParagraphAlignment align) {
-        this.align = align;
+    public void setShadingPattern(XWPFShadingPattern shadingPattern) {
+        this.shadingPattern = shadingPattern;
     }
 
     public String getBackgroundColor() {
@@ -191,20 +191,12 @@ public class ParagraphStyle implements Serializable {
         this.backgroundColor = backgroundColor;
     }
 
-    public XWPFShadingPattern getShadingPattern() {
-        return shadingPattern;
+    public Boolean getWidowControl() {
+        return widowControl;
     }
 
-    public void setShadingPattern(XWPFShadingPattern shadingPattern) {
-        this.shadingPattern = shadingPattern;
-    }
-
-    public String getStyleId() {
-        return styleId;
-    }
-
-    public void setStyleId(String styleId) {
-        this.styleId = styleId;
+    public void setWidowControl(Boolean widowControl) {
+        this.widowControl = widowControl;
     }
 
     public Boolean getKeepLines() {
@@ -223,14 +215,6 @@ public class ParagraphStyle implements Serializable {
         this.keepNext = keepNext;
     }
 
-    public Boolean getAllowWordBreak() {
-        return allowWordBreak;
-    }
-
-    public void setAllowWordBreak(Boolean allowWordBreak) {
-        this.allowWordBreak = allowWordBreak;
-    }
-
     public Boolean getPageBreakBefore() {
         return pageBreakBefore;
     }
@@ -239,19 +223,35 @@ public class ParagraphStyle implements Serializable {
         this.pageBreakBefore = pageBreakBefore;
     }
 
-    public Boolean getWidowControl() {
-        return widowControl;
+    public Boolean getAllowWordBreak() {
+        return allowWordBreak;
     }
 
-    public void setWidowControl(Boolean widowControl) {
-        this.widowControl = widowControl;
+    public void setAllowWordBreak(Boolean allowWordBreak) {
+        this.allowWordBreak = allowWordBreak;
     }
 
-    public double getSpacing() {
+    public Double getSpacingBeforeLines() {
+        return spacingBeforeLines;
+    }
+
+    public void setSpacingBeforeLines(Double spacingBeforeLines) {
+        this.spacingBeforeLines = spacingBeforeLines;
+    }
+
+    public Double getSpacingAfterLines() {
+        return spacingAfterLines;
+    }
+
+    public void setSpacingAfterLines(Double spacingAfterLines) {
+        this.spacingAfterLines = spacingAfterLines;
+    }
+
+    public Double getSpacing() {
         return spacing;
     }
 
-    public void setSpacing(double spacing) {
+    public void setSpacing(Double spacing) {
         this.spacing = spacing;
     }
 
@@ -271,28 +271,28 @@ public class ParagraphStyle implements Serializable {
         this.glyphStyle = glyphStyle;
     }
 
+    public Long getNumId() {
+        return numId;
+    }
+
+    public void setNumId(Long numId) {
+        this.numId = numId;
+    }
+
+    public Long getLvl() {
+        return lvl;
+    }
+
+    public void setLvl(Long lvl) {
+        this.lvl = lvl;
+    }
+
     public Style getDefaultTextStyle() {
         return defaultTextStyle;
     }
 
     public void setDefaultTextStyle(Style defaultTextStyle) {
         this.defaultTextStyle = defaultTextStyle;
-    }
-
-    public long getNumId() {
-        return numId;
-    }
-
-    public void setNumId(long numId) {
-        this.numId = numId;
-    }
-
-    public long getLvl() {
-        return lvl;
-    }
-
-    public void setLvl(long lvl) {
-        this.lvl = lvl;
     }
 
     /**
@@ -304,34 +304,31 @@ public class ParagraphStyle implements Serializable {
         return new Builder();
     }
 
-    /**
-     * Builder to build {@link ParagraphStyle}.
-     */
     public static final class Builder {
         private String styleId;
         private ParagraphAlignment align;
-        private double indentLeftChars;
-        private double indentRightChars;
-        private double indentHangingChars;
-        private double indentFirstLineChars;
+        private Double indentLeftChars;
+        private Double indentRightChars;
+        private Double indentHangingChars;
+        private Double indentFirstLineChars;
         private BorderStyle leftBorder;
         private BorderStyle rightBorder;
         private BorderStyle topBorder;
         private BorderStyle bottomBorder;
-        private String backgroundColor;
         private XWPFShadingPattern shadingPattern;
+        private String backgroundColor;
         private Boolean widowControl;
         private Boolean keepLines;
         private Boolean keepNext;
         private Boolean pageBreakBefore;
         private Boolean allowWordBreak;
-        private double spacingBeforeLines;
-        private double spacingAfterLines;
-        private double spacing = -1;
+        private Double spacingBeforeLines;
+        private Double spacingAfterLines;
+        private Double spacing;
         private LineSpacingRule spacingRule;
         private Style glyphStyle;
-        private long numId = -1;
-        private long lvl = -1;
+        private Long numId;
+        private Long lvl;
         private Style defaultTextStyle;
 
         private Builder() {
@@ -387,13 +384,13 @@ public class ParagraphStyle implements Serializable {
             return this;
         }
 
-        public Builder withBackgroundColor(String backgroundColor) {
-            this.backgroundColor = backgroundColor;
+        public Builder withShadingPattern(XWPFShadingPattern shadingPattern) {
+            this.shadingPattern = shadingPattern;
             return this;
         }
 
-        public Builder withShadingPattern(XWPFShadingPattern shadingPattern) {
-            this.shadingPattern = shadingPattern;
+        public Builder withBackgroundColor(String backgroundColor) {
+            this.backgroundColor = backgroundColor;
             return this;
         }
 
