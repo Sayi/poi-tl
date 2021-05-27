@@ -216,9 +216,10 @@ public class NiceXWPFDocument extends XWPFDocument {
     public RelationPart addChartData(XWPFChart chart) throws InvalidFormatException, IOException {
         int chartNumber = getNextPartNumber(XWPFRelation.CHART, charts.size() + 1);
 
+        PackagePart packagePart = chartMappingPart.getOrDefault(chart, chart.getPackagePart());
         // create relationship in document for new chart
         RelationPart rp = createRelationship(XWPFRelation.CHART,
-                new XWPFChartFactory(chartMappingPart.getOrDefault(chart, chart.getPackagePart())), chartNumber, false);
+                new XWPFChartFactory(packagePart), chartNumber, false);
 
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
@@ -229,7 +230,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         // add chart object to chart list
         charts.add(xwpfChart);
-        chartMappingPart.put(xwpfChart, chart.getPackagePart());
+        chartMappingPart.put(xwpfChart, packagePart);
         return rp;
     }
 
