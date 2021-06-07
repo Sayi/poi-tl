@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.10.0-beta 
+v1.10.0
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -94,13 +94,13 @@ poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.0-beta</version>
+  <version>1.10.0</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-compile group: 'com.deepoove', name: 'poi-tl', version: '1.10.0-beta'
+compile group: 'com.deepoove', name: 'poi-tl', version: '1.10.0'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 
@@ -1305,7 +1305,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 除了八个通用的策略插件外，还内置了一些非常有用的插件。
 |===
 | `ParagraphRenderPolicy` |渲染一个段落，可以包含不同样式文本，图片等 |
-| `DocumentRenderPolicy` |渲染多个段落和表格 |
+| `DocumentRenderPolicy` |渲染整个word文档 |
 | `CommentRenderPolicy` |完整的批注功能 | link:#plugin-comment[示例-批注]
 | `LoopRowTableRenderPolicy` |循环表格行，下文会详细介绍 | link:#hack-loop-table[示例-表格行循环]
 | `LoopColumnTableRenderPolicy` |循环表格列 |link:#loop-col-table[示例-表格列循环]
@@ -1390,7 +1390,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 image::./example/example_looptable_output.png[width=650, align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/policy/LoopRowTableRenderPolicyTest.java[JUnit LoopRowTableRenderPolicyTest]，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 `new LoopRowTableRenderPolicy(true)` 来构造插件。
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/plugin/LoopRowTableRenderPolicyTest.java[JUnit LoopRowTableRenderPolicyTest]，如果希望模板标签和循环行在同一行而不是在上一行，可以使用 `new LoopRowTableRenderPolicy(true)` 来构造插件。
 
 [#loop-col-table]
 === 表格列循环
@@ -1429,7 +1429,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 image::./example/example_loopcol_output.png[width=650, align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/policy/LoopColumnTableRenderPolicyTest.java[JUnit LoopColumnTableRenderPolicyTest]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/plugin/LoopColumnTableRenderPolicyTest.java[JUnit LoopColumnTableRenderPolicyTest]
 
 [#plugin-dynamic-table]
 === 动态表格
@@ -1513,7 +1513,7 @@ Configure config = Configure.builder().bind("detail_table", new DetailTablePolic
 image::./example/dynamic_output.png[width=650, align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
 
 [#plugin-comment]
 === 批注
@@ -1550,7 +1550,7 @@ XWPFTemplate.compile("comment_template.docx", config).render(data);
 
 image::./example/example_comment_output.png[align='center']
 --
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl/src/test/java/com/deepoove/poi/tl/plugin/CommentRenderPolicyTest.java[JUnit CommentRenderPolicyTest]。
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/plugin/CommentRenderPolicyTest.java[JUnit CommentRenderPolicyTest]。
 
 
 [#plugin-highlight]
@@ -1616,7 +1616,7 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);
 
 image::./example/highlight.png[align='center']
 --
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl-plugin-highlight/src/test/java/com/deepoove/poi/plugin/highlight/HighlightRenderPolicyTest.java[JUnit HighlightRenderPolicyTest]。
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl-plugin-highlight/src/test/java/com/deepoove/poi/plugin/highlight/HighlightRenderPolicyTest.java[JUnit HighlightRenderPolicyTest]。
 
 ==== 常用语言支持
 - apache
@@ -1675,7 +1675,7 @@ NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl-plugin
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl-plugin-markdown</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
 </dependency>
 ----
 
@@ -1714,7 +1714,7 @@ image::./example/example_markdown_output.png[align='center']
 --
 
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl-plugin-markdown/src/test/java/com/deepoove/poi/plugin/markdown/MarkdownRenderPolicyTest.java[JUnit MarkdownRenderPolicyTest]。
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl-plugin-markdown/src/test/java/com/deepoove/poi/plugin/markdown/MarkdownRenderPolicyTest.java[JUnit MarkdownRenderPolicyTest]。
 
 == 示例
 接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。
@@ -1738,7 +1738,7 @@ image::./example/example_poitl_template1.png[align='center']
 
 这个示例向我们展示了poi-tl最基本的能力，它在模板标签位置，插入基本的数据模型，所见即所得。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[JUnit XWPFTemplateTest]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/XWPFTemplateTest.java[JUnit XWPFTemplateTest]
 
 [#example-table]
 === 付款通知书
@@ -1762,7 +1762,7 @@ image::./example/example_payment_template.png[align='center']
 
 这个示例主要用来展示link:#plugin-dynamic-table[DynamicTableRenderPolicy]的用法，货物明细和人工费仅仅是循环渲染表格行，使用link:#hack-loop-table[LoopRowTableRenderPolicy] 插件会更方便。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
 
 [#example-okr]
 === 目标制定
@@ -1784,7 +1784,7 @@ image::./example/example_okr_template.png[align='center']
 
 这个示例展示了区块对的功能，它可以对文档内容进行循环渲染。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/OKRExample.java[JUnit OKRExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/OKRExample.java[JUnit OKRExample]
 
 [#example-animal]
 === 野生动物现状
@@ -1806,7 +1806,7 @@ image::./example/example_animal_template.png[align='center']
 
 这个示例展示了区块对的循环功能，以及如何在循环中使用引用图片和引用图表的功能。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/AnimalExample.java[JUnit AnimalExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/AnimalExample.java[JUnit AnimalExample]
 
 [#example-certificate]
 === 证书奖状
@@ -1828,7 +1828,7 @@ image::./example/example_certificate_template.png[align='center']
 
 这个示例展示了引用图片和文本框的功能。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/CertificateExample.java[JUnit CertificateExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/CertificateExample.java[JUnit CertificateExample]
 
 [#example-resume]
 === 个人简历
@@ -1849,7 +1849,7 @@ image::./example/example_resume_output.png[align='center']
 image::./example/example_iterable_resume_template.png[align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java[JUnit Iterable ResumeExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java[JUnit Iterable ResumeExample]
 
 ==== 方案二：使用嵌套标签
 [example]
@@ -1864,7 +1864,7 @@ image::./example/example_resume_template.png[align='center']
 
 因为模版即样式，模版引擎无需考虑样式，只关心数据，我们甚至可以制作10种不同样式的简历模板，用同一份数据去渲染。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[JUnit ResumeExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/ResumeExample.java[JUnit ResumeExample]
 
 [#example-swagger]
 === Swagger文档
@@ -1914,7 +1914,7 @@ template.writeToFile("out_example_swagger.docx");
 
 没错，一切都是如此简洁：简洁的导出代码 ，简洁的Word模板，甚至生成的Swagger文档都看起来那么简洁，愿一切如你所愿。
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl//src/test/java/com/deepoove/poi/tl/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/v1.10.0/poi-tl/src/test/java/com/deepoove/poi/tl/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
 
 == License
 Apache License 2.0
@@ -1942,6 +1942,8 @@ ____
   参考link:https://github.com/Sayi/poi-tl/issues/227[issue227]。
 有没有HTML转Word的插件？::
   参考link:https://github.com/Sayi/poi-tl/issues/219[issue219]。
+有没有公式的插件？::
+  参考link:https://github.com/Sayi/poi-tl/issues/27[issue27]。
 如何通过标签指定格式化函数？::
   Spring表达式，应有尽有。
 如何在一行中显示不同样式的文本？::
