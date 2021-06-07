@@ -32,13 +32,29 @@ public class Numberings {
         return of(NumberingFormat.BULLET);
     }
 
-    public static NumberingBuilder ofDecimal() {
-        return of(NumberingFormat.DECIMAL);
-    }
+	public static NumberingBuilder ofDecimal() {
+		return of(NumberingFormat.DECIMAL);
+	}
 
-    public static NumberingBuilder ofDecimalParentheses() {
-        return of(NumberingFormat.DECIMAL_PARENTHESES);
-    }
+	public static NumberingBuilder ofDecimal(String... text) {
+		NumberingBuilder inst = of(NumberingFormat.DECIMAL);
+		if (null != text) {
+			Arrays.stream(text).forEach(inst::addItem);
+		}
+		return inst;
+	}
+
+	public static NumberingBuilder ofDecimalParentheses() {
+		return of(NumberingFormat.DECIMAL_PARENTHESES);
+	}
+
+	public static NumberingBuilder ofDecimalParentheses(String... text) {
+		NumberingBuilder inst = of(NumberingFormat.DECIMAL_PARENTHESES);
+		if (null != text) {
+			Arrays.stream(text).forEach(inst::addItem);
+		}
+		return inst;
+	}
 
     public static NumberingBuilder of(NumberingFormat format) {
         return new NumberingBuilder(format);
