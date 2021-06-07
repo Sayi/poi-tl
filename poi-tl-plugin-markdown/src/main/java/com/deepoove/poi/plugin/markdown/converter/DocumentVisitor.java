@@ -168,7 +168,7 @@ public class DocumentVisitor extends AbstractVisitor {
                         paragraphStyle = new ParagraphStyle();
                         ((ParagraphRenderData) doc).setParagraphStyle(paragraphStyle);
                     }
-                    paragraphStyle.setSpacing(1.0f);
+                    paragraphStyle.setSpacing(1.0);
 //                       paragraphStyle.setSpacing(0.0f);
 //                       paragraphStyle.setSpacingRule(LineSpacingRule.AT_LEAST);
                 }
@@ -240,7 +240,7 @@ public class DocumentVisitor extends AbstractVisitor {
                                 if (paragraph.getParagraphStyle() == null) {
                                     paragraph.setParagraphStyle(new ParagraphStyle());
                                 }
-                                paragraph.getParagraphStyle().setIndentLeftChars(index * 1.8f);
+                                paragraph.getParagraphStyle().setIndentLeftChars(index * 1.8);
                                 result.add(new NumberingItemRenderData(-1, paragraph));
                             }
                         }
@@ -275,11 +275,11 @@ public class DocumentVisitor extends AbstractVisitor {
                     }
 
                     if (first) {
-                        paragraphStyle.setSpacingBeforeLines(0.4f);
+                        paragraphStyle.setSpacingBeforeLines(0.4);
                         first = false;
                     }
                     if (i == size - 1) {
-                        paragraphStyle.setSpacingAfterLines(0.4f);
+                        paragraphStyle.setSpacingAfterLines(0.4);
                     }
                     of.addParagraph(paragraph);
                 }
