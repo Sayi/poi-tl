@@ -39,6 +39,8 @@ public class TableStyle implements Serializable {
     private int rightCellMargin;
     private int bottomCellMargin;
 
+    private Double indentation;
+
     /**
      * auto, xx% or xx in twips
      * 
@@ -161,6 +163,14 @@ public class TableStyle implements Serializable {
 
     public void setBottomCellMargin(int bottomCellMargin) {
         this.bottomCellMargin = bottomCellMargin;
+    }
+
+    public Double getIndentation() {
+        return indentation;
+    }
+
+    public void setIndentation(Double indentation) {
+        this.indentation = indentation;
     }
 
 }

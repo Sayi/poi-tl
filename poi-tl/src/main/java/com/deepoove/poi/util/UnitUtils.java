@@ -22,7 +22,6 @@ import org.apache.poi.util.Units;
 
 /**
  * @author Sayi
- *
  */
 public final class UnitUtils {
 
@@ -42,8 +41,18 @@ public final class UnitUtils {
      * @param pt
      * @return in twentieths of a point (1/1440 of an inch)
      */
-    public static int point2Twips(int pt) {
-        return pt * 20;
+    public static int point2Twips(double pt) {
+        return (int) (pt * 20);
+    }
+
+    /**
+     * twips to point
+     * 
+     * @param twips
+     * @return
+     */
+    public static double twips2Point(int twips) {
+        return (twips / 20.0);
     }
 
     /**

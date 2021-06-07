@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.plugin.highlight.HighlightRenderData;
 
 import io.swagger.models.ExternalDocs;
 import io.swagger.models.Info;
@@ -370,7 +371,7 @@ class Header {
 class Definition {
     private BookmarkTextRenderData name;
     List<Property> properties;
-    List<TextRenderData> codes;
+    HighlightRenderData definitionCode;
 
     public BookmarkTextRenderData getName() {
         return name;
@@ -388,13 +389,14 @@ class Definition {
         this.properties = properties;
     }
 
-    public List<TextRenderData> getCodes() {
-        return codes;
+    public HighlightRenderData getDefinitionCode() {
+        return definitionCode;
     }
 
-    public void setCodes(List<TextRenderData> codes) {
-        this.codes = codes;
+    public void setDefinitionCode(HighlightRenderData definitionCode) {
+        this.definitionCode = definitionCode;
     }
+
 }
 
 class Property {

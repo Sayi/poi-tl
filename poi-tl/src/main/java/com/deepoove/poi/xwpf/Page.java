@@ -2,34 +2,44 @@ package com.deepoove.poi.xwpf;
 
 import java.math.BigInteger;
 
-class Page {
+import com.deepoove.poi.util.UnitUtils;
+
+public class Page {
 
     public static final Page A4_NORMAL = new Page(210, 297, new PageMargin(1440, 1440, 1800, 1800));
     public static final Page A4_NARROW = new Page(210, 297, new PageMargin(720, 720, 720, 720));
     public static final Page A4_MEDIUM = new Page(210, 297, new PageMargin(1440, 1440, 1080, 1080));
     public static final Page A4_EXTEND = new Page(210, 297, new PageMargin(1440, 1440, 2880, 2880));
 
-    private int widthInMilli;
-    private int heightInMilli;
+    private int pageWidth;
+    private int pageHeight;
     private PageMargin pageMar;
 
     Page(int width, int height, PageMargin pageMar) {
-        this.widthInMilli = width;
-        this.heightInMilli = height;
+        this.pageWidth = width;
+        this.pageHeight = height;
         this.pageMar = pageMar;
     }
 
-    public BigInteger tableWidth() {
-        long fullWidth = (long) (this.widthInMilli / 10 / 2.54 * 1440);
-        return BigInteger.valueOf(fullWidth - pageMar.left.longValue() - pageMar.right.longValue());
+    public BigInteger contentWidth() {
+        int pageWidthTwips = UnitUtils.cm2Twips(this.pageWidth / 10.0);
+        return BigInteger.valueOf(pageWidthTwips - pageMar.left.intValue() - pageMar.right.intValue());
     }
 
-    public int getWidthInMilli() {
-        return widthInMilli;
+    public int getPageWidth() {
+        return pageWidth;
     }
 
-    public int getHeightInMilli() {
-        return heightInMilli;
+    public void setPageWidth(int pageWidth) {
+        this.pageWidth = pageWidth;
+    }
+
+    public int getPageHeight() {
+        return pageHeight;
+    }
+
+    public void setPageHeight(int pageHeight) {
+        this.pageHeight = pageHeight;
     }
 
     public PageMargin getPageMar() {

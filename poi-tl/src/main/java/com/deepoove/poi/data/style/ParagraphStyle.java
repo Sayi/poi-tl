@@ -49,8 +49,10 @@ public class ParagraphStyle implements Serializable {
     private Boolean pageBreakBefore; // 段前分页
     private Boolean allowWordBreak; // 单词断行
 
-    private Double spacingBeforeLines; // 间距-段前
-    private Double spacingAfterLines; // 间距-断后
+    private Double spacingBeforeLines; // 间距-段前-行
+    private Double spacingAfterLines; // 间距-断后-行
+    private Double spacingBefore; // 间距-段前-磅
+    private Double spacingAfter; // 间距-断后-磅
     /**
      * Example: 1.5 spacing
      */
@@ -84,6 +86,8 @@ public class ParagraphStyle implements Serializable {
         this.allowWordBreak = builder.allowWordBreak;
         this.spacingBeforeLines = builder.spacingBeforeLines;
         this.spacingAfterLines = builder.spacingAfterLines;
+        this.spacingBefore = builder.spacingBefore;
+        this.spacingAfter = builder.spacingAfter;
         this.spacing = builder.spacing;
         this.spacingRule = builder.spacingRule;
         this.glyphStyle = builder.glyphStyle;
@@ -247,6 +251,22 @@ public class ParagraphStyle implements Serializable {
         this.spacingAfterLines = spacingAfterLines;
     }
 
+    public Double getSpacingBefore() {
+        return spacingBefore;
+    }
+
+    public void setSpacingBefore(Double spacingBefore) {
+        this.spacingBefore = spacingBefore;
+    }
+
+    public Double getSpacingAfter() {
+        return spacingAfter;
+    }
+
+    public void setSpacingAfter(Double spacingAfter) {
+        this.spacingAfter = spacingAfter;
+    }
+
     public Double getSpacing() {
         return spacing;
     }
@@ -324,6 +344,8 @@ public class ParagraphStyle implements Serializable {
         private Boolean allowWordBreak;
         private Double spacingBeforeLines;
         private Double spacingAfterLines;
+        private Double spacingBefore;
+        private Double spacingAfter;
         private Double spacing;
         private LineSpacingRule spacingRule;
         private Style glyphStyle;
@@ -426,6 +448,16 @@ public class ParagraphStyle implements Serializable {
 
         public Builder withSpacingAfterLines(double spacingAfterLines) {
             this.spacingAfterLines = spacingAfterLines;
+            return this;
+        }
+
+        public Builder withSpacingBefore(double spacingBefore) {
+            this.spacingBefore = spacingBefore;
+            return this;
+        }
+
+        public Builder withSpacingAfter(double spacingAfter) {
+            this.spacingAfter = spacingAfter;
             return this;
         }
 
