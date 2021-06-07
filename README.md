@@ -17,6 +17,24 @@ poi-tl is a *"logic-less"* template engine. There is no complicated control stru
 
 poi-tl supports custom functions (plug-ins), functions can be executed anywhere in the Word template, do anything anywhere in the document is the goal of poi-tl.
 
+## TOC
+* [Maven](#Maven)
+* [Quick start](#Quick-start)
+* [Tags](#Tags)
+  * [Text](#Text)
+  * [Picture](#Picture)
+  * [Table](#Table)
+  * [List](#List)
+  * [Sections](#Sections)
+    * [False Values or Empty collection](#False-Values-or-Empty-collection)
+    * [Non-False Values and Not a collection](#Non-False-Values-and-Not-a-collection)
+    * [Non-Empty collection](#Non-Empty-collection)
+  * [Nesting](#Nesting)
+* [Documentation and examples](#Documentation-and-examples)
+* [Contributing](#Contributing)
+* [FAQ](#FAQ)
+
+
 ## Maven
 
 ```xml
