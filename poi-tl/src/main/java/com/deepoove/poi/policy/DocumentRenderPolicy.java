@@ -34,7 +34,6 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
  * Document Render
  * 
  * @author Sayi
- *
  */
 public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderData> {
 
@@ -66,8 +65,10 @@ public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderDat
                     ParagraphRenderPolicy.Helper.renderParagraph(createRun, (ParagraphRenderData) item);
                 } else if (item instanceof TableRenderData) {
                     TableRenderPolicy.Helper.renderTable(createRun, (TableRenderData) item);
+                    BodyContainerFactory.getBodyContainer(createRun).clearPlaceholder(createRun);
                 } else if (item instanceof NumberingRenderData) {
                     NumberingRenderPolicy.Helper.renderNumbering(createRun, (NumberingRenderData) item);
+                    BodyContainerFactory.getBodyContainer(createRun).clearPlaceholder(createRun);
                 }
             }
         }

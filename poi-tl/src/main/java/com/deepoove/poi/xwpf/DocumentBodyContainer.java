@@ -103,7 +103,9 @@ public class DocumentBodyContainer implements BodyContainer {
     public int elementPageWidth(IBodyElement element) {
         XWPFSection section = closelySectPr(element);
         if (null == section) {
-            throw new IllegalAccessError("Unable to read the page where the element is located.");
+            //throw new IllegalAccessError("Unable to read the page where the element is located.");
+            // default A4
+            return Page.A4_NORMAL.contentWidth().intValue();
         }
         return section.getPageContentWidth().intValue();
     }

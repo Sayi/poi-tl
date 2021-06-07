@@ -15,7 +15,25 @@ poi-tl is a *"logic-less"* template engine. There is no complicated control stru
 > 
 > [《Google CTemplate》](https://github.com/OlafvdSpek/ctemplate/blob/master/doc/guide.html)
 
-poi-tl supports custom functions (plug-ins), functions can be executed anywhere in the Word template, do anything anywhere in the document is the goal of poi-tl.
+poi-tl supports **custom functions (plug-ins)**, functions can be executed anywhere in the Word template, do anything anywhere in the document is the goal of poi-tl.
+
+## TOC
+* [Maven](#Maven)
+* [Quick start](#Quick-start)
+* [Tags](#Tags)
+  * [Text](#Text)
+  * [Picture](#Picture)
+  * [Table](#Table)
+  * [Numbering](#Numbering)
+  * [Sections](#Sections)
+    * [False Values or Empty collection](#False-Values-or-Empty-collection)
+    * [Non-False Values and Not a collection](#Non-False-Values-and-Not-a-collection)
+    * [Non-Empty collection](#Non-Empty-collection)
+  * [Nesting](#Nesting)
+* [Documentation and examples](#Documentation-and-examples)
+* [Contributing](#Contributing)
+* [FAQ](#FAQ)
+
 
 ## Maven
 
@@ -115,7 +133,7 @@ Output:
 <tr><td>Song name</td><td>Artist</td></tr>
 </table>
 
-### List
+### Numbering
 The list tag corresponds to Word's symbol list or numbered list, starting with `*`, such as `{{*number}}`.
 
 Code:
@@ -308,7 +326,7 @@ Address: Shanghai,China
 * [Example: Convert Markdown to word](http://deepoove.com/poi-tl/#plugin-markdown)
 * [Example: Convert Swagger to word](http://deepoove.com/poi-tl/#example-swagger)
 
-For more examples and the source code of all examples, see JUnit unit testcases.
+For more examples and the source code of all examples, see JUnit testcases.
 
 ![](http://deepoove.com/poi-tl/demo.png)
 ![](http://deepoove.com/poi-tl/demo_result.png)
@@ -321,6 +339,4 @@ You can join this project in many ways, not limited to the following ways:
 * Solve and discuss issues
 
 ## FAQ
-See [FAQ](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98), welcome to issue on GitHub Questions and exchanges.
-
-Community exchange discussion group: [Gitter channel](https://gitter.im/Sayi/poi-tl)
+See [FAQ](http://deepoove.com/poi-tl/#_%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98).

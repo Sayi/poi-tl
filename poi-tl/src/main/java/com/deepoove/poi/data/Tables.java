@@ -103,7 +103,7 @@ public class Tables {
         private TableBuilder() {
             data = new TableRenderData();
             border(BorderStyle.DEFAULT);
-            cellMargin(0, 0.19f, 0, 0.19f);
+            cellMargin(0, 0.19f, 0, 0.19f).indentation(0);
         }
 
         public TableBuilder width(double widthCm, double[] colWidthsCm) {
@@ -178,6 +178,12 @@ public class Tables {
             tableStyle.setLeftCellMargin(UnitUtils.cm2Twips(leftCm));
             tableStyle.setBottomCellMargin(UnitUtils.cm2Twips(bottomCm));
             tableStyle.setRightCellMargin(UnitUtils.cm2Twips(rightCm));
+            return this;
+        }
+
+        public TableBuilder indentation(double indent) {
+            TableStyle tableStyle = getTableStyle();
+            tableStyle.setIndentation(indent);
             return this;
         }
 

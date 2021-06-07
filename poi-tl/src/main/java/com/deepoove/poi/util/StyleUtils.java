@@ -112,7 +112,7 @@ public final class StyleUtils {
         if (0 != point && -1 != point) run.setCharacterSpacing(UnitUtils.point2Twips(point));
         String vertAlign = style.getVertAlign();
         if (StringUtils.isNotBlank(vertAlign)) {
-            run.setVerticalAlignment(vertAlign); 
+            run.setVerticalAlignment(vertAlign);
         }
     }
 
@@ -194,6 +194,14 @@ public final class StyleUtils {
 
         table.setCellMargins(tableStyle.getTopCellMargin(), tableStyle.getLeftCellMargin(),
                 tableStyle.getBottomCellMargin(), tableStyle.getRightCellMargin());
+
+        if (null != tableStyle.getIndentation()) {
+            CTTbl ctTbl = table.getCTTbl();
+            CTTblPr tPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
+            CTTblWidth tw = tPr.isSetTblInd() ? tPr.getTblInd() : tPr.addNewTblInd();
+            tw.setType(STTblWidth.DXA);
+            tw.setW(BigInteger.valueOf(UnitUtils.cm2Twips(tableStyle.getIndentation())));
+        }
 
     }
 
@@ -341,6 +349,12 @@ public final class StyleUtils {
             paragraph.setSpacingAfterLines(
                     new BigInteger(String.valueOf(Math.round(style.getSpacingAfterLines() * 100.0))).intValue());
         }
+        if (null != style.getSpacingBefore()) {
+            paragraph.setSpacingBefore(UnitUtils.point2Twips(style.getSpacingBefore()));
+        }
+        if (null != style.getSpacingAfter()) {
+            paragraph.setSpacingAfter(UnitUtils.point2Twips(style.getSpacingAfter()));
+        }
 
         CTP ctp = paragraph.getCTP();
         CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
@@ -448,7 +462,6 @@ public final class StyleUtils {
     public static ParagraphStyle retriveParagraphStyle(XWPFParagraph paragraph) {
         if (null == paragraph) return null;
         Builder builder = ParagraphStyle.builder();
-        paragraph.getAlignment();
         CTP ctp = paragraph.getCTP();
         CTPPr pr = ctp.isSetPPr() ? ctp.getPPr() : ctp.addNewPPr();
         if (paragraph.isWordWrapped()) {
@@ -473,6 +486,28 @@ public final class StyleUtils {
             CTShd shd = pr.getShd();
             builder.withShadingPattern(XWPFShadingPattern.valueOf(shd.getVal().intValue()));
             if (shd.isSetFill()) builder.withBackgroundColor(shd.xgetFill().getStringValue());
+        }
+        builder.withAlign(paragraph.getAlignment());
+        int spacingBeforeLines = paragraph.getSpacingBeforeLines();
+        if (-1 != spacingBeforeLines) {
+            builder.withSpacingBeforeLines(spacingBeforeLines / 100.0f);
+        }
+        int spacingAfterLines = paragraph.getSpacingAfterLines();
+        if (-1 != spacingAfterLines) {
+            builder.withSpacingAfterLines(spacingAfterLines / 100.0f);
+        }
+        int spacingBefore = paragraph.getSpacingBefore();
+        if (-1 != spacingBefore) {
+            builder.withSpacingBefore(UnitUtils.twips2Point(spacingBefore));
+        }
+        int spacingAfter = paragraph.getSpacingAfter();
+        if (-1 != spacingAfter) {
+            builder.withSpacingAfter(UnitUtils.twips2Point(spacingAfter));
+        }
+        double spacingBetween = paragraph.getSpacingBetween();
+        if (-1 != spacingBetween) {
+            builder.withSpacing(spacingBetween);
+            builder.withSpacingRule(paragraph.getSpacingLineRule());
         }
 
         return builder.build();

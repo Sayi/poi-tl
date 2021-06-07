@@ -82,7 +82,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
     public static class Helper {
 
-        public static void renderTable(XWPFRun run, TableRenderData data) throws Exception {
+        public static XWPFTable renderTable(XWPFRun run, TableRenderData data) throws Exception {
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
             XWPFTable table = bodyContainer.insertNewTable(run, data.obtainRowSize(), data.obtainColSize());
             StyleUtils.styleTable(table, data.getTableStyle());
@@ -94,6 +94,7 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
 
             applyMergeRule(table, data.getMergeRule());
+            return table;
         }
 
         public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
