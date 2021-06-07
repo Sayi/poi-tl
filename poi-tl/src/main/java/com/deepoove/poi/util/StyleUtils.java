@@ -201,6 +201,14 @@ public final class StyleUtils {
         table.setCellMargins(tableStyle.getTopCellMargin(), tableStyle.getLeftCellMargin(),
                 tableStyle.getBottomCellMargin(), tableStyle.getRightCellMargin());
 
+        if (null != tableStyle.getIndentation()) {
+            CTTbl ctTbl = table.getCTTbl();
+            CTTblPr tPr = (ctTbl.getTblPr() != null) ? ctTbl.getTblPr() : ctTbl.addNewTblPr();
+            CTTblWidth tw = tPr.isSetTblInd() ? tPr.getTblInd() : tPr.addNewTblInd();
+            tw.setType(STTblWidth.DXA);
+            tw.setW(BigInteger.valueOf(UnitUtils.cm2Twips(tableStyle.getIndentation())));
+        }
+
     }
 
     /**
