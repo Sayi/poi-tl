@@ -41,7 +41,7 @@ poi-tl supports **custom functions (plug-ins)**, functions can be executed anywh
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.0-beta</version>
+  <version>1.10.0</version>
 </dependency>
 ```
 
