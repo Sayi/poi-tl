@@ -112,13 +112,14 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
 
                         List<XWPFTableCell> cells = newRow.getTableCells();
                         RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory()
-                                .newCompute(EnvModel.of(dt, EnvIterator.makeEnv(index++, hasNextData || hasNextTempRow)));
+                                .newCompute(EnvModel.of(dt, EnvIterator.makeEnv(index, hasNextData || hasNextTempRow)));
                         cells.forEach(tableCell -> {
                             List<MetaTemplate> metaTemplates = resolver.resolveBodyElements(tableCell.getBodyElements());
                             new DocumentProcessor(template, resolver, dataCompute).process(metaTemplates);
                         });
                         ++position;
                     }
+                    ++index;
                 }
 
                 removeTableRow(table, position, tempRows.size());
