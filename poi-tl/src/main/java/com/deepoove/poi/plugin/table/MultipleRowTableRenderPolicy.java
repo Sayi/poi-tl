@@ -55,7 +55,7 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
     }
 
     public MultipleRowTableRenderPolicy(String prefix, String suffix) {
-        this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_PREFIX, prefix, suffix);
+        this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, prefix, suffix);
     }
 
     public MultipleRowTableRenderPolicy(String multiplePrefix, String multipleSuffix, String prefix, String suffix) {
