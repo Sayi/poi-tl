@@ -25,8 +25,12 @@ import java.util.Vector;
 
 /**
  * word模板替换，多行表格复用渲染
- * <p>该插件旨在替换多行表格内容</p>
- * <p>单行表格循环可以使用{@link LoopRowTableRenderPolicy}</p>
+ * <p>
+ * 该插件旨在替换多行表格内容
+ * </p>
+ * <p>
+ * 单行表格循环可以使用{@link LoopRowTableRenderPolicy}
+ * </p>
  *
  * @author llzero54
  * @see RenderPolicy
@@ -71,7 +75,8 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
             RunTemplate runTemplate = cast2runTemplate(eleTemplate);
             XWPFRun run = runTemplate.getRun();
 
-            checkTargetIsTable(run, "Processing [" + runTemplate.getTagName() + "] failed, the target content is not a table");
+            checkTargetIsTable(run,
+                    "Processing [" + runTemplate.getTagName() + "] failed, the target content is not a table");
             XWPFTableCell tagCell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
 
             final XWPFTable table = tagCell.getTableRow().getTable();
@@ -111,10 +116,12 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
                         setTableRow(table, newRow, position);
 
                         List<XWPFTableCell> cells = newRow.getTableCells();
-                        RenderDataCompute dataCompute = template.getConfig().getRenderDataComputeFactory()
+                        RenderDataCompute dataCompute = template.getConfig()
+                                .getRenderDataComputeFactory()
                                 .newCompute(EnvModel.of(dt, EnvIterator.makeEnv(index, hasNextData || hasNextTempRow)));
                         cells.forEach(tableCell -> {
-                            List<MetaTemplate> metaTemplates = resolver.resolveBodyElements(tableCell.getBodyElements());
+                            List<MetaTemplate> metaTemplates = resolver
+                                    .resolveBodyElements(tableCell.getBodyElements());
                             new DocumentProcessor(template, resolver, dataCompute).process(metaTemplates);
                         });
                         ++position;
