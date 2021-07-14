@@ -111,7 +111,8 @@ public class Pictures {
         private String url;
 
         public UrlPictureSupplier(String url) {
-            this.url = url;
+            // hack for tp=webp
+            this.url = url.replace("tp=webp", "tp=png");
         }
 
         @Override
