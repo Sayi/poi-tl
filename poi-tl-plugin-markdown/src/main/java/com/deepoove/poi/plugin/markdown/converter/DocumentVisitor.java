@@ -275,11 +275,11 @@ public class DocumentVisitor extends AbstractVisitor {
                     }
 
                     if (first) {
-                        paragraphStyle.setSpacingBeforeLines(0.4);
+                        paragraphStyle.setSpacingBeforeLines(Double.valueOf(0.4));
                         first = false;
                     }
                     if (i == size - 1) {
-                        paragraphStyle.setSpacingAfterLines(0.4);
+                        paragraphStyle.setSpacingAfterLines(Double.valueOf(0.4));
                     }
                     of.addParagraph(paragraph);
                 }
