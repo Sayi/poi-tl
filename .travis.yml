@@ -1,2 +1,5 @@
 language: java
 script: mvn clean install -f poi-tl/pom.xml
+
+after_success:
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -f poi-tl/pom.xml
