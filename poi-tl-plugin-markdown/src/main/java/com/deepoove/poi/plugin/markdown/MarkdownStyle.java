@@ -44,7 +44,7 @@ public class MarkdownStyle {
         style.setHighlightStyle(HighlightStyle.builder()
 //              .withShowLine(true)
                 .withTheme("zenburn")
-                .withFontFamily("Monaco")
+                .withFontFamily("Consolas")
                 .withFontSize(9.0f)
                 .build());
         style.setQuoteStyle(ParagraphStyle.builder()
