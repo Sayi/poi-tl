@@ -16,6 +16,7 @@
 package com.deepoove.poi.policy;
 
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,6 +26,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingItemRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
+import com.deepoove.poi.data.Numberings;
+import com.deepoove.poi.data.Numberings.NumberingBuilder;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
@@ -36,24 +39,32 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * 
  * @author Sayi
  */
-public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {
+public class NumberingRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
-    protected boolean validate(NumberingRenderData data) {
-        return (null != data && CollectionUtils.isNotEmpty(data.getItems()));
+    protected boolean validate(Object data) {
+        if (null == data) return false;
+        if (data instanceof NumberingRenderData) {
+            return CollectionUtils.isNotEmpty(((NumberingRenderData) data).getItems());
+        }
+        return data instanceof Iterable;
     }
 
     @Override
-    public void doRender(RenderContext<NumberingRenderData> context) throws Exception {
+    public void doRender(RenderContext<Object> context) throws Exception {
         Helper.renderNumbering(context.getRun(), context.getData());
     }
 
     @Override
-    protected void afterRender(RenderContext<NumberingRenderData> context) {
+    protected void afterRender(RenderContext<Object> context) {
         clearPlaceholder(context, true);
     }
 
     public static class Helper {
+
+        public static void renderNumbering(XWPFRun run, Object data) throws Exception {
+            renderNumbering(run, wrapper(data));
+        }
 
         public static void renderNumbering(XWPFRun run, NumberingRenderData data) throws Exception {
             List<NumberingItemRenderData> items = data.getItems();
@@ -72,6 +83,19 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderD
                 StyleUtils.styleRun(createRun, run);
                 ParagraphRenderPolicy.Helper.renderParagraph(createRun, item.getItem());
             }
+        }
+
+        private static NumberingRenderData wrapper(Object obj) {
+            if (obj instanceof NumberingRenderData) return (NumberingRenderData) obj;
+            NumberingBuilder ofBullet = Numberings.ofBullet();
+            if (obj instanceof Iterable) {
+                Iterator<?> iterator = ((Iterable<?>) obj).iterator();
+                while (iterator.hasNext()) {
+                    Object next = iterator.next();
+                    ofBullet.addItem(String.valueOf(next));
+                }
+            }
+            return ofBullet.create();
         }
 
     }
