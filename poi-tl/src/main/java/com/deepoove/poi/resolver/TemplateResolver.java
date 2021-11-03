@@ -29,7 +29,17 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -268,13 +278,15 @@ public class TemplateResolver extends AbstractResolver {
 
     private List<MetaTemplate> resolveTextbox(XWPFRun run) {
         XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
-    	return Arrays.<Supplier<XWPFTextboxContent>>asList(runWrapper::getWpstxbx, runWrapper::getVtextbox, runWrapper::getShapetxbx)
-    			.stream()
-    			.map(Supplier::get)
-    			.map(txbx -> txbx == null ? Collections.<IBodyElement>emptyList() : txbx.getBodyElements())
-    			.map(this::resolveBodyElements)
-    			.flatMap(Collection::stream)
-    			.collect(Collectors.toList());
+        return Arrays
+                .<Supplier<XWPFTextboxContent>>asList(runWrapper::getWpstxbx, runWrapper::getVtextbox,
+                        runWrapper::getShapetxbx)
+                .stream()
+                .map(Supplier::get)
+                .map(txbx -> txbx == null ? Collections.<IBodyElement>emptyList() : txbx.getBodyElements())
+                .map(this::resolveBodyElements)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     <T extends IBody> List<MetaTemplate> resolveBodys(List<T> bodys) {
