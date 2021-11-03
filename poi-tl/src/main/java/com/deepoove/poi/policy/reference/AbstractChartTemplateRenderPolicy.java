@@ -16,6 +16,7 @@
 package com.deepoove.poi.policy.reference;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -91,7 +92,9 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         final int numOfPoints = seriesDatas.get(0).getValues().length;
 
         CTTable ctTable = getSheetTable(sheet);
-        ctTable.setRef("A1:" + (char) ('A' + seriesSize) + (numOfPoints + 1));
+        char prefix = seriesSize >= 26 ? (char) ('A' + ((seriesSize / 26) - 1)) : '\0';
+        char c = (char) ('A' + (seriesSize % 26));
+        ctTable.setRef("A1:" + prefix + c + (numOfPoints + 1));
         CTTableColumns tableColumns = ctTable.getTableColumns();
         tableColumns.setCount(seriesSize + 1);
 
