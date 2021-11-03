@@ -28,6 +28,9 @@ import com.deepoove.poi.data.NumberingItemRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.Numberings;
 import com.deepoove.poi.data.Numberings.NumberingBuilder;
+import com.deepoove.poi.data.ParagraphRenderData;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
@@ -52,7 +55,7 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
     public void doRender(RenderContext<Object> context) throws Exception {
-        Helper.renderNumbering(context.getRun(), context.getData());
+        Helper.renderNumbering(context.getRun(), wrapper(context.getData()));
     }
 
     @Override
@@ -60,11 +63,28 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<Object> {
         clearPlaceholder(context, true);
     }
 
-    public static class Helper {
-
-        public static void renderNumbering(XWPFRun run, Object data) throws Exception {
-            renderNumbering(run, wrapper(data));
+    private static NumberingRenderData wrapper(Object obj) {
+        if (obj instanceof NumberingRenderData) return (NumberingRenderData) obj;
+        NumberingBuilder ofBullet = Numberings.ofBullet();
+        if (obj instanceof Iterable) {
+            Iterator<?> iterator = ((Iterable<?>) obj).iterator();
+            while (iterator.hasNext()) {
+                Object next = iterator.next();
+                if (next instanceof TextRenderData) {
+                    ofBullet.addItem((TextRenderData) next);
+                } else if (next instanceof PictureRenderData) {
+                    ofBullet.addItem((PictureRenderData) next);
+                } else if (next instanceof ParagraphRenderData) {
+                    ofBullet.addItem((ParagraphRenderData) next);
+                } else {
+                    ofBullet.addItem(next.toString());
+                }
+            }
         }
+        return ofBullet.create();
+    }
+
+    public static class Helper {
 
         public static void renderNumbering(XWPFRun run, NumberingRenderData data) throws Exception {
             List<NumberingItemRenderData> items = data.getItems();
@@ -83,19 +103,6 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<Object> {
                 StyleUtils.styleRun(createRun, run);
                 ParagraphRenderPolicy.Helper.renderParagraph(createRun, item.getItem());
             }
-        }
-
-        private static NumberingRenderData wrapper(Object obj) {
-            if (obj instanceof NumberingRenderData) return (NumberingRenderData) obj;
-            NumberingBuilder ofBullet = Numberings.ofBullet();
-            if (obj instanceof Iterable) {
-                Iterator<?> iterator = ((Iterable<?>) obj).iterator();
-                while (iterator.hasNext()) {
-                    Object next = iterator.next();
-                    ofBullet.addItem(String.valueOf(next));
-                }
-            }
-            return ofBullet.create();
         }
 
     }
