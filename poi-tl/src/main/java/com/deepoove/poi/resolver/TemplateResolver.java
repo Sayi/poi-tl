@@ -16,16 +16,30 @@
 package com.deepoove.poi.resolver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPicture;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -46,6 +60,7 @@ import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.xwpf.CTDrawingWrapper;
 import com.deepoove.poi.xwpf.CTPictWrapper;
 import com.deepoove.poi.xwpf.XWPFRunWrapper;
+import com.deepoove.poi.xwpf.XWPFTextboxContent;
 
 /**
  * Resolver
@@ -263,12 +278,15 @@ public class TemplateResolver extends AbstractResolver {
 
     private List<MetaTemplate> resolveTextbox(XWPFRun run) {
         XWPFRunWrapper runWrapper = new XWPFRunWrapper(run);
-        if (null != runWrapper.getWpstxbx()) {
-            return resolveBodyElements(runWrapper.getWpstxbx().getBodyElements());
-        } else if (null != runWrapper.getShapetxbx()) {
-            return resolveBodyElements(runWrapper.getShapetxbx().getBodyElements());
-        }
-        return new ArrayList<>();
+        return Arrays
+                .<Supplier<XWPFTextboxContent>>asList(runWrapper::getWpstxbx, runWrapper::getVtextbox,
+                        runWrapper::getShapetxbx)
+                .stream()
+                .map(Supplier::get)
+                .map(txbx -> txbx == null ? Collections.<IBodyElement>emptyList() : txbx.getBodyElements())
+                .map(this::resolveBodyElements)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     <T extends IBody> List<MetaTemplate> resolveBodys(List<T> bodys) {

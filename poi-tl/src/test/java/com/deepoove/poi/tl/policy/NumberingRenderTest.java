@@ -1,5 +1,6 @@
 package com.deepoove.poi.tl.policy;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,8 @@ public class NumberingRenderTest {
         datas.put("multilevel", getMultiLevel());
         // paragraph list
         datas.put("picture_hyper_text", getPictureData());
+        // list string
+        datas.put("liststring", Arrays.asList("A", "B", "C"));
 
         XWPFTemplate.compile("src/test/resources/template/render_numbering.docx")
                 .render(datas)

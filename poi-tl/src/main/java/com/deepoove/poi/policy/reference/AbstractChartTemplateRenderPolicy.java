@@ -30,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTTitle;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTTx;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTRegularTextRun;
@@ -78,9 +79,11 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             for (int i = 0; i < numOfPoints + 1; i++) {
                 for (int j = orignSize; j > seriesSize; j--) {
                     XSSFRow row = sheet.getRow(i);
-                    if (null == row) continue;
+                    if (null == row)
+                        continue;
                     XSSFCell cell = row.getCell(j);
-                    if (null != cell) row.removeCell(cell);
+                    if (null != cell)
+                        row.removeCell(cell);
                 }
             }
         }
@@ -91,7 +94,10 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         final int numOfPoints = seriesDatas.get(0).getValues().length;
 
         CTTable ctTable = getSheetTable(sheet);
-        ctTable.setRef("A1:" + (char) ('A' + seriesSize) + (numOfPoints + 1));
+        String prefix = seriesSize >= 26 ? String.valueOf((char) ('A' + ((seriesSize / 26) - 1))) : "";
+        char c = (char) ('A' + (seriesSize % 26));
+        String ref = "A1:" + prefix + c + (numOfPoints + 1);
+        ctTable.setRef(ref);
         CTTableColumns tableColumns = ctTable.getTableColumns();
         tableColumns.setCount(seriesSize + 1);
 
@@ -128,6 +134,18 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
                 XDDFNumericalDataSource.class);
         method.setAccessible(true);
         for (XDDFChartData.Series series : data.getSeries()) {
+            boolean numeric = series.getCategoryData().isNumeric();
+            if (!numeric) {
+                Method getAxDSMethod = series.getClass().getDeclaredMethod("getAxDS");
+                getAxDSMethod.setAccessible(true);
+                CTAxDataSource axDataSource = (CTAxDataSource) getAxDSMethod.invoke(series);
+                if (axDataSource.isSetNumRef()) {
+                    axDataSource.unsetNumRef();
+                }
+                if (axDataSource.isSetNumLit()) {
+                    axDataSource.unsetNumLit();
+                }
+            }
             series.plot();
             method.invoke(chart, sheet, series.getCategoryData(), series.getValuesData());
         }
