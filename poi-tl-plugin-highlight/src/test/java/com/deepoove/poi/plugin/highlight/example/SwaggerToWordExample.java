@@ -1,4 +1,4 @@
-package com.deepoove.poi.tl.example;
+package com.deepoove.poi.plugin.highlight.example;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -88,10 +88,12 @@ public class SwaggerToWordExample {
 
         List<Endpoint> endpoints = new ArrayList<>();
         Map<String, Path> paths = swagger.getPaths();
-        if (null == paths) return view;
+        if (null == paths)
+            return view;
         paths.forEach((url, path) -> {
 
-            if (null == path.getOperationMap()) return;
+            if (null == path.getOperationMap())
+                return;
             path.getOperationMap().forEach((method, operation) -> {
                 Endpoint endpoint = new Endpoint();
                 endpoint.setUrl(url);
@@ -194,9 +196,9 @@ public class SwaggerToWordExample {
                 Definition definition = new Definition();
                 definition.setName(new BookmarkTextRenderData(name, name));
                 if (null != model.getProperties()) {
-                    List<com.deepoove.poi.tl.example.Property> properties = new ArrayList<>();
+                    List<com.deepoove.poi.plugin.highlight.example.Property> properties = new ArrayList<>();
                     model.getProperties().forEach((key, prop) -> {
-                        com.deepoove.poi.tl.example.Property property = new com.deepoove.poi.tl.example.Property();
+                        com.deepoove.poi.plugin.highlight.example.Property property = new com.deepoove.poi.plugin.highlight.example.Property();
                         property.setName(key);
                         property.setDescription(prop.getDescription());
                         property.setRequired(prop.getRequired());
@@ -238,8 +240,10 @@ public class SwaggerToWordExample {
         Object value;
         if (prop instanceof RefProperty) {
             String ref = ((RefProperty) prop).get$ref().substring("#/definitions/".length());
-            if (keyCache.contains(ref)) value = ((RefProperty) prop).get$ref();
-            else value = valueOfModel(definitions, definitions.get(ref), keyCache);
+            if (keyCache.contains(ref))
+                value = ((RefProperty) prop).get$ref();
+            else
+                value = valueOfModel(definitions, definitions.get(ref), keyCache);
         } else if (prop instanceof ArrayProperty) {
             List<Object> list = new ArrayList<>();
             Property insideItems = ((ArrayProperty) prop).getItems();
@@ -257,7 +261,8 @@ public class SwaggerToWordExample {
 
     private List<TextRenderData> fomartSchemaModel(Model schemaModel) {
         List<TextRenderData> schema = new ArrayList<>();
-        if (null == schemaModel) return schema;
+        if (null == schemaModel)
+            return schema;
         // if array
         if (schemaModel instanceof ArrayModel) {
             Property items = ((ArrayModel) schemaModel).getItems();
@@ -266,13 +271,13 @@ public class SwaggerToWordExample {
             schema.add(new TextRenderData(">"));
             schema.add(new TextRenderData(((ArrayModel) schemaModel).getType()));
         } else
-            // if ref
-            if (schemaModel instanceof RefModel) {
-                String ref = ((RefModel) schemaModel).get$ref().substring("#/definitions/".length());
-                schema.add(new HyperlinkTextRenderData(ref, "anchor:" + ref));
-            } else if (schemaModel instanceof ModelImpl) {
-                schema.add(new TextRenderData(((ModelImpl) schemaModel).getType()));
-            }
+        // if ref
+        if (schemaModel instanceof RefModel) {
+            String ref = ((RefModel) schemaModel).get$ref().substring("#/definitions/".length());
+            schema.add(new HyperlinkTextRenderData(ref, "anchor:" + ref));
+        } else if (schemaModel instanceof ModelImpl) {
+            schema.add(new TextRenderData(((ModelImpl) schemaModel).getType()));
+        }
         // ComposedModel
         return schema;
     }

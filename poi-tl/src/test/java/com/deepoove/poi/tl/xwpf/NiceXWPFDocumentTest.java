@@ -15,14 +15,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.apache.poi.xwpf.usermodel.XWPFComment;
+import org.apache.poi.xwpf.usermodel.XWPFComments;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.deepoove.poi.plugin.comment.XWPFComment;
-import com.deepoove.poi.plugin.comment.XWPFComments;
+import com.deepoove.poi.util.NextIDUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 @DisplayName("Merge word test case")
@@ -128,7 +129,8 @@ public class NiceXWPFDocumentTest {
     public void testCreateComments() throws FileNotFoundException, IOException {
         NiceXWPFDocument document = new NiceXWPFDocument();
         XWPFComments docComments = document.createComments();
-        XWPFComment addComment = docComments.addComment();
+        XWPFComment addComment = docComments
+                .createComment(NextIDUtils.getCommentMaxId(docComments).add(BigInteger.ONE));
         BigInteger cId = addComment.getCtComment().getId();
 
         XWPFParagraph paragraph = document.createParagraph();

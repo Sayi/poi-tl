@@ -26,7 +26,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.poi.Version;
 import org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -44,7 +43,6 @@ import com.deepoove.poi.resolver.Resolver;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.util.PoitlIOUtils;
-import com.deepoove.poi.util.Preconditions;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
@@ -61,24 +59,12 @@ public class XWPFTemplate implements Closeable {
     public static final String TEMPLATE_TAG_NAME = "var";
 
     private static Logger logger = LoggerFactory.getLogger(XWPFTemplate.class);
-    private static final String SUPPORT_MINIMUM_VERSION = "4.1.2";
 
     private NiceXWPFDocument doc;
     private Configure config;
     private Resolver resolver;
     private Render renderer;
     private List<MetaTemplate> eleTemplates;
-
-    static {
-        try {
-            Class.forName("org.apache.poi.Version");
-            Preconditions.checkMinimumVersion(Version.getVersion(), SUPPORT_MINIMUM_VERSION,
-                    (cur, min) -> "Require Apache POI version at least " + min + ", but now is " + cur
-                            + ", please check the dependency of project.");
-        } catch (ClassNotFoundException e) {
-            // no-op
-        }
-    }
 
     private XWPFTemplate() {
     }

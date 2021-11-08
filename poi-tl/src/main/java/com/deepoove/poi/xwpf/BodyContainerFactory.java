@@ -17,12 +17,12 @@
 package com.deepoove.poi.xwpf;
 
 import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.XWPFComment;
 import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
-import com.deepoove.poi.plugin.comment.XWPFComment;
 import com.deepoove.poi.template.IterableTemplate;
 
 /**

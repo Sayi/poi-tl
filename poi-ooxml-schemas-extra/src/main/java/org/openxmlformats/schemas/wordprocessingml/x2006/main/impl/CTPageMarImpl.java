@@ -6,507 +6,483 @@
  * Automatically generated - do not modify.
  */
 package org.openxmlformats.schemas.wordprocessingml.x2006.main.impl;
+
+import javax.xml.namespace.QName;
+import org.apache.xmlbeans.QNameSet;
+
 /**
  * An XML CT_PageMar(@http://schemas.openxmlformats.org/wordprocessingml/2006/main).
  *
  * This is a complex type.
  */
-public class CTPageMarImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentImpl implements org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar
-{
+public class CTPageMarImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentImpl implements org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar {
     private static final long serialVersionUID = 1L;
-    
-    public CTPageMarImpl(org.apache.xmlbeans.SchemaType sType)
-    {
+
+    public CTPageMarImpl(org.apache.xmlbeans.SchemaType sType) {
         super(sType);
     }
-    
-    private static final javax.xml.namespace.QName TOP$0 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "top");
-    private static final javax.xml.namespace.QName RIGHT$2 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "right");
-    private static final javax.xml.namespace.QName BOTTOM$4 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "bottom");
-    private static final javax.xml.namespace.QName LEFT$6 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "left");
-    private static final javax.xml.namespace.QName HEADER$8 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "header");
-    private static final javax.xml.namespace.QName FOOTER$10 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "footer");
-    private static final javax.xml.namespace.QName GUTTER$12 = 
-        new javax.xml.namespace.QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "gutter");
-    
-    
+
+    private static final QName[] PROPERTY_QNAME = {
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "top"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "right"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "bottom"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "left"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "header"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "footer"),
+        new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "gutter"),
+    };
+
+
     /**
      * Gets the "top" attribute
      */
-    public java.math.BigInteger getTop()
-    {
+    @Override
+    public java.lang.Object getTop() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(TOP$0);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[0]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "top" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure xgetTop()
-    {
+    @Override
+    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure xgetTop() {
         synchronized (monitor())
         {
             check_orphaned();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(TOP$0);
+            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[0]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "top" attribute
      */
-    public void setTop(java.math.BigInteger top)
-    {
+    @Override
+    public void setTop(java.lang.Object top) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(TOP$0);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(TOP$0);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[0]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[0]);
             }
-            target.setBigIntegerValue(top);
+            target.setObjectValue(top);
         }
     }
-    
+
     /**
      * Sets (as xml) the "top" attribute
      */
-    public void xsetTop(org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure top)
-    {
+    @Override
+    public void xsetTop(org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure top) {
         synchronized (monitor())
         {
             check_orphaned();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(TOP$0);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().add_attribute_user(TOP$0);
+            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[0]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[0]);
             }
             target.set(top);
         }
     }
-    
+
     /**
      * Gets the "right" attribute
      */
-    public java.math.BigInteger getRight()
-    {
+    @Override
+    public java.lang.Object getRight() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(RIGHT$2);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[1]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "right" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure xgetRight()
-    {
+    @Override
+    public org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure xgetRight() {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(RIGHT$2);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[1]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "right" attribute
      */
-    public void setRight(java.math.BigInteger right)
-    {
+    @Override
+    public void setRight(java.lang.Object right) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(RIGHT$2);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(RIGHT$2);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[1]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[1]);
             }
-            target.setBigIntegerValue(right);
+            target.setObjectValue(right);
         }
     }
-    
+
     /**
      * Sets (as xml) the "right" attribute
      */
-    public void xsetRight(org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure right)
-    {
+    @Override
+    public void xsetRight(org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure right) {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(RIGHT$2);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().add_attribute_user(RIGHT$2);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[1]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[1]);
             }
             target.set(right);
         }
     }
-    
+
     /**
      * Gets the "bottom" attribute
      */
-    public java.math.BigInteger getBottom()
-    {
+    @Override
+    public java.lang.Object getBottom() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(BOTTOM$4);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[2]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "bottom" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure xgetBottom()
-    {
+    @Override
+    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure xgetBottom() {
         synchronized (monitor())
         {
             check_orphaned();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(BOTTOM$4);
+            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[2]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "bottom" attribute
      */
-    public void setBottom(java.math.BigInteger bottom)
-    {
+    @Override
+    public void setBottom(java.lang.Object bottom) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(BOTTOM$4);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(BOTTOM$4);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[2]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[2]);
             }
-            target.setBigIntegerValue(bottom);
+            target.setObjectValue(bottom);
         }
     }
-    
+
     /**
      * Sets (as xml) the "bottom" attribute
      */
-    public void xsetBottom(org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure bottom)
-    {
+    @Override
+    public void xsetBottom(org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure bottom) {
         synchronized (monitor())
         {
             check_orphaned();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(BOTTOM$4);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().add_attribute_user(BOTTOM$4);
+            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[2]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[2]);
             }
             target.set(bottom);
         }
     }
-    
+
     /**
      * Gets the "left" attribute
      */
-    public java.math.BigInteger getLeft()
-    {
+    @Override
+    public java.lang.Object getLeft() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(LEFT$6);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[3]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "left" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure xgetLeft()
-    {
+    @Override
+    public org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure xgetLeft() {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(LEFT$6);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[3]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "left" attribute
      */
-    public void setLeft(java.math.BigInteger left)
-    {
+    @Override
+    public void setLeft(java.lang.Object left) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(LEFT$6);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(LEFT$6);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[3]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[3]);
             }
-            target.setBigIntegerValue(left);
+            target.setObjectValue(left);
         }
     }
-    
+
     /**
      * Sets (as xml) the "left" attribute
      */
-    public void xsetLeft(org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure left)
-    {
+    @Override
+    public void xsetLeft(org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure left) {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(LEFT$6);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().add_attribute_user(LEFT$6);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[3]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[3]);
             }
             target.set(left);
         }
     }
-    
+
     /**
      * Gets the "header" attribute
      */
-    public java.math.BigInteger getHeader()
-    {
+    @Override
+    public java.lang.Object getHeader() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(HEADER$8);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[4]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "header" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure xgetHeader()
-    {
+    @Override
+    public org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure xgetHeader() {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(HEADER$8);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[4]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "header" attribute
      */
-    public void setHeader(java.math.BigInteger header)
-    {
+    @Override
+    public void setHeader(java.lang.Object header) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(HEADER$8);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(HEADER$8);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[4]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[4]);
             }
-            target.setBigIntegerValue(header);
+            target.setObjectValue(header);
         }
     }
-    
+
     /**
      * Sets (as xml) the "header" attribute
      */
-    public void xsetHeader(org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure header)
-    {
+    @Override
+    public void xsetHeader(org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure header) {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(HEADER$8);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().add_attribute_user(HEADER$8);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[4]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[4]);
             }
             target.set(header);
         }
     }
-    
+
     /**
      * Gets the "footer" attribute
      */
-    public java.math.BigInteger getFooter()
-    {
+    @Override
+    public java.lang.Object getFooter() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(FOOTER$10);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[5]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "footer" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure xgetFooter()
-    {
+    @Override
+    public org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure xgetFooter() {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(FOOTER$10);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[5]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "footer" attribute
      */
-    public void setFooter(java.math.BigInteger footer)
-    {
+    @Override
+    public void setFooter(java.lang.Object footer) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(FOOTER$10);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(FOOTER$10);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[5]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[5]);
             }
-            target.setBigIntegerValue(footer);
+            target.setObjectValue(footer);
         }
     }
-    
+
     /**
      * Sets (as xml) the "footer" attribute
      */
-    public void xsetFooter(org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure footer)
-    {
+    @Override
+    public void xsetFooter(org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure footer) {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(FOOTER$10);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().add_attribute_user(FOOTER$10);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[5]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[5]);
             }
             target.set(footer);
         }
     }
-    
+
     /**
      * Gets the "gutter" attribute
      */
-    public java.math.BigInteger getGutter()
-    {
+    @Override
+    public java.lang.Object getGutter() {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(GUTTER$12);
-            if (target == null)
-            {
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[6]);
+            if (target == null) {
                 return null;
             }
-            return target.getBigIntegerValue();
+            return target.getObjectValue();
         }
     }
-    
+
     /**
      * Gets (as xml) the "gutter" attribute
      */
-    public org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure xgetGutter()
-    {
+    @Override
+    public org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure xgetGutter() {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(GUTTER$12);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[6]);
             return target;
         }
     }
-    
+
     /**
      * Sets the "gutter" attribute
      */
-    public void setGutter(java.math.BigInteger gutter)
-    {
+    @Override
+    public void setGutter(java.lang.Object gutter) {
         synchronized (monitor())
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(GUTTER$12);
-            if (target == null)
-            {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(GUTTER$12);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(PROPERTY_QNAME[6]);
+            if (target == null) {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(PROPERTY_QNAME[6]);
             }
-            target.setBigIntegerValue(gutter);
+            target.setObjectValue(gutter);
         }
     }
-    
+
     /**
      * Sets (as xml) the "gutter" attribute
      */
-    public void xsetGutter(org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure gutter)
-    {
+    @Override
+    public void xsetGutter(org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure gutter) {
         synchronized (monitor())
         {
             check_orphaned();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure target = null;
-            target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().find_attribute_user(GUTTER$12);
-            if (target == null)
-            {
-                target = (org.openxmlformats.schemas.wordprocessingml.x2006.main.STTwipsMeasure)get_store().add_attribute_user(GUTTER$12);
+            org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure target = null;
+            target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().find_attribute_user(PROPERTY_QNAME[6]);
+            if (target == null) {
+                target = (org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure)get_store().add_attribute_user(PROPERTY_QNAME[6]);
             }
             target.set(gutter);
         }

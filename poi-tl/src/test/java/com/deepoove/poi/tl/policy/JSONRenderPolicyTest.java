@@ -19,7 +19,7 @@ public class JSONRenderPolicyTest {
     @Test
     public void testJSONRender() throws Exception {
 
-        File file = new File("src/test/resources/swagger/petstore.json");
+        File file = new File("src/test/resources/petstore.json");
         FileInputStream in = new FileInputStream(file);
         int size = in.available();
         byte[] buffer = new byte[size];

@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.10.1</version>
+	<version>1.11.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
@@ -69,17 +69,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.deepoove</groupId>
-			<artifactId>poi-ooxml-schemas-extra</artifactId>
-			<version>4.1.2</version>
+			<version>5.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
@@ -113,12 +103,6 @@
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-parser</artifactId>
 			<version>1.0.50</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.deepoove</groupId>
-			<artifactId>poi-tl-plugin-highlight</artifactId>
-			<version>1.0.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

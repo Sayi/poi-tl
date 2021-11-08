@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
+import org.apache.poi.ooxml.util.POIXMLUnits;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
@@ -331,7 +332,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 
                 // fix github issue 499
                 CTStyle ctStyle = xwpfStyle.getCTStyle();
-                if (ctStyle.isSetDefault() && ctStyle.getDefault() == XWPFOnOff.X_1
+                if (ctStyle.isSetDefault() && POIXMLUnits.parseOnOff(ctStyle.xgetDefault())
                         && ctStyle.getType() == STStyleType.PARAGRAPH) {
                     defaultParaStyleId = ctStyle.getStyleId();
                 }

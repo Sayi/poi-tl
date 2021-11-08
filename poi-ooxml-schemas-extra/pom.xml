@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-ooxml-schemas-extra</artifactId>
-	<version>4.1.2</version>
+	<version>5.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>poi-ooxml-schemas-extra</name>
@@ -58,16 +58,16 @@
 	</distributionManagement>
 
 	<dependencies>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
+			<version>5.1.0</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
+			<version>5.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
