@@ -142,7 +142,7 @@ public enum PictureType {
         }
         String str = new String(bytes);
         // TODO better compare
-        if (str.substring(0, 100).indexOf("<svg") != -1) {
+        if (str.substring(0, 100).indexOf("<svg") != -1 || str.substring(str.length() - 10).indexOf("</svg>") != -1) {
             return SVG;
         }
         throw new IllegalArgumentException("Unable to identify the picture type from byte");

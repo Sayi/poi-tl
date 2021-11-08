@@ -61,7 +61,7 @@ public class PictureRenderTest {
         // base64
         datas.put("base64Image", Pictures.ofBase64(imageBase64, PictureType.PNG).size(100, 100).center().create());
         // svg
-        datas.put("svgPicture", Pictures.ofUrl("https://img.shields.io/badge/jdk-1.6%2B-orange.svg").create());
+        datas.put("svgPicture", Pictures.ofUrl("http://deepoove.com/images/%E8%8C%84%E5%AD%90.svg").create());
         // alt attribute for not exist image
         datas.put("image", Pictures.ofLocal("not_exist_image.png").altMeta("No Image!").create());
 
@@ -88,7 +88,7 @@ public class PictureRenderTest {
         assertEquals(PictureType.PNG,
                 PictureType.suggestFileType(ByteUtils.getUrlByteArray("http://deepoove.com/images/icecream.png")));
         assertEquals(PictureType.SVG, PictureType
-                .suggestFileType(ByteUtils.getUrlByteArray("https://img.shields.io/badge/jdk-1.6%2B-orange.svg")));
+                .suggestFileType(ByteUtils.getUrlByteArray("http://deepoove.com/images/%E8%8C%84%E5%AD%90.svg")));
     }
 
 }
