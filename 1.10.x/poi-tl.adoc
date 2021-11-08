@@ -22,6 +22,11 @@ v1.10.0
 // :stylesheet: asciidoctor.css
 // :linkcss:
 
+[example]
+--
+关于文档：poi-tl v1.10.x是构建在Apache poi4.1.2和JDK1.8+上的版本，会持续进行优化和bugfix，如果希望使用Apache poi5.1.0+，推荐使用poi-tl最新版本：link:http://deepoove.com/poi-tl[poi-tl 最新文档, window=_blank]。
+--
+
 poi-tl（poi template language）是Word模板引擎，使用Word模板和数据创建很棒的Word文档。
 
 [quote]

@@ -77,8 +77,10 @@ poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你�
 * Apache POI 5.1.0
 * JDK 1.8+
 
+Apache POI已经进入5.1.0+时代，如果你仍希望使用低版本的Apache POI(3.16+、4.1.2)，请查阅历史版本。
+
 == 历史版本
-点击下方链接查阅poi-tl历史版本文档，其中v1.5.x是构建在Apache poi3.16+和JDK1.6+上的版本，适用于无法升级poi的古老项目。
+点击下方链接查阅poi-tl历史版本文档，其中v1.5.x是构建在Apache POI3.16+和JDK1.6+上的版本，适用于无法升级poi的古老项目。
 
 * link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]
 * link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]
