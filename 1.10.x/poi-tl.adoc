@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.10.0
+v1.10.1
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -98,13 +98,13 @@ poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你�
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.0</version>
+  <version>1.10.1</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-implementation 'com.deepoove:poi-tl:1.10.0'
+implementation 'com.deepoove:poi-tl:1.10.1'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 
