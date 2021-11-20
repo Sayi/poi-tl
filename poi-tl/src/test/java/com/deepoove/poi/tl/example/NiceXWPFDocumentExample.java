@@ -2,9 +2,8 @@ package com.deepoove.poi.tl.example;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.tl.example.policy.MyDocxDataRenderPolicy;
+import com.deepoove.poi.policy.NiceXWPFDocumentRenderPolicy;
 import com.deepoove.poi.tl.example.policy.MyUpdateExcelPolicy;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,15 +11,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-@DisplayName("Example for Resume")
-public class ResumeExample {
+@DisplayName("Example for NiceXWPFDocument")
+public class NiceXWPFDocumentExample {
 
-    ResumeData datas = new ResumeData();
+	NiceXWPFDocumentData datas = new NiceXWPFDocumentData();
 
     @BeforeEach
     public void init() {
-
-        // 模板文档循环合并
         List<ExperienceData> experiences = new ArrayList<ExperienceData>();
         ExperienceData data0 = new ExperienceData();
         data0.setCompany("香港微软");
@@ -36,48 +33,38 @@ public class ResumeExample {
 
         experiences.add(data0);
         experiences.add(data1);
-        experiences.add(data0);
-        experiences.add(data1);
 
 	    List<SonData> sonDataList = new ArrayList<>();
 	    SonData sonData = new SonData();
 	    sonData.setCode("SON1");
 	    sonData.setExperienceData(experiences);
+
 	    SonData sonData2 = new SonData();
 	    sonData2.setCode("SON2");
-	    sonData2.setExperienceData(experiences);
+
+	    List<ExperienceData> experiences2 = new ArrayList<ExperienceData>();
+	    experiences2.add(data1);
+	    experiences2.add(data0);
+	    sonData2.setExperienceData(experiences2);
 
 	    sonDataList.add(sonData);
 	    sonDataList.add(sonData2);
 
-	    List<NiceXWPFDocument> riskList = new ArrayList<>();
-	    for (SonData data : sonDataList) {
-		    Configure config = Configure.builder()
-			    .bind("experienceData", new MyUpdateExcelPolicy())
-			    .build();
-		    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/resume/segment.docx", config)
-			    .render(data);
 
-		    NiceXWPFDocument xwpfDocument = template.getXWPFDocument();
-		    riskList.add(xwpfDocument);
-//		    try {
-//			    template.writeToFile("out_example_resume_"+data.getCode()+".docx");
-//		    } catch (IOException e) {
-//			    e.printStackTrace();
-//		    }
-	    }
-
-	    datas.setRiskList(riskList);
+	    datas.setSonDataList(sonDataList);
     }
 
     @Test
-    public void testResumeExample() throws Exception {
-	    Configure config = Configure.builder()
-		    .bind("riskList", new MyDocxDataRenderPolicy())
+    public void testExample() throws Exception {
+	    Configure sonConfig = Configure.builder()
+		    .bind("experienceData", new MyUpdateExcelPolicy())
 		    .build();
-	    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/resume/resume.docx", config)
+	    Configure config = Configure.builder()
+		    .bind("sonDataList", new NiceXWPFDocumentRenderPolicy("src/test/resources/nice/son.docx", sonConfig))
+		    .build();
+	    XWPFTemplate template = XWPFTemplate.compile("src/test/resources/nice/main.docx", config)
 		    .render(datas);
-        template.writeToFile("out_example_resume.docx");
+        template.writeToFile("out_example_nice.docx");
     }
 
 }
