@@ -89,7 +89,16 @@ public class NiceXWPFDocumentRenderPolicy extends AbstractRenderPolicy<Object> {
 
 	private void renderByTemplate(List<NiceXWPFDocument> xwpfDocumentList, Object data) {
 		XWPFTemplate copyOfTemplate = XWPFTemplate.compile(new ByteArrayInputStream(inputStreamBytes), config);
-		xwpfDocumentList.add(copyOfTemplate.render(data).getXWPFDocument());
+		XWPFTemplate xwpfTemplate = copyOfTemplate.render(data);
+		try {
+			// 这里采用 write 的方式得到 NiceXWPFDocument, 因为 write 时会触发一些 POIXMLDocumentPart (如 chart 等) 的更新
+			//      也就是说, 如果不触发, 那么可能代码操作了一些内存的数据, 但是这些数据不会实时写到 word 的对于的 packagePart 里, 需要 commit 才行.
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(40960);
+			xwpfTemplate.write(byteArrayOutputStream);
+			xwpfDocumentList.add(new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
+		} catch (Exception e) {
+			logger.error("renderByTemplate error "+ e.getMessage(), e);
+		}
 	}
 
 

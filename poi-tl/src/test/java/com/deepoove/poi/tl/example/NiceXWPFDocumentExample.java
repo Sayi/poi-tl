@@ -2,6 +2,8 @@ package com.deepoove.poi.tl.example;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.ChartSingleSeriesRenderData;
+import com.deepoove.poi.data.Charts;
 import com.deepoove.poi.policy.NiceXWPFDocumentRenderPolicy;
 import com.deepoove.poi.tl.example.policy.MyUpdateExcelPolicy;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,24 +36,31 @@ public class NiceXWPFDocumentExample {
         experiences.add(data0);
         experiences.add(data1);
 
+	    List<ExperienceData> experiences2 = new ArrayList<ExperienceData>();
+	    experiences2.add(data1);
+	    experiences2.add(data0);
+
+	    ChartSingleSeriesRenderData pie = Charts.ofPie("111", new String[]{"研发工程师", "BUG工程师"})
+		    .series("职位占比", new Integer[]{20, 30})
+		    .create();
+
 	    List<SonData> sonDataList = new ArrayList<>();
 	    SonData sonData = new SonData();
 	    sonData.setCode("SON1");
 	    sonData.setExperienceData(experiences);
+		sonData.setPie(pie);
 
 	    SonData sonData2 = new SonData();
 	    sonData2.setCode("SON2");
-
-	    List<ExperienceData> experiences2 = new ArrayList<ExperienceData>();
-	    experiences2.add(data1);
-	    experiences2.add(data0);
 	    sonData2.setExperienceData(experiences2);
+		sonData2.setPie(pie);
 
 	    sonDataList.add(sonData);
 	    sonDataList.add(sonData2);
 
 
 	    datas.setSonDataList(sonDataList);
+		datas.setPie(pie);
     }
 
     @Test

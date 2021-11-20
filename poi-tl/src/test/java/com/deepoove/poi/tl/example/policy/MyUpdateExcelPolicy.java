@@ -9,6 +9,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,9 +32,10 @@ public class MyUpdateExcelPolicy extends AbstractRenderPolicy<List<ExperienceDat
 		}
 		List<PackagePart> allEmbeddedParts = doc.getAllEmbeddedParts();
 		for (PackagePart allEmbeddedPart : allEmbeddedParts) {
+			String extension = allEmbeddedPart.getPartName().getExtension();
 			if (
-				allEmbeddedPart.getPartName().getExtension().equals("xls")
-				|| allEmbeddedPart.getPartName().getExtension().equals("xlsx")
+				extension.equals("xls")
+				|| extension.equals("xlsx")
 			) {
 				try (
 					InputStream inputStream = allEmbeddedPart.getInputStream();
@@ -51,6 +55,21 @@ public class MyUpdateExcelPolicy extends AbstractRenderPolicy<List<ExperienceDat
 					}
 
 					workbook.write(outputStream);
+				}
+			} else if (extension.equals("docx")) {
+				try (
+					InputStream inputStream = allEmbeddedPart.getInputStream();
+					OutputStream outputStream = allEmbeddedPart.getOutputStream()
+				) {
+					XWPFDocument xwpfDocument = new XWPFDocument(inputStream);
+					List<XWPFParagraph> paragraphs = xwpfDocument.getParagraphs();
+					for (XWPFParagraph paragraph : paragraphs) {
+						List<XWPFRun> runs = paragraph.getRuns();
+						for (XWPFRun run : runs) {
+							run.setText("hello", 0);
+						}
+					}
+					xwpfDocument.write(outputStream);
 				}
 			}
 		}

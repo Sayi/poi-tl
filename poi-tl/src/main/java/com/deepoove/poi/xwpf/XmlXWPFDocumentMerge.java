@@ -17,6 +17,7 @@ package com.deepoove.poi.xwpf;
 
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
+import org.apache.poi.ooxml.POIXMLFactory;
 import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.ooxml.util.POIXMLUnits;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -386,17 +387,16 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 			map.put(relationship.getId(), relationshipNew.getId());
 		}
 
-		String typeOfpackage = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/package";
-		mergePackageByRelationType(map, source, merged, typeOfpackage, XWPFRelation.getInstance(typeOfpackage));
+		// todo 即使添加的是 word, 其 Relation 也是 如下 typeOfPackage 的值, 因此导致添加的 word 因文件名与 Relation 高度关联造成后缀对不上, 这会使生成的 docx 里的对应的 word 图标无法点击
+		String typeOfPackage = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/package";
+		mergePackageByRelationType(map, source, merged, typeOfPackage, XWPFRelation.getInstance(typeOfPackage), XWPFFactory.getInstance());
 
-//		String typeOfObject = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject";
-//		mergePackageByRelationType(map, source, merged, typeOfObject, XSSFRelation.getInstance(typeOfObject));
 		return map;
 	}
 
 	private final Map<String, Integer> nameIndexMap = new HashMap<>(8);
 
-	private void mergePackageByRelationType(Map<String, String> map, NiceXWPFDocument source, NiceXWPFDocument merged, String relationshipType, POIXMLRelation xwpfRelation) throws InvalidFormatException, IOException {
+	private void mergePackageByRelationType(Map<String, String> map, NiceXWPFDocument source, NiceXWPFDocument merged, String relationshipType, POIXMLRelation xwpfRelation, POIXMLFactory factory) throws InvalidFormatException, IOException {
 		PackagePart packagePart = merged.getPackagePart();
 		PackageRelationshipCollection packageRelationships = packagePart.getRelationshipsByType(relationshipType);
 		if (packageRelationships==null || packageRelationships.size()==0) {
@@ -408,7 +408,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 			String relationshipId = relationship.getId();
 			PackagePart mergedPart = packagePart.getRelatedPart(relationship);
 
-			POIXMLDocumentPart newDocumentPart = source.createRelationship(xwpfRelation, XWPFFactory.getInstance(), getNameIndex(xwpfRelation));
+			POIXMLDocumentPart newDocumentPart = source.createRelationship(xwpfRelation, factory, getNameIndex(xwpfRelation));
 			newDocumentPart.setCommitted(true);
 			PackagePart newPackagePart = newDocumentPart.getPackagePart();
 			writeFromIn(mergedPart.getInputStream(), newPackagePart.getOutputStream());

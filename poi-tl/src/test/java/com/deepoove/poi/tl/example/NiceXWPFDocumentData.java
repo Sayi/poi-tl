@@ -1,5 +1,7 @@
 package com.deepoove.poi.tl.example;
 
+import com.deepoove.poi.data.ChartSingleSeriesRenderData;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ import java.util.List;
 public class NiceXWPFDocumentData {
 
 	private List<SonData> sonDataList;
+	private ChartSingleSeriesRenderData pie;
 
 	public List<SonData> getSonDataList() {
 		return sonDataList;
@@ -17,5 +20,13 @@ public class NiceXWPFDocumentData {
 
 	public void setSonDataList(List<SonData> sonDataList) {
 		this.sonDataList = sonDataList;
+	}
+
+	public ChartSingleSeriesRenderData getPie() {
+		return pie;
+	}
+
+	public void setPie(ChartSingleSeriesRenderData pie) {
+		this.pie = pie;
 	}
 }

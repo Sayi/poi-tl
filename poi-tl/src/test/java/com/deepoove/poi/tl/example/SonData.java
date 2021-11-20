@@ -1,5 +1,7 @@
 package com.deepoove.poi.tl.example;
 
+import com.deepoove.poi.data.ChartSingleSeriesRenderData;
+
 import java.util.List;
 
 /**
@@ -10,6 +12,7 @@ public class SonData {
 
 	private String code;
 	private List<ExperienceData> experienceData;
+	private ChartSingleSeriesRenderData pie;
 
 	public String getCode() {
 		return code;
@@ -25,5 +28,13 @@ public class SonData {
 
 	public void setExperienceData(List<ExperienceData> experienceData) {
 		this.experienceData = experienceData;
+	}
+
+	public ChartSingleSeriesRenderData getPie() {
+		return pie;
+	}
+
+	public void setPie(ChartSingleSeriesRenderData pie) {
+		this.pie = pie;
 	}
 }
