@@ -15,33 +15,21 @@
  */
 package com.deepoove.poi.xwpf;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
 import org.apache.poi.ooxml.util.POIXMLUnits;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.PackageRelationship;
-import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
-import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
-import org.apache.poi.openxml4j.opc.TargetMode;
+import org.apache.poi.openxml4j.opc.*;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.util.*;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
@@ -362,9 +350,10 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
     }
 
     private Map<String, String> mergeHyperlink(NiceXWPFDocument source, NiceXWPFDocument merged)
-            throws InvalidFormatException {
+	    throws InvalidFormatException, IOException {
         Map<String, String> map = new HashMap<String, String>();
-        PackageRelationshipCollection hyperlinks = merged.getPackagePart()
+	    PackagePart packagePart = merged.getPackagePart();
+	    PackageRelationshipCollection hyperlinks = packagePart
                 .getRelationshipsByType(PackageRelationshipTypes.HYPERLINK_PART);
         Iterator<PackageRelationship> iterator = hyperlinks.iterator();
         while (iterator.hasNext()) {
@@ -373,8 +362,44 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                     relationship.getTargetURI().toString(), XWPFRelation.HYPERLINK.getRelation());
             map.put(relationship.getId(), relationshipNew.getId());
         }
-        return map;
+
+	    mergePackageByRelationType(map, source, merged, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/package");
+	    mergePackageByRelationType(map, source, merged, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject");
+	    return map;
     }
+
+	private void mergePackageByRelationType(Map<String, String> map, NiceXWPFDocument source, NiceXWPFDocument merged, String relationshipTypeOfPackage) throws InvalidFormatException, IOException {
+		PackagePart packagePart = merged.getPackagePart();
+		PackageRelationshipCollection packageRelationships = packagePart
+	            .getRelationshipsByType(relationshipTypeOfPackage);
+		Iterator<PackageRelationship> packageRelationshipIterator = packageRelationships.iterator();
+		while (packageRelationshipIterator.hasNext()) {
+			PackageRelationship relationship = packageRelationshipIterator.next();
+			PackagePart mergedPart = packagePart.getRelatedPart(relationship);
+
+			PackagePart sourcePart = source.getPackage().createPart(mergedPart.getPartName(), mergedPart.getContentType());
+			writeFromIn(mergedPart.getInputStream(), sourcePart.getOutputStream());
+			PackageRelationship relationshipNew = source.getPackagePart().addExternalRelationship(
+				relationship.getTargetURI().toString(), relationshipTypeOfPackage);
+
+			String relationshipId = relationship.getId();
+			POIXMLDocumentPart relationById = merged.getRelationById(relationshipId);
+			source.addRelation(relationshipId, XWPFRelation.getInstance(relationshipTypeOfPackage), relationById);
+
+			map.put(relationshipId, relationshipNew.getId());
+		}
+	}
+
+	private void writeFromIn(InputStream inputStream, OutputStream outputStream) throws IOException {
+		int length;
+		byte[] buff = new byte[4096];
+		while ((length = inputStream.read(buff)) != -1) {
+			outputStream.write(buff, 0, length);
+		}
+		outputStream.flush();
+		outputStream.close();
+		inputStream.close();
+	}
 
     private Map<String, String> mergeChart(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException, IOException {
