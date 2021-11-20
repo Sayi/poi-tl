@@ -48,7 +48,7 @@ public class ResumeExample {
 	    sonData2.setExperienceData(experiences);
 
 	    sonDataList.add(sonData);
-//	    sonDataList.add(sonData2);
+	    sonDataList.add(sonData2);
 
 	    List<NiceXWPFDocument> riskList = new ArrayList<>();
 	    for (SonData data : sonDataList) {
