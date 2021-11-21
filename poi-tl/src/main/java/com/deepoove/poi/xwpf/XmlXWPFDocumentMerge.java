@@ -336,14 +336,17 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 			List<XWPFStyle> lists = (List<XWPFStyle>) listStyleField.get(stylesMerge);
 			String defaultParaStyleId = null;
 			for (XWPFStyle xwpfStyle : lists) {
+				CTStyle ctStyle = xwpfStyle.getCTStyle();
 				if (styles.styleExist(xwpfStyle.getStyleId())) {
+					if (ctStyle.getName().getVal().startsWith("heading")) {
+						continue;
+					}
 					String id = xwpfStyle.getStyleId();
 					xwpfStyle.setStyleId(UUID.randomUUID().toString().substring(0, 8));
 					styleIdsMap.put(id, xwpfStyle.getStyleId());
 				}
 
 				// fix github issue 499
-				CTStyle ctStyle = xwpfStyle.getCTStyle();
 				if (ctStyle.isSetDefault() && POIXMLUnits.parseOnOff(ctStyle.xgetDefault())
 					&& ctStyle.getType() == STStyleType.PARAGRAPH) {
 					defaultParaStyleId = ctStyle.getStyleId();
