@@ -39,6 +39,14 @@ public class RowStyle implements Serializable {
     private String heightRule;
 
     /**
+     * Specifies that the current row should be repeated at the top each new page on
+     * which the table is displayed. This can be specified for multiple rows to
+     * generate a multi-row header. Note that if the row is not the first row, then
+     * the property will be ignored.
+     */
+    private boolean repeated;
+
+    /**
      * default cell style for all cells in the current row
      */
     private CellStyle defaultCellStyle;
@@ -57,6 +65,14 @@ public class RowStyle implements Serializable {
 
     public void setHeightRule(String heightRule) {
         this.heightRule = heightRule;
+    }
+
+    public boolean isRepeated() {
+        return repeated;
+    }
+
+    public void setRepeated(boolean repeated) {
+        this.repeated = repeated;
     }
 
     public CellStyle getDefaultCellStyle() {
