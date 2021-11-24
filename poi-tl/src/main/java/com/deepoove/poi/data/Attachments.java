@@ -16,9 +16,16 @@
 package com.deepoove.poi.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.exception.ResolverException;
 import com.deepoove.poi.util.ByteUtils;
+import com.deepoove.poi.util.PoitlIOUtils;
 
 /**
  * Factory method to create {@link AttachmentRenderData}
@@ -32,6 +39,30 @@ public class Attachments {
 
     public static AttachmentBuilder ofLocal(String src, AttachmentType fileType) {
         return ofBytes(ByteUtils.getLocalByteArray(new File(src)), fileType);
+    }
+
+    public static AttachmentBuilder ofWord(XWPFDocument src) {
+        try {
+            return ofStream(PoitlIOUtils.docToInputStream(src), AttachmentType.DOCX);
+        } catch (IOException e) {
+            throw new ResolverException("Cannot compile attachment document", e);
+        }
+    }
+
+    public static AttachmentBuilder ofWordTemplate(XWPFTemplate src) {
+        try {
+            return ofStream(PoitlIOUtils.templateToInputStream(src), AttachmentType.DOCX);
+        } catch (IOException e) {
+            throw new ResolverException("Cannot compile attachment document", e);
+        }
+    }
+
+    public static AttachmentBuilder ofWorkbook(XSSFWorkbook src) {
+        try {
+            return ofStream(PoitlIOUtils.docToInputStream(src), AttachmentType.XLSX);
+        } catch (IOException e) {
+            throw new ResolverException("Cannot compile attachment document", e);
+        }
     }
 
     public static AttachmentBuilder ofStream(InputStream inputStream, AttachmentType fileType) {
