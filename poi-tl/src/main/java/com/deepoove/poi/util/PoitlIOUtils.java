@@ -22,15 +22,27 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.ooxml.POIXMLDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.deepoove.poi.XWPFTemplate;
 
 public class PoitlIOUtils {
 
     private static Logger logger = LoggerFactory.getLogger(PoitlIOUtils.class);
 
-    public static InputStream docToInputStream(XWPFDocument doc) throws IOException {
+    public static InputStream docToInputStream(POIXMLDocument doc) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            doc.write(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } finally {
+            closeQuietlyMulti(doc, out);
+        }
+    }
+
+    public static InputStream templateToInputStream(XWPFTemplate doc) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             doc.write(out);
