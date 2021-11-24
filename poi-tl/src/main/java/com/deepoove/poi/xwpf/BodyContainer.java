@@ -211,7 +211,8 @@ public interface BodyContainer extends ParentContext {
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
             boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);
-            if ("".equals(paragraphText) && !havePictures && !havePageBreak) {
+            boolean haveObject = ParagraphUtils.haveObject((XWPFParagraph) parent);
+            if ("".equals(paragraphText) && !havePictures && !havePageBreak && !haveObject) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
                 removeBodyElement(pos);
             }

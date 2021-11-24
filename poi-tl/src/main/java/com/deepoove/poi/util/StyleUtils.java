@@ -214,16 +214,23 @@ public final class StyleUtils {
     public static void styleTableRow(XWPFTableRow row, RowStyle rowStyle) {
         if (null == row || null == rowStyle) return;
         int height = rowStyle.getHeight();
+        CTRow ctRow = row.getCtRow();
+        CTTrPr properties = (ctRow.isSetTrPr()) ? ctRow.getTrPr() : ctRow.addNewTrPr();
         if (0 != height) {
             row.setHeight(height);
-            CTRow ctRow = row.getCtRow();
-            CTTrPr properties = (ctRow.isSetTrPr()) ? ctRow.getTrPr() : ctRow.addNewTrPr();
             CTHeight h = properties.sizeOfTrHeightArray() == 0 ? properties.addNewTrHeight()
                     : properties.getTrHeightArray(0);
             String heightRule = rowStyle.getHeightRule();
             if ("exact".equals(heightRule)) h.setHRule(STHeightRule.EXACT);
             else if ("atleast".equals(heightRule)) h.setHRule(STHeightRule.AT_LEAST);
             else h.setHRule(STHeightRule.AUTO);
+        }
+
+        boolean repeated = rowStyle.isRepeated();
+        if (repeated) {
+            CTOnOff tblHeader = properties.sizeOfTblHeaderArray() == 0 ? properties.addNewTblHeader()
+                    : properties.getTblHeaderArray(0);
+            tblHeader.setVal(XWPFOnOff.ON);
         }
     }
 

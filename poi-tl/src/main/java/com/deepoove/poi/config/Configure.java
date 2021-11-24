@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
@@ -47,6 +48,8 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.RegexUtils;
+import com.deepoove.poi.xwpf.BodyContainer;
+import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * The config of template
@@ -338,7 +341,9 @@ public class Configure implements Cloneable {
     public static class ClearHandler implements ValidErrorHandler {
         @Override
         public void handler(RenderContext<?> context) {
-            context.getRun().setText("", 0);
+            XWPFRun run = context.getRun();
+            BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
+            bodyContainer.clearPlaceholder(run);
         }
     }
 

@@ -132,6 +132,12 @@ public class Rows {
             return this;
         }
 
+        public RowBuilder repeatedHeader() {
+            RowStyle rowStyle = getRowStyle();
+            rowStyle.setRepeated(true);
+            return this;
+        }
+
         public RowBuilder addCell(CellRenderData cell) {
             data.addCell(cell);
             return this;

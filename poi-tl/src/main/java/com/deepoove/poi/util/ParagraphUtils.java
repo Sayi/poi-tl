@@ -69,4 +69,12 @@ public final class ParagraphUtils {
         return false;
     }
 
+    public static boolean haveObject(XWPFParagraph paragraph) {
+        List<XWPFRun> runs = paragraph.getRuns();
+        for (XWPFRun run : runs) {
+            if (CollectionUtils.isNotEmpty(run.getCTR().getObjectList())) return true;
+        }
+        return false;
+    }
+
 }

@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +30,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
+import org.apache.poi.ooxml.POIXMLException;
+import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.usermodel.*;
@@ -42,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.util.ParagraphUtils;
+import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.UnitUtils;
 
 /**
@@ -55,10 +62,38 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
+    protected List<POIXMLDocumentPart> embedds = new ArrayList<POIXMLDocumentPart>();
     protected IdenifierManagerWrapper idenifierManagerWrapper;
     protected boolean adjustDoc = false;
 
     protected Map<XWPFChart, PackagePart> chartMappingPart = new HashMap<>();
+    protected static XWPFRelation DOCUMENT;
+
+    static {
+        try {
+            Constructor<XWPFRelation> constructor = ReflectionUtils.findConstructor(XWPFRelation.class, String.class,
+                    String.class, String.class, POIXMLRelation.NoArgConstructor.class,
+                    POIXMLRelation.PackagePartConstructor.class);
+            DOCUMENT = constructor.newInstance(
+                    new Object[] { "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            POIXMLDocument.PACK_OBJECT_REL_TYPE, "/word/embeddings/Microsoft_Word_#.docx",
+                            new POIXMLRelation.NoArgConstructor() {
+
+                                @Override
+                                public POIXMLDocumentPart init() {
+                                    return new XWPFDocument();
+                                }
+                            }, new POIXMLRelation.PackagePartConstructor() {
+
+                                @Override
+                                public POIXMLDocumentPart init(PackagePart part) throws IOException, XmlException {
+                                    return new XWPFDocument(part.getInputStream());
+                                }
+                            } });
+        } catch (Exception e) {
+            logger.warn("init releation error: {}", e.getMessage());
+        }
+    }
 
     public NiceXWPFDocument() {
         super();
@@ -174,8 +209,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
         PackagePart packagePart = chartMappingPart.getOrDefault(chart, chart.getPackagePart());
         // create relationship in document for new chart
-        RelationPart rp = createRelationship(XWPFRelation.CHART,
-                new XWPFChartFactory(packagePart), chartNumber, false);
+        RelationPart rp = createRelationship(XWPFRelation.CHART, new XWPFChartFactory(packagePart), chartNumber, false);
 
         // initialize xwpfchart object
         XWPFChart xwpfChart = rp.getDocumentPart();
@@ -188,6 +222,43 @@ public class NiceXWPFDocument extends XWPFDocument {
         charts.add(xwpfChart);
         chartMappingPart.put(xwpfChart, packagePart);
         return rp;
+    }
+
+    public String addEmbeddData(byte[] embeddData, int format) throws InvalidFormatException {
+        XWPFRelation relation = 0 == format ? DOCUMENT : XWPFRelation.WORKBOOK;
+
+        int idx = 256 + getRelationIndex(relation);
+        POIXMLDocumentPart embeddPart = createRelationship(relation, XWPFFactory.getInstance(),
+                idx);
+        embedds.add(embeddPart);
+        /* write bytes to new part */
+        PackagePart picDataPart = embeddPart.getPackagePart();
+        try (OutputStream out = picDataPart.getOutputStream()) {
+            out.write(embeddData);
+        } catch (IOException e) {
+            throw new POIXMLException(e);
+        }
+        return getRelationId(embeddPart);
+    }
+
+    private int getRelationIndex(XWPFRelation relation) {
+        int i = 1;
+        for (RelationPart rp : getRelationParts()) {
+            if (rp.getRelationship().getRelationshipType().equals(relation.getRelation())) {
+                i++;
+            }
+        }
+        return i;
+    }
+
+    @Override
+    protected void commit() throws IOException {
+        saveEmbedds();
+        super.commit();
+    }
+
+    private void saveEmbedds() {
+        embedds.forEach(part -> part.setCommitted(true));
     }
 
     public NiceXWPFDocument generate() throws IOException {
