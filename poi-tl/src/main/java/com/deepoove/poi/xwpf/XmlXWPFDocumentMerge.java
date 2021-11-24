@@ -403,9 +403,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
     private Map<String, String> mergeAttachment(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException, IOException {
         Map<String, String> attachmentIdsMap = new HashMap<String, String>();
-        PackageRelationshipCollection imagePart = merged.getPackagePart()
+        PackageRelationshipCollection part = merged.getPackagePart()
                 .getRelationshipsByType(POIXMLDocument.PACK_OBJECT_REL_TYPE);
-        Iterator<PackageRelationship> iterator = imagePart.iterator();
+        Iterator<PackageRelationship> iterator = part.iterator();
         while (iterator.hasNext()) {
             PackageRelationship relationship = iterator.next();
             PackagePart embeddPart = merged.getPackagePart().getRelatedPart(relationship);
