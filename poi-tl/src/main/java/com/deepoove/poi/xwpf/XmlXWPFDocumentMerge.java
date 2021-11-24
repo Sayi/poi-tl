@@ -27,12 +27,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
+import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
 import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
 import org.apache.poi.openxml4j.opc.TargetMode;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
@@ -153,6 +157,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         Map<String, String> externalBlipIdsMap = mergeExternalPicture(source, merged);
         Map<String, String> hyperlinkMap = mergeHyperlink(source, merged);
         Map<String, String> chartIdsMap = mergeChart(source, merged);
+        Map<String, String> attachmentIdsMap = mergeAttachment(source, merged);
 
         String appendString = mergedBody.xmlText(DefaultXmlOptions.OPTIONS_OUTER);
         String addPart = ridSectPr(appendString);
@@ -204,6 +209,14 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         }
         for (String relaId : chartIdsMap.keySet()) {
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"", "r:id=\"" + chartIdsMap.get(relaId) + "\"");
+        }
+
+        // attachment id
+        for (String relaId : attachmentIdsMap.keySet()) {
+            attachmentIdsMap.put(relaId, attachmentIdsMap.get(relaId) + CROSS_REPLACE_STRING);
+        }
+        for (String relaId : attachmentIdsMap.keySet()) {
+            addPart = addPart.replaceAll("r:id=\"" + relaId + "\"", "r:id=\"" + attachmentIdsMap.get(relaId) + "\"");
         }
 
         // numbering numId
@@ -385,6 +398,28 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             map.put(relationId, addChartData.getRelationship().getId());
         }
         return map;
+    }
+
+    private Map<String, String> mergeAttachment(NiceXWPFDocument source, NiceXWPFDocument merged)
+            throws InvalidFormatException, IOException {
+        Map<String, String> attachmentIdsMap = new HashMap<String, String>();
+        PackageRelationshipCollection imagePart = merged.getPackagePart()
+                .getRelationshipsByType(POIXMLDocument.PACK_OBJECT_REL_TYPE);
+        Iterator<PackageRelationship> iterator = imagePart.iterator();
+        while (iterator.hasNext()) {
+            PackageRelationship relationship = iterator.next();
+            PackagePart embeddPart = merged.getPackagePart().getRelatedPart(relationship);
+            String path = relationship.getTargetURI().getPath();
+            if (null == path || (!path.endsWith(".docx") && !path.endsWith(".xlsx"))) continue;
+            try {
+                byte[] byteData = IOUtils.toByteArray(embeddPart.getInputStream());
+                String newId = source.addEmbeddData(byteData, path.endsWith("docx") ? 0 : 1);
+                attachmentIdsMap.putIfAbsent(relationship.getId(), newId);
+            } catch (IOException e) {
+                throw new POIXMLException(e);
+            }
+        }
+        return attachmentIdsMap;
     }
 
     // TODO merge header, footer, pageSect...
