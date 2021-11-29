@@ -41,11 +41,11 @@ poi-tl supports **custom functions (plug-ins)**, functions can be executed anywh
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.11.0-beta</version>
+  <version>1.11.0</version>
 </dependency>
 ```
 
-> NOTE: poi-tl `1.11.0-beta` requires POI version `5.1.0`.
+> NOTE: poi-tl `1.11.0` requires POI version `5.1.0`.
 
 ## Quick start
 Start with a deadly simple example: replace `{{title}}` with "poi-tl template engine".
