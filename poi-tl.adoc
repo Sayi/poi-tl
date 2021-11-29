@@ -1,5 +1,5 @@
 = Poi-tl Documentation
-Sayi <sayi90@163.com>
+Sayi <sayi@apache.org>
 v1.11.0
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
@@ -22,74 +22,70 @@ v1.11.0
 // :stylesheet: asciidoctor.css
 // :linkcss:
 
-poi-tl（poi template language）是Word模板引擎，使用Word模板和数据创建很棒的Word文档。
+poi-tl（poi template language）是Word模板引擎，使用Word模板和数据**创建很棒的Word文档**。
 
 [quote]
 ____
 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 ____
 
+== License
+Apache License 2.0
+
+== 源码
+link:https://github.com/Sayi/poi-tl[GitHub]
+
 == Why poi-tl
 [options="header", stripes=none]
 |===
 | 方案 | 移植性 |  功能性  | 易用性
-| **Poi-tl** | Java跨平台 | Word模板引擎 | 基于Apache POI，更友好的API
-| Apache POI | Java跨平台 | Apache项目，不仅封装了易用的文档API(文本、图片、表格、页眉、页脚、图表等)，也可以在底层直接操作XML结构 | 文档不全，这里有一个教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
-| Freemarker | XML跨平台 | 仅支持文本，很大的局限性 | 不推荐，需要维护XML结构，代码后期不可维护
+| **Poi-tl** | Java跨平台 | Word模板引擎，基于Apache POI，提供更友好的API | 低代码，准备文档模板和数据即可
+| Apache POI | Java跨平台 | Apache项目，封装了常见的文档操作，也可以操作底层XML结构 | 文档不全，这里有一个教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
+| Freemarker | XML跨平台 | 仅支持文本，很大的局限性 | 不推荐，XML结构的代码几乎无法维护
 | OpenOffice | 部署OpenOffice，移植性较差 | - | 需要了解OpenOffice的API
-| HTML浏览器导出 | 依赖浏览器的实现，移植性较差 | HTML不能很好的兼容Word的格式 | -
+| HTML浏览器导出 | 依赖浏览器的实现，移植性较差 | HTML不能很好的兼容Word的格式，样式糟糕 | -
 | Jacob、winlib | Windows平台 | - | 复杂，完全不推荐使用
 |===
 
-[quote]
-____
-**poi-tl**正是一个基于Apache POI的Word模板引擎，并且拥有着让人喜悦的特性。
-____
+CAUTION: **poi-tl**是一个基于Apache POI的Word模板引擎，也是一个免费开源的Java类库，你可以非常方便的加入到你的项目中，并且拥有着让人喜悦的特性。
 
 [cols=",", options="header"]
 |===
-|引擎功能 |描述
-|icon:check-circle[role="green"]文本 |将标签渲染为文本
-|icon:check-circle[role="green"]图片 |将标签渲染为图片
-|icon:check-circle[role="green"]表格 |将标签渲染为表格
-|icon:check-circle[role="green"]列表 |将标签渲染为列表
-|icon:check-circle[role="green"]图表 |条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）等图表渲染
-|icon:check-circle[role="green"]If Condition判断 |隐藏或者显示某些文档内容（包括文本、段落、图片、表格、列表、图表等）
-|icon:check-circle[role="green"]Foreach Loop循环 |循环某些文档内容（包括文本、段落、图片、表格、列表、图表等）
-|icon:check-circle[role="green"]Loop表格行 |循环复制渲染表格的某一行
-|icon:check-circle[role="green"]Loop表格列 |循环复制渲染表格的某一列
-|icon:check-circle[role="green"]Loop有序列表 |支持有序列表的循环，同时支持多级列表
-|icon:check-circle[role="green"]代码高亮 |word中代码块高亮展示，支持26种语言和上百种着色样式
-|icon:check-circle[role="green"]Markdown |将Markdown渲染为word文档
-|icon:check-circle[role="green"]Word批注 |完整的批注功能，创建批注、修改批注等
-|icon:check-circle[role="green"]Word附件 |Word中插入附件
-|icon:check-circle[role="green"]图片替换 |将原有图片替换成另一张图片
-|icon:check-circle[role="green"]书签、锚点、超链接 |支持设置书签，文档内锚点和超链接功能
-|icon:check-circle[role="green"]Expression Language |完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL...
-|icon:check-circle[role="green"]标签定制 |支持自定义标签前后缀
-|icon:check-circle[role="green"]文本框 |文本框内标签支持
-|icon:check-circle[role="green"]样式 |模板即样式，同时代码也可以设置样式
-|icon:check-circle[role="green"]模板嵌套 |模板包含子模板，子模板再包含子模板
-|icon:check-circle[role="green"]合并 |Word合并Merge，也可以在指定位置进行合并
-|icon:check-circle[role="green"]用户自定义函数(插件) |在文档任何位置执行函数
+|Word模板引擎功能 |描述
+|icon:check-circle[role="green"]    文本 |将标签渲染为文本
+|icon:check-circle[role="green"]    图片 |将标签渲染为图片
+|icon:check-circle[role="green"]    表格 |将标签渲染为表格
+|icon:check-circle[role="green"]    列表 |将标签渲染为列表
+|icon:check-circle[role="green"]    图表 |条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）等图表渲染
+|icon:check-circle[role="green"]    If Condition判断 |根据条件隐藏或者显示某些文档内容（包括文本、段落、图片、表格、列表、图表等）
+|icon:check-circle[role="green"]    Foreach Loop循环 |根据集合循环某些文档内容（包括文本、段落、图片、表格、列表、图表等）
+|icon:check-circle[role="green"]    Loop表格行 |循环复制渲染表格的某一行
+|icon:check-circle[role="green"]    Loop表格列 |循环复制渲染表格的某一列
+|icon:check-circle[role="green"]    Loop有序列表 |支持有序列表的循环，同时支持多级列表
+|icon:check-circle[role="green"]    Highlight代码高亮 |word中代码块高亮展示，支持26种语言和上百种着色样式
+|icon:check-circle[role="green"]    Markdown |将Markdown渲染为word文档
+|icon:check-circle[role="green"]    Word批注 |完整的批注功能，创建批注、修改批注等
+|icon:check-circle[role="green"]    Word附件 |Word中插入附件
+|icon:check-circle[role="green"]    Textbox文本框 |文本框内标签支持
+|icon:check-circle[role="green"]    图片替换 |将原有图片替换成另一张图片
+|icon:check-circle[role="green"]    书签、锚点、超链接 |支持设置书签，文档内锚点和超链接功能
+|icon:check-circle[role="green"]    Expression Language |完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL...
+|icon:check-circle[role="green"]    样式 |模板即样式，同时代码也可以设置样式
+|icon:check-circle[role="green"]    模板嵌套 |模板包含子模板，子模板再包含子模板
+|icon:check-circle[role="green"]    合并 |Word合并Merge，也可以在指定位置进行合并
+|icon:check-circle[role="green"]    用户自定义函数(插件) |插件化设计，在文档任何位置执行函数
 |===
-
-[quote]
-____
-poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你的项目中。
-____
-
 
 == 版本
 Apache POI已经进入5.1.0+时代，如果你仍希望使用低版本的Apache POI，请查阅历史版本。
 
-* `当前版本` 1.11.0 Documentation「Apache POI5.1.0+，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]「Apache POI4.1.2，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]「Apache POI4.1.2，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.8.x/[1.8.x Documentation , window=_blank]「Apache POI4.1.2，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.7.x/[1.7.x Documentation , window=_blank]「Apache POI4.0.0+，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]「Apache POI4.0.0+，JDK1.8+」
-* link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]「Apache POI3.16+，JDK1.6+」
+* icon:tags[role="red"] 当前版本 1.11.0 Documentation，Apache POI5.1.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.8.x/[1.8.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.7.x/[1.7.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]，Apache POI3.16+，JDK1.6+
 
 == Getting Started
 === Maven
@@ -458,7 +454,7 @@ TableRenderData表格模型在单元格内可以展示文本和图片，同时�
 
 [TIP]
 ====
-产品需求中表格的布局和样式可能很复杂，可以尝试一些已有表格插件来解决，参见link:#plugin-list[可选插件列表]。
+产品需求中表格的布局和样式可能很复杂，可以尝试一些已有表格插件来解决，参见link:#plugin-list[更多插件列表]。
 
 我们也可以编写插件，完全由自己生成整个表格，前提是需要熟悉Apache POI XWPFTable相关API，但是自由度最高：参见 link:#cus-policy-section[开发一个插件]。
 ====
@@ -644,7 +640,7 @@ Last Dance
 }
 ```
 
-template.docx:
+template.docx(注意：如果标签内要使用运算符，需要开启Spring表达式):
 
 ```
 {{?produces}}
@@ -919,7 +915,7 @@ builder.addPlugin('#', new PictureRenderPolicy());
 这样{{@var}}就变成了表格标签，{{#var}}变成了图片标签，虽然不建议改变默认标签标识，但是从中可以看到poi-tl插件的灵活度，在插件章节中我们将会看到如何自定义自己的标签。
 
 
-=== 标签匹配
+=== 标签正则
 标签默认支持**中文、字母、数字、下划线**的组合，我们可以通过正则表达式来配置标签的规则，比如不允许中文：
 [source, java]
 builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
@@ -928,8 +924,8 @@ builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
 [source, java]
 builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));
 
-=== 标签值计算
-标签值计算是指如何在数据模型中索引标签Key的值，可以完全自定义获取标签值的方式。
+=== 计算标签值
+计算标签值是指如何在数据模型中索引标签Key的值，可以完全自定义获取标签值的方式。
 [source, java]
 ----
 builder.setRenderDataComputeFactory(new RenderDataComputeFactory());
@@ -982,7 +978,7 @@ builder.useSpringEL();
 --
 
 ==== SpringEL作为区块对的条件
-Spring表达式与区块对结合可以实现更强大的功能。
+Spring表达式与区块对结合可以实现更强大的功能，示例如下：
 
 [example]
 --
@@ -1034,7 +1030,7 @@ builder.useSpringEL(true);
 ----
 
 ==== 标签数据类型不合法
-我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法（为空或者是一个错误的数据类型），可以配置模板标签的渲染行为。
+我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法（为NULL或者是一个错误的数据类型），可以配置模板标签的渲染行为。
 
 poi-tl默认的行为会清空标签，如果希望对标签不作任何处理：
 [source, java]
@@ -1303,7 +1299,7 @@ XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx"
 <3> 自定义列表插件
 --
 
-== 可选插件
+== 更多插件
 
 [#plugin-list]
 === 插件列表
@@ -1956,12 +1952,6 @@ template.writeToFile("out_example_swagger.docx");
 没错，一切都是如此简洁：简洁的导出代码 ，简洁的Word模板，甚至生成的Swagger文档都看起来那么简洁，愿一切如你所愿。
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/v1.11.0/poi-tl-plugin-highlight/src/test/java/com/deepoove/poi/plugin/highlight/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
-
-== License
-Apache License 2.0
-
-== 源码
-link:https://github.com/Sayi/poi-tl[GitHub]
 
 == 打赏个小费
 poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎。
