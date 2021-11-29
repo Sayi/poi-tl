@@ -1,6 +1,7 @@
 package com.deepoove.poi.tl.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -65,9 +66,7 @@ public class ConfigELTest {
         paragraph = document.getParagraphArray(1);
         assertEquals(paragraph.getText(), "卅一");
         paragraph = document.getParagraphArray(3);
-        assertEquals(paragraph.getText(), "");
-        paragraph = document.getParagraphArray(4);
-        assertEquals(paragraph.getText(), "");
+        assertNull(paragraph);
 
         assertEquals(document.getAllPictures().size(), 1);
         assertEquals(document.getTables().size(), 1);

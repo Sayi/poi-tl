@@ -2,8 +2,6 @@ package com.deepoove.poi.tl.issue;
 
 import org.junit.jupiter.api.Test;
 
-import com.deepoove.poi.XWPFTemplate;
-
 public class Issue636 {
 
     @Test
