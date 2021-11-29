@@ -57,10 +57,8 @@ public class Issue157 {
         XWPFParagraph paragraph = document.getParagraphArray(0);
         assertEquals(paragraph.getText(), "testTitle");
         paragraph = document.getParagraphArray(1);
-        assertEquals(paragraph.getText(), "");
-        paragraph = document.getParagraphArray(2);
         assertEquals(paragraph.getText(), "老师：t1\n" + "年龄：18");
-        paragraph = document.getParagraphArray(3);
+        paragraph = document.getParagraphArray(2);
         assertEquals(paragraph.getText(), "老师：t2\n" + "年龄：36");
 
         document.close();
