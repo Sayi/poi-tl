@@ -17,6 +17,31 @@ poi-tl is a *"logic-less"* template engine. There is no complicated control stru
 
 poi-tl supports **custom functions (plug-ins)**, functions can be executed anywhere in the Word template, do anything anywhere in the document is the goal of poi-tl.
 
+|Feature |Description|
+| ------------- |-------------|
+|:white_check_mark: text |Render the tag as text|
+|:white_check_mark: Picture |Render the tag as a picture|
+|:white_check_mark: table |Render the tag as a table|
+|:white_check_mark: Numbering |Render the tag as a numbering|
+|:white_check_mark: Chart|Bar chart (3D bar chart), column chart (3D column chart), area chart (3D area chart), line chart (3D line chart), radar chart, pie chart (3D pie Figure) and other chart rendering |
+|:white_check_mark: If Condition |Hide or display certain document content (including text, paragraphs, pictures, tables, lists, charts, etc.) according to conditions|
+|:white_check_mark: Foreach Loop | Loop through certain document content (including text, paragraphs, pictures, tables, lists, charts, etc.) according to the collection|
+|:white_check_mark: Loop table row | Loop to copy a row of the rendered table|
+|:white_check_mark: Loop table column | Loop copy and render a column of the table|
+|:white_check_mark: Loop ordered list |Support the loop of ordered list, and support multi-level list at the same time|
+|:white_check_mark: Highlight code highlighting |Word highlighting of code blocks, supporting 26 languages ​​and hundreds of coloring styles|
+|:white_check_mark: Markdown |Convert Markdown to a word document|
+|:white_check_mark: Word Comments |Complete comment function, create comment, modify comment, etc.|
+|:white_check_mark: Word attachment |Insert attachment in Word|
+|:white_check_mark: Textbox |Tag support in text box|
+|:white_check_mark: Picture replacement |Replace the original picture with another picture|
+|:white_check_mark: bookmarks, anchors, hyperlinks |Support setting bookmarks, anchors and hyperlinks in documents|
+|:white_check_mark: Expression Language |Fully supports SpringEL expressions and can extend more expressions: OGNL, MVEL...|
+|:white_check_mark: Style |The template is the style, and the code can also set the style|
+|:white_check_mark: Template nesting |The template contains sub-templates, and the sub-templates then contain sub-templates|
+|:white_check_mark: Merge |Word merge Merge, you can also merge in the specified position|
+|:white_check_mark: custom functions (plug-ins) | Plug-in design, execute function anywhere in the document|
+
 ## TOC
 * [Maven](#Maven)
 * [Quick start](#Quick-start)
