@@ -15,11 +15,11 @@
  */
 package com.deepoove.poi.xwpf;
 
-import com.deepoove.poi.data.AttachmentType;
-import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.util.ParagraphUtils;
-import com.deepoove.poi.util.ReflectionUtils;
-import com.deepoove.poi.util.UnitUtils;
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.math.BigInteger;
+import java.util.*;
+
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ooxml.POIXMLException;
@@ -36,10 +36,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enu
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.math.BigInteger;
-import java.util.*;
+import com.deepoove.poi.data.NumberingFormat;
+import com.deepoove.poi.util.ParagraphUtils;
+import com.deepoove.poi.util.ReflectionUtils;
+import com.deepoove.poi.util.UnitUtils;
 
 /**
  * Enhanced XWPFDocument
@@ -230,34 +230,21 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
         return getRelationId(embeddPart);
     }
-	/**
-	 * update by caoguangcheng 2021/12/16
-	 * 解决添加的附件在wps下不显示的兼容性问题
-	 * @param doc
-	 * @param embeddData
-	 * @param fileType
-	 * @param contentType
-	 * @param part
-	 * @return
-	 * @throws InvalidFormatException
-	 */
-	public String addEmbeddData(NiceXWPFDocument doc, byte[] embeddData, AttachmentType fileType, String contentType, String part) throws InvalidFormatException,IOException {
-		String embeddId = "";
-		ByteArrayOutputStream bos = null;
-		try {
-			bos = new ByteArrayOutputStream();
-			bos.write(embeddData);
-			PackagePartName partName = PackagingURIHelper.createPartName(part);
-			doc.getPackage().createPart(partName,contentType,bos);
-			PackageRelationship ole = doc.getPackagePart().addRelationship(partName, TargetMode.INTERNAL, POIXMLDocument.PACK_OBJECT_REL_TYPE);
-			embeddId = ole.getId();
-		} finally {
-			if(bos!=null){
-				bos.close();
-			}
-		}
-		return embeddId;
-	}
+
+    public String addEmbeddData(byte[] embeddData, String contentType, String part)
+            throws InvalidFormatException, IOException {
+        PackagePartName partName = PackagingURIHelper.createPartName(part);
+        PackagePart packagePart = getPackage().createPart(partName, contentType);
+
+        try (OutputStream out = packagePart.getOutputStream()) {
+            out.write(embeddData);
+        } catch (IOException e) {
+            throw new POIXMLException(e);
+        }
+        PackageRelationship ole = getPackagePart().addRelationship(partName, TargetMode.INTERNAL,
+                POIXMLDocument.PACK_OBJECT_REL_TYPE);
+        return ole.getId();
+    }
 
     private int getRelationIndex(XWPFRelation relation) {
         int i = 1;

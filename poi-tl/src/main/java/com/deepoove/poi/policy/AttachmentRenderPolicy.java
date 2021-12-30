@@ -15,10 +15,11 @@
  */
 package com.deepoove.poi.policy;
 
-import com.deepoove.poi.data.*;
-import com.deepoove.poi.data.style.PictureStyle;
-import com.deepoove.poi.render.RenderContext;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
+import java.io.StringReader;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
+
 import org.apache.poi.ooxml.POIXMLTypeLoader;
 import org.apache.poi.ooxml.util.DocumentHelper;
 import org.apache.poi.util.Units;
@@ -28,10 +29,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import java.io.StringReader;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
+import com.deepoove.poi.data.*;
+import com.deepoove.poi.data.style.PictureStyle;
+import com.deepoove.poi.render.RenderContext;
+import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * attachment render
@@ -83,20 +84,11 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         super.clearPlaceholder(context, false);
     }
 
-	/**
-	 * update by caoguangcheng 2021/12/16
-	 * 解决添加的附件在wps下不显示的兼容性问题
-	 * shapeId生成可能不唯一问题
-	 * 给附件的图片底部添加文件名，提升用户使用体验
-	 * @param context
-	 * @throws Exception
-	 */
     @Override
     public void doRender(RenderContext<AttachmentRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
         XWPFRun run = context.getRun();
-        //CTObject ctObject = run.getCTR().addNewObject();
-		CTR ctr = run.getCTR();
+        CTR ctr = run.getCTR();
 
         // Only one shapetype is needed
         String shapeTypeXml = "";
@@ -105,23 +97,25 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
             shapeTypeXml = SHAPE_TYPE_XML;
         }
 
-		String uuidRandom = UUID.randomUUID().toString().replace("-","")+ ThreadLocalRandom.current().nextInt(1024);
-		String shapeId = "_x0000_i20" + uuidRandom;
+        String uuidRandom = UUID.randomUUID().toString().replace("-", "") + ThreadLocalRandom.current().nextInt(1024);
+        String shapeId = "_x0000_i20" + uuidRandom;
 
         AttachmentRenderData data = context.getData();
         AttachmentType fileType = data.getFileType();
         byte[] attachment = data.getAttachment();
 
-		String contentType = "";
-		String part = "";
-		if(fileType == AttachmentType.DOCX){
-			contentType = WORD_CONTENTTYPE;
-			part = "/word/embeddings/word" + uuidRandom + ".docx";
-		}else{
-			contentType = EXCEL_CONTENTTYPE;
-			part = "/word/embeddings/excel" + uuidRandom + ".xlsx";
-		}
-        String progId = fileType == AttachmentType.DOCX ? WORD_DOCUMENT_12 : EXCEL_SHEET_12;
+        String contentType = "";
+        String part = "";
+        String progId = "";
+        if (fileType == AttachmentType.DOCX) {
+            progId = WORD_DOCUMENT_12;
+            contentType = WORD_CONTENTTYPE;
+            part = "/word/embeddings/word" + uuidRandom + ".docx";
+        } else {
+            progId = EXCEL_SHEET_12;
+            contentType = EXCEL_CONTENTTYPE;
+            part = "/word/embeddings/excel" + uuidRandom + ".xlsx";
+        }
         PictureRenderData icon = data.getIcon();
         if (null == icon) {
             icon = Pictures.ofBase64(fileType == AttachmentType.DOCX ? docxIcon : xlsxIcon, PictureType.PNG)
@@ -142,7 +136,7 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
 
         String imageRId = doc.addPictureData(image, pictureType.type());
         //String embeddId = doc.addEmbeddData(attachment, fileType.ordinal());
-		String embeddId = doc.addEmbeddData(doc,attachment,fileType,contentType,part);
+        String embeddId = doc.addEmbeddData(attachment, contentType, part);
 
         String wObjectXml = "<w:object xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                 + "             xmlns:v=\"urn:schemas-microsoft-com:vml\""
@@ -160,9 +154,8 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
                 + "                    </o:OLEObject>" 
                 + "            </w:object>";
 
-        //ctObject.set(XmlToken.Factory.parse(wObjectXml));
-		Document document = DocumentHelper.readDocument(new InputSource(new StringReader(wObjectXml)));
-		ctr.set(XmlObject.Factory.parse(document.getDocumentElement(), POIXMLTypeLoader.DEFAULT_XML_OPTIONS));
+        Document document = DocumentHelper.readDocument(new InputSource(new StringReader(wObjectXml)));
+        ctr.set(XmlObject.Factory.parse(document.getDocumentElement(), POIXMLTypeLoader.DEFAULT_XML_OPTIONS));
     }
 
 }
