@@ -15,59 +15,24 @@
  */
 package com.deepoove.poi.xwpf;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.openxml4j.opc.*;
 import org.apache.poi.util.IOUtils;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFactory;
-import org.apache.poi.xwpf.usermodel.XWPFNumbering;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CommentsDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHint;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STNumberFormat.Enum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -295,7 +260,22 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
         return getRelationId(embeddPart);
     }
-    
+
+    public String addEmbeddData(byte[] embeddData, String contentType, String part)
+            throws InvalidFormatException, IOException {
+        PackagePartName partName = PackagingURIHelper.createPartName(part);
+        PackagePart packagePart = getPackage().createPart(partName, contentType);
+
+        try (OutputStream out = packagePart.getOutputStream()) {
+            out.write(embeddData);
+        } catch (IOException e) {
+            throw new POIXMLException(e);
+        }
+        PackageRelationship ole = getPackagePart().addRelationship(partName, TargetMode.INTERNAL,
+                POIXMLDocument.PACK_OBJECT_REL_TYPE);
+        return ole.getId();
+    }
+
     @Override
     protected void commit() throws IOException {
         saveEmbedds();
