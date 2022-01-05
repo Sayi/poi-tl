@@ -18,38 +18,21 @@ package com.deepoove.poi.xwpf;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
 import org.apache.poi.ooxml.POIXMLException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.openxml4j.opc.PackageRelationship;
-import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
-import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
-import org.apache.poi.openxml4j.opc.TargetMode;
+import org.apache.poi.openxml4j.opc.*;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
     private static final String CROSS_REPLACE_STRING = "@PoiTL@";
-    private static ThreadLocal<Map<String, String>> styleCacheThreadLocal = new ThreadLocal<Map<String, String>>();
 
     public XmlXWPFDocumentMerge() {
     }
@@ -73,11 +56,15 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
     private String truncatedOverlapWP(CTBody body) {
         String xmlText = body.xmlText(DefaultXmlOptions.OPTIONS_INNER);
-        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>").replaceAll("<w:p><w:p\\s", "<w:p ")
-                .replaceAll("<w:p><w:tbl>", "<w:tbl>").replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
+        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>")
+                .replaceAll("<w:p><w:p\\s", "<w:p ")
+                .replaceAll("<w:p><w:tbl>", "<w:tbl>")
+                .replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
 
-        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>").replaceAll("</w:p></w:p>", "</w:p>")
-                .replaceAll("</w:tbl></w:p>", "</w:tbl>").replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
+        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
+                .replaceAll("</w:p></w:p>", "</w:p>")
+                .replaceAll("</w:tbl></w:p>", "</w:tbl>")
+                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
                 .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
         return xmlText;
     }
@@ -101,23 +88,22 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         NiceXWPFDocument next = iterator.next();
 
         // apply style merge once
-        styleCacheThreadLocal.set(mergeStyles(source, next));
-        try {
-            // apply namespaces merge once
-            mergeNamespaces(source, next);
-            do {
-                addParts.add(createMergeableString(source, next));
-                try {
-                    next.close();
-                } catch (Exception e) {
-                    logger.warn("close merged doc failed!", e);
-                }
-                if (iterator.hasNext()) next = iterator.next();
-                else break;
-            } while (true);
-        } finally {
-            styleCacheThreadLocal.remove();
-        }
+        Map<String, String> mergeStyles = mergeStyles(source, next);
+        // apply namespaces merge once
+        mergeNamespaces(source, next);
+        do {
+            addParts.add(createMergeableString(source, next, mergeStyles));
+            try {
+                next.close();
+            } catch (Exception e) {
+                logger.warn("close merged doc failed!", e);
+            }
+            if (iterator.hasNext())
+                next = iterator.next();
+            else
+                break;
+        } while (true);
+
         return addParts;
     }
 
@@ -143,12 +129,13 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 return true;
             } else if (newCursor.hasNextToken()) {
                 newCursor.toNextToken();
-            } else return false;
+            } else
+                return false;
         } while (true);
     }
 
-    private String createMergeableString(NiceXWPFDocument source, NiceXWPFDocument merged)
-            throws InvalidFormatException, IOException {
+    private String createMergeableString(NiceXWPFDocument source, NiceXWPFDocument merged,
+            Map<String, String> styleIdsMap) throws InvalidFormatException, IOException {
         CTBody mergedBody = merged.getDocument().getBody();
         // TODO For the same style, reduce the number of merges
         // Map<String, String> styleIdsMap = mergeStyles(docMerge);
@@ -163,7 +150,6 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         String addPart = ridSectPr(appendString);
 
         // style
-        Map<String, String> styleIdsMap = styleCacheThreadLocal.get();
         for (String styleId : styleIdsMap.keySet()) {
             addPart = addPart
                     .replaceAll("<w:pStyle\\sw:val=\"" + styleId + "\"",
@@ -267,8 +253,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         while (iterator.hasNext()) {
             PackageRelationship relationship = iterator.next();
             if (relationship.getTargetMode() == TargetMode.EXTERNAL) {
-                PackageRelationship relationshipNew = source.getPackagePart().addExternalRelationship(
-                        relationship.getTargetURI().toString(), XWPFRelation.IMAGES.getRelation());
+                PackageRelationship relationshipNew = source.getPackagePart()
+                        .addExternalRelationship(relationship.getTargetURI().toString(),
+                                XWPFRelation.IMAGES.getRelation());
                 blipIdsMap.putIfAbsent(relationship.getId(), relationshipNew.getId());
             }
         }
@@ -341,14 +328,14 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                     xwpfStyle.setStyleId(UUID.randomUUID().toString().substring(0, 8));
                     styleIdsMap.put(id, xwpfStyle.getStyleId());
                 }
-                
+
                 // fix github issue 499
                 CTStyle ctStyle = xwpfStyle.getCTStyle();
                 if (ctStyle.isSetDefault() && ctStyle.getDefault() == XWPFOnOff.X_1
                         && ctStyle.getType() == STStyleType.PARAGRAPH) {
                     defaultParaStyleId = ctStyle.getStyleId();
                 }
-                
+
                 if (ctStyle.isSetDefault()) {
                     ctStyle.unsetDefault();
                 }
@@ -361,7 +348,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 }
                 styles.addStyle(xwpfStyle);
             }
-            
+
             if (null != defaultParaStyleId) {
                 final String dpid = defaultParaStyleId;
                 merged.getParagraphs().stream().filter(p -> null == p.getStyle()).forEach(p -> p.setStyle(dpid));
@@ -381,8 +368,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         Iterator<PackageRelationship> iterator = hyperlinks.iterator();
         while (iterator.hasNext()) {
             PackageRelationship relationship = iterator.next();
-            PackageRelationship relationshipNew = source.getPackagePart().addExternalRelationship(
-                    relationship.getTargetURI().toString(), XWPFRelation.HYPERLINK.getRelation());
+            PackageRelationship relationshipNew = source.getPackagePart()
+                    .addExternalRelationship(relationship.getTargetURI().toString(),
+                            XWPFRelation.HYPERLINK.getRelation());
             map.put(relationship.getId(), relationshipNew.getId());
         }
         return map;
