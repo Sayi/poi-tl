@@ -64,12 +64,20 @@ public class RunningRunParagraph {
         this.runs = paragraph.getRuns();
         if (null == runs || runs.isEmpty()) return;
 
-        Matcher matcher = pattern.matcher(paragraph.getParagraphText());
+        Matcher matcher = pattern.matcher(getParagraphText(paragraph));
         if (matcher.find()) {
             refactorParagraph();
         }
 
         buildRunEdge(pattern);
+    }
+
+    private String getParagraphText(XWPFParagraph paragraph) {
+        StringBuilder out = new StringBuilder(64);
+        for (XWPFRun run : runs) {
+            out.append(run.text());
+        }
+        return out.toString();
     }
 
     public List<XWPFRun> refactorRun() {
@@ -88,8 +96,7 @@ public class RunningRunParagraph {
 
             String startText = runs.get(startRunPos).text();
             String endText = runs.get(endRunPos).text();
-            
-            
+
             if (endOffset + 1 >= endText.length()) {
                 // delete the redundant end Run directly
                 if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
@@ -181,7 +188,7 @@ public class RunningRunParagraph {
 
     private void buildRunEdge(Pattern pattern) {
         // find all templates
-        Matcher matcher = pattern.matcher(paragraph.getParagraph().getParagraphText());
+        Matcher matcher = pattern.matcher(getParagraphText(paragraph.getParagraph()));
         while (matcher.find()) {
             pairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
                     new RunEdge(matcher.end(), matcher.group())));
