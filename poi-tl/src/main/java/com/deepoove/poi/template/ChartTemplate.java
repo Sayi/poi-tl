@@ -18,27 +18,15 @@ package com.deepoove.poi.template;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.xddf.usermodel.chart.ChartTypes;
-import org.apache.poi.xddf.usermodel.chart.XDDFArea3DChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFBar3DChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFDoughnutChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFLine3DChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFPie3DChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFPieChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFRadarChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFScatterChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFSurface3DChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFSurfaceChartData;
+import org.apache.poi.xddf.usermodel.chart.*;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.processor.Visitor;
+import com.deepoove.poi.util.ChartUtils;
+import com.deepoove.poi.xwpf.XDDFOfPieChartData;
 
 /**
  * chart docx template element: XWPFChart
@@ -60,7 +48,7 @@ public class ChartTemplate extends ElementTemplate {
     }
 
     private ChartTypes readChartType(XWPFChart chart) {
-        List<XDDFChartData> chartSeries = chart.getChartSeries();
+        List<XDDFChartData> chartSeries = ChartUtils.getChartSeries(chart);
         if (CollectionUtils.isEmpty(chartSeries)) {
             return null;
         }
@@ -78,7 +66,7 @@ public class ChartTemplate extends ElementTemplate {
             chartType = ChartTypes.LINE;
         } else if (chartData.getClass() == XDDFLine3DChartData.class) {
             chartType = ChartTypes.LINE3D;
-        } else if (chartData.getClass() == XDDFPieChartData.class) {
+        } else if (chartData.getClass() == XDDFPieChartData.class || chartData.getClass() == XDDFOfPieChartData.class) {
             chartType = ChartTypes.PIE;
         } else if (chartData.getClass() == XDDFPie3DChartData.class) {
             chartType = ChartTypes.PIE3D;

@@ -26,6 +26,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.ChartSingleSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.util.ChartUtils;
 
 /**
  * single series chart
@@ -39,7 +40,7 @@ public class SingleSeriesChartTemplateRenderPolicy
     public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
             throws Exception {
         XWPFChart chart = eleTemplate.getChart();
-        XDDFChartData pie = chart.getChartSeries().get(0);
+        XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
 
         XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
