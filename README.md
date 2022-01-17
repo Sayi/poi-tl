@@ -70,7 +70,7 @@ poi-tl supports **custom functions (plug-ins)**, functions can be executed anywh
 </dependency>
 ```
 
-> NOTE: poi-tl `1.11.x` requires POI version `5.1.0`.
+> NOTE: poi-tl `1.11.x` requires POI version `5.1.0+`.
 
 ## Quick start
 Start with a deadly simple example: replace `{{title}}` with "poi-tl template engine".
