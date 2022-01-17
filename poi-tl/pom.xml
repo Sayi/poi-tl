@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.10.3-SNAPSHOT</version>
+	<version>1.10.3</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>com.deepoove</groupId>
 			<artifactId>poi-ooxml-schemas-extra</artifactId>
-			<version>4.1.4-SNAPSHOT</version>
+			<version>4.1.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
