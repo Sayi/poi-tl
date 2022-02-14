@@ -69,7 +69,7 @@ public class IterableRenderBasicExample {
             {
                 put("mores", mores);
             }
-        }).writeToFile("out_iterable_basic.docx");
+        }).writeToFile("target/out_iterable_basic.docx");
     }
 
 }

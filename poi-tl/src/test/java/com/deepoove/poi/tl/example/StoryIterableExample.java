@@ -67,7 +67,7 @@ public class StoryIterableExample {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/story/iterable_story.docx").render(data);
 
-        FileOutputStream out = new FileOutputStream("out_example_story_iterable.docx");
+        FileOutputStream out = new FileOutputStream("target/out_example_story_iterable.docx");
         template.write(out);
         out.flush();
         out.close();

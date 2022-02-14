@@ -67,7 +67,7 @@ public class PictureRenderTest {
 
         XWPFTemplate.compile("src/test/resources/template/render_picture.docx")
                 .render(datas)
-                .writeToFile("out_render_picture.docx");
+                .writeToFile("target/out_render_picture.docx");
 
     }
 

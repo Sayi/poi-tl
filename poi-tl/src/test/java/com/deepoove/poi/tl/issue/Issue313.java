@@ -28,13 +28,13 @@ public class Issue313 {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("item1", "{{#excel_first}}\n{{#excel_second}}");
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/313.docx").render(map);
-        FileOutputStream out = new FileOutputStream("out_313temp.docx");
+        FileOutputStream out = new FileOutputStream("target/out_313temp.docx");
         template.write(out);
         out.flush();
         out.close();
         template.close();
 
-        excelRender("out_313temp.docx");
+        excelRender("target/out_313temp.docx");
     }
 
     public void excelRender(String temppath) throws Exception {

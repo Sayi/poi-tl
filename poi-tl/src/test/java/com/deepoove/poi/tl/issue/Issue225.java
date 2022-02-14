@@ -32,7 +32,7 @@ public class Issue225 {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/244.docx")
                 .render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_issue_225.docx");
+        FileOutputStream out = new FileOutputStream("target/out_issue_225.docx");
         template.write(out);
         out.flush();
         out.close();

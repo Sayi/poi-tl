@@ -51,7 +51,7 @@ public class ParagraphRenderPolicyTest {
         Configure config = Configure.builder().bind("paragraph", new ParagraphRenderPolicy())
                 .bind("styleParagraph", new ParagraphRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/template/render_paragraph.docx", config).render(data)
-                .writeToFile("out_render_paragraph.docx");
+                .writeToFile("target/out_render_paragraph.docx");
     }
 
 }

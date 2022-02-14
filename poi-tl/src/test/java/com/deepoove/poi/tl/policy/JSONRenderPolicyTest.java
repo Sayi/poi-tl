@@ -44,7 +44,7 @@ public class JSONRenderPolicyTest {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_json.docx", config)
                 .render(datas);
 
-        template.writeToFile("out_render_json.docx");
+        template.writeToFile("target/out_render_json.docx");
 
     }
 }

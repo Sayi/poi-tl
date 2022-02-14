@@ -77,7 +77,7 @@ public class ResumeExample {
     @Test
     public void testResumeExample() throws Exception {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/resume/resume.docx").render(datas);
-        template.writeToFile("out_example_resume.docx");
+        template.writeToFile("target/out_example_resume.docx");
     }
 
 }

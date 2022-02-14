@@ -36,7 +36,7 @@ public class PictureTemplateRenderTest {
                     {
                         put("mores", mores);
                     }
-                }).writeToFile("out_reference_picture_iterable.docx");
+                }).writeToFile("target/out_reference_picture_iterable.docx");
     }
 
     @SuppressWarnings("serial")
@@ -47,7 +47,7 @@ public class PictureTemplateRenderTest {
                     {
                         put("img", Pictures.ofLocal("src/test/resources/sayi.png").size(100, 120).create());
                     }
-                }).writeToFile("out_reference_picture.docx");
+                }).writeToFile("target/out_reference_picture.docx");
     }
 
 }

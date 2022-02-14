@@ -78,7 +78,7 @@ public class ResumeIterableExample {
     public void testResumeExample() throws Exception {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_resume.docx").render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_example_resume_iterable.docx");
+        FileOutputStream out = new FileOutputStream("target/out_example_resume_iterable.docx");
         template.write(out);
         out.flush();
         out.close();

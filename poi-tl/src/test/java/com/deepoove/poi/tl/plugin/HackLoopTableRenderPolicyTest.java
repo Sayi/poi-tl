@@ -63,7 +63,7 @@ public class HackLoopTableRenderPolicyTest {
                 .bind("labors", hackLoopTableRenderPolicy).bind("goods2", hackLoopSameLineTableRenderPolicy)
                 .bind("labors2", hackLoopSameLineTableRenderPolicy).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("out_render_looprow.docx");
+        template.writeToFile("target/out_render_looprow.docx");
     }
 
 }

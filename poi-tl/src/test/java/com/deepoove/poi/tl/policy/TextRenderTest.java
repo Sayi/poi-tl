@@ -65,7 +65,7 @@ public class TextRenderTest {
         };
 
         XWPFTemplate.compile("src/test/resources/template/render_text.docx").render(datas)
-                .writeToFile("out_render_text.docx");
+                .writeToFile("target/out_render_text.docx");
 
     }
 

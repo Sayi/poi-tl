@@ -113,7 +113,7 @@ public class IfTemplateRenderTest {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_if2.docx");
         template.render(datas);
-        template.writeToFile("out_iterable_if_basic.docx");
+        template.writeToFile("target/out_iterable_if_basic.docx");
     }
 
 }

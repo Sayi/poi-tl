@@ -26,7 +26,7 @@ public class SectionTableRenderPolicyTest {
                 .useSpringEL(false)
                 .build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
-        template.writeToFile("out_render_ifcol.docx");
+        template.writeToFile("target/out_render_ifcol.docx");
     }
 
 }

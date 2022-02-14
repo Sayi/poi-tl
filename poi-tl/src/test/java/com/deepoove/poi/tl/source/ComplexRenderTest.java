@@ -122,7 +122,7 @@ public class ComplexRenderTest {
         // 动态持有XWPFTable对象
         template.render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_complex.docx");
+        FileOutputStream out = new FileOutputStream("target/out_complex.docx");
         template.write(out);
         out.flush();
         out.close();

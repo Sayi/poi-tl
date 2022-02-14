@@ -78,7 +78,7 @@ public class NumberingRenderTest {
 
         XWPFTemplate.compile("src/test/resources/template/render_numbering.docx")
                 .render(datas)
-                .writeToFile("out_render_numbering.docx");
+                .writeToFile("target/out_render_numbering.docx");
 
     }
 

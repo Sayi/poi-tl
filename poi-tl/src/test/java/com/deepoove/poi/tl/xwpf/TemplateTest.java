@@ -53,7 +53,7 @@ public class TemplateTest {
                 .addParagraph(Paragraphs.of("Hello, world!").create())
                 .addTable(table)
                 .create();
-        XWPFTemplate.create(data).writeToFile("out_create.docx");
+        XWPFTemplate.create(data).writeToFile("target/out_create.docx");
     }
 
 }

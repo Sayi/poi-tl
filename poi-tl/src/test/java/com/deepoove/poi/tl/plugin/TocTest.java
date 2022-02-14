@@ -74,7 +74,7 @@ public class TocTest {
             }
         }).build();
         XWPFTemplate template = XWPFTemplate.compile("out_example_swagger.docx", config).render(new HashMap<>());
-        template.writeToFile("out_example_swagger_toc.docx");
+        template.writeToFile("target/out_example_swagger_toc.docx");
     }
 
 }

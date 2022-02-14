@@ -28,7 +28,7 @@ public class BookmarkRenderPolicyTest {
         Configure config = Configure.builder().bind("title", bookmarkRenderPolicy).bind("text", bookmarkRenderPolicy)
                 .build();
         XWPFTemplate.compile("src/test/resources/template/render_bookmark.docx", config).render(datas)
-                .writeToFile("out_render_bookmark.docx");
+                .writeToFile("target/out_render_bookmark.docx");
 
     }
 

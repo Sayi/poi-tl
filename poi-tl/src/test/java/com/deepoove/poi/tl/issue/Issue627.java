@@ -38,7 +38,7 @@ public class Issue627 {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("serviceChart", chart);
 
-        XWPFTemplate.compile("src/test/resources/issue/627.docx").render(resultMap).writeToFile("out_issue_627.docx");
+        XWPFTemplate.compile("src/test/resources/issue/627.docx").render(resultMap).writeToFile("target/out_issue_627.docx");
 
     }
 

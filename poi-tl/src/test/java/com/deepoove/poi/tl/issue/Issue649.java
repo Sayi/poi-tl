@@ -30,7 +30,7 @@ public class Issue649 {
                         })
                         .create());
             }
-        }).writeToFile("out_issue_649.docx");
+        }).writeToFile("target/out_issue_649.docx");
 
     }
 

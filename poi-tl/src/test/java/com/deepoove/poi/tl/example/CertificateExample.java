@@ -28,7 +28,7 @@ public class CertificateExample {
         };
 
         XWPFTemplate.compile("src/test/resources/certificate/certificate.docx").render(datas)
-                .writeToFile("out_example_certificate.docx");
+                .writeToFile("target/out_example_certificate.docx");
 
     }
 

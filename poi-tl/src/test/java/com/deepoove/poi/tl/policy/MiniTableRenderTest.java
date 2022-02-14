@@ -73,7 +73,7 @@ public class MiniTableRenderTest {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/render_table.docx", config)
                 .render(datas);
 
-        FileOutputStream out = new FileOutputStream("out_render_table.docx");
+        FileOutputStream out = new FileOutputStream("target/out_render_table.docx");
         template.write(out);
         out.flush();
         out.close();

@@ -20,7 +20,7 @@ public class Issue716 {
                 .create();
         Map<String, Object> param = new HashMap<>();
         param.put("cccc", pie);
-        XWPFTemplate.compile("src/test/resources/issue/716.docx").render(param).writeToFile("out_issue_716.docx");
+        XWPFTemplate.compile("src/test/resources/issue/716.docx").render(param).writeToFile("target/out_issue_716.docx");
 
     }
 

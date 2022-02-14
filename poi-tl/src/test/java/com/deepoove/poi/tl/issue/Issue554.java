@@ -31,7 +31,7 @@ public class Issue554 {
     @Test
     public void test554() throws Exception {
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/554.docx").render(data);
-        FileOutputStream out = new FileOutputStream("out_issue_554.docx");
+        FileOutputStream out = new FileOutputStream("target/out_issue_554.docx");
         template.write(out);
         out.flush();
         out.close();

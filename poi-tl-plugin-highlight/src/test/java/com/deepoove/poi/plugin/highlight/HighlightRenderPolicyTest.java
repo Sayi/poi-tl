@@ -78,7 +78,7 @@ public class HighlightRenderPolicyTest {
 
         Configure config = Configure.builder().bind("code", new HighlightRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/hightlight/highlight_template.docx", config).render(data)
-                .writeToFile("out_highlight.docx");
+                .writeToFile("target/out_highlight.docx");
     }
 
 }

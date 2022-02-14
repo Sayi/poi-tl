@@ -75,7 +75,7 @@ public class IterableRenderPaymentExample {
             {
                 put("orders", orders);
             }
-        }).writeToFile("out_iterable_payment.docx");
+        }).writeToFile("target/out_iterable_payment.docx");
     }
 
 }

@@ -61,7 +61,7 @@ public class PaymentExample {
     public void testPaymentExample() throws Exception {
         Configure config = Configure.builder().bind("detail_table", new DetailTablePolicy()).build();
         XWPFTemplate template = XWPFTemplate.compile(resource, config).render(datas);
-        template.writeToFile("out_example_payment.docx");
+        template.writeToFile("target/out_example_payment.docx");
     }
 
 }
