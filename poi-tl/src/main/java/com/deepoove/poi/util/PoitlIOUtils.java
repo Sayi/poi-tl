@@ -16,13 +16,10 @@
 
 package com.deepoove.poi.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import org.apache.poi.ooxml.POIXMLDocument;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +36,17 @@ public class PoitlIOUtils {
             return new ByteArrayInputStream(out.toByteArray());
         } finally {
             closeQuietlyMulti(doc, out);
+        }
+    }
+
+    public static XSSFWorkbook cloneWorkbook(XSSFWorkbook src, boolean closed) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            src.write(out);
+            return new XSSFWorkbook(new ByteArrayInputStream(out.toByteArray()));
+        } finally {
+            if (closed) closeQuietly(src);
+            closeQuietly(out);
         }
     }
 
