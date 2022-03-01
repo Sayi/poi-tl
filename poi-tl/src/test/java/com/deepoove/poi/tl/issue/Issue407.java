@@ -16,7 +16,7 @@ public class Issue407 {
         datas.put("經理人", "Wang");
         datas.put("會計主管", "Fan");
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/407.docx").render(datas);
-        template.writeToFile("out_issue_407.docx");
+        template.writeToFile("target/out_issue_407.docx");
     }
 
 }

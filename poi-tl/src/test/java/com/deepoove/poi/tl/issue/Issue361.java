@@ -21,7 +21,7 @@ public class Issue361 {
         datas.put("testItems", Arrays.asList("2", "2"));
         Configure config = Configure.builder().buildGramer("${", "}").build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/361.docx", config).render(datas);
-        template.writeToFile("out_issue_361.docx");
+        template.writeToFile("target/out_issue_361.docx");
     }
 
 }

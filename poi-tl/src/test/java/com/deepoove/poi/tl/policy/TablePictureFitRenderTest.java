@@ -33,7 +33,7 @@ public class TablePictureFitRenderTest {
 
         Configure config = Configure.builder().build();
         XWPFTemplate.compile("src/test/resources/template/width_fit.docx", config).render(datas)
-                .writeToFile("out_fit_width.docx");
+                .writeToFile("target/out_fit_width.docx");
 
     }
 }

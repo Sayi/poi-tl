@@ -77,7 +77,7 @@ public class NiceXWPFDocumentTest {
                 new FileInputStream(new File("src/test/resources/template/reference_chart.docx")));
 
         source = source.merge(target1);
-        source.write(new FileOutputStream("out_merge_chart.docx"));
+        source.write(new FileOutputStream("target/out_merge_chart.docx"));
         source.close();
 
     }
@@ -121,7 +121,7 @@ public class NiceXWPFDocumentTest {
                 new FileInputStream(new File("src/test/resources/template/render_include_sect.docx")));
         source = source.merge(target);
 
-        source.write(new FileOutputStream("out_merge_sect.docx"));
+        source.write(new FileOutputStream("target/out_merge_sect.docx"));
         source.close();
     }
 
@@ -146,7 +146,7 @@ public class NiceXWPFDocumentTest {
         addComment.setDate(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
         addComment.createParagraph().createRun().setText("The first comment.");
 
-        document.write(new FileOutputStream("out_create_comments.docx"));
+        document.write(new FileOutputStream("target/out_create_comments.docx"));
         document.close();
     }
 

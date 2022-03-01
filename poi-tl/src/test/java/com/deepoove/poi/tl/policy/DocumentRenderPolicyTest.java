@@ -70,7 +70,7 @@ public class DocumentRenderPolicyTest {
 
         Map<String, Object> data = new HashMap<>();
         data.put("document", document);
-        template.render(data).writeToFile("out_render_document.docx");
+        template.render(data).writeToFile("target/out_render_document.docx");
     }
 
 }

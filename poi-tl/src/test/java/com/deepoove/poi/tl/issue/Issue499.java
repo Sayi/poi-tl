@@ -18,7 +18,7 @@ public class Issue499 {
                 put("experience", Includes.ofLocal("src/test/resources/issue/499_MERGE.docx").create());
             }
         });
-        template.writeToFile("out_issue_499.docx");
+        template.writeToFile("target/out_issue_499.docx");
     }
 
 }

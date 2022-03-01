@@ -70,7 +70,7 @@ public class DocxRenderTest {
         };
 
         XWPFTemplate.compile("src/test/resources/template/render_include.docx").render(datas)
-                .writeToFile("out_render_include.docx");
+                .writeToFile("target/out_render_include.docx");
 
     }
 

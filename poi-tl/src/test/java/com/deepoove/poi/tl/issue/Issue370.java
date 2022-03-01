@@ -42,7 +42,7 @@ public class Issue370 {
 
         result = source.merge(target);
         
-        // result.write(new FileOutputStream("out_merge_test.docx"));
+        // result.write(new FileOutputStream("target/out_merge_test.docx"));
 
         assertEquals(result.getBodyElements().size(), size + target.getBodyElements().size());
 

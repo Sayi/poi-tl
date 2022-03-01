@@ -33,7 +33,7 @@ public class ChartReferencePolicyTest {
         datas.put("doughnutChart", pie);
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx").render(datas);
-        template.writeToFile("out_reference_chart.docx");
+        template.writeToFile("target/out_reference_chart.docx");
     }
 
     private ChartSingleSeriesRenderData createSingleSeriesChart() {

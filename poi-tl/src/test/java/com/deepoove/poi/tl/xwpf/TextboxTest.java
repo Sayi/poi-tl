@@ -48,7 +48,7 @@ public class TextboxTest {
         };
 
         XWPFTemplate.compile("src/test/resources/template/template_textbox.docx").render(data)
-                .writeToFile("out_template_textbox.docx");
+                .writeToFile("target/out_template_textbox.docx");
 
     }
 

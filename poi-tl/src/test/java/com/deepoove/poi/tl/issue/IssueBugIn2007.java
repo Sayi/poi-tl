@@ -23,7 +23,7 @@ public class IssueBugIn2007 {
         model.put("ph", "qweasdzxc");
         
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/issue/bug-in-2007.docx");
-        template.render(model).writeToFile("out_bug-in-2007.docx");
+        template.render(model).writeToFile("target/out_bug-in-2007.docx");
 	}
 	
 }

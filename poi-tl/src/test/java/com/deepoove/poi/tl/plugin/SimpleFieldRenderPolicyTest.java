@@ -22,7 +22,7 @@ public class SimpleFieldRenderPolicyTest {
         Configure config = Configure.builder().bind("field", new SimpleFieldRenderPolicy()).build();
 
         XWPFTemplate template = XWPFTemplate.compile(xwpfDocument, config).render(data);
-        template.writeToFile("out_render_field.docx");
+        template.writeToFile("target/out_render_field.docx");
     }
 
 }

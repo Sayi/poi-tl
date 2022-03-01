@@ -107,7 +107,7 @@ public class AttachmentRenderTest {
 
                     }
                 })
-                .writeToFile("out_render_attachment.docx");
+                .writeToFile("target/out_render_attachment.docx");
 
     }
 

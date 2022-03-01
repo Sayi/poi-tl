@@ -51,7 +51,7 @@ public class OKRExample {
         data.setDate("2020-01-31");
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/okr/OKR.docx").render(data);
-        template.writeToFile("out_example_okr.docx");
+        template.writeToFile("target/out_example_okr.docx");
 
     }
 

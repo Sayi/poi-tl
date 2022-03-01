@@ -30,7 +30,7 @@ public class MarkdownRenderPolicyTest {
         Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/markdown/markdown_template.docx", config)
                 .render(data)
-                .writeToFile("out_markdown.docx");
+                .writeToFile("target/out_markdown.docx");
     }
 
 }

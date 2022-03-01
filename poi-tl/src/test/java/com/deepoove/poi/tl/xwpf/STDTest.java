@@ -44,7 +44,7 @@ public class STDTest {
 
         XWPFTemplate.compile("src/test/resources/template/template_sdt.docx")
                 .render(data)
-                .writeToFile("out_template_sdt.docx");
+                .writeToFile("target/out_template_sdt.docx");
 
     }
 

@@ -48,7 +48,7 @@ public class AnimalExample {
             {
                 put("animals", animals);
             }
-        }).writeToFile("out_example_animal.docx");
+        }).writeToFile("target/out_example_animal.docx");
     }
 
 }

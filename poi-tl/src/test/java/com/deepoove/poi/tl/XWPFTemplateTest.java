@@ -54,7 +54,7 @@ public class XWPFTemplateTest {
                         "Templates, not just templates, but also style templates"));
 
         XWPFTemplate.compile("src/test/resources/template/template.docx").render(datas)
-                .writeToFile("out_template.docx");
+                .writeToFile("target/out_template.docx");
     }
 
 }

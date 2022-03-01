@@ -20,7 +20,7 @@ public class NumberingContinueTest {
                 put("list", Arrays.asList(new MyList(), new MyList()));
             }
         });
-        template.writeToFile("out_iterable_numbering.docx");
+        template.writeToFile("target/out_iterable_numbering.docx");
     }
 
     static class MyList {

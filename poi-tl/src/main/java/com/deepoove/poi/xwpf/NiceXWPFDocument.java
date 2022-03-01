@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.util.ParagraphUtils;
+import com.deepoove.poi.util.PoitlIOUtils;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.UnitUtils;
 
@@ -206,7 +207,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         xwpfChart.setChartIndex(chartNumber);
         // CTChartSpace ctChartSpace = xwpfChart.getCTChartSpace();
         // ctChartSpace.unsetExternalData();
-        xwpfChart.setWorkbook(chart.getWorkbook());
+        xwpfChart.setWorkbook(PoitlIOUtils.cloneWorkbook(chart.getWorkbook(), false));
 
         // add chart object to chart list
         charts.add(xwpfChart);

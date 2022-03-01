@@ -26,7 +26,7 @@ public class Issue656 {
             {
                 put("chart", chart);
             }
-        }).writeToFile("out_issue_656.docx");
+        }).writeToFile("target/out_issue_656.docx");
 
     }
 

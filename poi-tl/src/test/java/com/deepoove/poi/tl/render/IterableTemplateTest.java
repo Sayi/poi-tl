@@ -72,7 +72,7 @@ public class IterableTemplateTest {
         };
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_withstyle.docx");
-        template.render(datas).writeToFile("out_iterable_foreach_withstyle.docx");
+        template.render(datas).writeToFile("target/out_iterable_foreach_withstyle.docx");
     }
 
     @SuppressWarnings("serial")
@@ -219,7 +219,7 @@ public class IterableTemplateTest {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/iterable_foreach_all.docx");
         template.render(datas);
-        template.writeToFile("out_iterable_foreach_all.docx");
+        template.writeToFile("target/out_iterable_foreach_all.docx");
     }
 
 }

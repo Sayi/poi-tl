@@ -73,7 +73,7 @@ public class StoryExample {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/story/story.docx").render(data);
 
-        FileOutputStream out = new FileOutputStream("out_example_story.docx");
+        FileOutputStream out = new FileOutputStream("target/out_example_story.docx");
         template.write(out);
         out.flush();
         out.close();

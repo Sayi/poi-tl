@@ -61,13 +61,13 @@ public class Issue149 {
     @Test
     public void testOldMergeOld() throws Exception {
         source = new NiceXWPFDocument();
-        FileOutputStream out = new FileOutputStream("out_149temp.docx");
+        FileOutputStream out = new FileOutputStream("target/out_149temp.docx");
         source.write(out);
         source.close();
         out.close();
         source.close();
 
-        source = new NiceXWPFDocument(new FileInputStream("out_149temp.docx"));
+        source = new NiceXWPFDocument(new FileInputStream("target/out_149temp.docx"));
         target = new NiceXWPFDocument(new FileInputStream(resource));
         result = source.merge(target);
 
@@ -82,7 +82,7 @@ public class Issue149 {
         target.close();
         result.close();
 
-        new File("out_149temp.docx").deleteOnExit();
+        new File("target/out_149temp.docx").deleteOnExit();
 
     }
 
@@ -128,13 +128,13 @@ public class Issue149 {
     @Test
     public void testNewMergeNew2() throws Exception {
         target = new NiceXWPFDocument();
-        FileOutputStream out = new FileOutputStream("out_149temp1.docx");
+        FileOutputStream out = new FileOutputStream("target/out_149temp1.docx");
         target.write(out);
         target.close();
         out.close();
         target.close();
 
-        target = new NiceXWPFDocument(new FileInputStream("out_149temp1.docx"));
+        target = new NiceXWPFDocument(new FileInputStream("target/out_149temp1.docx"));
 
         source = new NiceXWPFDocument();
         result = source.merge(target);
@@ -146,7 +146,7 @@ public class Issue149 {
         target.close();
         result.close();
 
-        new File("out_149temp1.docx").deleteOnExit();
+        new File("target/out_149temp1.docx").deleteOnExit();
 
     }
 

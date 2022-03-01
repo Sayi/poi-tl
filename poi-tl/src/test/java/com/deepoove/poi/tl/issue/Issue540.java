@@ -39,7 +39,7 @@ public class Issue540 {
                                         .create());
                     }
                 });
-        template.writeToFile("out_issue_540.docx");
+        template.writeToFile("target/out_issue_540.docx");
     }
 
 }

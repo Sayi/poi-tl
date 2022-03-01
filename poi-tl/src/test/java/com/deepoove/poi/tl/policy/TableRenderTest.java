@@ -68,7 +68,7 @@ public class TableRenderTest {
         Configure config = Configure.builder().bind("table", new TableRenderPolicy())
                 .bind("complex_table", new TableRenderPolicy()).bind("no_data_table", new TableRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/template/render_tablev2.docx", config).render(datas)
-                .writeToFile("out_render_tablev2.docx");
+                .writeToFile("target/out_render_tablev2.docx");
 
     }
 }

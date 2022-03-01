@@ -21,14 +21,14 @@ public class Issue657 {
                                 .addSeries("SPP2", new Number[] { 32, 36, 50, 52, 41 })
                                 .create());
             }
-        }).writeToFile("out_issue_657.docx");
+        }).writeToFile("target/out_issue_657.docx");
 
     }
     
     @Test
     public void test6575() throws Exception {
         
-        XWPFTemplate.compile("out_issue_657.docx");
+        XWPFTemplate.compile("target/out_issue_657.docx");
         
     }
 

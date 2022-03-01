@@ -66,7 +66,7 @@ public class CommentRenderPolicyTest {
 
         XWPFTemplate.compile("src/test/resources/template/render_comment.docx", config)
                 .render(data)
-                .writeToFile("out_render_comment.docx");
+                .writeToFile("target/out_render_comment.docx");
     }
 
     @Test
@@ -92,7 +92,7 @@ public class CommentRenderPolicyTest {
 
         // render
         XWPFTemplate.create(documentBuilder.create(), Style.builder().buildFontFamily("微软雅黑").buildFontSize(14f).build())
-                .writeToFile("out_render_comment_YONG.docx");
+                .writeToFile("target/out_render_comment_YONG.docx");
     }
 
     private CommentBuilder newCommentBuilder() {

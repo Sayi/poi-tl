@@ -109,7 +109,7 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         CTTableColumn column = tableColumns.addNewTableColumn();
         // category
         column.setId(1);
-        column.setName(" ");
+        column.setName(sheet.getRow(0).getCell(0).getStringCellValue());
         // series
         for (int i = 0; i < seriesSize; i++) {
             column = tableColumns.addNewTableColumn();

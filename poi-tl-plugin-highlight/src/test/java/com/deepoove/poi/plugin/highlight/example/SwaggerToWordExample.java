@@ -73,7 +73,7 @@ public class SwaggerToWordExample {
                 .build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/swagger/swagger.docx", config)
                 .render(viewData);
-        template.writeToFile("out_example_swagger.docx");
+        template.writeToFile("target/out_example_swagger.docx");
     }
 
     @SuppressWarnings("rawtypes")
