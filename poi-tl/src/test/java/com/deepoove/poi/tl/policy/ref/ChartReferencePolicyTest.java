@@ -32,6 +32,9 @@ public class ChartReferencePolicyTest {
         datas.put("pieChart", pie);
         datas.put("doughnutChart", pie);
 
+        ChartSingleSeriesRenderData scatter = createSingleSeriesScatterChart();
+        datas.put("scatterChart", scatter);
+
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx").render(datas);
         template.writeToFile("target/out_reference_chart.docx");
     }
@@ -42,13 +45,20 @@ public class ChartReferencePolicyTest {
                 .create();
     }
 
+    private ChartSingleSeriesRenderData createSingleSeriesScatterChart() {
+        return Charts.ofSingleSeries("ChartTitle", new String[] { "1", "3", "4", "6", "9", "2", "4" })
+                .series("Y值", new Integer[] { 12, 4, 9, 2, 10, 5, 7 })
+                .create();
+    }
+
     private ChartMultiSeriesRenderData createMultiSeriesChart() {
         return Charts
                 .ofMultiSeries("CustomTitle",
                         new String[] { "中文", "English", "日本語", "português", "中文", "English", "日本語", "português" })
                 .addSeries("countries", new Double[] { 15.0, 6.0, 18.0, 231.0, 150.0, 6.0, 118.0, 31.0 })
                 .addSeries("speakers", new Double[] { 223.0, 119.0, 154.0, 142.0, 223.0, 119.0, 54.0, 42.0 })
-                .addSeries("youngs", new Double[] { 323.0, 89.0, 54.0, 42.0, 223.0, 119.0, 54.0, 442.0 }).create();
+                .addSeries("youngs", new Double[] { 323.0, 89.0, 54.0, 42.0, 223.0, 119.0, 54.0, 442.0 })
+                .create();
     }
 
     private ChartMultiSeriesRenderData createComboChart() {
@@ -57,7 +67,8 @@ public class ChartReferencePolicyTest {
                 .addBarSeries("speakers", new Double[] { 223.0, 119.0, 154.0, 142.0 })
                 .addBarSeries("NewBar", new Double[] { 223.0, 119.0, 154.0, 142.0 })
                 .addLineSeries("youngs", new Double[] { 323.0, 89.0, 54.0, 42.0 })
-                .addLineSeries("NewLine", new Double[] { 123.0, 59.0, 154.0, 42.0 }).create();
+                .addLineSeries("NewLine", new Double[] { 123.0, 59.0, 154.0, 42.0 })
+                .create();
     }
 
 }
