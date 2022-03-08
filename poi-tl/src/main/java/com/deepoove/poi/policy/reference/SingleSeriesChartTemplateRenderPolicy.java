@@ -16,10 +16,12 @@
 package com.deepoove.poi.policy.reference;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFScatterChartData;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -43,7 +45,12 @@ public class SingleSeriesChartTemplateRenderPolicy
         XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
 
-        XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
+        XDDFDataSource<?> categoriesData = null;
+        if (pie instanceof XDDFScatterChartData) {
+            categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
+        } else {
+            categoriesData = createCategoryDataSource(chart, data.getCategories());
+        }
         XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart, seriesDatas.getValues(), 0);
 
         XDDFChartData.Series currentSeries = pie.getSeries(0);
@@ -53,6 +60,10 @@ public class SingleSeriesChartTemplateRenderPolicy
 
         plot(chart, pie);
         setTitle(chart, data.getChartTitle());
+    }
+
+    private Double[] toNumberArray(String[] categories) {
+        return Stream.of(categories).mapToDouble(Double::parseDouble).boxed().toArray(Double[]::new);
     }
 
 }

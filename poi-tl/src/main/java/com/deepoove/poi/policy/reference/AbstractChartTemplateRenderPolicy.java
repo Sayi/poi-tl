@@ -19,12 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xddf.usermodel.chart.XDDFCategoryDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFChart;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
-import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xddf.usermodel.chart.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -49,7 +44,13 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
     protected final int CATEGORY_COL = 0;
     protected final int VALUE_START_COL = 1;
 
-    protected XDDFCategoryDataSource createCategoryDataSource(XWPFChart chart, String[] categories) {
+    protected XDDFDataSource<?> createCategoryDataSource(XWPFChart chart, String[] categories) {
+        return XDDFDataSourcesFactory.fromArray(categories,
+                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
+                CATEGORY_COL);
+    }
+
+    protected XDDFDataSource<?> createCategoryDataSource(XWPFChart chart, Number[] categories) {
         return XDDFDataSourcesFactory.fromArray(categories,
                 chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
                 CATEGORY_COL);
@@ -79,11 +80,9 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             for (int i = 0; i < numOfPoints + 1; i++) {
                 for (int j = orignSize; j > seriesSize; j--) {
                     XSSFRow row = sheet.getRow(i);
-                    if (null == row)
-                        continue;
+                    if (null == row) continue;
                     XSSFCell cell = row.getCell(j);
-                    if (null != cell)
-                        row.removeCell(cell);
+                    if (null != cell) row.removeCell(cell);
                 }
             }
         }
