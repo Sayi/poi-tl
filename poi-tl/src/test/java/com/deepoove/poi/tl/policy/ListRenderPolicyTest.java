@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.FilePictureRenderData;
 import com.deepoove.poi.data.Numberings;
-import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.ListRenderPolicy;
@@ -26,10 +26,10 @@ public class ListRenderPolicyTest {
         final List<Object> list = new ArrayList<Object>() {
             {
                 add(new TextRenderData("ver 0.0.3"));
-                add(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+                add(new FilePictureRenderData(100, 120, "src/test/resources/logo.png"));
                 add(new TextRenderData("9d55b8", "Deeply in love with the things you love, just deepoove."));
                 add(new TextRenderData("ver 0.0.4"));
-                add(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+                add(new FilePictureRenderData(100, 120, "src/test/resources/logo.png"));
                 add(Numberings.ofDecimalParentheses()
                         .addItem("Deeply in love with the things you love, just deepoove.")
                         .addItem("Deeply in love with the things you love, just deepoove.")

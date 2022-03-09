@@ -6,8 +6,8 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.FilePictureRenderData;
 import com.deepoove.poi.data.Numberings;
-import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.Tables;
 import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.tl.source.MyDataModel;
@@ -26,7 +26,7 @@ public class JavaObjectRenderTest {
                 "Minimal Microsoft word(docx) templating with {{template}} in Java. It works by expanding tags in a template using values provided in a JavaMap or JavaObject.");
         obj.setAuthor("Sayi");
         obj.setIntroduce(Texts.of("http://www.deepoove.com").link("http://www.deepoove.com").create());
-        obj.setPortrait(new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+        obj.setPortrait(new FilePictureRenderData(60, 60, "src/test/resources/sayi.png"));
         obj.setSolutionCompare(Tables
                 .of(new String[][] { new String[] { "00", "01", "02" }, new String[] { "10", "11", "12" } }).create());
         obj.setFeature(Numberings.create("Plug-in grammar, add new grammar by yourself",

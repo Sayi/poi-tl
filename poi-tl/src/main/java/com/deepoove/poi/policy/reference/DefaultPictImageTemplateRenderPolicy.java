@@ -15,8 +15,6 @@
  */
 package com.deepoove.poi.policy.reference;
 
-import java.util.function.Supplier;
-
 import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
@@ -33,8 +31,7 @@ public class DefaultPictImageTemplateRenderPolicy
     public void doRender(PictImageTemplate pictImageTemplate, PictureRenderData data, XWPFTemplate template)
             throws Exception {
         CTPictWrapper t = pictImageTemplate.getPicture();
-        Supplier<byte[]> supplier = data.getPictureSupplier();
-        byte[] image = supplier.get();
+        byte[] image = data.readPictureData();
         PictureType pictureType = data.getPictureType();
         if (null == pictureType) {
             pictureType = PictureType.suggestFileType(image);

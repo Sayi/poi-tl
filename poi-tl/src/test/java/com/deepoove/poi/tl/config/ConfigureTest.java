@@ -20,6 +20,7 @@ import com.deepoove.poi.config.Configure.DiscardHandler;
 import com.deepoove.poi.config.ConfigureBuilder;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
@@ -59,7 +60,7 @@ public class ConfigureTest {
         Map<String, Object> datas = new HashMap<String, Object>() {
             {
                 put("title", "Hello, poi tl.");
-                put("text", new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+                put("text", Pictures.ofLocal("src/test/resources/logo.png").size(100, 120).create());
                 put("word", "虽然我是百分号开头，但是我也被自定义成文本了");
             }
         };
@@ -135,7 +136,7 @@ public class ConfigureTest {
             {
                 put("作者姓名", "Sayi");
                 put("作者别名", "卅一");
-                put("头像", new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+                put("头像", Pictures.ofLocal("src/test/resources/sayi.png").size(60, 60).create());
                 put("详情网址", new HyperlinkTextRenderData("http://www.deepoove.com", "http://www.deepoove.com"));
                 put("详情", new HashMap<String, Object>() {
                     {

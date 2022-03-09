@@ -18,7 +18,6 @@ package com.deepoove.poi.policy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.function.Supplier;
 
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -50,11 +49,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<Object> {
 
     @Override
     protected boolean validate(Object data) {
-        if (null == data) return false;
-        if (data instanceof PictureRenderData) {
-            return null != ((PictureRenderData) data).getPictureSupplier();
-        }
-        return true;
+        return null != data;
     }
 
     @Override
@@ -84,8 +79,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<Object> {
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            Supplier<byte[]> supplier = picture.getPictureSupplier();
-            byte[] imageBytes = supplier.get();
+            byte[] imageBytes = picture.readPictureData();
             if (null == imageBytes) {
                 throw new IllegalStateException("Can't read picture byte arrays!");
             }

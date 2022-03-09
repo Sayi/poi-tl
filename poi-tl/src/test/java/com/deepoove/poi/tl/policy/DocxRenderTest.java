@@ -12,8 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.data.FilePictureRenderData;
 import com.deepoove.poi.data.Includes;
-import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.tl.source.DataTest;
 
 @DisplayName("Include Docx Render test case")
@@ -29,7 +29,7 @@ public class DocxRenderTest {
         data1.setB("唐");
         data1.setC("明");
         data1.setD("清");
-        data1.setLogo(new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+        data1.setLogo(new FilePictureRenderData(120, 120, "src/test/resources/sayi.png"));
 
         DataTest data2 = new DataTest();
         data2.setQuestion("康乾盛世是历史上哪个朝代");
@@ -37,7 +37,7 @@ public class DocxRenderTest {
         data2.setB("元");
         data2.setC("清");
         data2.setD("唐");
-        data2.setLogo(new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+        data2.setLogo(new FilePictureRenderData(100, 120, "src/test/resources/logo.png"));
 
         dataList = Arrays.asList(data1, data2);
     }
