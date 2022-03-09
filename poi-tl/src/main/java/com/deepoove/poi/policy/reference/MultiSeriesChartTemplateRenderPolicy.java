@@ -21,14 +21,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFChart;
-import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.*;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData.Series;
-import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
-import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
-import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 
@@ -70,7 +64,12 @@ public class MultiSeriesChartTemplateRenderPolicy
             usedSeriesDatas.addAll(currentSeriesData);
             int currentSeriesSize = currentSeriesData.size();
 
-            XDDFDataSource<?> categoriesData = createCategoryDataSource(chart, data.getCategories());
+            XDDFDataSource<?> categoriesData = null;
+            if (chartData instanceof XDDFScatterChartData) {
+                categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
+            } else {
+                categoriesData = createCategoryDataSource(chart, data.getCategories());
+            }
             for (int i = 0; i < currentSeriesSize; i++) {
                 XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
                         currentSeriesData.get(i).getValues(), valueCol);

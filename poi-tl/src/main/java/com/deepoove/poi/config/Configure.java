@@ -144,12 +144,12 @@ public class Configure implements Cloneable {
         plugin(ChartTypes.LINE, multiSeriesRenderPolicy);
         plugin(ChartTypes.LINE3D, multiSeriesRenderPolicy);
         plugin(ChartTypes.RADAR, multiSeriesRenderPolicy);
+        plugin(ChartTypes.SCATTER, multiSeriesRenderPolicy);
 
         RenderPolicy singleSeriesRenderPolicy = new SingleSeriesChartTemplateRenderPolicy();
         plugin(ChartTypes.PIE, singleSeriesRenderPolicy);
         plugin(ChartTypes.PIE3D, singleSeriesRenderPolicy);
         plugin(ChartTypes.DOUGHNUT, singleSeriesRenderPolicy);
-        plugin(ChartTypes.SCATTER, singleSeriesRenderPolicy);
 
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
         plugin(PictImageTemplate.class, new DefaultPictImageTemplateRenderPolicy());

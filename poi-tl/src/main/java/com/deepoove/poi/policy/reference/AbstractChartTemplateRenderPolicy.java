@@ -17,6 +17,7 @@ package com.deepoove.poi.policy.reference;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xddf.usermodel.chart.*;
@@ -189,6 +190,10 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             chart.setTitleText(title);
             chart.setTitleOverlay(false);
         }
+    }
+
+    protected Double[] toNumberArray(String[] categories) {
+        return Stream.of(categories).mapToDouble(Double::parseDouble).boxed().toArray(Double[]::new);
     }
 
 }
