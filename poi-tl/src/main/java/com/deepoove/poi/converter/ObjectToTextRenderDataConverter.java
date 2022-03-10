@@ -15,19 +15,16 @@
  */
 package com.deepoove.poi.converter;
 
-import com.deepoove.poi.data.RenderData;
+import com.deepoove.poi.data.TextRenderData;
 
-/**
- * Convert <T> to RenderData
- * 
- * @author Sayi
- *
- * @param <T>
- * @param <R>
- */
-@FunctionalInterface
-public interface ToRenderDataConverter<T, R extends RenderData> {
+public class ObjectToTextRenderDataConverter implements ToRenderDataConverter<Object, TextRenderData> {
 
-    R convert(T t);
+    @Override
+    public TextRenderData convert(Object source) {
+        if (null == source) return null;
+        TextRenderData text = source instanceof TextRenderData ? (TextRenderData) source
+                : new TextRenderData(source.toString());
+        return null == text.getText() ? new TextRenderData("") : text;
+    }
 
 }

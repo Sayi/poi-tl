@@ -25,9 +25,9 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.converter.ObjectToPictureRenderDataConverter;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
-import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
 import com.deepoove.poi.exception.RenderException;
@@ -45,36 +45,35 @@ import com.deepoove.poi.xwpf.XWPFRunWrapper;
  * 
  * @author Sayi
  */
-public class PictureRenderPolicy extends AbstractRenderPolicy<Object> {
+public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
+
+    private static final ObjectToPictureRenderDataConverter converter = new ObjectToPictureRenderDataConverter();
 
     @Override
-    protected boolean validate(Object data) {
+    public PictureRenderData cast(Object source) {
+        return converter.convert(source);
+    }
+
+    @Override
+    protected boolean validate(PictureRenderData data) {
         return null != data;
     }
 
     @Override
-    public void doRender(RenderContext<Object> context) throws Exception {
-        Helper.renderPicture(context.getRun(), wrapper(context.getData()));
+    public void doRender(RenderContext<PictureRenderData> context) throws Exception {
+        Helper.renderPicture(context.getRun(), context.getData());
     }
 
     @Override
-    protected void afterRender(RenderContext<Object> context) {
+    protected void afterRender(RenderContext<PictureRenderData> context) {
         clearPlaceholder(context, false);
     }
 
     @Override
-    protected void reThrowException(RenderContext<Object> context, Exception e) {
+    protected void reThrowException(RenderContext<PictureRenderData> context, Exception e) {
         logger.info("Render picture " + context.getEleTemplate() + " error: {}", e.getMessage());
-        String alt = "";
-        if (context.getData() instanceof PictureRenderData) {
-            alt = ((PictureRenderData) context.getData()).getAltMeta();
-        }
+        String alt = context.getData().getAltMeta();
         context.getRun().setText(alt, 0);
-    }
-
-    private static PictureRenderData wrapper(Object object) {
-        if (object instanceof PictureRenderData) return (PictureRenderData) object;
-        return Pictures.of(object.toString()).fitSize().create();
     }
 
     public static class Helper {

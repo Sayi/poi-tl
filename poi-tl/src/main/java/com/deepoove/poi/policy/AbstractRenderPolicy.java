@@ -39,12 +39,16 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("unchecked")
+    public T cast(Object source) {
+        // type safe
+        return (T) source;
+    }
+
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        // type safe
         T model = null;
         try {
-            model = (T) data;
+            model = cast(data);
         } catch (ClassCastException e) {
             throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
         }

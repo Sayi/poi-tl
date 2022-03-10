@@ -78,7 +78,7 @@ public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderD
                     styleRunWithDefaultStyle(fragment, defaultControlStyles);
                     StyleUtils.styleRun(fragment,
                             null == data.getParagraphStyle() ? null : data.getParagraphStyle().getDefaultTextStyle());
-                    TextRenderPolicy.Helper.renderTextRun(fragment, content);
+                    TextRenderPolicy.Helper.renderTextRun(fragment, (TextRenderData)content);
                 } else if (content instanceof PictureRenderData) {
                     PictureRenderPolicy.Helper.renderPicture(fragment, (PictureRenderData) content);
                 } else if (content instanceof CommentRenderData) {
