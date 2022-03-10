@@ -100,8 +100,8 @@ public class DefaultRender implements Render {
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
         int k = 0;
         while (k < elementTemplates.size()) {
-            for (k = 0; k < elementTemplates.size(); k++) {
-                MetaTemplate metaTemplate = elementTemplates.get(k);
+            for (int j = 0; j < elementTemplates.size(); k=++j) {
+                MetaTemplate metaTemplate = elementTemplates.get(j);
                 if (!(metaTemplate instanceof RunTemplate)) continue;
                 RunTemplate runTemplate = (RunTemplate) metaTemplate;
                 policy = runTemplate.findPolicy(template.getConfig());
@@ -116,6 +116,7 @@ public class DefaultRender implements Render {
                 if (current != template.getXWPFDocument()) {
                     current = template.getXWPFDocument();
                     elementTemplates = template.getElementTemplates();
+                    k = 0;
                     break;
                 }
             }
