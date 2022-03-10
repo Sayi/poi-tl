@@ -43,7 +43,7 @@ public class SingleSeriesChartTemplateRenderPolicy
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
-
+        
         XDDFDataSource<?> categoriesData = null;
         if (pie instanceof XDDFScatterChartData) {
             categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
@@ -59,6 +59,7 @@ public class SingleSeriesChartTemplateRenderPolicy
 
         plot(chart, pie);
         setTitle(chart, data.getChartTitle());
+        setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle());
     }
 
 }

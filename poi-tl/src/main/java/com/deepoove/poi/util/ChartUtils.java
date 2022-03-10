@@ -16,13 +16,17 @@
 
 package com.deepoove.poi.util;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTOfPieChart;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTValAx;
 
 import com.deepoove.poi.xwpf.XDDFOfPieChartData;
 
@@ -38,6 +42,17 @@ public final class ChartUtils {
             series.add(new XDDFOfPieChartData(chart, barChart));
         }
         return series;
+    }
+    
+    public static Map<Long, XDDFValueAxis> getValueAxes(XWPFChart chart) {
+        CTPlotArea plotArea = chart.getCTChart().getPlotArea();
+        int sizeOfArray = plotArea.sizeOfValAxArray();
+        Map<Long, XDDFValueAxis> axes = new HashMap<>(sizeOfArray);
+        for (int i = 0; i < sizeOfArray; i++) {
+            CTValAx values = plotArea.getValAxArray(i);
+            axes.put(values.getAxId().getVal(), new XDDFValueAxis(values));
+        }
+        return axes;
     }
 
 }

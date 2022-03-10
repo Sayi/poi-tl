@@ -17,6 +17,7 @@ package com.deepoove.poi.policy.reference;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -38,6 +39,7 @@ import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
 
 import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.util.ChartUtils;
 
 public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTemplateRenderPolicy<ChartTemplate, T> {
 
@@ -156,8 +158,35 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
             chart.getCTChart().unsetTitle();
             return;
         }
-        boolean isSet = false;
         CTTitle ctTitle = chart.getCTChart().getTitle();
+        boolean isSet = setCTTitle(ctTitle, title);
+        if (!isSet) {
+            chart.setTitleText(title);
+            chart.setTitleOverlay(false);
+        }
+    }
+
+    protected void setAxisTitle(XWPFChart chart, String xAxisTitle, String yAxisTitle) {
+        if (null == xAxisTitle && null == yAxisTitle) return;
+        Map<Long, XDDFValueAxis> valueAxes = ChartUtils.getValueAxes(chart);
+        if (valueAxes.isEmpty()) return;
+        for (XDDFValueAxis valueAxe : valueAxes.values()) {
+            AxisPosition position = valueAxe.getPosition();
+            if (position == AxisPosition.BOTTOM || position == AxisPosition.TOP) {
+                if (null != xAxisTitle) {
+                    valueAxe.setTitle(xAxisTitle);
+                }
+            }
+            if (position == AxisPosition.LEFT || position == AxisPosition.RIGHT) {
+                if (null != yAxisTitle) {
+                    valueAxe.setTitle(yAxisTitle);
+                }
+            }
+        }
+    }
+
+    private boolean setCTTitle(CTTitle ctTitle, String title) {
+        boolean isSet = false;
         if (null != ctTitle) {
             if (!ctTitle.isSetTx()) {
                 ctTitle.addNewTx();
@@ -186,10 +215,7 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
                 }
             }
         }
-        if (!isSet) {
-            chart.setTitleText(title);
-            chart.setTitleOverlay(false);
-        }
+        return isSet;
     }
 
     protected Double[] toNumberArray(String[] categories) {

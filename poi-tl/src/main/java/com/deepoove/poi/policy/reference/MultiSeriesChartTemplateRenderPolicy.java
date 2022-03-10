@@ -101,6 +101,7 @@ public class MultiSeriesChartTemplateRenderPolicy
             plot(chart, chartData);
         }
         setTitle(chart, data.getChartTitle());
+        setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle());
     }
 
     protected void processNewSeries(XDDFChartData chartData, Series addSeries) {
