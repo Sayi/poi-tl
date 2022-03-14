@@ -15,6 +15,8 @@ public class XWPFTemplateTest {
 
     @Test
     public void testRenderTemplate() throws Exception {
+        Map<String, Object> datas = new HashMap<String, Object>();
+
         // create table
         RowRenderData header = Rows.of("Word处理方案", "是否跨平台", "易用性")
                 .textColor("FFFFFF")
@@ -28,7 +30,6 @@ public class XWPFTemplateTest {
         RowRenderData row3 = Rows.create("OpenOffice", "需要安装OpenOffice软件", "复杂，需要了解OpenOffice的API");
         TableRenderData table = Tables.create(header, row0, row1, row2, row3);
 
-        Map<String, Object> datas = new HashMap<String, Object>();
         // text
         datas.put("header", "Deeply love what you love.");
         datas.put("name", "Poi-tl");
@@ -53,7 +54,7 @@ public class XWPFTemplateTest {
         datas.put("chart",
                 Charts.ofMultiSeries("易用性", new String[] { "代码量", "维护量" })
                         .addSeries("poi-tl", new Double[] { 10.0, 5.0 })
-                        .addSeries("freemark", new Double[] { 90.0, 90.0 })
+                        .addSeries("freemark", new Double[] { 90.0, 70.0 })
                         .create());
 
         XWPFTemplate.compile("src/test/resources/template/template.docx")

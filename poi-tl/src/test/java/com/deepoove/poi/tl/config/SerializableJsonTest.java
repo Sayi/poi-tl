@@ -18,13 +18,10 @@ import com.deepoove.poi.config.DefaultGsonHandler;
 import com.deepoove.poi.config.GsonHandler;
 import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.style.Style;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class SerializableJsonTest {
     GsonHandler provider = new DefaultGsonHandler();
-    Gson gson = provider.gsonWrite();
-    Gson gsonParser = provider.gonParse();
     String jsonStr = "";
 
     @Test
@@ -179,7 +176,7 @@ public class SerializableJsonTest {
         datas.put("chart",
                 Charts.ofMultiSeries("易用性", new String[] { "代码量", "维护量" })
                         .addSeries("poi-tl", new Double[] { 10.0, 5.0 })
-                        .addSeries("freemark", new Double[] { 90.0, 90.0 })
+                        .addSeries("freemark", new Double[] { 90.0, 70.0 })
                         .create());
 
         Map<String, Object> result = write(datas).getResult(new TypeToken<Map<String, Object>>() {
@@ -192,17 +189,17 @@ public class SerializableJsonTest {
     }
 
     private SerializableJsonTest write(Object data) throws IOException {
-        jsonStr = gson.toJson(data);
-        System.out.println(jsonStr);
+        jsonStr = provider.writer().toJson(data);
+//        System.out.println(jsonStr);
         return this;
     }
 
     private <T> T getResult(Class<T> clazz) throws IOException, ClassNotFoundException {
-        return gsonParser.fromJson(jsonStr, clazz);
+        return provider.parser().fromJson(jsonStr, clazz);
     }
 
     private Map<String, Object> getResult(Type collectionType) {
-        return gsonParser.fromJson(jsonStr, collectionType);
+        return provider.parser().fromJson(jsonStr, collectionType);
     }
 
 }

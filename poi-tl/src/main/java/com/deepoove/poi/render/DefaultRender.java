@@ -66,7 +66,7 @@ public class DefaultRender implements Render {
 
         } catch (Exception e) {
             if (e instanceof RenderException) throw (RenderException) e;
-            throw new RenderException("Cannot render docx template, please check the Exception", e);
+            throw new RenderException("Cannot render docx template", e);
         } finally {
             watch.stop();
         }
