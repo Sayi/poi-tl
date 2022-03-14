@@ -277,7 +277,7 @@ public class Configure implements Cloneable {
         return spELFunction;
     }
 
-    public GsonHandler getGsonProvider() {
+    public GsonHandler getGsonHandler() {
         return gsonHandler;
     }
 

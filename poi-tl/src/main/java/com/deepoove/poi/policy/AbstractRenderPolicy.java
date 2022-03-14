@@ -51,7 +51,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     @SuppressWarnings("unchecked")
     protected T castFromJson(Configure configure, LinkedTreeMap<?, ?> source) {
         Class<?>[] typeArguments = TypeResolver.resolveRawArguments(AbstractRenderPolicy.class, getClass());
-        return (T) configure.getGsonProvider().castJsonToClass(source, typeArguments[0]);
+        return (T) configure.getGsonHandler().castJsonToClass(source, typeArguments[0]);
     }
 
     @Override
