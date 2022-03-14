@@ -50,31 +50,31 @@ public class DefaultGsonHandler implements GsonHandler {
 
     private static final String TYPE_NAME = "type";
 
-    public Gson parse, write;
+    private Gson parser, writer;
 
     @Override
-    public Gson gonParse() {
-        if (null != parse) return parse;
+    public Gson parser() {
+        if (null != parser) return parser;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapterFactory(createRenderTypeAdapter(true));
         gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(true));
         gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(true));
         createTypeAdapters(true).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
-        parse = gsonBuilder.create();
-        return parse;
+        parser = gsonBuilder.create();
+        return parser;
 
     }
 
     @Override
-    public Gson gsonWrite() {
-        if (null != write) return write;
+    public Gson writer() {
+        if (null != writer) return writer;
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapterFactory(createRenderTypeAdapter(false));
         gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(false));
         gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(false));
         createTypeAdapters(false).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
-        write = gsonBuilder.create();
-        return write;
+        writer = gsonBuilder.create();
+        return writer;
     }
 
     protected RuntimeTypeAdapterFactory<RenderData> createRenderTypeAdapter(boolean readable) {

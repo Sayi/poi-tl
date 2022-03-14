@@ -80,7 +80,13 @@ public class Charts {
         return new ChartSingles(chartTitle, categories);
     }
 
-    public static abstract class ChartBuilder<T extends RenderData> implements RenderDataBuilder<T> {
+    public static interface ChartSetting<T extends RenderData> {
+        ChartBuilder<T> setxAsixTitle(String xAxisTitle);
+
+        ChartBuilder<T> setyAsixTitle(String yAxisTitle);
+    }
+
+    public static abstract class ChartBuilder<T extends RenderData> implements RenderDataBuilder<T>, ChartSetting<T> {
         protected String chartTitle;
         protected String xAxisTitle;
         protected String yAxisTitle;

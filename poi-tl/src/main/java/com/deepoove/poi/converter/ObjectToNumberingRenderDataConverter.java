@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2021 Sayi
+ * Copyright 2014-2022 Sayi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,17 @@ import java.util.Iterator;
 import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.Numberings.NumberingBuilder;
 
+/**
+ * Convert Object to NumberingRenderData
+ * 
+ * @author Sayi
+ *
+ */
 public class ObjectToNumberingRenderDataConverter implements ToRenderDataConverter<Object, NumberingRenderData> {
-
-    public static final ObjectToNumberingRenderDataConverter INSTANCE = new ObjectToNumberingRenderDataConverter();
 
     @Override
     public NumberingRenderData convert(Object source) {
-        if (null == source) return null;
-        if (source instanceof NumberingRenderData) return (NumberingRenderData) source;
+        if (null == source || source instanceof NumberingRenderData) return (NumberingRenderData) source;
         NumberingBuilder ofBullet = Numberings.ofBullet();
         if (source instanceof Iterable) {
             Iterator<?> iterator = ((Iterable<?>) source).iterator();

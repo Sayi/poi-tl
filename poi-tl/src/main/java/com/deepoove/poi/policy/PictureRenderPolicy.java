@@ -47,9 +47,11 @@ import com.deepoove.poi.xwpf.XWPFRunWrapper;
  */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
+    private static ObjectToPictureRenderDataConverter converter = new ObjectToPictureRenderDataConverter();
+
     @Override
     public PictureRenderData cast(Object source) {
-        return ObjectToPictureRenderDataConverter.INSTANCE.convert(source);
+        return converter.convert(source);
     }
 
     @Override

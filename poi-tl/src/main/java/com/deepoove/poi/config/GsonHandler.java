@@ -22,26 +22,26 @@ import com.google.gson.internal.LinkedTreeMap;
 
 public interface GsonHandler {
 
-    Gson gonParse();
+    Gson parser();
 
-    default Gson gsonWrite() {
-        return gonParse();
+    default Gson writer() {
+        return parser();
     }
 
     default <T> T castJsonToType(LinkedTreeMap<?, ?> source, Type type) {
-        return gonParse().fromJson(gsonWrite().toJson(source), type);
+        return parser().fromJson(writer().toJson(source), type);
     }
 
     default <T> T castJsonToClass(LinkedTreeMap<?, ?> source, Class<T> clazz) {
-        return gonParse().fromJson(gsonWrite().toJson(source), clazz);
+        return parser().fromJson(writer().toJson(source), clazz);
     }
 
     default <T> T castJsonToType(String source, Type type) {
-        return gonParse().fromJson(source, type);
+        return parser().fromJson(source, type);
     }
 
     default <T> T castJsonToClass(String source, Class<T> clazz) {
-        return gonParse().fromJson(source, clazz);
+        return parser().fromJson(source, clazz);
     }
 
 }
