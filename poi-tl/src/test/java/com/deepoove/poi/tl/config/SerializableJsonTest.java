@@ -14,17 +14,17 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.DefaultGsonProvider;
-import com.deepoove.poi.config.GsonProvider;
+import com.deepoove.poi.config.DefaultGsonHandler;
+import com.deepoove.poi.config.GsonHandler;
 import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.style.Style;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class SerializableJsonTest {
-    GsonProvider provider = new DefaultGsonProvider();
-    Gson gson = provider.write();
-    Gson gsonParser = provider.read();
+    GsonHandler provider = new DefaultGsonHandler();
+    Gson gson = provider.writeHandler();
+    Gson gsonParser = provider.readHandler();
     String jsonStr = "";
 
     @Test

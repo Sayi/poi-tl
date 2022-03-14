@@ -131,7 +131,7 @@ public class Configure implements Cloneable {
     /**
      * JSON serialize or deserialize
      */
-    protected GsonProvider gsonProvider = new DefaultGsonProvider();
+    protected GsonHandler gsonHandler = new DefaultGsonHandler();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -176,11 +176,6 @@ public class Configure implements Cloneable {
      * @return
      */
     public static ConfigureBuilder builder() {
-        return new ConfigureBuilder();
-    }
-
-    @Deprecated
-    public static ConfigureBuilder newBuilder() {
         return new ConfigureBuilder();
     }
 
@@ -282,8 +277,8 @@ public class Configure implements Cloneable {
         return spELFunction;
     }
 
-    public GsonProvider getGsonProvider() {
-        return gsonProvider;
+    public GsonHandler getGsonProvider() {
+        return gsonHandler;
     }
 
     @Override

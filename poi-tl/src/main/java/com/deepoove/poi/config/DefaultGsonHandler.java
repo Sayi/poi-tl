@@ -24,7 +24,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
-public class DefaultGsonProvider implements GsonProvider {
+/**
+ * 
+ * define type for all render data class <br />
+ * Json string to Map<String, Object> and Map<String, Object> to Json string.
+ * 
+ */
+public class DefaultGsonHandler implements GsonHandler {
 
     private static final String BYTES = "bytes";
     private static final String URL = "url";
@@ -41,12 +47,38 @@ public class DefaultGsonProvider implements GsonProvider {
     private static final String BOOKMARK = "bookmark";
     private static final String LINK = "link";
     private static final String TEXT = "text";
-    private static final String TYPE = "type";
+
+    private static final String TYPE_NAME = "type";
 
     public Gson read, write;
 
-    protected RuntimeTypeAdapterFactory<RenderData> createTypeAdapter(boolean isRead) {
-        return RuntimeTypeAdapterFactory.of(RenderData.class, TYPE, isRead)
+    @Override
+    public Gson readHandler() {
+        if (null != read) return read;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapterFactory(createTypeAdapter(true));
+        gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(true));
+        gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(true));
+        createTypeAdapterIndividually(true).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
+        read = gsonBuilder.create();
+        return read;
+
+    }
+
+    @Override
+    public Gson writeHandler() {
+        if (null != write) return write;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapterFactory(createTypeAdapter(false));
+        gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(false));
+        gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(false));
+        createTypeAdapterIndividually(false).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
+        write = gsonBuilder.create();
+        return write;
+    }
+
+    protected RuntimeTypeAdapterFactory<RenderData> createTypeAdapter(boolean readable) {
+        return RuntimeTypeAdapterFactory.of(RenderData.class, TYPE_NAME, readable)
                 .registerSubtype(TextRenderData.class, TEXT)
                 .registerSubtype(HyperlinkTextRenderData.class, LINK)
                 .registerSubtype(BookmarkTextRenderData.class, BOOKMARK)
@@ -64,75 +96,50 @@ public class DefaultGsonProvider implements GsonProvider {
                 .registerSubtype(ByteArrayPictureRenderData.class, BYTES);
     }
 
-    protected List<RuntimeTypeAdapterFactory<?>> createTypeAdapterIndividually(boolean isRead) {
+    protected List<RuntimeTypeAdapterFactory<?>> createTypeAdapterIndividually(boolean readable) {
         return Arrays.asList(
-                RuntimeTypeAdapterFactory.of(ParagraphRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(ParagraphRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(ParagraphRenderData.class, PARAGRAPH),
-                RuntimeTypeAdapterFactory.of(NumberingRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(NumberingRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(NumberingRenderData.class, NUMBERING),
-                RuntimeTypeAdapterFactory.of(TableRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(TableRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(TableRenderData.class, TABLE),
-                RuntimeTypeAdapterFactory.of(CommentRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(CommentRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(CommentRenderData.class, COMMENT),
-                RuntimeTypeAdapterFactory.of(DocxRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(DocxRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(DocxRenderData.class, IMPORT),
-                RuntimeTypeAdapterFactory.of(AttachmentRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(AttachmentRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(AttachmentRenderData.class, ATTACHMENT),
-                RuntimeTypeAdapterFactory.of(DocumentRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(DocumentRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(DocumentRenderData.class, DOC),
-                RuntimeTypeAdapterFactory.of(ChartMultiSeriesRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(ChartMultiSeriesRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(ChartMultiSeriesRenderData.class, CHART_MULTI),
-                RuntimeTypeAdapterFactory.of(ChartSingleSeriesRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(ChartSingleSeriesRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(ChartSingleSeriesRenderData.class, CHART_SINGLE),
-                RuntimeTypeAdapterFactory.of(HyperlinkTextRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(HyperlinkTextRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(HyperlinkTextRenderData.class, LINK),
-                RuntimeTypeAdapterFactory.of(BookmarkTextRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(BookmarkTextRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(BookmarkTextRenderData.class, BOOKMARK),
-                RuntimeTypeAdapterFactory.of(FilePictureRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(FilePictureRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(FilePictureRenderData.class, FILE),
-                RuntimeTypeAdapterFactory.of(UrlPictureRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(UrlPictureRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(UrlPictureRenderData.class, URL),
-                RuntimeTypeAdapterFactory.of(ByteArrayPictureRenderData.class, TYPE, isRead)
+                RuntimeTypeAdapterFactory.of(ByteArrayPictureRenderData.class, TYPE_NAME, readable)
                         .registerSubtype(ByteArrayPictureRenderData.class, BYTES));
     }
 
-    protected RuntimeTypeAdapterFactory<TextRenderData> createTextTypeAdapter(boolean isRead) {
-        return RuntimeTypeAdapterFactory.of(TextRenderData.class, TYPE, isRead)
+    protected RuntimeTypeAdapterFactory<TextRenderData> createTextTypeAdapter(boolean readable) {
+        return RuntimeTypeAdapterFactory.of(TextRenderData.class, TYPE_NAME, readable)
                 .registerSubtype(TextRenderData.class, TEXT)
                 .registerSubtype(HyperlinkTextRenderData.class, LINK)
                 .registerSubtype(BookmarkTextRenderData.class, BOOKMARK);
     }
 
-    protected RuntimeTypeAdapterFactory<PictureRenderData> createPictureTypeAdapter(boolean isRead) {
-        return RuntimeTypeAdapterFactory.of(PictureRenderData.class, TYPE, isRead)
+    protected RuntimeTypeAdapterFactory<PictureRenderData> createPictureTypeAdapter(boolean readable) {
+        return RuntimeTypeAdapterFactory.of(PictureRenderData.class, TYPE_NAME, readable)
                 .registerSubtype(FilePictureRenderData.class, FILE)
                 .registerSubtype(UrlPictureRenderData.class, URL)
                 .registerSubtype(ByteArrayPictureRenderData.class, BYTES);
-    }
-
-    @Override
-    public Gson read() {
-        if (null != read) return read;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapterFactory(createTypeAdapter(true));
-        gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(true));
-        gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(true));
-        createTypeAdapterIndividually(true).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
-        read = gsonBuilder.create();
-        return read;
-
-    }
-
-    @Override
-    public Gson write() {
-        if (null != write) return write;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapterFactory(createTypeAdapter(false));
-        gsonBuilder.registerTypeAdapterFactory(createTextTypeAdapter(false));
-        gsonBuilder.registerTypeAdapterFactory(createPictureTypeAdapter(false));
-        createTypeAdapterIndividually(false).forEach(factory -> gsonBuilder.registerTypeAdapterFactory(factory));
-        write = gsonBuilder.create();
-        return write;
     }
 
 }

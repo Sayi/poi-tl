@@ -20,18 +20,20 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
-public interface GsonProvider {
+public interface GsonHandler {
 
-    Gson read();
+    Gson readHandler();
 
-    Gson write();
+    default Gson writeHandler() {
+        return readHandler();
+    }
 
     default <T> T castJsonToType(LinkedTreeMap<?, ?> source, Type type) {
-        return read().fromJson(write().toJson(source), type);
+        return readHandler().fromJson(writeHandler().toJson(source), type);
     }
 
     default <T> T castJsonToClass(LinkedTreeMap<?, ?> source, Class<T> clazz) {
-        return read().fromJson(write().toJson(source), clazz);
+        return readHandler().fromJson(writeHandler().toJson(source), clazz);
     }
 
 }

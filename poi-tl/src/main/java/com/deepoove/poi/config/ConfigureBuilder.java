@@ -96,8 +96,8 @@ public class ConfigureBuilder {
         return this;
     }
 
-    public ConfigureBuilder setGsonProvider(GsonProvider provider) {
-        config.gsonProvider = provider;
+    public ConfigureBuilder setGsonHandler(GsonHandler provider) {
+        config.gsonHandler = provider;
         return this;
     }
 
