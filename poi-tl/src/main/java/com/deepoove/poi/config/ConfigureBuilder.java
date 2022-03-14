@@ -96,6 +96,11 @@ public class ConfigureBuilder {
         return this;
     }
 
+    public ConfigureBuilder setGsonProvider(GsonProvider provider) {
+        config.gsonProvider = provider;
+        return this;
+    }
+
     public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
         config.plugin(c, policy);
         return this;

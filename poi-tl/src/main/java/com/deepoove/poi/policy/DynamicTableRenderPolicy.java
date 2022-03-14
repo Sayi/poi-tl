@@ -20,9 +20,8 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
-import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
-import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.TableTools;
 
@@ -38,11 +37,13 @@ import com.deepoove.poi.util.TableTools;
  * 
  * @author Sayi
  */
-public abstract class DynamicTableRenderPolicy implements RenderPolicy {
+public abstract class DynamicTableRenderPolicy extends AbstractRenderPolicy<Object> {
+
+    public abstract void render(XWPFTable table, Object data) throws Exception;
 
     @Override
-    public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        RunTemplate runTemplate = (RunTemplate) eleTemplate;
+    public void doRender(RenderContext<Object> context) throws Exception {
+        RunTemplate runTemplate = (RunTemplate) context.getEleTemplate();
         XWPFRun run = runTemplate.getRun();
         run.setText("", 0);
         try {
@@ -52,12 +53,10 @@ public abstract class DynamicTableRenderPolicy implements RenderPolicy {
             }
             XWPFTableCell cell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
             XWPFTable table = cell.getTableRow().getTable();
-            render(table, data);
+            render(table, context.getData());
         } catch (Exception e) {
             throw new RenderException("Dynamic render table error:" + e.getMessage(), e);
         }
     }
-
-    public abstract void render(XWPFTable table, Object data) throws Exception;
 
 }

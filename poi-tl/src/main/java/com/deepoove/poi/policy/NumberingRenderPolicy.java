@@ -39,11 +39,9 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  */
 public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {
 
-    private static final ObjectToNumberingRenderDataConverter converter = new ObjectToNumberingRenderDataConverter();
-
     @Override
     public NumberingRenderData cast(Object source) {
-        return converter.convert(source);
+        return ObjectToNumberingRenderDataConverter.INSTANCE.convert(source);
     }
 
     @Override

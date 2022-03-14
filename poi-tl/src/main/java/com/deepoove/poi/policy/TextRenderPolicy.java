@@ -39,11 +39,9 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  */
 public class TextRenderPolicy extends AbstractRenderPolicy<TextRenderData> {
 
-    private static final ObjectToTextRenderDataConverter converter = new ObjectToTextRenderDataConverter();
-
     @Override
     public TextRenderData cast(Object source) {
-        return converter.convert(source);
+        return ObjectToTextRenderDataConverter.INSTANCE.convert(source);
     }
 
     @Override

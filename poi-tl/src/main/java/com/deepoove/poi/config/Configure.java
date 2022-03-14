@@ -128,6 +128,11 @@ public class Configure implements Cloneable {
      */
     protected Map<String, Method> spELFunction = new HashMap<String, Method>();
 
+    /**
+     * JSON serialize or deserialize
+     */
+    protected GsonProvider gsonProvider = new DefaultGsonProvider();
+
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
         plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
@@ -275,6 +280,10 @@ public class Configure implements Cloneable {
 
     public Map<String, Method> getSpELFunction() {
         return spELFunction;
+    }
+
+    public GsonProvider getGsonProvider() {
+        return gsonProvider;
     }
 
     @Override

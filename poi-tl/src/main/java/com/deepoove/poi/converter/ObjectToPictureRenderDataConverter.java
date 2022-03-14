@@ -20,9 +20,11 @@ import com.deepoove.poi.data.Pictures;
 
 public class ObjectToPictureRenderDataConverter implements ToRenderDataConverter<Object, PictureRenderData> {
 
+    public static final ObjectToPictureRenderDataConverter INSTANCE = new ObjectToPictureRenderDataConverter();;
+
     @Override
     public PictureRenderData convert(Object source) {
-        if (null == source ) return null;
+        if (null == source) return null;
         if (source instanceof PictureRenderData) return (PictureRenderData) source;
         return Pictures.of(source.toString()).fitSize().create();
     }
