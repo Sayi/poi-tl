@@ -1,0 +1,51 @@
+{
+  "md": {
+    "type": "markdown",
+    "markdown": "# Heading 1\n## Heading 2\n### Heading 3\n#### Heading 4\n##### Heading 5\n\n## *italic* and **bold** and `code`\n\nThis is the first paragraph.\n\nThis is the second paragraph. \n\nThis is a\\\nline break.\n\n*Italics*\n**Bold**\n**`code`Bold**\n\n> quote First line\n> Another line *Italics* and **Bold** and [text](http://a.com)\n>\n> > Nested line *Italics* and **Bold** and [text](http://a.com)\n>\n> Last line and `one code`\n\n---\n\n* bullet Apples link:[text](http://a.com)\n\n  By default, the latest Apache release package will be pulled.\n* Oranges\n\n```\nOr use 3 backticks\n```\n* Pears\n\n1. orderd First\n2. Second\n3. Third\n\n- `one`\n- `two`\n\n* Item1\n    1. First Subitem and [text](http://a.com)\n    2. Second Subitem and `onecode`\n* Item2\n    - Subitem\n    - Subitem\n* Item3\n\n1. Item1\n    1. First Subitem and [text](http://a.com)\n    2. Second Subitem and `onecode`\n2. Item2\n    - Subitem\n    - Subitem\n3. Item3\n\n\n[text link](http://a.com)\n![alt](src/test/resources/sayi.png)\n\nInline code: `code`\n\n    indent 4 spaces\n    indent 4 spaces\n\n```java\n/**\n * @author John Smith <john.smith@example.com>\n*/\npackage l2f.gameserver.model;\n\npublic abstract strictfp class L2Char extends L2Object {\n  public static final Short ERROR = 0x0001;\n\n  public void moveTo(int x, int y, int z) {\n    _ai = null;\n    log(\"Should not be called\");\n    if (1 > 5) { // wtf!?\n      return;\n    }\n  }\n}\n```\n\n| First Header  | Second Header |\n| ------------- | ------------- |\n| Content Cell  | Content Cell  |\n| `git status` | List all *new or modified* files |\n| `git diff` | Show file [text](http://a.com) differences that **haven't been** staged |\n\n| Left-aligned | Center-aligned | Right-aligned |\n| :---         |     :---:      |          ---: |\n| git status   | git status     | git status    |\n| git diff     | git diff       | git diff      |\n\n- [ ] foo\n- [x] bar",
+    "style": {
+      "inlineCodeStyle": {
+        "color": "f44336",
+        "fontFamily": "Monaco",
+        "fontSize": 0,
+        "characterSpacing": 0
+      },
+      "highlightStyle": {
+        "showLine": false,
+        "theme": "zenburn",
+        "fontFamily": "Consolas",
+        "fontSize": 9
+      },
+      "quoteStyle": {
+        "indentLeftChars": 1,
+        "leftBorder": {
+          "size": 48,
+          "color": "70ad47",
+          "type": "SINGLE",
+          "space": 8
+        }
+      },
+      "tableBorderStyle": {
+        "size": 1,
+        "color": "BFBFBF",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "tableHeaderStyle": {
+        "height": 0,
+        "repeated": false,
+        "defaultCellStyle": {
+          "backgroundColor": "5b9bd5",
+          "defaultParagraphStyle": {
+            "defaultTextStyle": {
+              "color": "ffffff",
+              "fontSize": 0,
+              "characterSpacing": 0
+            }
+          }
+        }
+      },
+      "showHeaderNumber": true,
+      "imagesDir": ""
+    }
+  }
+}

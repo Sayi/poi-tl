@@ -1,0 +1,389 @@
+{
+  "solution_compare": {
+    "type": "table",
+    "rows": [
+      {
+        "cells": [
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Word处理方案"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "是否跨平台"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "易用性"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "rowStyle": {
+          "height": 1417,
+          "repeated": false,
+          "defaultCellStyle": {
+            "backgroundColor": "ff9800",
+            "vertAlign": "CENTER",
+            "defaultParagraphStyle": {
+              "align": "CENTER",
+              "defaultTextStyle": {
+                "color": "FFFFFF",
+                "fontSize": 0,
+                "characterSpacing": 0
+              }
+            }
+          }
+        }
+      },
+      {
+        "cells": [
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Poi-tl"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "纯Java组件，跨平台"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "简单：模板引擎功能，并对POI进行了一些封装"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Apache Poi"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "纯Java组件，跨平台"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "简单，缺少一些功能的封装"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "Freemarker"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "XML操作，跨平台"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "复杂，需要理解XML结构"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "OpenOffice"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "需要安装OpenOffice软件"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "paragraphs": [
+              {
+                "type": "paragraph",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "复杂，需要了解OpenOffice的API"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "tableStyle": {
+      "leftBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "rightBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "topBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "bottomBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "insideHBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "insideVBorder": {
+        "size": 4,
+        "color": "auto",
+        "type": "SINGLE",
+        "space": 0
+      },
+      "leftCellMargin": 107,
+      "topCellMargin": 0,
+      "rightCellMargin": 107,
+      "bottomCellMargin": 0,
+      "indentation": 0,
+      "width": "100%"
+    }
+  },
+  "what": "Java Word模板引擎： Minimal Microsoft word(docx) templating with {{template}} in Java.",
+  "feature": {
+    "type": "numbering",
+    "multiFormats": [
+      {
+        "numFmt": 24,
+        "lvlText": "●"
+      }
+    ],
+    "items": [
+      {
+        "item": {
+          "type": "paragraph",
+          "contents": [
+            {
+              "type": "text",
+              "text": "Plug-in grammar, add new grammar by yourself"
+            }
+          ]
+        },
+        "level": 0
+      },
+      {
+        "item": {
+          "type": "paragraph",
+          "contents": [
+            {
+              "type": "text",
+              "text": "Supports word text, local pictures, web pictures, table, list, header, footer..."
+            }
+          ]
+        },
+        "level": 0
+      },
+      {
+        "item": {
+          "type": "paragraph",
+          "contents": [
+            {
+              "type": "text",
+              "text": "Templates, not just templates, but also style templates"
+            }
+          ]
+        },
+        "level": 0
+      }
+    ]
+  },
+  "author": {
+    "type": "text",
+    "style": {
+      "color": "000000",
+      "fontSize": 0,
+      "characterSpacing": 0
+    },
+    "text": "Sayi卅一"
+  },
+  "introduce": {
+    "type": "link",
+    "url": "http://www.deepoove.com",
+    "style": {
+      "color": "0000FF",
+      "fontSize": 0,
+      "underlinePatterns": "SINGLE",
+      "characterSpacing": 0
+    },
+    "text": "http://www.deepoove.com"
+  },
+  "name": "Poi-tl",
+  "header": "Deeply love what you love.",
+  "time": "2020-08-31",
+  "portrait": {
+    "type": "file",
+    "path": "src/test/resources/sayi.png",
+    "pictureType": "PNG",
+    "pictureStyle": {
+      "width": 60,
+      "height": 60,
+      "scalePattern": "NONE"
+    },
+    "altMeta": ""
+  },
+  "word": "模板引擎",
+  "chart": {
+    "type": "chart-multi",
+    "chartTitle": "易用性",
+    "categories": [
+      "代码量",
+      "维护量"
+    ],
+    "seriesDatas": [
+      {
+        "name": "poi-tl",
+        "values": [
+          10,
+          5
+        ]
+      },
+      {
+        "name": "freemark",
+        "values": [
+          90,
+          90
+        ]
+      }
+    ]
+  }
+}
