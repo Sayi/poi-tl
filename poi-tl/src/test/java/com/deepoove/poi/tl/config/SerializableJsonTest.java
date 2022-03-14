@@ -23,8 +23,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class SerializableJsonTest {
     GsonHandler provider = new DefaultGsonHandler();
-    Gson gson = provider.writeHandler();
-    Gson gsonParser = provider.readHandler();
+    Gson gson = provider.gsonWrite();
+    Gson gsonParser = provider.gonParse();
     String jsonStr = "";
 
     @Test

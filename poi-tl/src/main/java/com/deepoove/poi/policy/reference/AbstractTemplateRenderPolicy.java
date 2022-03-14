@@ -29,7 +29,7 @@ public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T>
     @SuppressWarnings("unchecked")
     protected T castFromJson(Configure configure, LinkedTreeMap<?, ?> source) {
         Class<?>[] typeArguments = TypeResolver.resolveRawArguments(AbstractTemplateRenderPolicy.class, getClass());
-        return (T) configure.getGsonProvider().castJsonToClass(source, typeArguments[1]);
+        return (T) configure.getGsonHandler().castJsonToClass(source, typeArguments[1]);
     }
 
     @SuppressWarnings("unchecked")
