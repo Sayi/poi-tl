@@ -15,11 +15,14 @@
  */
 package com.deepoove.poi.policy;
 
+import java.util.Optional;
+
 import org.apache.poi.xwpf.usermodel.BreakType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 
+import com.deepoove.poi.converter.ObjectToTextRenderDataConverter;
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -34,15 +37,20 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  * @author Sayi
  *
  */
-public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
+public class TextRenderPolicy extends AbstractRenderPolicy<TextRenderData> {
 
     @Override
-    protected boolean validate(Object data) {
+    public TextRenderData cast(Object source) {
+        return ObjectToTextRenderDataConverter.INSTANCE.convert(source);
+    }
+
+    @Override
+    protected boolean validate(TextRenderData data) {
         return null != data;
     }
 
     @Override
-    public void doRender(RenderContext<Object> context) throws Exception {
+    public void doRender(RenderContext<TextRenderData> context) throws Exception {
         Helper.renderTextRun(context.getRun(), context.getData());
     }
 
@@ -50,16 +58,14 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
 
         public static final String REGEX_LINE_CHARACTOR = "\\n";
 
-        public static void renderTextRun(XWPFRun run, Object data) {
+        public static void renderTextRun(XWPFRun run, TextRenderData data) {
             XWPFRun textRun = run;
             if (data instanceof HyperlinkTextRenderData) {
                 textRun = createHyperlink(run, ((HyperlinkTextRenderData) data).getUrl());
             }
 
-            TextRenderData wrapper = wrapper(data);
-            StyleUtils.styleRun(textRun, wrapper.getStyle());
-
-            String text = wrapper.getText();
+            StyleUtils.styleRun(textRun, data.getStyle());
+            String text = Optional.ofNullable(data.getText()).orElse("");
             String[] fragment = text.split(REGEX_LINE_CHARACTOR, -1);
             if (fragment.length > 0) {
                 textRun.setText(fragment[0], 0);
@@ -77,12 +83,6 @@ public class TextRenderPolicy extends AbstractRenderPolicy<Object> {
             if (data instanceof BookmarkTextRenderData) {
                 createBookmark(textRun, ((BookmarkTextRenderData) data).getBookmark());
             }
-        }
-
-        private static TextRenderData wrapper(Object obj) {
-            TextRenderData text = obj instanceof TextRenderData ? (TextRenderData) obj
-                    : new TextRenderData(obj.toString());
-            return null == text.getText() ? new TextRenderData("") : text;
         }
 
         private static XWPFRun createHyperlink(XWPFRun run, String url) {

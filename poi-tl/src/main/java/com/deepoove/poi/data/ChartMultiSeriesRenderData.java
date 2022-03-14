@@ -27,6 +27,8 @@ public class ChartMultiSeriesRenderData implements RenderData {
     private static final long serialVersionUID = 1L;
 
     private String chartTitle;
+    private String xAxisTitle;
+    private String yAxisTitle;
     private String[] categories;
     private List<SeriesRenderData> seriesDatas;
 
@@ -39,6 +41,22 @@ public class ChartMultiSeriesRenderData implements RenderData {
 
     public void setChartTitle(String chartTitle) {
         this.chartTitle = chartTitle;
+    }
+
+    public String getxAxisTitle() {
+        return xAxisTitle;
+    }
+
+    public void setxAxisTitle(String xAxisTitle) {
+        this.xAxisTitle = xAxisTitle;
+    }
+
+    public String getyAxisTitle() {
+        return yAxisTitle;
+    }
+
+    public void setyAxisTitle(String yAxisTitle) {
+        this.yAxisTitle = yAxisTitle;
     }
 
     public String[] getCategories() {

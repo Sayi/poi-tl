@@ -22,6 +22,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.converter.ObjectToTextRenderDataConverter;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TableRenderData;
@@ -39,6 +40,8 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  */
 public class WhereDelegate {
 
+    private static final ObjectToTextRenderDataConverter converter = new ObjectToTextRenderDataConverter();
+
     private final XWPFRun run;
 
     public WhereDelegate(XWPFRun run) {
@@ -50,7 +53,7 @@ public class WhereDelegate {
     }
 
     public void renderText(Object data) {
-        TextRenderPolicy.Helper.renderTextRun(run, data);
+        TextRenderPolicy.Helper.renderTextRun(run, converter.convert(data));
     }
 
     public void renderNumbering(NumberingRenderData data) throws Exception {

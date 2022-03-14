@@ -13,11 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.HyperlinkTextRenderData;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.TableRenderData;
-import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
@@ -41,7 +37,7 @@ public class ConfigELTest {
         Author author = new Author();
         author.setName("Sayi");
         author.setAlias(new TextRenderData("FF0000", "卅一"));
-        author.setAvatar(new PictureRenderData(60, 60, "src/test/resources/sayi.png"));
+        author.setAvatar(Pictures.ofLocal("src/test/resources/sayi.png").size(60, 60).create());
         model.setAuthor(author);
 
         Detail detail = new Detail();

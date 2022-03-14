@@ -128,6 +128,11 @@ public class Configure implements Cloneable {
      */
     protected Map<String, Method> spELFunction = new HashMap<String, Method>();
 
+    /**
+     * JSON serialize or deserialize
+     */
+    protected GsonHandler gsonHandler = new DefaultGsonHandler();
+
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
         plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
@@ -144,12 +149,12 @@ public class Configure implements Cloneable {
         plugin(ChartTypes.LINE, multiSeriesRenderPolicy);
         plugin(ChartTypes.LINE3D, multiSeriesRenderPolicy);
         plugin(ChartTypes.RADAR, multiSeriesRenderPolicy);
+        plugin(ChartTypes.SCATTER, multiSeriesRenderPolicy);
 
         RenderPolicy singleSeriesRenderPolicy = new SingleSeriesChartTemplateRenderPolicy();
         plugin(ChartTypes.PIE, singleSeriesRenderPolicy);
         plugin(ChartTypes.PIE3D, singleSeriesRenderPolicy);
         plugin(ChartTypes.DOUGHNUT, singleSeriesRenderPolicy);
-        plugin(ChartTypes.SCATTER, singleSeriesRenderPolicy);
 
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
         plugin(PictImageTemplate.class, new DefaultPictImageTemplateRenderPolicy());
@@ -171,11 +176,6 @@ public class Configure implements Cloneable {
      * @return
      */
     public static ConfigureBuilder builder() {
-        return new ConfigureBuilder();
-    }
-
-    @Deprecated
-    public static ConfigureBuilder newBuilder() {
         return new ConfigureBuilder();
     }
 
@@ -275,6 +275,10 @@ public class Configure implements Cloneable {
 
     public Map<String, Method> getSpELFunction() {
         return spELFunction;
+    }
+
+    public GsonHandler getGsonProvider() {
+        return gsonHandler;
     }
 
     @Override

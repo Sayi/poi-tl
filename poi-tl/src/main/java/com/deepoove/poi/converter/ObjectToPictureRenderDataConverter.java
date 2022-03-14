@@ -15,19 +15,18 @@
  */
 package com.deepoove.poi.converter;
 
-import com.deepoove.poi.data.RenderData;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Pictures;
 
-/**
- * Convert <T> to RenderData
- * 
- * @author Sayi
- *
- * @param <T>
- * @param <R>
- */
-@FunctionalInterface
-public interface ToRenderDataConverter<T, R extends RenderData> {
+public class ObjectToPictureRenderDataConverter implements ToRenderDataConverter<Object, PictureRenderData> {
 
-    R convert(T t);
+    public static final ObjectToPictureRenderDataConverter INSTANCE = new ObjectToPictureRenderDataConverter();;
+
+    @Override
+    public PictureRenderData convert(Object source) {
+        if (null == source) return null;
+        if (source instanceof PictureRenderData) return (PictureRenderData) source;
+        return Pictures.of(source.toString()).fitSize().create();
+    }
 
 }

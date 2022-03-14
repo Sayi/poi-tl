@@ -80,8 +80,10 @@ public class Charts {
         return new ChartSingles(chartTitle, categories);
     }
 
-    public static abstract class ChartBuilder {
+    public static abstract class ChartBuilder<T extends RenderData> implements RenderDataBuilder<T> {
         protected String chartTitle;
+        protected String xAxisTitle;
+        protected String yAxisTitle;
         protected String[] categories;
 
         protected ChartBuilder(String chartTitle, String[] categories) {
@@ -95,6 +97,16 @@ public class Charts {
                         "The length of categories and series values in chart must be the same!");
             }
         }
+
+        public ChartBuilder<T> setxAsixTitle(String xAxisTitle) {
+            this.xAxisTitle = xAxisTitle;
+            return this;
+        }
+
+        public ChartBuilder<T> setyAsixTitle(String yAxisTitle) {
+            this.yAxisTitle = yAxisTitle;
+            return this;
+        }
     }
 
     /**
@@ -102,7 +114,7 @@ public class Charts {
      * builder to build multi series chart
      *
      */
-    public static class ChartMultis extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
+    public static class ChartMultis extends ChartBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
         private ChartMultis(String chartTitle, String[] categories) {
@@ -119,6 +131,8 @@ public class Charts {
         public ChartMultiSeriesRenderData create() {
             ChartMultiSeriesRenderData data = new ChartMultiSeriesRenderData();
             data.setChartTitle(chartTitle);
+            data.setxAxisTitle(xAxisTitle);
+            data.setyAxisTitle(yAxisTitle);
             data.setCategories(categories);
             data.setSeriesDatas(seriesDatas);
             return data;
@@ -129,7 +143,7 @@ public class Charts {
      * builder to build combo series chart
      *
      */
-    public static class ChartCombos extends ChartBuilder implements RenderDataBuilder<ChartMultiSeriesRenderData> {
+    public static class ChartCombos extends ChartBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
 
         private ChartCombos(String chartTitle, String[] categories) {
@@ -162,6 +176,8 @@ public class Charts {
         public ChartMultiSeriesRenderData create() {
             ChartMultiSeriesRenderData data = new ChartMultiSeriesRenderData();
             data.setChartTitle(chartTitle);
+            data.setxAxisTitle(xAxisTitle);
+            data.setyAxisTitle(yAxisTitle);
             data.setCategories(categories);
             data.setSeriesDatas(seriesDatas);
             return data;
@@ -172,7 +188,7 @@ public class Charts {
      * builder to build single series chart
      *
      */
-    public static class ChartSingles extends ChartBuilder implements RenderDataBuilder<ChartSingleSeriesRenderData> {
+    public static class ChartSingles extends ChartBuilder<ChartSingleSeriesRenderData> {
         private SeriesRenderData series;
 
         private ChartSingles(String chartTitle, String[] categories) {
@@ -189,6 +205,8 @@ public class Charts {
         public ChartSingleSeriesRenderData create() {
             ChartSingleSeriesRenderData data = new ChartSingleSeriesRenderData();
             data.setChartTitle(chartTitle);
+            data.setxAxisTitle(xAxisTitle);
+            data.setyAxisTitle(yAxisTitle);
             data.setCategories(categories);
             data.setSeriesData(series);
             return data;

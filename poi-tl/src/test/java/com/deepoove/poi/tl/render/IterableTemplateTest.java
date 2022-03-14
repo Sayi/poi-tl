@@ -2,12 +2,7 @@ package com.deepoove.poi.tl.render;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -15,14 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.data.HyperlinkTextRenderData;
-import com.deepoove.poi.data.NumberingFormat;
-import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.Rows;
-import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.tl.source.XWPFTestSupport;
 
@@ -195,7 +183,7 @@ public class IterableTemplateTest {
                 put("name", "Sayi");
                 put("addrs", addrs);
                 put("list", new NumberingRenderData(NumberingFormat.DECIMAL, textRenderData, textRenderData));
-                put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+                put("image", new FilePictureRenderData(120, 120, "src/test/resources/sayi.png"));
                 put("table", Tables.of(row0, row1, row2).create());
 
             }
@@ -204,7 +192,7 @@ public class IterableTemplateTest {
             {
                 put("name", "Deepoove");
                 put("list", new NumberingRenderData(NumberingFormat.DECIMAL, textRenderData, textRenderData));
-                put("image", new PictureRenderData(120, 120, "src/test/resources/sayi.png"));
+                put("image", new FilePictureRenderData(120, 120, "src/test/resources/sayi.png"));
 
             }
         });

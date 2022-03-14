@@ -49,7 +49,7 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
             if (data instanceof TextRenderData) {
                 XWPFRun createRun = bodyContainer.insertNewParagraph(run).createRun();
                 StyleUtils.styleRun(createRun, run);
-                TextRenderPolicy.Helper.renderTextRun(createRun, data);
+                TextRenderPolicy.Helper.renderTextRun(createRun, (TextRenderData) data);
             } else if (data instanceof TableRenderData) {
                 TableRenderPolicy.Helper.renderTable(run, (TableRenderData) data);
             } else if (data instanceof NumberingRenderData) {

@@ -31,7 +31,7 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 public class BookmarkRenderPolicy extends TextRenderPolicy {
 
     @Override
-    public void doRender(RenderContext<Object> context) throws Exception {
+    public void doRender(RenderContext<TextRenderData> context) throws Exception {
         Helper.renderTextRun(context.getRun(), context.getData());
 
         XWPFRun run = context.getRun();

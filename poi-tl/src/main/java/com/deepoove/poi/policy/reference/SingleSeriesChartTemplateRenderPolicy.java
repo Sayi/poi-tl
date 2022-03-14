@@ -16,7 +16,6 @@
 package com.deepoove.poi.policy.reference;
 
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
@@ -44,7 +43,7 @@ public class SingleSeriesChartTemplateRenderPolicy
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
-
+        
         XDDFDataSource<?> categoriesData = null;
         if (pie instanceof XDDFScatterChartData) {
             categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
@@ -60,10 +59,7 @@ public class SingleSeriesChartTemplateRenderPolicy
 
         plot(chart, pie);
         setTitle(chart, data.getChartTitle());
-    }
-
-    private Double[] toNumberArray(String[] categories) {
-        return Stream.of(categories).mapToDouble(Double::parseDouble).boxed().toArray(Double[]::new);
+        setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle());
     }
 
 }

@@ -32,8 +32,9 @@ public class ChartReferencePolicyTest {
         datas.put("pieChart", pie);
         datas.put("doughnutChart", pie);
 
-        ChartSingleSeriesRenderData scatter = createSingleSeriesScatterChart();
+        ChartMultiSeriesRenderData scatter = createMultiSeriesScatterChart();
         datas.put("scatterChart", scatter);
+        datas.put("relatechart", scatter);
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/reference_chart.docx").render(datas);
         template.writeToFile("target/out_reference_chart.docx");
@@ -45,9 +46,12 @@ public class ChartReferencePolicyTest {
                 .create();
     }
 
-    private ChartSingleSeriesRenderData createSingleSeriesScatterChart() {
-        return Charts.ofSingleSeries("ChartTitle", new String[] { "1", "3", "4", "6", "9", "2", "4" })
-                .series("Y值", new Integer[] { 12, 4, 9, 2, 10, 5, 7 })
+    private ChartMultiSeriesRenderData createMultiSeriesScatterChart() {
+        return Charts.ofMultiSeries("ChartTitle", new String[] { "1", "3", "4", "6", "9", "2", "4" })
+                .addSeries("A", new Integer[] { 12, 4, 9, 2, 10, 5, 7 })
+                .addSeries("B", new Integer[] { 2, 6, 3, 6, 2, 6, 9 })
+                .setxAsixTitle("X Title")
+                .setyAsixTitle("Y Title")
                 .create();
     }
 

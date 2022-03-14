@@ -18,7 +18,6 @@ package com.deepoove.poi.policy;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.function.Supplier;
 
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -26,9 +25,9 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.converter.ObjectToPictureRenderDataConverter;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
-import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
 import com.deepoove.poi.exception.RenderException;
@@ -45,46 +44,38 @@ import com.deepoove.poi.xwpf.WidthScalePattern;
  * 
  * @author Sayi
  */
-public class PictureRenderPolicy extends AbstractRenderPolicy<Object> {
+public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
     @Override
-    protected boolean validate(Object data) {
-        if (null == data) return false;
-        if (data instanceof PictureRenderData) {
-            return null != ((PictureRenderData) data).getPictureSupplier();
-        }
-        return true;
+    public PictureRenderData cast(Object source) {
+        return ObjectToPictureRenderDataConverter.INSTANCE.convert(source);
     }
 
     @Override
-    public void doRender(RenderContext<Object> context) throws Exception {
-        Helper.renderPicture(context.getRun(), wrapper(context.getData()));
+    protected boolean validate(PictureRenderData data) {
+        return null != data;
     }
 
     @Override
-    protected void afterRender(RenderContext<Object> context) {
+    public void doRender(RenderContext<PictureRenderData> context) throws Exception {
+        Helper.renderPicture(context.getRun(), context.getData());
+    }
+
+    @Override
+    protected void afterRender(RenderContext<PictureRenderData> context) {
         clearPlaceholder(context, false);
     }
 
     @Override
-    protected void reThrowException(RenderContext<Object> context, Exception e) {
+    protected void reThrowException(RenderContext<PictureRenderData> context, Exception e) {
         logger.info("Render picture " + context.getEleTemplate() + " error: {}", e.getMessage());
-        String alt = "";
-        if (context.getData() instanceof PictureRenderData) {
-            alt = ((PictureRenderData) context.getData()).getAltMeta();
-        }
+        String alt = context.getData().getAltMeta();
         context.getRun().setText(alt, 0);
-    }
-
-    private static PictureRenderData wrapper(Object object) {
-        if (object instanceof PictureRenderData) return (PictureRenderData) object;
-        return Pictures.of(object.toString()).fitSize().create();
     }
 
     public static class Helper {
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
-            Supplier<byte[]> supplier = picture.getPictureSupplier();
-            byte[] imageBytes = supplier.get();
+            byte[] imageBytes = picture.readPictureData();
             if (null == imageBytes) {
                 throw new IllegalStateException("Can't read picture byte arrays!");
             }

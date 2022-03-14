@@ -15,16 +15,9 @@
  */
 package com.deepoove.poi.converter;
 
-import com.deepoove.poi.data.DocumentRenderData;
-import com.deepoove.poi.data.Documents;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.Documents.DocumentBuilder;
-import com.deepoove.poi.data.ParagraphRenderData;
-import com.deepoove.poi.data.Paragraphs;
 import com.deepoove.poi.data.Paragraphs.ParagraphBuilder;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.RenderData;
-import com.deepoove.poi.data.TextRenderData;
-import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
 
 /**
@@ -49,7 +42,7 @@ public class ParagraphToDocumentRenderDataConverter
     }
 
     @Override
-    public DocumentRenderData convert(ParagraphRenderData para) throws Exception {
+    public DocumentRenderData convert(ParagraphRenderData para) {
         int line = FIRST_LINE;
         DocumentBuilder of = Documents.of();
         ParagraphBuilder paragraphBuilder = null;

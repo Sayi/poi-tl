@@ -16,21 +16,16 @@
 package com.deepoove.poi.policy;
 
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
+import com.deepoove.poi.converter.ObjectToNumberingRenderDataConverter;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingItemRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
-import com.deepoove.poi.data.Numberings;
-import com.deepoove.poi.data.Numberings.NumberingBuilder;
-import com.deepoove.poi.data.ParagraphRenderData;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
@@ -42,46 +37,27 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  * 
  * @author Sayi
  */
-public class NumberingRenderPolicy extends AbstractRenderPolicy<Object> {
+public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {
 
     @Override
-    protected boolean validate(Object data) {
+    public NumberingRenderData cast(Object source) {
+        return ObjectToNumberingRenderDataConverter.INSTANCE.convert(source);
+    }
+
+    @Override
+    protected boolean validate(NumberingRenderData data) {
         if (null == data) return false;
-        if (data instanceof NumberingRenderData) {
-            return CollectionUtils.isNotEmpty(((NumberingRenderData) data).getItems());
-        }
-        return data instanceof Iterable;
+        return CollectionUtils.isNotEmpty(((NumberingRenderData) data).getItems());
     }
 
     @Override
-    public void doRender(RenderContext<Object> context) throws Exception {
-        Helper.renderNumbering(context.getRun(), wrapper(context.getData()));
+    public void doRender(RenderContext<NumberingRenderData> context) throws Exception {
+        Helper.renderNumbering(context.getRun(), context.getData());
     }
 
     @Override
-    protected void afterRender(RenderContext<Object> context) {
+    protected void afterRender(RenderContext<NumberingRenderData> context) {
         clearPlaceholder(context, true);
-    }
-
-    private static NumberingRenderData wrapper(Object obj) {
-        if (obj instanceof NumberingRenderData) return (NumberingRenderData) obj;
-        NumberingBuilder ofBullet = Numberings.ofBullet();
-        if (obj instanceof Iterable) {
-            Iterator<?> iterator = ((Iterable<?>) obj).iterator();
-            while (iterator.hasNext()) {
-                Object next = iterator.next();
-                if (next instanceof TextRenderData) {
-                    ofBullet.addItem((TextRenderData) next);
-                } else if (next instanceof PictureRenderData) {
-                    ofBullet.addItem((PictureRenderData) next);
-                } else if (next instanceof ParagraphRenderData) {
-                    ofBullet.addItem((ParagraphRenderData) next);
-                } else {
-                    ofBullet.addItem(next.toString());
-                }
-            }
-        }
-        return ofBullet.create();
     }
 
     public static class Helper {

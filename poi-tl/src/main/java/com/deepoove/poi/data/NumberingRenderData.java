@@ -64,16 +64,6 @@ public class NumberingRenderData implements RenderData {
         }
     }
 
-    @Deprecated
-    public static NumberingRenderData build(String... text) {
-        if (null != text) {
-            return new NumberingRenderData(Arrays.stream(text).map(TextRenderData::new).map(data -> {
-                return Paragraphs.of(data).create();
-            }).collect(Collectors.toList()));
-        }
-        return new NumberingRenderData(NumberingFormat.BULLET, (TextRenderData) null);
-    }
-
     public static NumberingRenderData build(TextRenderData... text) {
         return new NumberingRenderData(NumberingFormat.BULLET, text);
     }

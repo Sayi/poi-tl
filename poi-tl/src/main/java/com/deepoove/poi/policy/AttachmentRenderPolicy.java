@@ -18,7 +18,6 @@ package com.deepoove.poi.policy;
 import java.io.StringReader;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Supplier;
 
 import org.apache.poi.ooxml.POIXMLTypeLoader;
 import org.apache.poi.ooxml.util.DocumentHelper;
@@ -122,8 +121,7 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
                     .size(64, 64)
                     .create();
         }
-        Supplier<byte[]> supplier = icon.getPictureSupplier();
-        byte[] image = supplier.get();
+        byte[] image = icon.readPictureData();
         PictureType pictureType = icon.getPictureType();
         if (null == pictureType) {
             pictureType = PictureType.suggestFileType(image);

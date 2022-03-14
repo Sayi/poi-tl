@@ -20,18 +20,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 
-import com.deepoove.poi.data.CellRenderData;
-import com.deepoove.poi.data.MergeCellRule;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.MergeCellRule.Grid;
-import com.deepoove.poi.data.ParagraphRenderData;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.TableRenderData;
 import com.deepoove.poi.data.style.CellStyle;
 import com.deepoove.poi.data.style.ParagraphStyle;
 import com.deepoove.poi.data.style.Style;

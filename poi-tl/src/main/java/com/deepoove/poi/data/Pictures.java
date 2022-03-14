@@ -16,10 +16,7 @@
 package com.deepoove.poi.data;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.function.Supplier;
 
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
@@ -38,15 +35,15 @@ public class Pictures {
     }
 
     public static PictureBuilder ofLocal(String path) {
-        return of(new LocalPictureSupplier(path), PictureType.suggestFileType(path));
+        return new PictureBuilder(new FilePictureRenderData(path, PictureType.suggestFileType(path)));
     }
 
     public static PictureBuilder ofUrl(String url, PictureType pictureType) {
-        return of(new UrlPictureSupplier(url), pictureType);
+        return new PictureBuilder(new UrlPictureRenderData(url, pictureType));
     }
 
     public static PictureBuilder ofUrl(String url) {
-        return of(new UrlPictureSupplier(url));
+        return ofUrl(url, null);
     }
 
     public static PictureBuilder ofStream(InputStream inputStream, PictureType pictureType) {
@@ -58,7 +55,7 @@ public class Pictures {
     }
 
     public static PictureBuilder ofBufferedImage(BufferedImage image, PictureType pictureType) {
-        return of(() -> BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
+        return ofBytes(BufferedImageUtils.getBufferByteArray(image, pictureType.format()), pictureType);
     }
 
     public static PictureBuilder ofBase64(String base64, PictureType pictureType) {
@@ -70,7 +67,7 @@ public class Pictures {
     }
 
     public static PictureBuilder ofBytes(byte[] bytes, PictureType pictureType) {
-        return new PictureBuilder(pictureType, new PictureSupplier(bytes));
+        return new PictureBuilder(new ByteArrayPictureRenderData(bytes, pictureType));
     }
 
     public static PictureBuilder of(String imgUri) {
@@ -81,63 +78,6 @@ public class Pictures {
         }
     }
 
-    public static PictureBuilder of(Supplier<byte[]> supplier) {
-        return of(supplier, null);
-    }
-
-    public static PictureBuilder of(Supplier<byte[]> supplier, PictureType pictureType) {
-        return new PictureBuilder(pictureType, supplier);
-    }
-
-    public static class LocalPictureSupplier implements Supplier<byte[]>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-        private String path;
-
-        public LocalPictureSupplier(String path) {
-            this.path = path;
-        }
-
-        @Override
-        public byte[] get() {
-            return ByteUtils.getLocalByteArray(new File(path));
-        }
-
-    }
-
-    public static class UrlPictureSupplier implements Supplier<byte[]>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-        private String url;
-
-        public UrlPictureSupplier(String url) {
-            // hack for tp=webp
-            this.url = url.replace("tp=webp", "tp=png");
-        }
-
-        @Override
-        public byte[] get() {
-            return ByteUtils.getUrlByteArray(url);
-        }
-
-    }
-
-    public static class PictureSupplier implements Supplier<byte[]>, Serializable {
-
-        private static final long serialVersionUID = 1L;
-        private byte[] bytes;
-
-        public PictureSupplier(byte[] bytes) {
-            this.bytes = bytes;
-        }
-
-        @Override
-        public byte[] get() {
-            return bytes;
-        }
-
-    }
-
     /**
      * Builder to build {@link PictureRenderData} instances.
      */
@@ -145,8 +85,8 @@ public class Pictures {
 
         private PictureRenderData data;
 
-        private PictureBuilder(PictureType pictureType, Supplier<byte[]> supplier) {
-            data = new PictureRenderData(0, 0, pictureType, supplier);
+        private PictureBuilder(PictureRenderData data) {
+            this.data = data;
         }
 
         public PictureBuilder size(int width, int height) {

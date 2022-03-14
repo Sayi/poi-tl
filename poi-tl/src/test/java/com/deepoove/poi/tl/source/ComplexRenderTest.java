@@ -9,12 +9,7 @@ import java.util.Map;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.data.PictureRenderData;
-import com.deepoove.poi.data.PictureType;
-import com.deepoove.poi.data.RowRenderData;
-import com.deepoove.poi.data.Rows;
-import com.deepoove.poi.data.Tables;
-import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.*;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.util.ByteUtils;
 
@@ -44,18 +39,17 @@ public class ComplexRenderTest {
                 put("d_depart", "deepoove.com");
                 put("metalNumber", "与描述相符");
                 put("metalWord", "没有质量问题");
-                put("metalPicture", new PictureRenderData(100, 120, "src/test/resources/logo.png"));
+                put("metalPicture", new FilePictureRenderData(100, 120, "src/test/resources/logo.png"));
                 put("s_safeWord", "没有安全问题");
                 put("s_treadWord", "没有安全问题");
                 put("s_brakeWord", "没有安全问题");
                 put("s_fluidWord", "没有安全问题");
                 put("s_antiWord", "没有安全问题");
 
-                put("brakePicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
-                put("treadPicture", new PictureRenderData(220, 135, PictureType.PNG, ByteUtils
-                        .getLocalByteArray(new File("src/test/resources/logo.png"))));
-                put("fluidPicture", new PictureRenderData(220, 135, "src/test/resources/logo.png"));
-                put("antiPicture", new PictureRenderData(75, 170, "src/test/resources/logo.png"));
+                put("brakePicture", new FilePictureRenderData(220, 135, "src/test/resources/logo.png"));
+                put("treadPicture", new FilePictureRenderData(220, 135, "src/test/resources/logo.png"));
+                put("fluidPicture", new FilePictureRenderData(220, 135, "src/test/resources/logo.png"));
+                put("antiPicture", new FilePictureRenderData(75, 170, "src/test/resources/logo.png"));
 
                 put("o_operWord", "正常");
                 put("zhidong", "正常");
@@ -67,7 +61,7 @@ public class ComplexRenderTest {
                 String code = "detect_";
                 for (int i = 0; i < 25; i++) {
                     put(code + i + "pic",
-                            new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
+                            new FilePictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
                     put(code + i, new TextRenderData("df2d4f", "玻璃"));
                     put(code + i + "pro", new TextRenderData("模糊"));
                 }
@@ -92,8 +86,8 @@ public class ComplexRenderTest {
                     }
                 };
                 for (String text : cfgs) {
-                    put(text + "_p", new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
-                    put(text + "_v", new PictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
+                    put(text + "_p", new FilePictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
+                    put(text + "_v", new FilePictureRenderData(8, 8, "src/test/resources/source/0-1.png"));
                 }
                 put("c_cfgWord", "一切正常");
 
