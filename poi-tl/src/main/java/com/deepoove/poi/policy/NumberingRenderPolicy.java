@@ -23,6 +23,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.converter.ObjectToNumberingRenderDataConverter;
+import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.NumberingFormat;
 import com.deepoove.poi.data.NumberingItemRenderData;
 import com.deepoove.poi.data.NumberingRenderData;
@@ -39,10 +40,10 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
  */
 public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderData> {
 
-    private static ObjectToNumberingRenderDataConverter converter = new ObjectToNumberingRenderDataConverter();
+    private static ToRenderDataConverter<Object, NumberingRenderData> converter = new ObjectToNumberingRenderDataConverter();
 
     @Override
-    public NumberingRenderData cast(Object source) {
+    public NumberingRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 

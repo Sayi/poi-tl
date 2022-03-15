@@ -26,7 +26,7 @@ import com.deepoove.poi.data.TextRenderData;
 public class ObjectToTextRenderDataConverter implements ToRenderDataConverter<Object, TextRenderData> {
 
     @Override
-    public TextRenderData convert(Object source) {
+    public TextRenderData convert(Object source) throws Exception {
         if (null == source) return null;
         TextRenderData text = source instanceof TextRenderData ? (TextRenderData) source
                 : new TextRenderData(source.toString());

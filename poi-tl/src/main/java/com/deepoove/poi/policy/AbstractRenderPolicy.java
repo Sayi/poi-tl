@@ -43,7 +43,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("unchecked")
-    protected T cast(Object source) {
+    protected T cast(Object source) throws Exception {
         // type safe
         return (T) source;
     }
@@ -63,7 +63,7 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
                 source = castFromJson(template.getConfig(), (LinkedTreeMap<?, ?>) data);
             }
             model = cast(source);
-        } catch (ClassCastException e) {
+        } catch (Exception e) {
             throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
         }
 

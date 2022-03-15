@@ -42,7 +42,7 @@ public class ParagraphToDocumentRenderDataConverter
     }
 
     @Override
-    public DocumentRenderData convert(ParagraphRenderData para) {
+    public DocumentRenderData convert(ParagraphRenderData para) throws Exception {
         int line = FIRST_LINE;
         DocumentBuilder of = Documents.of();
         ParagraphBuilder paragraphBuilder = null;

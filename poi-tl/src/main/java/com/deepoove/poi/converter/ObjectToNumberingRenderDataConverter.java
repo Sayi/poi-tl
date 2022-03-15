@@ -29,7 +29,7 @@ import com.deepoove.poi.data.Numberings.NumberingBuilder;
 public class ObjectToNumberingRenderDataConverter implements ToRenderDataConverter<Object, NumberingRenderData> {
 
     @Override
-    public NumberingRenderData convert(Object source) {
+    public NumberingRenderData convert(Object source) throws Exception {
         if (null == source || source instanceof NumberingRenderData) return (NumberingRenderData) source;
         NumberingBuilder ofBullet = Numberings.ofBullet();
         if (source instanceof Iterable) {
