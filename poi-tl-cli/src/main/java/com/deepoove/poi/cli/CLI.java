@@ -20,6 +20,7 @@ import com.deepoove.poi.plugin.highlight.HighlightRenderPolicy;
 import com.deepoove.poi.plugin.markdown.FileMarkdownRenderData;
 import com.deepoove.poi.plugin.markdown.MarkdownRenderData;
 import com.deepoove.poi.plugin.markdown.MarkdownRenderPolicy;
+import com.deepoove.poi.plugin.toc.TOCRenderPolicy;
 import com.deepoove.poi.policy.AttachmentRenderPolicy;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -95,6 +96,7 @@ public class CLI {
                 .addPlugin(';', new AttachmentRenderPolicy())
                 .addPlugin('~', new HighlightRenderPolicy())
                 .addPlugin('-', new MarkdownRenderPolicy());
+        builder.bind("toc", new TOCRenderPolicy());
 
         Configure configure = builder.build();
         try {

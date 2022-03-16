@@ -25,7 +25,6 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.XWPFOnOff;
-import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
  * Experimental: Table of contents
@@ -38,8 +37,7 @@ public class TOCRenderPolicy implements RenderPolicy {
         run.setText("", 0);
 
         XWPFParagraph tocPara = (XWPFParagraph) run.getParent();
-        XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(tocPara);
-        XWPFFieldRun fieldRun = wrapper.insertNewField(0);
+        XWPFFieldRun fieldRun = tocPara.insertNewFieldRun(0);
 
         CTSimpleField toc = fieldRun.getCTField();
         toc.setInstr("TOC \\o");
