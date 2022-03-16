@@ -25,3 +25,4 @@ merge_all
 **/**/mk.md
 complex.docx
 ~$*.docx
+poi-tl-cli/target/

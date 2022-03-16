@@ -3,6 +3,8 @@ package com.deepoove.poi.tl.xwpf;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.FilePictureRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
@@ -45,6 +47,19 @@ public class STDTest {
         XWPFTemplate.compile("src/test/resources/template/template_sdt.docx")
                 .render(data)
                 .writeToFile("target/out_template_sdt.docx");
+
+    }
+
+    @Test
+    public void testRenderSDTBlock() throws Exception {
+        @SuppressWarnings("serial")
+        Map<String, Object> data = new HashMap<String, Object>() {
+            {
+                put("title", "Poi-tl");
+            }
+        };
+
+        XWPFTemplate.compile("src/test/resources/template/sdt.docx").render(data).writeToFile("target/out_sdt.docx");
 
     }
 

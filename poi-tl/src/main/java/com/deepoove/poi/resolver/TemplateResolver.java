@@ -29,17 +29,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFChart;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -100,6 +90,7 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<MetaTemplate> resolveBodyElements(List<IBodyElement> bodyElements) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
@@ -116,6 +107,42 @@ public class TemplateResolver extends AbstractResolver {
                 resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
+                List<XWPFTableRow> rows = table.getRows();
+                if (null == rows) continue;
+                for (XWPFTableRow row : rows) {
+                    List<XWPFTableCell> cells = row.getTableCells();
+                    if (null == cells) continue;
+                    cells.forEach(cell -> {
+                        addNewMeta(metaTemplates, stack, resolveBodyElements(cell.getBodyElements()));
+                    });
+                }
+            } else if (element.getElementType() == BodyElementType.CONTENTCONTROL) {
+                XWPFSDT sdt = (XWPFSDT) element;
+                XWPFSDTContent content = (XWPFSDTContent) sdt.getContent();
+                List<ISDTContents> contents = (List<ISDTContents>) ReflectionUtils.getValue("bodyElements", content);
+                addNewMeta(metaTemplates, stack, resolveSDTElements(contents));
+            }
+
+        }
+        checkStack(stack);
+        return metaTemplates;
+    }
+
+    private List<MetaTemplate> resolveSDTElements(List<ISDTContents> contents) {
+        List<MetaTemplate> metaTemplates = new ArrayList<>();
+        if (null == contents) return metaTemplates;
+
+        // current iterable templates state
+        Deque<BlockTemplate> stack = new LinkedList<BlockTemplate>();
+
+        for (ISDTContents content : contents) {
+            if (content == null) continue;
+            if (content instanceof XWPFParagraph) {
+                XWPFParagraph paragraph = (XWPFParagraph) content;
+                new RunningRunParagraph(paragraph, templatePattern).refactorRun();
+                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
+            } else if (content instanceof XWPFTable) {
+                XWPFTable table = (XWPFTable) content;
                 List<XWPFTableRow> rows = table.getRows();
                 if (null == rows) continue;
                 for (XWPFTableRow row : rows) {
