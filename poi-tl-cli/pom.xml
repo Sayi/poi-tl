@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>com.deepoove</groupId>
 			<artifactId>poi-tl-plugin-markdown</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.beust</groupId>

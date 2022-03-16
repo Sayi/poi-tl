@@ -17,6 +17,7 @@ import com.deepoove.poi.data.RenderData;
 import com.deepoove.poi.plugin.comment.CommentRenderPolicy;
 import com.deepoove.poi.plugin.highlight.HighlightRenderData;
 import com.deepoove.poi.plugin.highlight.HighlightRenderPolicy;
+import com.deepoove.poi.plugin.markdown.FileMarkdownRenderData;
 import com.deepoove.poi.plugin.markdown.MarkdownRenderData;
 import com.deepoove.poi.plugin.markdown.MarkdownRenderPolicy;
 import com.deepoove.poi.policy.AttachmentRenderPolicy;
@@ -73,7 +74,8 @@ public class CLI {
             @Override
             protected RuntimeTypeAdapterFactory<RenderData> createRenderTypeAdapter(boolean readable) {
                 return super.createRenderTypeAdapter(readable).registerSubtype(MarkdownRenderData.class, "markdown")
-                        .registerSubtype(HighlightRenderData.class, "code");
+                        .registerSubtype(HighlightRenderData.class, "code")
+                        .registerSubtype(FileMarkdownRenderData.class, "markdown-file");
             }
 
             @Override
@@ -83,6 +85,9 @@ public class CLI {
                         .registerSubtype(MarkdownRenderData.class, "markdown"));
                 typeAdapter.add(RuntimeTypeAdapterFactory.of(HighlightRenderData.class, "type", readable)
                         .registerSubtype(HighlightRenderData.class, "code"));
+                typeAdapter.add(RuntimeTypeAdapterFactory.of(MarkdownRenderData.class, "type", readable)
+                        .registerSubtype(MarkdownRenderData.class, "markdown")
+                        .registerSubtype(FileMarkdownRenderData.class, "markdown-file"));
                 return typeAdapter;
             }
         });

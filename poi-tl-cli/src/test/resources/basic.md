@@ -61,7 +61,7 @@ Or use 3 backticks
 
 
 [text link](http://a.com)
-![alt](src/test/resources/logo.png)
+![alt](src/test/resources/sayi.png)
 
 Inline code: `code`
 

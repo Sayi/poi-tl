@@ -43,7 +43,7 @@ public class MarkdownToDocumentRenderDataConverter
     }
 
     @Override
-    public DocumentRenderData convert(MarkdownRenderData data) {
+    public DocumentRenderData convert(MarkdownRenderData data) throws Exception {
         Node node = parser.parse(data.getMarkdown());
         DocumentVisitor visitor = new DocumentVisitor(data.getStyle());
         node.accept(visitor);

@@ -11,8 +11,14 @@ public class CLITest {
     }
 
     @Test
-    public void testMD() {
+    public void testMarkdown() {
         String cmd = "-t src/test/resources/markdown_template.docx -o target/out_md.docx -d src/test/resources/md.json";
+        CLI.main(cmd.split(" "));
+    }
+    
+    @Test
+    public void testDocsify() {
+        String cmd = "-t src/test/resources/markdown_template.docx -o target/out_docsify.docx -d src/test/resources/docsify.json";
         CLI.main(cmd.split(" "));
     }
 

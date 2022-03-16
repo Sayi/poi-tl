@@ -1,7 +1,7 @@
 {
   "md": {
     "type": "markdown-file",
-    "path": "src/test/resources/basic.md",
+    "path": "src/test/resources/docsify",
     "style": {
       "inlineCodeStyle": {
         "color": "f44336",

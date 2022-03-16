@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.DefaultGsonHandler;
 
 public class MarkdownRenderPolicyTest {
 
@@ -26,10 +25,13 @@ public class MarkdownRenderPolicyTest {
         code.setStyle(style);
 
         Map<String, Object> data = new HashMap<>();
-        data.put("md", code);
+         data.put("md", code);
         
-        System.out.println(new DefaultGsonHandler().gsonWrite().toJson(data));
-
+//        FileMarkdownRenderData fileMarkdownRenderData = new FileMarkdownRenderData();
+//        fileMarkdownRenderData.setPath("src/test/resources/markdown/basic.md");
+//        fileMarkdownRenderData.setStyle(style);
+//        data.put("md", fileMarkdownRenderData);
+        
         Configure config = Configure.builder().bind("md", new MarkdownRenderPolicy()).build();
         XWPFTemplate.compile("src/test/resources/markdown/markdown_template.docx", config)
                 .render(data)

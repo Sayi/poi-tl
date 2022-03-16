@@ -35,7 +35,7 @@ public class HighlightToDocumentRenderDataConverter
         implements ToRenderDataConverter<HighlightRenderData, DocumentRenderData> {
 
     @Override
-    public DocumentRenderData convert(HighlightRenderData data) {
+    public DocumentRenderData convert(HighlightRenderData data) throws Exception {
         Highlighter<ParagraphRenderData> highlighter = new Highlighter<>(
                 new StyleRendererFactory<ParagraphRenderData>() {
                     @Override
