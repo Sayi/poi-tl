@@ -23,6 +23,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 
 import com.deepoove.poi.converter.ObjectToTextRenderDataConverter;
+import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.BookmarkTextRenderData;
 import com.deepoove.poi.data.HyperlinkTextRenderData;
 import com.deepoove.poi.data.TextRenderData;
@@ -39,10 +40,10 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  */
 public class TextRenderPolicy extends AbstractRenderPolicy<TextRenderData> {
 
-    private static ObjectToTextRenderDataConverter converter = new ObjectToTextRenderDataConverter();
+    private static ToRenderDataConverter<Object, TextRenderData> converter = new ObjectToTextRenderDataConverter();
 
     @Override
-    public TextRenderData cast(Object source) {
+    public TextRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 

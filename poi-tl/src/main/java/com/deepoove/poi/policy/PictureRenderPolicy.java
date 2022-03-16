@@ -26,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.converter.ObjectToPictureRenderDataConverter;
+import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.data.style.PictureStyle;
@@ -46,10 +47,10 @@ import com.deepoove.poi.xwpf.WidthScalePattern;
  */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
-    private static ObjectToPictureRenderDataConverter converter = new ObjectToPictureRenderDataConverter();
+    private static ToRenderDataConverter<Object, PictureRenderData> converter = new ObjectToPictureRenderDataConverter();
 
     @Override
-    public PictureRenderData cast(Object source) {
+    public PictureRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 

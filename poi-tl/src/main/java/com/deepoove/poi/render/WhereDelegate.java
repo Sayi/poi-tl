@@ -23,9 +23,11 @@ import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.converter.ObjectToTextRenderDataConverter;
+import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.NumberingRenderData;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.TableRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import com.deepoove.poi.policy.NumberingRenderPolicy;
 import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.TableRenderPolicy;
@@ -40,7 +42,7 @@ import com.deepoove.poi.policy.TextRenderPolicy;
  */
 public class WhereDelegate {
 
-    private static final ObjectToTextRenderDataConverter converter = new ObjectToTextRenderDataConverter();
+    private static final ToRenderDataConverter<Object, TextRenderData> converter = new ObjectToTextRenderDataConverter();
 
     private final XWPFRun run;
 
@@ -52,8 +54,9 @@ public class WhereDelegate {
         return this.run;
     }
 
-    public void renderText(Object data) {
-        TextRenderPolicy.Helper.renderTextRun(run, converter.convert(data));
+    public void renderText(Object data) throws Exception {
+        TextRenderData renderData = converter.convert(data);
+        TextRenderPolicy.Helper.renderTextRun(run, renderData);
     }
 
     public void renderNumbering(NumberingRenderData data) throws Exception {

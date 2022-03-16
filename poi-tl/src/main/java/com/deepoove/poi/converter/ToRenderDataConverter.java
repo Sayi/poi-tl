@@ -28,6 +28,6 @@ import com.deepoove.poi.data.RenderData;
 @FunctionalInterface
 public interface ToRenderDataConverter<T, R extends RenderData> {
 
-    R convert(T t);
+    R convert(T t) throws Exception;
 
 }
