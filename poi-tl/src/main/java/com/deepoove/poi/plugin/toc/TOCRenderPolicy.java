@@ -15,9 +15,9 @@
  */
 package com.deepoove.poi.plugin.toc;
 
+import org.apache.poi.xwpf.usermodel.XWPFFieldRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -25,6 +25,7 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.XWPFOnOff;
+import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
  * Experimental: Table of contents
@@ -37,9 +38,10 @@ public class TOCRenderPolicy implements RenderPolicy {
         run.setText("", 0);
 
         XWPFParagraph tocPara = (XWPFParagraph) run.getParent();
-        CTP ctP = tocPara.getCTP();
+        XWPFParagraphWrapper wrapper = new XWPFParagraphWrapper(tocPara);
+        XWPFFieldRun fieldRun = wrapper.insertNewField(0);
 
-        CTSimpleField toc = ctP.addNewFldSimple();
+        CTSimpleField toc = fieldRun.getCTField();
         toc.setInstr("TOC \\o");
         toc.setDirty(XWPFOnOff.ON);
     }
