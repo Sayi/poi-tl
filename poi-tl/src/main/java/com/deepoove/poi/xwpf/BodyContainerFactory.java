@@ -17,9 +17,9 @@
 package com.deepoove.poi.xwpf;
 
 import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFComment;
 import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 
@@ -39,14 +39,16 @@ public class BodyContainerFactory {
             return new TextBoxBodyContainer((XWPFTextboxContent) body);
         } else if (body instanceof XWPFComment) {
             return new CommentBodyContainer((XWPFComment) body);
+        } else if (body instanceof XWPFStructuredDocumentTagContent) {
+            return new SDTBodyContainer((XWPFStructuredDocumentTagContent) body);
         } else {
             return new DocumentBodyContainer((NiceXWPFDocument) body);
         }
     }
 
     public static BodyContainer getBodyContainer(XWPFRun run) {
-        // TODO XWPFSdt
-        return getBodyContainer(((XWPFParagraph) run.getParent()).getBody());
+        assert run.getParent() instanceof IBodyElement;
+        return getBodyContainer(((IBodyElement) run.getParent()).getBody());
     }
 
     public static BodyContainer getBodyContainer(IterableTemplate iterableTemplate) {

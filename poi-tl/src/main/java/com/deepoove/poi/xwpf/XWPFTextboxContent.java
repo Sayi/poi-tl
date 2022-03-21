@@ -12,11 +12,13 @@ import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSDT;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtBlock;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTxbxContent;
@@ -53,6 +55,14 @@ public class XWPFTextboxContent implements IBody {
                 paragraphs.add(p);
                 bodyElements.add(p);
             }
+            if (o instanceof CTSdtBlock) {
+                XWPFSDT c = new XWPFSDT((CTSdtBlock) o, this);
+                bodyElements.add(c);
+            }
+//            if (o instanceof CTSdtRun) {
+//                XWPFSDT c = new XWPFSDT((CTSdtRun) o, this);
+//                bodyElements.add(c);
+//            }
         }
         cursor.dispose();
     }
@@ -127,7 +137,7 @@ public class XWPFTextboxContent implements IBody {
     /**
      * add a Paragraph to this TableCell
      *
-     * @param p the paragaph which has to be added
+     * @param p the paragraph which has to be added
      */
     public void addParagraph(XWPFParagraph p) {
         paragraphs.add(p);

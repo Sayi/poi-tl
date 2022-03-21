@@ -27,6 +27,7 @@ import org.apache.poi.ooxml.POIXMLRelation;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.*;
 import org.apache.poi.xwpf.usermodel.*;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
@@ -51,6 +52,7 @@ public class NiceXWPFDocument extends XWPFDocument {
 
     private static Logger logger = LoggerFactory.getLogger(NiceXWPFDocument.class);
 
+    protected List<XWPFStructuredDocumentTag> structuredDocumentTags = new ArrayList<>();
     protected List<XWPFTable> allTables = new ArrayList<XWPFTable>();
     protected List<XWPFPicture> allPictures = new ArrayList<XWPFPicture>();
     protected List<POIXMLDocumentPart> embedds = new ArrayList<POIXMLDocumentPart>();
@@ -136,6 +138,28 @@ public class NiceXWPFDocument extends XWPFDocument {
         read(this);
         this.getHeaderList().forEach(header -> read(header));
         this.getFooterList().forEach(header -> read(header));
+        // structured document tag
+        if (!contentControls.isEmpty()) {
+            XmlCursor docCursor = getDocument().newCursor();
+            docCursor.selectPath("./*");
+            while (docCursor.toNextSelection()) {
+                XmlObject o = docCursor.getObject();
+                if (o instanceof CTBody) {
+                    XmlCursor bodyCursor = o.newCursor();
+                    bodyCursor.selectPath("./*");
+                    while (bodyCursor.toNextSelection()) {
+                        XmlObject bodyObj = bodyCursor.getObject();
+                        if (bodyObj instanceof CTSdtBlock) {
+                            XWPFStructuredDocumentTag c = new XWPFStructuredDocumentTag((CTSdtBlock) bodyObj, this);
+                            bodyElements.add(c);
+                            structuredDocumentTags.add(c);
+                        }
+                    }
+                    bodyCursor.dispose();
+                }
+            }
+            docCursor.dispose();
+        }
     }
 
     public List<XWPFPicture> getAllEmbeddedPictures() {
@@ -219,8 +243,7 @@ public class NiceXWPFDocument extends XWPFDocument {
         XWPFRelation relation = 0 == format ? DOCUMENT : XWPFRelation.WORKBOOK;
 
         int idx = 256 + getRelationIndex(relation);
-        POIXMLDocumentPart embeddPart = createRelationship(relation, XWPFFactory.getInstance(),
-                idx);
+        POIXMLDocumentPart embeddPart = createRelationship(relation, XWPFFactory.getInstance(), idx);
         embedds.add(embeddPart);
         /* write bytes to new part */
         PackagePart picDataPart = embeddPart.getPackagePart();

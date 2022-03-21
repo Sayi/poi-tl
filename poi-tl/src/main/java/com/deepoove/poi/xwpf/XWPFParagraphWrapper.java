@@ -33,12 +33,17 @@ import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSDT;
 import org.apache.xmlbeans.QNameSet;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTMarkupRange;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtBlock;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.impl.CTPImpl;
 
@@ -68,6 +73,7 @@ public class XWPFParagraphWrapper {
     static final QNameSet RUN_QNAME_SET = QNameSet.forArray(new QName[] { HYPER_QNAME, FLDSIMPLE_QNAME, R_QNAME });
 
     XWPFParagraph paragraph;
+    List<XWPFStructuredDocumentTag> sdts = null;
 
     public XWPFParagraphWrapper(XWPFParagraph paragraph) {
         this.paragraph = paragraph;
@@ -378,6 +384,33 @@ public class XWPFParagraphWrapper {
             return true;
         }
         return false;
+    }
+
+    public List<XWPFStructuredDocumentTag> getSDTs() {
+        if (null != sdts) return sdts;
+        sdts = new ArrayList<>();
+        long count = paragraph.getIRuns().stream().filter(r -> r instanceof XWPFSDT).count();
+        if (0 == count) return sdts;
+
+        CTP ctp = paragraph.getCTP();
+        XmlCursor c = ctp.newCursor();
+        try {
+            c.selectPath("child::*");
+            while (c.toNextSelection()) {
+                XmlObject o = c.getObject();
+                if (o instanceof CTSdtBlock) {
+                    XWPFStructuredDocumentTag cc = new XWPFStructuredDocumentTag((CTSdtBlock) o, paragraph.getBody());
+                    sdts.add(cc);
+                }
+                if (o instanceof CTSdtRun) {
+                    XWPFStructuredDocumentTag cc = new XWPFStructuredDocumentTag((CTSdtRun) o, paragraph.getBody());
+                    sdts.add(cc);
+                }
+            }
+        } finally {
+            c.dispose();
+        }
+        return sdts;
     }
 
     public XWPFParagraph getParagraph() {

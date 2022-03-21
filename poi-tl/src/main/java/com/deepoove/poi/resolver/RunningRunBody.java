@@ -24,7 +24,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.QNameSet;
 import org.apache.xmlbeans.XmlObject;
@@ -37,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.util.StyleUtils;
-import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
+import com.deepoove.poi.xwpf.RunBodyContext;
 
 /**
  * Running Run algorithm
@@ -45,34 +44,34 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  * @author Sayi
  * @version
  */
-public class RunningRunParagraph {
+public class RunningRunBody {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RunningRunParagraph.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RunningRunBody.class);
 
     static QNameSet qname = QNameSet
             .forArray(new QName[] { new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "br"),
                     new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "t"),
                     new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "cr") });
 
-    private XWPFParagraphWrapper paragraph;
+    private RunBodyContext runBodyContext;
     private List<XWPFRun> runs;
 
     List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<>();
 
-    public RunningRunParagraph(XWPFParagraph paragraph, Pattern pattern) {
-        this.paragraph = new XWPFParagraphWrapper(paragraph);
-        this.runs = paragraph.getRuns();
+    public RunningRunBody(RunBodyContext context, Pattern pattern) {
+        this.runBodyContext = context;
+        this.runs = context.getRuns();
         if (null == runs || runs.isEmpty()) return;
 
-        Matcher matcher = pattern.matcher(getParagraphText(paragraph));
+        Matcher matcher = pattern.matcher(getText(context));
         if (matcher.find()) {
-            refactorParagraph();
+            refactorBody();
         }
 
         buildRunEdge(pattern);
     }
 
-    private String getParagraphText(XWPFParagraph paragraph) {
+    private String getText(RunBodyContext context) {
         StringBuilder out = new StringBuilder(64);
         for (XWPFRun run : runs) {
             out.append(run.text());
@@ -99,13 +98,13 @@ public class RunningRunParagraph {
 
             if (endOffset + 1 >= endText.length()) {
                 // delete the redundant end Run directly
-                if (startRunPos != endRunPos) paragraph.removeRun(endRunPos);
+                if (startRunPos != endRunPos) runBodyContext.removeRun(endRunPos);
             } else {
                 // split end run, set extra in a run
                 String extra = endText.substring(endOffset + 1, endText.length());
                 if (startRunPos == endRunPos) {
                     // create run and set extra content
-                    XWPFRun extraRun = paragraph.insertNewRun(endRunPos + 1);
+                    XWPFRun extraRun = runBodyContext.insertNewRun(endRunPos + 1);
                     StyleUtils.styleRun(extraRun, runs.get(endRunPos));
                     buildExtra(extra, extraRun);
                 } else {
@@ -117,7 +116,7 @@ public class RunningRunParagraph {
 
             // remove extra run
             for (int m = endRunPos - 1; m > startRunPos; m--) {
-                paragraph.removeRun(m);
+                runBodyContext.removeRun(m);
             }
 
             if (startOffset <= 0) {
@@ -131,7 +130,7 @@ public class RunningRunParagraph {
                 XWPFRun extraRun = runs.get(startRunPos);
                 buildExtra(extra, extraRun);
 
-                XWPFRun templateRun = paragraph.insertNewRun(startRunPos + 1);
+                XWPFRun templateRun = runBodyContext.insertNewRun(startRunPos + 1);
                 StyleUtils.styleRun(templateRun, extraRun);
                 templateRun.setText(startEdge.getTag(), 0);
                 templateRuns.add(runs.get(startRunPos + 1));
@@ -144,7 +143,7 @@ public class RunningRunParagraph {
         extraRun.setText(extra, 0);
     }
 
-    private void refactorParagraph() {
+    private void refactorBody() {
         for (int i = runs.size() - 1; i >= 0; i--) {
             XWPFRun xwpfRun = runs.get(i);
             CTR ctr = xwpfRun.getCTR();
@@ -160,7 +159,7 @@ public class RunningRunParagraph {
                     for (int j = size - 1; j >= 0; j--) {
                         Object obj = localArrayList.get(j);
                         if (obj instanceof CTEmpty) {
-                            XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
                             String tagName = ((CTEmpty) obj).getDomNode().getNodeName();
                             if ("w:br".equals(tagName) || "br".equals(tagName)) {
                                 insertNewRun.addBreak();
@@ -169,26 +168,26 @@ public class RunningRunParagraph {
                                 insertNewRun.addCarriageReturn();
                             }
                         } else if (obj instanceof CTBr) {
-                            XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
                             CTBr addNewBr = insertNewRun.getCTR().addNewBr();
                             if (null != ((CTBr) obj).getType()) addNewBr.setType(((CTBr) obj).getType());
                             if (null != ((CTBr) obj).getClear()) addNewBr.setClear(((CTBr) obj).getClear());
                         } else if (obj instanceof CTText) {
-                            XWPFRun insertNewRun = paragraph.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
                             StyleUtils.styleRun(insertNewRun, xwpfRun);
                             insertNewRun.setText(((CTText) obj).getStringValue());
                         }
                     }
-                    paragraph.removeRun(i);
+                    runBodyContext.removeRun(i);
                 }
             }
         }
-        this.runs = paragraph.getParagraph().getRuns();
+        this.runs = runBodyContext.getRuns();
     }
 
     private void buildRunEdge(Pattern pattern) {
         // find all templates
-        Matcher matcher = pattern.matcher(getParagraphText(paragraph.getParagraph()));
+        Matcher matcher = pattern.matcher(getText(runBodyContext));
         while (matcher.find()) {
             pairs.add(ImmutablePair.of(new RunEdge(matcher.start(), matcher.group()),
                     new RunEdge(matcher.end(), matcher.group())));
@@ -260,5 +259,4 @@ public class RunningRunParagraph {
             LOG.debug("[End]:" + runEdges.getRight().toString());
         }
     }
-
 }

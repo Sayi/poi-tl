@@ -16,11 +16,15 @@
 
 package com.deepoove.poi.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import com.deepoove.poi.xwpf.XWPFStructuredDocumentTagContent;
 
 public final class ParagraphUtils {
 
@@ -43,14 +47,25 @@ public final class ParagraphUtils {
     }
 
     public static Integer getRunPos(XWPFRun run) {
-        XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
-        List<XWPFRun> runs = paragraph.getRuns();
+        List<XWPFRun> runs = getRunList(run);
         for (int i = 0; i < runs.size(); i++) {
             if (run == runs.get(i)) {
                 return i;
             }
         }
         return null;
+    }
+
+    private static List<XWPFRun> getRunList(XWPFRun run) {
+        IRunBody parent = run.getParent();
+        if (parent instanceof XWPFParagraph) {
+            XWPFParagraph paragraph = (XWPFParagraph) parent;
+            return paragraph.getRuns();
+        } else if (parent instanceof XWPFStructuredDocumentTagContent) {
+            XWPFStructuredDocumentTagContent paragraph = (XWPFStructuredDocumentTagContent) parent;
+            return paragraph.getRuns();
+        }
+        return new ArrayList<>();
     }
 
     public static boolean havePictures(XWPFParagraph paragraph) {

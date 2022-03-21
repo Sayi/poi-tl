@@ -15,12 +15,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.resolver.RunningRunParagraph;
+import com.deepoove.poi.resolver.RunningRunBody;
 import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.template.MetaTemplate;
+import com.deepoove.poi.xwpf.RunBodyContextFactory;
 
 @DisplayName("Running run paragraph resolver test case")
-public class RunningRunParagraphTest {
+public class RunningRunBodyTest {
 
     @Test
     public void testDefaultGramer() throws IOException {
@@ -107,7 +108,8 @@ public class RunningRunParagraphTest {
         assertEquals(1, paragraph.getRuns().size());
         String text = paragraph.getParagraphText();
 
-        new RunningRunParagraph(paragraph, templateResolver.getTemplatePattern()).refactorRun();
+        new RunningRunBody(RunBodyContextFactory.getRunBodyContext(paragraph), templateResolver.getTemplatePattern())
+                .refactorRun();
         assertEquals(text, paragraph.getParagraphText());
         assertEquals(5, paragraph.getRuns().size());
         assertEquals("{{Hi}}", paragraph.getRuns().get(0).getText(0));
@@ -132,7 +134,8 @@ public class RunningRunParagraphTest {
 
         assertEquals(2, paragraph.getRuns().size());
 
-        new RunningRunParagraph(paragraph, templateResolver.getTemplatePattern()).refactorRun();
+        new RunningRunBody(RunBodyContextFactory.getRunBodyContext(paragraph), templateResolver.getTemplatePattern())
+                .refactorRun();
         assertEquals(3, paragraph.getRuns().size());
         assertEquals("{{Hi}}", paragraph.getRuns().get(0).getText(0));
         assertEquals("AA", paragraph.getRuns().get(1).toString());
