@@ -19,7 +19,6 @@ package com.deepoove.poi.render.processor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
@@ -33,10 +32,9 @@ import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
-import com.deepoove.poi.xwpf.ParagraphContext;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.RunBodyContext;
-import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
+import com.deepoove.poi.xwpf.RunBodyContextFactory;
 
 public class InlineIterableProcessor extends AbstractIterableProcessor {
 
@@ -52,8 +50,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
 
     @Override
     protected void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer) {
-        RunBodyContext parentContext = new ParagraphContext(
-                new XWPFParagraphWrapper((XWPFParagraph) iterableTemplate.getStartRun().getParent()));
+        RunBodyContext parentContext = RunBodyContextFactory.getRunBodyContext(iterableTemplate);
 
         Integer startRunPos = iterableTemplate.getStartMark().getRunPos();
         Integer endRunPos = iterableTemplate.getEndMark().getRunPos();
@@ -67,8 +64,7 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
     protected void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer, Iterable<?> compute) {
         RunTemplate start = iterableTemplate.getStartMark();
         RunTemplate end = iterableTemplate.getEndMark();
-        RunBodyContext parentContext = new ParagraphContext(
-                new XWPFParagraphWrapper((XWPFParagraph) start.getRun().getParent()));
+        RunBodyContext parentContext = RunBodyContextFactory.getRunBodyContext(iterableTemplate);
 
         Integer startRunPos = start.getRunPos();
         Integer endRunPos = end.getRunPos();

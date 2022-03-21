@@ -30,6 +30,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDataBinding;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
@@ -47,11 +48,7 @@ import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
-import com.deepoove.poi.xwpf.CTDrawingWrapper;
-import com.deepoove.poi.xwpf.CTPictWrapper;
-import com.deepoove.poi.xwpf.NiceXWPFDocument;
-import com.deepoove.poi.xwpf.XWPFRunWrapper;
-import com.deepoove.poi.xwpf.XWPFTextboxContent;
+import com.deepoove.poi.xwpf.*;
 
 /**
  * Resolver
@@ -90,7 +87,6 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<MetaTemplate> resolveBodyElements(List<IBodyElement> bodyElements) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
@@ -102,25 +98,19 @@ public class TemplateResolver extends AbstractResolver {
         for (IBodyElement element : bodyElements) {
             if (element == null) continue;
             if (element.getElementType() == BodyElementType.PARAGRAPH) {
-                XWPFParagraph paragraph = (XWPFParagraph) element;
-                new RunningRunParagraph(paragraph, templatePattern).refactorRun();
-                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
+                resolveParagraph((XWPFParagraph) element, metaTemplates, stack);
             } else if (element.getElementType() == BodyElementType.TABLE) {
                 XWPFTable table = (XWPFTable) element;
                 List<XWPFTableRow> rows = table.getRows();
                 if (null == rows) continue;
                 for (XWPFTableRow row : rows) {
-                    List<XWPFTableCell> cells = row.getTableCells();
-                    if (null == cells) continue;
-                    cells.forEach(cell -> {
-                        addNewMeta(metaTemplates, stack, resolveBodyElements(cell.getBodyElements()));
-                    });
+                    resolveTableRow(row, metaTemplates, stack);
                 }
-            } else if (element.getElementType() == BodyElementType.CONTENTCONTROL) {
-                XWPFSDT sdt = (XWPFSDT) element;
-                XWPFSDTContent content = (XWPFSDTContent) sdt.getContent();
-                List<ISDTContents> contents = (List<ISDTContents>) ReflectionUtils.getValue("bodyElements", content);
-                addNewMeta(metaTemplates, stack, resolveSDTElements(contents));
+
+            } else if (element.getElementType() == BodyElementType.CONTENTCONTROL
+                    && element instanceof XWPFStructuredDocumentTag) {
+                XWPFStructuredDocumentTag sdt = (XWPFStructuredDocumentTag) element;
+                addNewMeta(metaTemplates, stack, resolveSDTElements(sdt.getContent()));
             }
 
         }
@@ -128,35 +118,72 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
-    private List<MetaTemplate> resolveSDTElements(List<ISDTContents> contents) {
+    private List<MetaTemplate> resolveSDTElements(XWPFStructuredDocumentTagContent sdtContent) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
-        if (null == contents) return metaTemplates;
+        if (null == sdtContent) return metaTemplates;
+        CTDataBinding dataBinding = sdtContent.getSdt().getDataBinding();
+        if (null != dataBinding) {
+            logger.warn("Content control is bound to data and will not be resolved: " + dataBinding.getXpath());
+            return metaTemplates;
+        }
 
         // current iterable templates state
         Deque<BlockTemplate> stack = new LinkedList<BlockTemplate>();
-
-        for (ISDTContents content : contents) {
-            if (content == null) continue;
-            if (content instanceof XWPFParagraph) {
-                XWPFParagraph paragraph = (XWPFParagraph) content;
-                new RunningRunParagraph(paragraph, templatePattern).refactorRun();
-                resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
-            } else if (content instanceof XWPFTable) {
-                XWPFTable table = (XWPFTable) content;
-                List<XWPFTableRow> rows = table.getRows();
-                if (null == rows) continue;
-                for (XWPFTableRow row : rows) {
-                    List<XWPFTableCell> cells = row.getTableCells();
-                    if (null == cells) continue;
-                    cells.forEach(cell -> {
-                        addNewMeta(metaTemplates, stack, resolveBodyElements(cell.getBodyElements()));
-                    });
+        XWPFStructuredDocumentTag sdt = sdtContent.getSdt();
+        if (null != sdt.getCtSdtBlock()) {
+            List<ISDTContents> contents = sdtContent.getSdtElements();
+            for (ISDTContents content : contents) {
+                if (content == null) continue;
+                if (content instanceof XWPFParagraph) {
+                    resolveParagraph((XWPFParagraph) content, metaTemplates, stack);
+                } else if (content instanceof XWPFTable) {
+                    XWPFTable table = (XWPFTable) content;
+                    List<XWPFTableRow> rows = table.getRows();
+                    if (null == rows) continue;
+                    for (XWPFTableRow row : rows) {
+                        resolveTableRow(row, metaTemplates, stack);
+                    }
+                } else if (content instanceof XWPFStructuredDocumentTag) {
+                    addNewMeta(metaTemplates, stack,
+                            resolveSDTElements(((XWPFStructuredDocumentTag) content).getContent()));
                 }
+            }
+        } else if (null != sdt.getCtSdtRun()) {
+            new RunningRunBody(new SDTContentContext(sdtContent), templatePattern).refactorRun();
+            resolveXWPFRuns(sdtContent.getRuns(), metaTemplates, stack);
+        } else if (null != sdt.getCtSdtCell()) {
+            List<XWPFTableCell> cells = sdtContent.getCells();
+            if (null != cells) {
+                cells.forEach(cell -> {
+                    addNewMeta(metaTemplates, stack, resolveBodyElements(cell.getBodyElements()));
+                });
             }
         }
 
         checkStack(stack);
         return metaTemplates;
+    }
+
+    public void resolveParagraph(XWPFParagraph paragraph, List<MetaTemplate> metaTemplates,
+            Deque<BlockTemplate> stack) {
+        XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(paragraph);
+        new RunningRunBody(new ParagraphContext(paragraphWrapper), templatePattern).refactorRun();
+        resolveXWPFRuns(paragraph.getRuns(), metaTemplates, stack);
+        paragraphWrapper.getSDTs()
+                .forEach(sdtEle -> addNewMeta(metaTemplates, stack, resolveSDTElements(sdtEle.getContent())));
+    }
+
+    public void resolveTableRow(XWPFTableRow row, List<MetaTemplate> metaTemplates, Deque<BlockTemplate> stack) {
+        XWPFTableRowWrapper rowWrapper = new XWPFTableRowWrapper(row);
+        List<ICell> cells = rowWrapper.getTableICells();
+        if (null == cells) return;
+        cells.forEach(cell -> {
+            if (cell instanceof XWPFTableCell) {
+                addNewMeta(metaTemplates, stack, resolveBodyElements(((XWPFTableCell) cell).getBodyElements()));
+            } else if (cell instanceof XWPFStructuredDocumentTag) {
+                addNewMeta(metaTemplates, stack, resolveSDTElements(((XWPFStructuredDocumentTag) cell).getContent()));
+            }
+        });
     }
 
     @Override

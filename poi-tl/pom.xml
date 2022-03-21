@@ -79,7 +79,7 @@
 		<dependency>
 			<groupId>com.deepoove</groupId>
 			<artifactId>poi-ooxml-schemas-extra</artifactId>
-			<version>4.1.4</version>
+			<version>4.1.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>

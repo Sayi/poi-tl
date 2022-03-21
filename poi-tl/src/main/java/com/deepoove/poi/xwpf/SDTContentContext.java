@@ -27,38 +27,39 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 
-public class ParagraphContext implements RunBodyContext {
+public class SDTContentContext implements RunBodyContext {
 
-    private XWPFParagraphWrapper paragraphWrapper;
+    private XWPFStructuredDocumentTagContent content;
 
-    public ParagraphContext(XWPFParagraphWrapper paragraphWrapper) {
-        this.paragraphWrapper = paragraphWrapper;
+    public SDTContentContext(XWPFStructuredDocumentTagContent paragraphWrapper) {
+        this.content = paragraphWrapper;
     }
 
     @Override
     public IRunBody getTarget() {
-        return paragraphWrapper.getParagraph();
+        return content;
     }
 
     @Override
     public List<XWPFRun> getRuns() {
-        return paragraphWrapper.getParagraph().getRuns();
+        return content.getRuns();
     }
 
     @Override
     public void setAndUpdateRun(XWPFRun xwpfRun, XWPFRun sourceRun, int insertPostionCursor) {
-        paragraphWrapper.setAndUpdateRun(xwpfRun, sourceRun, insertPostionCursor);
+        content.setAndUpdateRun(xwpfRun, sourceRun, insertPostionCursor);
     }
 
     @Override
     public XWPFRun insertNewRun(XWPFRun xwpfRun, int insertPostionCursor) {
-        if (xwpfRun instanceof XWPFHyperlinkRun) {
-            return paragraphWrapper.insertNewHyperLinkRun(insertPostionCursor, "");
-        } else if (xwpfRun instanceof XWPFFieldRun) {
-            return paragraphWrapper.insertNewField(insertPostionCursor);
-        } else {
-            return paragraphWrapper.insertNewRun(insertPostionCursor);
-        }
+//        if (xwpfRun instanceof XWPFHyperlinkRun) {
+//            return content.insertNewHyperLinkRun(insertPostionCursor, "");
+//        } else if (xwpfRun instanceof XWPFFieldRun) {
+//            return content.insertNewField(insertPostionCursor);
+//        } else {
+//            return content.insertNewRun(insertPostionCursor);
+//        }
+        return content.insertNewRun(insertPostionCursor);
     }
 
     @Override
@@ -87,12 +88,12 @@ public class ParagraphContext implements RunBodyContext {
 
     @Override
     public void removeRun(int pos) {
-        paragraphWrapper.removeRun(pos);
+        content.removeRun(pos);
     }
 
     @Override
     public XWPFRun insertNewRun(int i) {
-        return paragraphWrapper.insertNewRun(i);
+        return content.insertNewRun(i);
     }
 
 }

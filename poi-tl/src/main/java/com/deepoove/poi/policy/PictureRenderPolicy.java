@@ -105,8 +105,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                 width = original.getWidth();
                 height = original.getHeight();
                 if (style.getScalePattern() == WidthScalePattern.FIT) {
-                    BodyContainer bodyContainer = BodyContainerFactory
-                            .getBodyContainer(((IBodyElement) run.getParent()).getBody());
+                    BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
                     int pageWidth = UnitUtils
                             .twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
                     if (width > pageWidth) {
