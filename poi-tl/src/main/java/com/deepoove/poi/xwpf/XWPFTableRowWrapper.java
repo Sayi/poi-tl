@@ -19,7 +19,9 @@ public class XWPFTableRowWrapper {
         this.row = row;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public List<ICell> getTableICells() {
+        boolean haveSdt = false;
         List<ICell> cells = new ArrayList<>();
         XmlCursor cursor = row.getCtRow().newCursor();
         try {
@@ -29,13 +31,14 @@ public class XWPFTableRowWrapper {
                 if (o instanceof CTTc) {
                     cells.add(new XWPFTableCell((CTTc) o, row, row.getTable().getBody()));
                 } else if (o instanceof CTSdtCell) {
+                    haveSdt = true;
                     cells.add(new XWPFStructuredDocumentTag((CTSdtCell) o, row, row.getTable().getBody()));
                 }
             }
         } finally {
             cursor.dispose();
         }
-        return cells;
+        return haveSdt ? cells : (List) row.getTableCells();
     }
 
     public XWPFTableRow getRow() {

@@ -100,7 +100,7 @@ public class SectionColumnTableRenderPolicy implements RenderPolicy {
                 if (null != gridSpan) intValue = gridSpan.getVal().intValue();
             }
             orginalCol += intValue;
-            if (current == cell) {
+            if (current.getCTTc() == cell.getCTTc()) {
                 return orginalCol - intValue;
             }
         }
