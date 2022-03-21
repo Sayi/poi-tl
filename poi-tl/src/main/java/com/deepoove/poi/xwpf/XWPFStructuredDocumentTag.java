@@ -15,8 +15,6 @@
  */
 package com.deepoove.poi.xwpf;
 
-import java.util.List;
-
 import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.BodyType;
@@ -91,9 +89,7 @@ public class XWPFStructuredDocumentTag implements IBodyElement, IRunElement, ICe
     }
 
     public CTDataBinding getDataBinding() {
-        List<CTDataBinding> dataBindingList = ctSdtPr.getDataBindingList();
-        if (null == dataBindingList || dataBindingList.isEmpty()) return null;
-        return dataBindingList.get(0);
+        return ctSdtPr.getDataBinding();
     }
 
     /**
