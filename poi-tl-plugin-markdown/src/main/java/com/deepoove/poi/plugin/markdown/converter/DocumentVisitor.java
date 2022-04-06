@@ -21,6 +21,7 @@ import static com.deepoove.poi.data.NumberingFormat.LOWER_LETTER_BUILDER;
 import static com.deepoove.poi.data.NumberingFormat.UPPER_LETTER_BUILDER;
 import static com.deepoove.poi.data.NumberingFormat.UPPER_ROMAN_BUILDER;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -140,7 +141,8 @@ public class DocumentVisitor extends AbstractVisitor {
     private PictureRenderData parsePicture(Image image) {
         String uri = image.getDestination();
         if (!uri.startsWith("http")) {
-            uri = style.getImagesDir() + uri;
+            // uri = style.getImagesDir() + uri;
+            uri = Paths.get(style.getImagesDir(), uri).toFile().getAbsolutePath();
         }
         return Pictures.of(uri).altMeta(image.getTitle()).fitSize().create();
     }
