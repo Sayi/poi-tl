@@ -96,8 +96,8 @@ public class ConfigureBuilder {
         return this;
     }
 
-    public ConfigureBuilder setGsonHandler(GsonHandler provider) {
-        config.gsonHandler = provider;
+    public ConfigureBuilder setPreRenderDataCastor(PreRenderDataCastor provider) {
+        config.preRenderDataCastor = provider;
         return this;
     }
 

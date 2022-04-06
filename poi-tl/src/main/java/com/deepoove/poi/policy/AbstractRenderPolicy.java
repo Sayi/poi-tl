@@ -21,16 +21,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.Configure.ValidErrorHandler;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
-import com.google.gson.internal.LinkedTreeMap;
-
-import net.jodah.typetools.TypeResolver;
 
 /**
  * General logic for data verification, rendering, clearing template tags, and
@@ -48,21 +44,11 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
         return (T) source;
     }
 
-    @SuppressWarnings("unchecked")
-    protected T castFromJson(Configure configure, LinkedTreeMap<?, ?> source) {
-        Class<?>[] typeArguments = TypeResolver.resolveRawArguments(AbstractRenderPolicy.class, getClass());
-        return (T) configure.getGsonHandler().castJsonToClass(source, typeArguments[0]);
-    }
-
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         T model = null;
         try {
-            Object source = data;
-            if (null != data && data instanceof LinkedTreeMap) {
-                source = castFromJson(template.getConfig(), (LinkedTreeMap<?, ?>) data);
-            }
-            model = cast(source);
+            model = cast(data);
         } catch (Exception e) {
             throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
         }

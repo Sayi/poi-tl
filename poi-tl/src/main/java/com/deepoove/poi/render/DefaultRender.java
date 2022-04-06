@@ -30,6 +30,7 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.compute.RenderDataCompute;
+import com.deepoove.poi.render.processor.DelegatePolicy;
 import com.deepoove.poi.render.processor.DocumentProcessor;
 import com.deepoove.poi.render.processor.LogProcessor;
 import com.deepoove.poi.template.MetaTemplate;
@@ -111,7 +112,7 @@ public class DefaultRender implements Render {
 
                 LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", runTemplate.getTagName(),
                         runTemplate.getSign(), ClassUtils.getShortClassName(policy.getClass()));
-                policy.render(runTemplate, renderDataCompute.compute(runTemplate.getTagName()), template);
+                DelegatePolicy.invoke(policy, runTemplate, renderDataCompute.compute(runTemplate.getTagName()), template);
 
                 if (current != template.getXWPFDocument()) {
                     current = template.getXWPFDocument();

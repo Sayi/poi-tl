@@ -10,12 +10,12 @@
 	</parent>
 
 	<groupId>com.deepoove</groupId>
-	<artifactId>poi-tl</artifactId>
-	<version>1.10.4-SNAPSHOT</version>
+	<artifactId>poi-tl-jsonmodel-support</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>poi-tl</name>
-	<description>Generate word(docx) with template</description>
+	<name>poi-tl-jsonmodel-support</name>
+	<description>support json model</description>
 	<url>http://deepoove.com/poi-tl</url>
 
 	<licenses>
@@ -57,75 +57,25 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.32</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.3.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>4.1.2</version>
-		</dependency>
-		<dependency>
 			<groupId>com.deepoove</groupId>
-			<artifactId>poi-ooxml-schemas-extra</artifactId>
-			<version>4.1.5-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-transcoder</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xmlgraphics</groupId>
-			<artifactId>batik-codec</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-expression</artifactId>
-			<version>4.3.6.RELEASE</version>
+			<artifactId>poi-tl</artifactId>
+			<version>1.10.4-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>1.2.10</version>
-			<scope>test</scope>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.9.0</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.2.10</version>
-			<scope>test</scope>
+			<groupId>org.danilopianini</groupId>
+			<artifactId>gson-extras</artifactId>
+			<version>0.4.0</version>
 		</dependency>
 		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-parser</artifactId>
-			<version>1.0.50</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.deepoove</groupId>
-			<artifactId>poi-tl-plugin-highlight</artifactId>
-			<version>1.0.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.14.2</version>
-			<scope>test</scope>
+			<groupId>net.jodah</groupId>
+			<artifactId>typetools</artifactId>
+			<version>0.6.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -140,9 +90,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba</groupId>
-<artifactId>fastjson</artifactId>
-<version>1.2.69</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.7</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -245,22 +195,6 @@
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.22.2</version>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<format>xml</format>
-					<maxmem>256m</maxmem>
-					<!-- aggregated reports for multi-module projects -->
-					<aggregate>true</aggregate>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.3.0</version>
 			</plugin>
 		</plugins>
 	</build>

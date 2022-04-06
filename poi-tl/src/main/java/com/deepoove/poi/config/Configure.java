@@ -131,7 +131,7 @@ public class Configure implements Cloneable {
     /**
      * JSON serialize or deserialize
      */
-    protected GsonHandler gsonHandler = new DefaultGsonHandler();
+    protected PreRenderDataCastor preRenderDataCastor = null;
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -277,8 +277,8 @@ public class Configure implements Cloneable {
         return spELFunction;
     }
 
-    public GsonHandler getGsonHandler() {
-        return gsonHandler;
+    public PreRenderDataCastor getPreRenderDataCastor() {
+        return preRenderDataCastor;
     }
 
     @Override

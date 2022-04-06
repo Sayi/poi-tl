@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.config;
+package com.deepoove.poi.jsonmodel.support;
 
 import java.util.ArrayList;
 import java.util.List;
