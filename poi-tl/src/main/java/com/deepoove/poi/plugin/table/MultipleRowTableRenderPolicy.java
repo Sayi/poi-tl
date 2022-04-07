@@ -1,5 +1,21 @@
 package com.deepoove.poi.plugin.table;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -13,15 +29,6 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
-import org.apache.poi.xwpf.usermodel.*;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Vector;
 
 /**
  * word模板替换，多行表格复用渲染
@@ -33,9 +40,10 @@ import java.util.Vector;
  * </p>
  *
  * @author llzero54
- * @see RenderPolicy
+ * @author li.ming
  */
 public class MultipleRowTableRenderPolicy implements RenderPolicy {
+
     private final static String DEFAULT_MULTIPLE_PREFIX = "$(";
 
     private final static String DEFAULT_MULTIPLE_SUFFIX = ")";
@@ -45,6 +53,8 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
     private final static String DEFAULT_SUFFIX = "]";
 
     private final static int DEFAULT_MULTIPLE_ROW_NUM = 1;
+
+    private final String regex = "\\$\\([0-9]+\\)";
 
     private final String multiplePrefix;
 
@@ -62,7 +72,7 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, prefix, suffix);
     }
 
-    public MultipleRowTableRenderPolicy(String multiplePrefix, String multipleSuffix, String prefix, String suffix) {
+    private MultipleRowTableRenderPolicy(String multiplePrefix, String multipleSuffix, String prefix, String suffix) {
         this.multiplePrefix = multiplePrefix;
         this.multipleSuffix = multipleSuffix;
         this.prefix = prefix;
@@ -74,29 +84,24 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         try {
             RunTemplate runTemplate = cast2runTemplate(eleTemplate);
             XWPFRun run = runTemplate.getRun();
-
             checkTargetIsTable(run,
                     "Processing [" + runTemplate.getTagName() + "] failed, the target content is not a table");
             XWPFTableCell tagCell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
-
             final XWPFTable table = tagCell.getTableRow().getTable();
-
-            if (data instanceof Iterable) {
-                run.setText("", 0);
-                TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
-                // 获取模板所在的起始行
-                int position = getRowIndex(tagCell.getTableRow());
-                List<XWPFTableRow> tempRows = getAllTemplateRow(table, template, position);
+            run.setText("", 0);
+            TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
+            // 获取模板所在的起始行
+            int position = getRowIndex(tagCell.getTableRow());
+            List<XWPFTableRow> tempRows = getAllTemplateRow(table, position);
+            if (null != data && data instanceof Iterable) {
                 // 保存第行模板，以便在后续操作中获取光标
                 final XWPFTableRow firstTempRow = tempRows.get(0);
                 Iterator<?> dataIt = ((Iterable<?>) data).iterator();
                 boolean hasNextData = dataIt.hasNext();
                 int index = 0;
-
                 while (hasNextData) {
                     Object dt = dataIt.next();
                     hasNextData = dataIt.hasNext();
-
                     Iterator<XWPFTableRow> rowTempIt = tempRows.iterator();
                     boolean hasNextTempRow = rowTempIt.hasNext();
                     while (hasNextTempRow) {
@@ -128,18 +133,28 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
                     }
                     ++index;
                 }
-
-                removeTableRow(table, position, tempRows.size());
             }
+            removeTableRow(table, position, tempRows.size());
         } catch (Exception e) {
             throw new RenderException("failed to render table multi-row template", e);
         }
     }
 
-    protected List<XWPFTableRow> getAllTemplateRow(XWPFTable table, XWPFTemplate template, int startIndex)
-            throws CloneNotSupportedException {
-        int tempRowNum = getMultipleRowNum(template);
+    protected List<XWPFTableRow> getAllTemplateRow(XWPFTable table, int startIndex) {
         List<XWPFTableRow> rows = table.getRows();
+        int tempRowNum = DEFAULT_MULTIPLE_ROW_NUM;
+        // 去除模板行数标记 如：$(3)
+        String text = rows.get(startIndex).getCell(0).getText();
+        Matcher matcher = Pattern.compile(regex).matcher(text);
+        if (matcher.find()) {
+            String rowNumText = matcher.group(0);
+            tempRowNum = Integer.parseInt(rowNumText.replace(multiplePrefix, "").replace(multipleSuffix, ""));
+            List<XWPFParagraph> paragraphs = rows.get(startIndex).getCell(0).getParagraphs();
+            paragraphs.get(0).getRuns().get(0).setText(text.replace(rowNumText, ""), 0);
+            for (int i = 1; i < paragraphs.get(0).getRuns().size(); i++) {
+                paragraphs.get(0).getRuns().get(i).setText("", 0);
+            }
+        }
         return new Vector<>(rows.subList(startIndex, startIndex + tempRowNum));
     }
 
@@ -154,19 +169,6 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
             throw new ClassCastException("type conversion failed, template is not of type RunTemplate");
         }
         return (RunTemplate) template;
-    }
-
-    protected int getMultipleRowNum(XWPFTemplate template) throws CloneNotSupportedException {
-        TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(multiplePrefix, multipleSuffix));
-        List<MetaTemplate> metaTemplates = resolver.resolveDocument(template.getXWPFDocument());
-        if (!metaTemplates.isEmpty()) {
-            RunTemplate run = cast2runTemplate(metaTemplates.get(0));
-            String tagName = run.getTagName();
-            int num = Integer.parseInt(tagName);
-            run.getRun().setText("", 0);
-            return num < 1 ? DEFAULT_MULTIPLE_ROW_NUM : num;
-        }
-        return DEFAULT_MULTIPLE_ROW_NUM;
     }
 
     protected void checkTargetIsTable(XWPFRun run, String message) {
