@@ -94,7 +94,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>4.3.6.RELEASE</version>
+			<version>5.3.18</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
