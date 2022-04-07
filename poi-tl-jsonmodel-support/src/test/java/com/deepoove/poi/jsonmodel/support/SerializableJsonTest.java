@@ -1,4 +1,5 @@
-package com.deepoove.poi.tl.config;
+package com.deepoove.poi.jsonmodel.support;
+
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,8 +15,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.DefaultGsonHandler;
-import com.deepoove.poi.config.GsonHandler;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.style.Style;
 import com.google.gson.reflect.TypeToken;
@@ -67,7 +67,7 @@ public class SerializableJsonTest {
     @Test
     void testDocxRenderData() throws Exception {
         DocxRenderData data = new DocxRenderData(
-                new File("src/test/resources/template/render_include_merge_template.docx"));
+                new File("src/test/resources/template.docx"));
         DocxRenderData result = write(data).getResult(DocxRenderData.class);
 
         assertArrayEquals(result.getMergedDoc(), data.getMergedDoc());
@@ -181,8 +181,10 @@ public class SerializableJsonTest {
 
         Map<String, Object> result = write(datas).getResult(new TypeToken<Map<String, Object>>() {
         }.getType());
+        
+        Configure config = Configure.builder().addPreRenderDataCastor(new GsonPreRenderDataCastor()).build();
 
-        XWPFTemplate.compile("src/test/resources/template/template.docx")
+        XWPFTemplate.compile("src/test/resources/template.docx", config)
                 .render(result)
                 .writeToFile("target/out_template_serializable.docx");
 

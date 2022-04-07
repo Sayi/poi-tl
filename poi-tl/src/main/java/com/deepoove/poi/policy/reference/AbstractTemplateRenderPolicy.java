@@ -16,21 +16,11 @@
 package com.deepoove.poi.policy.reference;
 
 import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
-import com.google.gson.internal.LinkedTreeMap;
-
-import net.jodah.typetools.TypeResolver;
 
 public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T> implements RenderPolicy {
-
-    @SuppressWarnings("unchecked")
-    protected T castFromJson(Configure configure, LinkedTreeMap<?, ?> source) {
-        Class<?>[] typeArguments = TypeResolver.resolveRawArguments(AbstractTemplateRenderPolicy.class, getClass());
-        return (T) configure.getGsonHandler().castJsonToClass(source, typeArguments[1]);
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -39,11 +29,7 @@ public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T>
         // type safe
         T model = null;
         try {
-            Object source = data;
-            if (data instanceof LinkedTreeMap) {
-                source = castFromJson(template.getConfig(), (LinkedTreeMap<?, ?>) data);
-            }
-            model = (T) source;
+            model = (T) data;
         } catch (ClassCastException e) {
             throw new RenderException("Error Render Data format for template: " + eleTemplate, e);
         }

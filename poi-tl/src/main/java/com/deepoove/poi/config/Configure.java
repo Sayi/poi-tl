@@ -16,9 +16,11 @@
 package com.deepoove.poi.config;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -129,9 +131,9 @@ public class Configure implements Cloneable {
     protected Map<String, Method> spELFunction = new HashMap<String, Method>();
 
     /**
-     * JSON serialize or deserialize
+     * pre render data castor
      */
-    protected GsonHandler gsonHandler = new DefaultGsonHandler();
+    protected List<PreRenderDataCastor> preRenderDataCastors = new ArrayList<>();
 
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
@@ -277,8 +279,8 @@ public class Configure implements Cloneable {
         return spELFunction;
     }
 
-    public GsonHandler getGsonHandler() {
-        return gsonHandler;
+    public List<PreRenderDataCastor> getPreRenderDataCastors() {
+        return preRenderDataCastors;
     }
 
     @Override

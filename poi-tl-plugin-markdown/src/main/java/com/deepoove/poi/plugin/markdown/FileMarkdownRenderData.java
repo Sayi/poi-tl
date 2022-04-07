@@ -48,7 +48,11 @@ public class FileMarkdownRenderData extends MarkdownRenderData {
         }
         Path docsifyPath = Paths.get(path, "_sidebar.md");
         if (!Files.exists(docsifyPath)) {
-            throw new RuntimeException("directory is not docsify, no _sidebar.md file.");
+            Path readme = Paths.get(path, "README.md");
+            if (!Files.exists(readme)) {
+                throw new RuntimeException("directory is not docsify, no _sidebar\\README.md file.");
+            }
+            return new String(Files.readAllBytes(readme));
         }
         StringBuilder all = new StringBuilder();
         String toc = new String(Files.readAllBytes(Paths.get(path, "_sidebar.md")));

@@ -16,6 +16,7 @@
 package com.deepoove.poi.config;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -96,8 +97,13 @@ public class ConfigureBuilder {
         return this;
     }
 
-    public ConfigureBuilder setGsonHandler(GsonHandler provider) {
-        config.gsonHandler = provider;
+    public ConfigureBuilder setPreRenderDataCastors(List<PreRenderDataCastor> providers) {
+        config.preRenderDataCastors = providers;
+        return this;
+    }
+
+    public ConfigureBuilder addPreRenderDataCastor(PreRenderDataCastor provider) {
+        config.preRenderDataCastors.add(provider);
         return this;
     }
 
