@@ -942,7 +942,7 @@ Spring Expression Language 是一个强大的表达式语言，支持在运行�
 <dependency>
   <groupId>org.springframework</groupId>
   <artifactId>spring-expression</artifactId>
-  <version>4.3.6.RELEASE</version>
+  <version>5.3.18</version>
 </dependency>
 ----
 
