@@ -1886,7 +1886,7 @@ image::./example/example_resume_output.png[align='center']
 image::./example/example_iterable_resume_template.png[align='center']
 --
 
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/master/poi-tl/src/test/java/com/deepoove/poi/tl/render/IterableRenderResumeExample.java[JUnit Iterable ResumeExample]
+NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/blob/master/poi-tl/src/test/java/com/deepoove/poi/tl/example/ResumeIterableExample.java[JUnit Iterable ResumeExample]
 
 ==== 方案二：使用嵌套标签
 [example]
