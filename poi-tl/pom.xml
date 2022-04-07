@@ -139,12 +139,6 @@
 			<version>5.6.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-<artifactId>fastjson</artifactId>
-<version>1.2.69</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<profiles>

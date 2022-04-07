@@ -182,7 +182,7 @@ public class SerializableJsonTest {
         Map<String, Object> result = write(datas).getResult(new TypeToken<Map<String, Object>>() {
         }.getType());
         
-        Configure config = Configure.builder().setPreRenderDataCastor(new DefaultPreRenderDataCastor()).build();
+        Configure config = Configure.builder().addPreRenderDataCastor(new GsonPreRenderDataCastor()).build();
 
         XWPFTemplate.compile("src/test/resources/template.docx", config)
                 .render(result)

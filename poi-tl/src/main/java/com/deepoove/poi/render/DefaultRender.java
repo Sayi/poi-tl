@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,9 +108,6 @@ public class DefaultRender implements Render {
                 if (!(policy instanceof DocxRenderPolicy)) {
                     continue;
                 }
-
-                LOGGER.info("Start render TemplateName:{}, Sign:{}, policy:{}", runTemplate.getTagName(),
-                        runTemplate.getSign(), ClassUtils.getShortClassName(policy.getClass()));
                 DelegatePolicy.invoke(policy, runTemplate, renderDataCompute.compute(runTemplate.getTagName()), template);
 
                 if (current != template.getXWPFDocument()) {

@@ -16,12 +16,6 @@
 
 package com.deepoove.poi.render.processor;
 
-import java.util.Objects;
-
-import org.apache.commons.lang3.ClassUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.policy.DocxRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
@@ -40,8 +34,6 @@ import com.deepoove.poi.template.run.RunTemplate;
  *
  */
 public class ElementProcessor extends DefaultTemplateProcessor {
-
-    private static Logger logger = LoggerFactory.getLogger(ElementProcessor.class);
 
     public ElementProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
@@ -69,10 +61,7 @@ public class ElementProcessor extends DefaultTemplateProcessor {
 
     void visit(ElementTemplate eleTemplate) {
         RenderPolicy policy = eleTemplate.findPolicy(template.getConfig());
-        Objects.requireNonNull(policy, "Cannot find render policy: [" + eleTemplate.getTagName() + "]");
-        if (policy instanceof DocxRenderPolicy) return;
-        logger.info("Start render Template {}, Sign:{}, policy:{}", eleTemplate, eleTemplate.getSign(),
-                ClassUtils.getShortClassName(policy.getClass()));
+        if (null != policy && policy instanceof DocxRenderPolicy) return;
         DelegatePolicy.invoke(policy, eleTemplate, renderDataCompute.compute(eleTemplate.getTagName()), template);
     }
 

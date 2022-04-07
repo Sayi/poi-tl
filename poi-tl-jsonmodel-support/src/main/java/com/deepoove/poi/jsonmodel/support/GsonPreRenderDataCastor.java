@@ -8,7 +8,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import net.jodah.typetools.TypeResolver;
 
-public class DefaultPreRenderDataCastor implements PreRenderDataCastor {
+public class GsonPreRenderDataCastor implements PreRenderDataCastor {
 
     private GsonHandler gsonHandler = new DefaultGsonHandler();
 
