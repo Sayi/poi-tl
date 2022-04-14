@@ -448,7 +448,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Sayi</span><br>
 <span id="email" class="email"><a href="mailto:sayi90@163.com">sayi90@163.com</a></span><br>
-<span id="revnumber">version 1.10.4</span>
+<span id="revnumber">version 1.10.3</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -492,11 +492,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_标签匹配">8.3. 标签匹配</a></li>
 <li><a href="#_标签值计算">8.4. 标签值计算</a></li>
 <li><a href="#_spring表达式">8.5. Spring表达式</a></li>
-<li><a href="#_数据模型序列化">8.6. 数据模型序列化</a></li>
-<li><a href="#_错误处理">8.7. 错误处理</a></li>
-<li><a href="#_模板生成模板">8.8. 模板生成模板</a></li>
-<li><a href="#_无模板创建文档">8.9. 无模板创建文档</a></li>
-<li><a href="#_日志">8.10. 日志</a></li>
+<li><a href="#_错误处理">8.6. 错误处理</a></li>
+<li><a href="#_模板生成模板">8.7. 模板生成模板</a></li>
+<li><a href="#_无模板创建文档">8.8. 无模板创建文档</a></li>
+<li><a href="#_日志">8.9. 日志</a></li>
 </ul>
 </li>
 <li><a href="#_插件">9. 插件</a>
@@ -654,7 +653,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>图表</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）、散点图等图表渲染</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）等图表渲染</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>If Condition判断</p></td>
@@ -691,10 +690,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>Word附件</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Word中插入附件</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>    SDT内容控件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">内容控件内标签支持</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><span class="icon green"><i class="fa fa-check-circle"></i></span>图片替换</p></td>
@@ -779,16 +774,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>V1.10.4版本作了一个不兼容的改动，升级的时候需要注意：</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>重构了PictureRenderData，改为抽象类，建议使用Pictures工厂方法来创建图片数据</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -801,7 +786,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;com.deepoove&lt;/groupId&gt;
   &lt;artifactId&gt;poi-tl&lt;/artifactId&gt;
-  &lt;version&gt;1.10.4&lt;/version&gt;
+  &lt;version&gt;1.10.3&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -810,7 +795,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_gradle"><a class="anchor" href="#_gradle"></a><a class="link" href="#_gradle">5.2. Gradle</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.deepoove:poi-tl:1.10.4'</code></pre>
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">implementation 'com.deepoove:poi-tl:1.10.3'</code></pre>
 </div>
 </div>
 </div>
@@ -1025,7 +1010,8 @@ put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));</co
 <div class="title">链式代码示例</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("author", Texts.of("Sayi").color("000000").create());
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">put("name", "Sayi");
+put("author", Texts.of("Sayi").color("000000").create());
 put("link", Texts.of("website").link("http://deepoove.com").create());
 put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 </div>
@@ -1134,15 +1120,6 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <li>
 <p><code>PictureRenderData</code></p>
 </li>
-<li>
-<p><code>ByteArrayPictureRenderData</code></p>
-</li>
-<li>
-<p><code>FilePictureRenderData</code></p>
-</li>
-<li>
-<p><code>UrlPictureRenderData</code></p>
-</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -1155,8 +1132,6 @@ put("anchor", Texts.of("anchortxt").anchor("appendix1").create());</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">// 指定图片路径
 put("image", "logo.png");
-// svg图片
-put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
 
 // 设置图片宽高
 put("image1", Pictures.ofLocal("logo.png").size(120, 120).create());
@@ -1168,6 +1143,9 @@ put("streamImg", Pictures.ofStream(new FileInputStream("logo.jpeg"), PictureType
 // 网络图片(注意网络耗时对系统可能的性能影响)
 put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png")
   .size(100, 100).create());
+
+// svg图片
+put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
 
 // java图片
 put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
@@ -1181,12 +1159,12 @@ put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 </div>
 <div class="sidebarblock">
 <div class="content">
-<div class="title">FilePictureRenderData的结构体</div>
+<div class="title">PictureRenderData的结构体</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
   "pictureType" : "PNG", <i class="conum" data-value="1"></i><b>(1)</b>
-  "path": "logo.png", <i class="conum" data-value="2"></i><b>(2)</b>
+  "pictureSupplier": () -&gt; byte[], <i class="conum" data-value="2"></i><b>(2)</b>
   "pictureStyle": {
     "width": 100, <i class="conum" data-value="3"></i><b>(3)</b>
     "height": 100 <i class="conum" data-value="4"></i><b>(4)</b>
@@ -1203,7 +1181,7 @@ put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>图片路径</td>
+<td>运行时获取图片byte[]字节数组的函数</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -2242,7 +2220,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;org.springframework&lt;/groupId&gt;
   &lt;artifactId&gt;spring-expression&lt;/artifactId&gt;
-  &lt;version&gt;5.3.18&lt;/version&gt;
+  &lt;version&gt;4.3.6.RELEASE&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
@@ -2257,7 +2235,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 <div class="sect3">
 <h4 id="_基本使用"><a class="anchor" href="#_基本使用"></a><a class="link" href="#_基本使用">8.5.1. 基本使用</a></h4>
 <div class="paragraph">
-<p>关于SpringEL的写法可以参见<a href="https://docs.spring.io/spring-framework/docs/5.3.18/reference/html/core.html#expressions">官方文档</a>，下面给出一些典型的示例。</p>
+<p>关于SpringEL的写法可以参见<a href="https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/htmlsingle/#expressions">官方文档</a>，下面给出一些典型的示例。</p>
 </div>
 <div class="exampleblock">
 <div class="content">
@@ -2364,35 +2342,12 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_数据模型序列化"><a class="anchor" href="#_数据模型序列化"></a><a class="link" href="#_数据模型序列化">8.6. 数据模型序列化</a></h3>
-<div class="paragraph">
-<p>数据模型支持JSON字符串序列化，可以方便的构造远程HTTP或者RPC服务，需要引入相应依赖：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
-	&lt;groupId&gt;com.deepoove&lt;/groupId&gt;
-	&lt;artifactId&gt;poi-tl-jsonmodel-support&lt;/artifactId&gt;
-	&lt;version&gt;1.0.0&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>然后配置数据模型前置转化器即可：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">builder.addPreRenderDataCastor(new GsonPreRenderDataCastor());</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_错误处理"><a class="anchor" href="#_错误处理"></a><a class="link" href="#_错误处理">8.7. 错误处理</a></h3>
+<h3 id="_错误处理"><a class="anchor" href="#_错误处理"></a><a class="link" href="#_错误处理">8.6. 错误处理</a></h3>
 <div class="paragraph">
 <p>poi-tl支持在发生错误的时候定制引擎的行为。</p>
 </div>
 <div class="sect3">
-<h4 id="_标签无法被计算"><a class="anchor" href="#_标签无法被计算"></a><a class="link" href="#_标签无法被计算">8.7.1. 标签无法被计算</a></h4>
+<h4 id="_标签无法被计算"><a class="anchor" href="#_标签无法被计算"></a><a class="link" href="#_标签无法被计算">8.6.1. 标签无法被计算</a></h4>
 <div class="paragraph">
 <p>标签无法被计算的场景有几种，比如模板中引用了一个不存在的变量，或者级联的前置结果不是一个哈希，如 <code>{{author.name}}</code> 中author的值为null，此时就无法计算name的值。</p>
 </div>
@@ -2414,7 +2369,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 <div class="sect3">
-<h4 id="_标签数据类型不合法"><a class="anchor" href="#_标签数据类型不合法"></a><a class="link" href="#_标签数据类型不合法">8.7.2. 标签数据类型不合法</a></h4>
+<h4 id="_标签数据类型不合法"><a class="anchor" href="#_标签数据类型不合法"></a><a class="link" href="#_标签数据类型不合法">8.6.2. 标签数据类型不合法</a></h4>
 <div class="paragraph">
 <p>我们知道渲染图片、表格等标签时对数据模型是有要求的，如果数据不合法（为空或者是一个错误的数据类型），可以配置模板标签的渲染行为。</p>
 </div>
@@ -2437,7 +2392,7 @@ RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂�
 </div>
 </div>
 <div class="sect2">
-<h3 id="_模板生成模板"><a class="anchor" href="#_模板生成模板"></a><a class="link" href="#_模板生成模板">8.8. 模板生成模板</a></h3>
+<h3 id="_模板生成模板"><a class="anchor" href="#_模板生成模板"></a><a class="link" href="#_模板生成模板">8.7. 模板生成模板</a></h3>
 <div class="paragraph">
 <p>模板引擎不仅仅可以生成文档，也可以生成新的模板，比如我们把原先的一个文本标签分成一个文本标签和一个表格标签：</p>
 </div>
@@ -2456,7 +2411,7 @@ data.put("title", document);</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_无模板创建文档"><a class="anchor" href="#_无模板创建文档"></a><a class="link" href="#_无模板创建文档">8.9. 无模板创建文档</a></h3>
+<h3 id="_无模板创建文档"><a class="anchor" href="#_无模板创建文档"></a><a class="link" href="#_无模板创建文档">8.8. 无模板创建文档</a></h3>
 <div class="paragraph">
 <p>使用 <code>XWPFTemplate.create</code> 在无需模板的情况下创建文档，可以充分利用poi-tl友好的API来生成文档元素。</p>
 </div>
@@ -2469,7 +2424,7 @@ XWPFTemplate template = XWPFTemplate.create(data);</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_日志"><a class="anchor" href="#_日志"></a><a class="link" href="#_日志">8.10. 日志</a></h3>
+<h3 id="_日志"><a class="anchor" href="#_日志"></a><a class="link" href="#_日志">8.9. 日志</a></h3>
 <div class="paragraph">
 <p>poi-tl使用slf4j作为日志门面，你可以自由选择日志实现，比如logback、log4j等。我们以logback为例：</p>
 </div>
@@ -4176,8 +4131,8 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.10.4<br>
-Last updated 2022-04-15 00:59:36 +0800
+Version 1.10.3<br>
+Last updated 2021-11-29 17:05:36 +0800
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

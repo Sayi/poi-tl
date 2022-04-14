@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.10.4
+v1.10.3
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -56,7 +56,7 @@ ____
 |icon:check-circle[role="green"]图片 |将标签渲染为图片
 |icon:check-circle[role="green"]表格 |将标签渲染为表格
 |icon:check-circle[role="green"]列表 |将标签渲染为列表
-|icon:check-circle[role="green"]图表 |条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）、散点图等图表渲染
+|icon:check-circle[role="green"]图表 |条形图（3D条形图）、柱形图（3D柱形图）、面积图（3D面积图）、折线图（3D折线图）、雷达图、饼图（3D饼图）等图表渲染
 |icon:check-circle[role="green"]If Condition判断 |隐藏或者显示某些文档内容（包括文本、段落、图片、表格、列表、图表等）
 |icon:check-circle[role="green"]Foreach Loop循环 |循环某些文档内容（包括文本、段落、图片、表格、列表、图表等）
 |icon:check-circle[role="green"]Loop表格行 |循环复制渲染表格的某一行
@@ -66,7 +66,6 @@ ____
 |icon:check-circle[role="green"]Markdown |将Markdown渲染为word文档
 |icon:check-circle[role="green"]Word批注 |完整的批注功能，创建批注、修改批注等
 |icon:check-circle[role="green"]Word附件 |Word中插入附件
-|icon:check-circle[role="green"]    SDT内容控件 |内容控件内标签支持
 |icon:check-circle[role="green"]图片替换 |将原有图片替换成另一张图片
 |icon:check-circle[role="green"]书签、锚点、超链接 |支持设置书签，文档内锚点和超链接功能
 |icon:check-circle[role="green"]Expression Language |完全支持SpringEL表达式，可以扩展更多的表达式：OGNL, MVEL...
@@ -93,10 +92,6 @@ poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你�
 * link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]
 * link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]
 
-V1.10.4版本作了一个不兼容的改动，升级的时候需要注意：
-
-* 重构了PictureRenderData，改为抽象类，建议使用Pictures工厂方法来创建图片数据
-
 == Getting Started
 === Maven
 [source, xml]
@@ -104,13 +99,13 @@ V1.10.4版本作了一个不兼容的改动，升级的时候需要注意：
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.4</version>
+  <version>1.10.3</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-implementation 'com.deepoove:poi-tl:1.10.4'
+implementation 'com.deepoove:poi-tl:1.10.3'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 
@@ -246,6 +241,7 @@ put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));
 --
 [source, java]
 ----
+put("name", "Sayi");
 put("author", Texts.of("Sayi").color("000000").create());
 put("link", Texts.of("website").link("http://deepoove.com").create());
 put("anchor", Texts.of("anchortxt").anchor("appendix1").create());
@@ -295,10 +291,7 @@ TIP: 文本换行使用 `\n` 字符。
 数据模型：
 
 - `String` ：图片url或者本地路径，默认使用图片自身尺寸
-- `PictureRenderData`  
-- `ByteArrayPictureRenderData`
-- `FilePictureRenderData`
-- `UrlPictureRenderData`
+- `PictureRenderData`
 
 推荐使用工厂 `Pictures` 构建图片模型。
 [sidebar]
@@ -308,8 +301,6 @@ TIP: 文本换行使用 `\n` 字符。
 ----
 // 指定图片路径
 put("image", "logo.png");
-// svg图片
-put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
 
 // 设置图片宽高
 put("image1", Pictures.ofLocal("logo.png").size(120, 120).create());
@@ -322,6 +313,9 @@ put("streamImg", Pictures.ofStream(new FileInputStream("logo.jpeg"), PictureType
 put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png")
   .size(100, 100).create());
 
+// svg图片
+put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
+
 // java图片
 put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
   .size(100, 100).create());
@@ -330,13 +324,13 @@ put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 图片支持BufferedImage，这意味着我们可以利用Java生成图表插入到word文档中。
 
 [sidebar]
-.FilePictureRenderData的结构体
+.PictureRenderData的结构体
 --
 [source, json]
 ----
 {
   "pictureType" : "PNG", <1>
-  "path": "logo.png", <2>
+  "pictureSupplier": () -> byte[], <2>
   "pictureStyle": {
     "width": 100, <3>
     "height": 100 <4>
@@ -345,7 +339,7 @@ put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
 }
 ----
 <1> 图片类型
-<2> 图片路径
+<2> 运行时获取图片byte[]字节数组的函数
 <3> 宽度，单位是像素
 <4> 高度，单位是像素
 <5> 当无法获取图片时展示的文字
@@ -953,7 +947,7 @@ Spring Expression Language 是一个强大的表达式语言，支持在运行�
 <dependency>
   <groupId>org.springframework</groupId>
   <artifactId>spring-expression</artifactId>
-  <version>5.3.18</version>
+  <version>4.3.6.RELEASE</version>
 </dependency>
 ----
 
@@ -964,7 +958,7 @@ builder.useSpringEL();
 ----
 
 ==== 基本使用
-关于SpringEL的写法可以参见link:https://docs.spring.io/spring-framework/docs/5.3.18/reference/html/core.html#expressions[官方文档]，下面给出一些典型的示例。
+关于SpringEL的写法可以参见link:https://docs.spring.io/spring/docs/4.3.26.RELEASE/spring-framework-reference/htmlsingle/#expressions[官方文档]，下面给出一些典型的示例。
 [example]
 --
 [source]
@@ -1022,21 +1016,6 @@ Find A Pet
 
 
 TIP: 使用SpringEL时区块对的结束标签可以是：{{/}}。
-
-=== 数据模型序列化
-数据模型支持JSON字符串序列化，可以方便的构造远程HTTP或者RPC服务，需要引入相应依赖：
-[source, xml]
-----
-<dependency>
-	<groupId>com.deepoove</groupId>
-	<artifactId>poi-tl-jsonmodel-support</artifactId>
-	<version>1.0.0</version>
-</dependency>
-----
-
-然后配置数据模型前置转化器即可：
-[source, java]
-builder.addPreRenderDataCastor(new GsonPreRenderDataCastor());
 
 === 错误处理
 poi-tl支持在发生错误的时候定制引擎的行为。
