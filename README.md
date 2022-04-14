@@ -2,10 +2,10 @@
 
 [![Build Status](https://app.travis-ci.com/Sayi/poi-tl.svg?branch=master)](https://app.travis-ci.com/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi5.1.0](https://img.shields.io/badge/apache--poi-5.1.0-blue.svg) [![Gitter](https://badges.gitter.im/Sayi/poi-tl.svg)](https://gitter.im/Sayi/poi-tl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-A better way to generate word(docx) with template，based on Apache POI - the Java API for Microsoft Documents。
+A better way to generate word(docx) with template，based on Apache POI。
 
 ## What is poi-tl
-FreeMarker or Velocity generates new html pages or configuration files based on text template and data. poi-tl is a Word template engine that generates **new documents** based on **Word template** and data.
+FreeMarker or Velocity generates new html pages or configuration files based on text template and data. poi-tl is a Word template engine that generates **new documents** based on **Word template** and **data**.
 
 The Word template has rich styles. Poi-tl will perfectly retain the styles in the template in the generated documents. You can also set styles for the tags. The styles of the tags will be applied to the replaced text, so you can focus on the template design. 
 
@@ -19,9 +19,9 @@ poi-tl supports **custom functions (plug-ins)**, functions can be executed anywh
 
 |Feature |Description|
 | ------------- |-------------|
-|:white_check_mark: text |Render the tag as text|
+|:white_check_mark: Text |Render the tag as text|
 |:white_check_mark: Picture |Render the tag as a picture|
-|:white_check_mark: table |Render the tag as a table|
+|:white_check_mark: Table |Render the tag as a table|
 |:white_check_mark: Numbering |Render the tag as a numbering|
 |:white_check_mark: Chart|Bar chart (3D bar chart), column chart (3D column chart), area chart (3D area chart), line chart (3D line chart), radar chart, pie chart (3D pie Figure) and other chart rendering |
 |:white_check_mark: If Condition |Hide or display certain document content (including text, paragraphs, pictures, tables, lists, charts, etc.) according to conditions|
@@ -29,10 +29,11 @@ poi-tl supports **custom functions (plug-ins)**, functions can be executed anywh
 |:white_check_mark: Loop table row | Loop to copy a row of the rendered table|
 |:white_check_mark: Loop table column | Loop copy and render a column of the table|
 |:white_check_mark: Loop ordered list |Support the loop of ordered list, and support multi-level list at the same time|
-|:white_check_mark: Highlight code highlighting |Word highlighting of code blocks, supporting 26 languages ​​and hundreds of coloring styles|
+|:white_check_mark: Highlight code |Word highlighting of code blocks, supporting 26 languages ​​and hundreds of coloring styles|
 |:white_check_mark: Markdown |Convert Markdown to a word document|
-|:white_check_mark: Word Comments |Complete comment function, create comment, modify comment, etc.|
 |:white_check_mark: Word attachment |Insert attachment in Word|
+|:white_check_mark: Word Comments |Complete support comment, create comment, modify comment, etc.|
+|:white_check_mark: Word SDT |Complete support structured document tag |
 |:white_check_mark: Textbox |Tag support in text box|
 |:white_check_mark: Picture replacement |Replace the original picture with another picture|
 |:white_check_mark: bookmarks, anchors, hyperlinks |Support setting bookmarks, anchors and hyperlinks in documents|
