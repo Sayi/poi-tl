@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.12.0-SNAPSHOT</version>
+	<version>1.12.0</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
@@ -90,7 +90,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>4.3.6.RELEASE</version>
+			<version>5.3.18</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
