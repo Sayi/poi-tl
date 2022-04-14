@@ -9,6 +9,12 @@ public class CLITest {
         String cmd = "-t src/test/resources/template.docx -o target/out.docx -d src/test/resources/data.json";
         CLI.main(cmd.split(" "));
     }
+    
+    @Test
+    public void testJsonStr() {
+        String cmd = "-t src/test/resources/template.docx -o target/out.docx -d {\"name\":\"Poi-tl\"}";
+        CLI.main(cmd.split(" "));
+    }
 
     @Test
     public void testMarkdown() {

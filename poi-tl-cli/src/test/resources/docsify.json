@@ -1,7 +1,7 @@
 {
   "md": {
     "type": "markdown-file",
-    "path": "src/test/resources/docsify",
+    "path": "/Users/sayi/develop/gitlab/zwa-doc",
     "style": {
       "inlineCodeStyle": {
         "color": "f44336",
@@ -45,7 +45,7 @@
         }
       },
       "showHeaderNumber": true,
-      "imagesDir": ""
+      "imagesDir": "/Users/sayi/develop/gitlab/zwa-doc"
     }
   }
 }

@@ -12,8 +12,10 @@ import com.beust.jcommander.Parameter;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.config.ConfigureBuilder;
-import com.deepoove.poi.config.DefaultGsonHandler;
 import com.deepoove.poi.data.RenderData;
+import com.deepoove.poi.jsonmodel.support.DefaultGsonHandler;
+import com.deepoove.poi.jsonmodel.support.GsonHandler;
+import com.deepoove.poi.jsonmodel.support.GsonPreRenderDataCastor;
 import com.deepoove.poi.plugin.comment.CommentRenderPolicy;
 import com.deepoove.poi.plugin.highlight.HighlightRenderData;
 import com.deepoove.poi.plugin.highlight.HighlightRenderPolicy;
@@ -22,6 +24,8 @@ import com.deepoove.poi.plugin.markdown.MarkdownRenderData;
 import com.deepoove.poi.plugin.markdown.MarkdownRenderPolicy;
 import com.deepoove.poi.plugin.toc.TOCRenderPolicy;
 import com.deepoove.poi.policy.AttachmentRenderPolicy;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 
@@ -71,7 +75,7 @@ public class CLI {
 
         // cli logic
         ConfigureBuilder builder = Configure.builder();
-        builder.setGsonHandler(new DefaultGsonHandler() {
+        GsonHandler gsonHandler = new DefaultGsonHandler() {
             @Override
             protected RuntimeTypeAdapterFactory<RenderData> createRenderTypeAdapter(boolean readable) {
                 return super.createRenderTypeAdapter(readable).registerSubtype(MarkdownRenderData.class, "markdown")
@@ -91,7 +95,10 @@ public class CLI {
                         .registerSubtype(FileMarkdownRenderData.class, "markdown-file"));
                 return typeAdapter;
             }
-        });
+        };
+        GsonPreRenderDataCastor gsonPreRenderDataCastor = new GsonPreRenderDataCastor();
+        gsonPreRenderDataCastor.setGsonHandler(gsonHandler);
+        builder.addPreRenderDataCastor(gsonPreRenderDataCastor);
         builder.addPlugin(':', new CommentRenderPolicy())
                 .addPlugin(';', new AttachmentRenderPolicy())
                 .addPlugin('~', new HighlightRenderPolicy())
@@ -100,15 +107,36 @@ public class CLI {
 
         Configure configure = builder.build();
         try {
+            String jsonStr = "";
+            if (validate(datamodel)) {
+                jsonStr = datamodel;
+            } else {
+                jsonStr = new String(Files.readAllBytes(Paths.get(datamodel)));
+            }
             XWPFTemplate.compile(template, configure)
-                    .render(configure.getGsonHandler()
-                            .castJsonToType(new String(Files.readAllBytes(Paths.get(datamodel))), TYPE))
+                    .render(gsonHandler.castJsonToType(jsonStr, TYPE))
                     .writeToFile(output);
         } catch (IOException e) {
             e.printStackTrace();
             JCommander.getConsole().println(e.getMessage());
         }
         JCommander.getConsole().println("Output file generated: " + Paths.get(output).toAbsolutePath().toString());
+    }
+
+    private static boolean validate(String jsonStr) {
+        JsonElement jsonElement;
+        try {
+            jsonElement = JsonParser.parseString(jsonStr);
+        } catch (Exception e) {
+            return false;
+        }
+        if (jsonElement == null) {
+            return false;
+        }
+        if (!jsonElement.isJsonObject()) {
+            return false;
+        }
+        return true;
     }
 
     public String getTemplate() {

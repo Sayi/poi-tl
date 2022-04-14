@@ -24,7 +24,13 @@ import java.util.List;
 
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
-import org.commonmark.node.*;
+import org.commonmark.node.AbstractVisitor;
+import org.commonmark.node.BulletList;
+import org.commonmark.node.Link;
+import org.commonmark.node.ListItem;
+import org.commonmark.node.Node;
+import org.commonmark.node.Paragraph;
+import org.commonmark.node.Text;
 import org.commonmark.parser.Parser;
 
 public class FileMarkdownRenderData extends MarkdownRenderData {
@@ -41,7 +47,7 @@ public class FileMarkdownRenderData extends MarkdownRenderData {
         }
     }
 
-    public String suggest() throws Exception {
+    private String suggest() throws Exception {
         Path filePath = Paths.get(path);
         if (!Files.isDirectory(filePath)) {
             return new String(Files.readAllBytes(filePath));
