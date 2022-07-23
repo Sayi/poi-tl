@@ -229,6 +229,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
     }
 
     protected String ridSectPr(String appendString) {
+		appendString = appendString.replaceAll("<w:sectPr/>","");
         int lastIndexOf = appendString.lastIndexOf("<w:sectPr");
         String addPart = "";
         int begin = appendString.indexOf(">") + 1;
