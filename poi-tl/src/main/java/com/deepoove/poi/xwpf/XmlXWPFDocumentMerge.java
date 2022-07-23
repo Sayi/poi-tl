@@ -55,7 +55,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return source.generate(true);
     }
 
-    private String truncatedOverlapWP(CTBody body) {
+    protected String truncatedOverlapWP(CTBody body) {
         String xmlText = body.xmlText(DefaultXmlOptions.OPTIONS_INNER);
         xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>")
                 .replaceAll("<w:p><w:p\\s", "<w:p ")
@@ -70,7 +70,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return xmlText;
     }
 
-    private String[] truncatedStartEndXmlFragment(CTBody body) {
+    protected String[] truncatedStartEndXmlFragment(CTBody body) {
         String srcString = body.xmlText(DefaultXmlOptions.OPTIONS_INNER);
         // hack for create document or single element document
         if (!srcString.startsWith("<xml-fragment")) {
@@ -82,7 +82,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return new String[] { prefix, suffix };
     }
 
-    private List<String> createMergeableStrings(NiceXWPFDocument source, Iterator<NiceXWPFDocument> iterator)
+    protected List<String> createMergeableStrings(NiceXWPFDocument source, Iterator<NiceXWPFDocument> iterator)
             throws InvalidFormatException, IOException {
         List<String> addParts = new ArrayList<String>();
         if (!iterator.hasNext()) return addParts;
@@ -108,7 +108,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return addParts;
     }
 
-    private void mergeNamespaces(NiceXWPFDocument source, NiceXWPFDocument docMerge) {
+    protected void mergeNamespaces(NiceXWPFDocument source, NiceXWPFDocument docMerge) {
         CTDocument1 document = source.getDocument();
         XmlCursor newCursor = document.newCursor();
         if (toStartCursor(newCursor)) {
@@ -124,7 +124,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         newCursor.dispose();
     }
 
-    private boolean toStartCursor(XmlCursor newCursor) {
+    protected boolean toStartCursor(XmlCursor newCursor) {
         do {
             if (newCursor.currentTokenType().isStart()) {
                 return true;
@@ -135,7 +135,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         } while (true);
     }
 
-    private String createMergeableString(NiceXWPFDocument source, NiceXWPFDocument merged,
+    protected String createMergeableString(NiceXWPFDocument source, NiceXWPFDocument merged,
             Map<String, String> styleIdsMap) throws InvalidFormatException, IOException {
         CTBody mergedBody = merged.getDocument().getBody();
         // TODO For the same style, reduce the number of merges
@@ -218,7 +218,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return addPart.replaceAll(CROSS_REPLACE_STRING, "");
     }
 
-    private String ridSectPr(String appendString) {
+    protected String ridSectPr(String appendString) {
         int lastIndexOf = appendString.lastIndexOf("<w:sectPr");
         String addPart = "";
         int begin = appendString.indexOf(">") + 1;
@@ -233,7 +233,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return addPart;
     }
 
-    private Map<String, String> mergePicture(NiceXWPFDocument source, NiceXWPFDocument merged)
+    protected Map<String, String> mergePicture(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException {
         Map<String, String> blipIdsMap = new HashMap<String, String>();
         List<XWPFPictureData> allPictures = merged.getAllPictures();
@@ -245,7 +245,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return blipIdsMap;
     }
 
-    private Map<String, String> mergeExternalPicture(NiceXWPFDocument source, NiceXWPFDocument merged)
+    protected Map<String, String> mergeExternalPicture(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException {
         Map<String, String> blipIdsMap = new HashMap<String, String>();
         PackageRelationshipCollection imagePart = merged.getPackagePart()
@@ -263,7 +263,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return blipIdsMap;
     }
 
-    private Map<String, String> mergeNumbering(NiceXWPFDocument source, NiceXWPFDocument merged) {
+    protected Map<String, String> mergeNumbering(NiceXWPFDocument source, NiceXWPFDocument merged) {
         Map<String, String> numIdsMap = new HashMap<String, String>();
         XWPFNumbering numberingMerge = merged.getNumbering();
         if (null == numberingMerge) return numIdsMap;
@@ -312,7 +312,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, String> mergeStyles(NiceXWPFDocument source, NiceXWPFDocument merged) {
+    protected Map<String, String> mergeStyles(NiceXWPFDocument source, NiceXWPFDocument merged) {
         Map<String, String> styleIdsMap = new HashMap<String, String>();
         XWPFStyles styles = source.getStyles();
         if (null == styles) styles = source.createStyles();
@@ -361,7 +361,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return styleIdsMap;
     }
 
-    private Map<String, String> mergeHyperlink(NiceXWPFDocument source, NiceXWPFDocument merged)
+    protected Map<String, String> mergeHyperlink(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException {
         Map<String, String> map = new HashMap<String, String>();
         PackageRelationshipCollection hyperlinks = merged.getPackagePart()
@@ -377,7 +377,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return map;
     }
 
-    private Map<String, String> mergeChart(NiceXWPFDocument source, NiceXWPFDocument merged)
+    protected Map<String, String> mergeChart(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException, IOException {
         Map<String, String> map = new HashMap<String, String>();
         List<XWPFChart> charts = merged.getCharts();
@@ -389,7 +389,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return map;
     }
 
-    private Map<String, String> mergeAttachment(NiceXWPFDocument source, NiceXWPFDocument merged)
+    protected Map<String, String> mergeAttachment(NiceXWPFDocument source, NiceXWPFDocument merged)
             throws InvalidFormatException, IOException {
         Map<String, String> attachmentIdsMap = new HashMap<String, String>();
         PackageRelationshipCollection part = merged.getPackagePart()
