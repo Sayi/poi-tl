@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
 import org.apache.poi.ooxml.util.POIXMLUnits;
@@ -35,8 +36,17 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
     private static final String CROSS_REPLACE_STRING = "@PoiTL@";
 
+	/**
+	 * 重名的样式，是否进行重命名后合并
+	 */
+	private boolean renameAndMergeExistsStyle = true;
+
     public XmlXWPFDocumentMerge() {
     }
+
+	public XmlXWPFDocumentMerge(boolean renameAndMergeExistsStyle) {
+		this.renameAndMergeExistsStyle = renameAndMergeExistsStyle;
+	}
 
     @Override
     public NiceXWPFDocument merge(NiceXWPFDocument source, Iterator<NiceXWPFDocument> mergeIterator, XWPFRun run)
@@ -325,6 +335,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             String defaultParaStyleId = null;
             for (XWPFStyle xwpfStyle : lists) {
                 if (styles.styleExist(xwpfStyle.getStyleId())) {
+					if(!getRenameAndMergeExistsStyle()) {
+						continue;
+					}
                     String id = xwpfStyle.getStyleId();
                     xwpfStyle.setStyleId(UUID.randomUUID().toString().substring(0, 8));
                     styleIdsMap.put(id, xwpfStyle.getStyleId());
@@ -340,7 +353,7 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 if (ctStyle.isSetDefault()) {
                     ctStyle.unsetDefault();
                 }
-                if (ctStyle.isSetName()) {
+				if (ctStyle.isSetName() && StringUtils.isBlank(ctStyle.getName().getVal())) {
                     ctStyle.getName().setVal(ctStyle.getName().getVal() + xwpfStyle.getStyleId());
                 }
                 if (ctStyle.isSetBasedOn()) {
@@ -411,6 +424,14 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return attachmentIdsMap;
     }
 
-    // TODO merge header, footer, pageSect...
+	public boolean getRenameAndMergeExistsStyle() {
+		return renameAndMergeExistsStyle;
+	}
+
+	public void setRenameAndMergeExistsStyle(boolean renameAndMergeExistsStyle) {
+		this.renameAndMergeExistsStyle = renameAndMergeExistsStyle;
+	}
+
+	// TODO merge header, footer, pageSect...
 
 }
