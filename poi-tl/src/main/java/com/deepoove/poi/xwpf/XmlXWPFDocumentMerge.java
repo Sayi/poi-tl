@@ -70,11 +70,14 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>")
                 .replaceAll("<w:p><w:p\\s", "<w:p ")
                 .replaceAll("<w:p><w:tbl>", "<w:tbl>")
-                .replaceAll("<w:p><w:tbl\\s", "<w:tbl ");
+                .replaceAll("<w:p><w:tbl\\s", "<w:tbl ")
+                .replaceAll("<w:p><w:sdt>", "<w:sdt>")
+                .replaceAll("<w:p><w:sdt\\s", "<w:sdt ");
 
         xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
                 .replaceAll("</w:p></w:p>", "</w:p>")
                 .replaceAll("</w:tbl></w:p>", "</w:tbl>")
+                .replaceAll("</w:sdt></w:p>", "</w:sdt>")
                 .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
                 .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
         return xmlText;
