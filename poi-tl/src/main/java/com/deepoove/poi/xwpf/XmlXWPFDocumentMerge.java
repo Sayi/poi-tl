@@ -18,19 +18,35 @@ package com.deepoove.poi.xwpf;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLDocumentPart.RelationPart;
-import org.apache.poi.ooxml.util.POIXMLUnits;
 import org.apache.poi.ooxml.POIXMLException;
+import org.apache.poi.ooxml.util.POIXMLUnits;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.*;
+import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.openxml4j.opc.PackageRelationship;
+import org.apache.poi.openxml4j.opc.PackageRelationshipCollection;
+import org.apache.poi.openxml4j.opc.PackageRelationshipTypes;
+import org.apache.poi.openxml4j.opc.TargetMode;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
@@ -57,7 +73,8 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
         XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
         CTP mergedContainer = paragraph.getCTP();
-        CTP mergedBody = CTP.Factory.parse(startEnd[0] + String.join("", addParts) + startEnd[1]);
+        CTP mergedBody = CTP.Factory
+                .parse(startEnd[0] + "<w:POITL>" + String.join("", addParts) + "</w:POITL>" + startEnd[1]);
         // instead insert xml-fragment?
         mergedContainer.set(mergedBody);
         String xmlText = truncatedOverlapWP(body);
@@ -67,19 +84,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
     protected String truncatedOverlapWP(CTBody body) {
         String xmlText = body.xmlText(DefaultXmlOptions.OPTIONS_INNER);
-        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>")
-                .replaceAll("<w:p><w:p\\s", "<w:p ")
-                .replaceAll("<w:p><w:tbl>", "<w:tbl>")
-                .replaceAll("<w:p><w:tbl\\s", "<w:tbl ")
-                .replaceAll("<w:p><w:sdt>", "<w:sdt>")
-                .replaceAll("<w:p><w:sdt\\s", "<w:sdt ");
-
-        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
-                .replaceAll("</w:p></w:p>", "</w:p>")
-                .replaceAll("</w:tbl></w:p>", "</w:tbl>")
-                .replaceAll("</w:sdt></w:p>", "</w:sdt>")
-                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
-                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
+        xmlText = xmlText.replaceAll("<w:p><w:POITL>", "")
+                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?><w:POITL>", "")
+                .replaceAll("</w:POITL></w:p>", "");
         return xmlText;
     }
 
