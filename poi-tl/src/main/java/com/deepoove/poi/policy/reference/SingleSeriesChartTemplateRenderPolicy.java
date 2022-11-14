@@ -43,18 +43,19 @@ public class SingleSeriesChartTemplateRenderPolicy
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
-        
+
         XDDFDataSource<?> categoriesData = null;
         if (pie instanceof XDDFScatterChartData) {
-            categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
+            categoriesData = createNumbericalDataSource(chart, toNumberArray(data.getCategories()), 0);
         } else {
-            categoriesData = createCategoryDataSource(chart, data.getCategories());
+            categoriesData = createStringDataSource(chart, data.getCategories(), 0);
         }
-        XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart, seriesDatas.getValues(), 0);
+        XDDFNumericalDataSource<? extends Number> valuesData = createNumbericalDataSource(chart,
+                seriesDatas.getValues(), 1);
 
         XDDFChartData.Series currentSeries = pie.getSeries(0);
         currentSeries.replaceData(categoriesData, valuesData);
-        currentSeries.setTitle(seriesDatas.getName(), chart.setSheetTitle(seriesDatas.getName(), VALUE_START_COL));
+        currentSeries.setTitle(seriesDatas.getName(), chart.setSheetTitle(seriesDatas.getName(), 1));
         updateCTTable(chart.getWorkbook().getSheetAt(0), Arrays.asList(seriesDatas));
 
         plot(chart, pie);

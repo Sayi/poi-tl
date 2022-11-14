@@ -21,7 +21,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xddf.usermodel.chart.*;
+import org.apache.poi.xddf.usermodel.chart.AxisPosition;
+import org.apache.poi.xddf.usermodel.chart.XDDFChart;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
+import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -44,27 +50,16 @@ import com.deepoove.poi.util.ChartUtils;
 public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTemplateRenderPolicy<ChartTemplate, T> {
 
     protected final int FIRST_ROW = 1;
-    protected final int CATEGORY_COL = 0;
-    protected final int VALUE_START_COL = 1;
 
-    protected XDDFDataSource<?> createCategoryDataSource(XWPFChart chart, String[] categories) {
+    protected XDDFDataSource<?> createStringDataSource(XWPFChart chart, String[] categories, int col) {
         return XDDFDataSourcesFactory.fromArray(categories,
-                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
-                CATEGORY_COL);
+                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, col, col)), col);
     }
 
-    protected XDDFDataSource<?> createCategoryDataSource(XWPFChart chart, Number[] categories) {
-        return XDDFDataSourcesFactory.fromArray(categories,
-                chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, CATEGORY_COL, CATEGORY_COL)),
-                CATEGORY_COL);
-    }
-
-    protected <N extends Number> XDDFNumericalDataSource<Number> createValueDataSource(XWPFChart chart, N[] data,
-            int index) {
+    protected <N extends Number> XDDFNumericalDataSource<Number> createNumbericalDataSource(XWPFChart chart, N[] data,
+            int col) {
         return XDDFDataSourcesFactory.fromArray(data,
-                chart.formatRange(
-                        new CellRangeAddress(FIRST_ROW, data.length, index + VALUE_START_COL, index + VALUE_START_COL)),
-                index + VALUE_START_COL);
+                chart.formatRange(new CellRangeAddress(FIRST_ROW, data.length, col, col)), col);
     }
 
     protected void removeExtraSeries(final XDDFChartData chartData, final int orignSize, final int seriesSize) {
