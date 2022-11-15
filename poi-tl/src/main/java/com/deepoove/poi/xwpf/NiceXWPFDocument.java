@@ -311,10 +311,7 @@ public class NiceXWPFDocument extends XWPFDocument {
     }
 
     public NiceXWPFDocument generate() throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        this.write(byteArrayOutputStream);
-        this.close();
-        return new NiceXWPFDocument(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+        return generate(false);
     }
 
     public NiceXWPFDocument generate(boolean adjust) throws IOException {

@@ -50,7 +50,7 @@ public class MultiSeriesChartTemplateRenderPolicy
         validate(chartSeries, data);
 
         int totalSeriesCount = ensureSeriesCount(chart, chartSeries);
-        int valueCol = 0;
+        int valueCol = 1;
         List<SeriesRenderData> usedSeriesDatas = new ArrayList<>();
         for (XDDFChartData chartData : chartSeries) {
             int orignSize = chartData.getSeriesCount();
@@ -66,12 +66,12 @@ public class MultiSeriesChartTemplateRenderPolicy
 
             XDDFDataSource<?> categoriesData = null;
             if (chartData instanceof XDDFScatterChartData) {
-                categoriesData = createCategoryDataSource(chart, toNumberArray(data.getCategories()));
+                categoriesData = createNumbericalDataSource(chart, toNumberArray(data.getCategories()), 0);
             } else {
-                categoriesData = createCategoryDataSource(chart, data.getCategories());
+                categoriesData = createStringDataSource(chart, data.getCategories(), 0);
             }
             for (int i = 0; i < currentSeriesSize; i++) {
-                XDDFNumericalDataSource<? extends Number> valuesData = createValueDataSource(chart,
+                XDDFNumericalDataSource<? extends Number> valuesData = createNumbericalDataSource(chart,
                         currentSeriesData.get(i).getValues(), valueCol);
 
                 XDDFChartData.Series currentSeries = null;
@@ -85,7 +85,7 @@ public class MultiSeriesChartTemplateRenderPolicy
                     processNewSeries(chartData, currentSeries);
                 }
                 String name = currentSeriesData.get(i).getName();
-                currentSeries.setTitle(name, chart.setSheetTitle(name, valueCol + VALUE_START_COL));
+                currentSeries.setTitle(name, chart.setSheetTitle(name, valueCol));
                 valueCol++;
             }
             // clear extra series

@@ -163,6 +163,7 @@ public class ConfigureTest {
         String text3 = "\n\npoi-tl";
         String text4 = "\n\n\n\n";
         String text5 = "hi\n\n\n\nwhat\nis\n\n\nthis";
+        String text7 = "hi\r\n\n\n\nwhat\nis\n\r\nthis";
 
         String regexLine = TextRenderPolicy.Helper.REGEX_LINE_CHARACTOR;
 
@@ -172,6 +173,7 @@ public class ConfigureTest {
         assertEquals(Arrays.toString(text3.split(regexLine, -1)), "[, , poi-tl]");
         assertEquals(Arrays.toString(text4.split(regexLine, -1)), "[, , , , ]");
         assertEquals(Arrays.toString(text5.split(regexLine, -1)), "[hi, , , , what, is, , , this]");
+        assertEquals(Arrays.toString(text7.split(regexLine, -1)), "[hi, , , , what, is, , this]");
     }
 
 }

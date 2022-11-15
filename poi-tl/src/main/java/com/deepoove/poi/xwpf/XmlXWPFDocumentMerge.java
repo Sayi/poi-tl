@@ -72,7 +72,8 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
         XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
         CTP mergedContainer = paragraph.getCTP();
-        CTP mergedBody = CTP.Factory.parse(startEnd[0] + String.join("", addParts) + startEnd[1]);
+        CTP mergedBody = CTP.Factory
+                .parse(startEnd[0] + "<w:POITL>" + String.join("", addParts) + "</w:POITL>" + startEnd[1]);
         // instead insert xml-fragment?
         mergedContainer.set(mergedBody);
         String xmlText = truncatedOverlapWP(body);
@@ -82,19 +83,9 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
     protected String truncatedOverlapWP(CTBody body) {
         String xmlText = body.xmlText(DefaultXmlOptions.OPTIONS_INNER);
-        xmlText = xmlText.replaceAll("<w:p><w:p>", "<w:p>")
-                .replaceAll("<w:p><w:p\\s", "<w:p ")
-                .replaceAll("<w:p><w:tbl>", "<w:tbl>")
-                .replaceAll("<w:p><w:tbl\\s", "<w:tbl ")
-                .replaceAll("<w:p><w:sdt>", "<w:sdt>")
-                .replaceAll("<w:p><w:sdt\\s", "<w:sdt ");
-
-        xmlText = xmlText.replaceAll("</w:sectPr></w:p>", "</w:sectPr>")
-                .replaceAll("</w:p></w:p>", "</w:p>")
-                .replaceAll("</w:tbl></w:p>", "</w:tbl>")
-                .replaceAll("</w:sdt></w:p>", "</w:sdt>")
-                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "")
-                .replaceAll("</w:p><w:bookmarkEnd(\\s[A-Za-z0-9:\\s=\"]*)?/></w:p>", "</w:p>");
+        xmlText = xmlText.replaceAll("<w:p><w:POITL>", "")
+                .replaceAll("<w:p(\\s[A-Za-z0-9:\\s=\"]*)?><w:POITL>", "")
+                .replaceAll("</w:POITL></w:p>", "");
         return xmlText;
     }
 

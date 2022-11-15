@@ -18,6 +18,7 @@ package com.deepoove.poi.config;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
@@ -124,6 +125,11 @@ public class ConfigureBuilder {
 
     public ConfigureBuilder bind(String tagName, RenderPolicy policy) {
         config.customPolicy(tagName, policy);
+        return this;
+    }
+
+    public ConfigureBuilder bind(RenderPolicy policy, String... tagNames) {
+        Stream.of(tagNames).forEach(tagName -> config.customPolicy(tagName, policy));
         return this;
     }
 

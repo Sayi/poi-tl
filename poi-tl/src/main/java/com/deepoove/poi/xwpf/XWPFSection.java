@@ -30,8 +30,12 @@ public class XWPFSection {
 
     public XWPFSection(CTSectPr sectPr) {
         this.sectPr = sectPr;
-        this.pageMargin = new XWPFPageMargin(sectPr.getPgMar());
-        this.pageSize = new XWPFPageSize(sectPr.getPgSz());
+        if (sectPr.isSetPgMar()) {
+            this.pageMargin = new XWPFPageMargin(sectPr.getPgMar());
+        }
+        if (sectPr.isSetPgSz()) {
+            this.pageSize = new XWPFPageSize(sectPr.getPgSz());
+        }
     }
 
     public boolean haveHeader(String headerRelationId) {
@@ -67,15 +71,19 @@ public class XWPFSection {
     }
 
     public int getPageWidth() {
-        return pageSize.getWidth();
+        return null == pageSize ? -1 : pageSize.getWidth();
     }
 
     public int getPageHeight() {
-        return pageSize.getHeight();
+        return null == pageSize ? -1 : pageSize.getHeight();
     }
 
     public BigInteger getPageContentWidth() {
+        long margin = 0;
+        if (null != pageMargin) {
+            margin = pageMargin.getLeft().longValue() + pageMargin.getRight().longValue();
+        }
         return BigInteger
-                .valueOf(getPageWidth() - pageMargin.getLeft().longValue() - pageMargin.getRight().longValue());
+                .valueOf((null == pageSize ? Page.A4_NORMAL.contentWidth().longValue() : getPageWidth()) - margin);
     }
 }

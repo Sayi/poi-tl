@@ -59,7 +59,7 @@ public class TextRenderPolicy extends AbstractRenderPolicy<TextRenderData> {
 
     public static class Helper {
 
-        public static final String REGEX_LINE_CHARACTOR = "\\n";
+        public static final String REGEX_LINE_CHARACTOR = "\\n|(\\r\\n)";
 
         public static void renderTextRun(XWPFRun run, TextRenderData data) {
             XWPFRun textRun = run;
