@@ -51,7 +51,8 @@ public class RunningRunBody {
     static QNameSet qname = QNameSet
             .forArray(new QName[] { new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "br"),
                     new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "t"),
-                    new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "cr") });
+                    new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "cr"),
+                    new QName("http://schemas.openxmlformats.org/wordprocessingml/2006/main", "tab") });
 
     private RunBodyContext runBodyContext;
     private List<XWPFRun> runs;
@@ -150,7 +151,8 @@ public class RunningRunBody {
             CTRImpl ctrimpl = (CTRImpl) ctr;
             int sizeOfBrArray = ctr.sizeOfBrArray();
             int sizeOfCrArray = ctr.sizeOfCrArray();
-            if ((sizeOfBrArray + sizeOfCrArray) > 0) {
+            int sizeOfTabArray = ctr.sizeOfTabArray();
+            if ((sizeOfBrArray + sizeOfCrArray + sizeOfTabArray) > 0) {
                 synchronized (ctrimpl.monitor()) {
                     // ctrimpl.check_orphaned();
                     List<? extends XmlObject> localArrayList = new ArrayList<XmlObject>();
@@ -166,6 +168,9 @@ public class RunningRunBody {
                             }
                             if ("w:cr".equals(tagName) || "cr".equals(tagName)) {
                                 insertNewRun.addCarriageReturn();
+                            }
+                            if ("w:tab".equals(tagName) || "tab".equals(tagName)) {
+                                insertNewRun.addTab();
                             }
                         } else if (obj instanceof CTBr) {
                             XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
