@@ -96,4 +96,9 @@ public class SDTContentContext implements RunBodyContext {
         return content.insertNewRun(i);
     }
 
+    @Override
+    public XWPFRun insertNewRunAfter(int i) {
+        return content.insertNewRunAfter(i);
+    }
+
 }

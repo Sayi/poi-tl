@@ -217,6 +217,69 @@ public class XWPFParagraphWrapper {
         return null;
     }
 
+    public XWPFRun insertNewRunAfter(int pos) {
+        if (pos == paragraph.getRuns().size()) {
+            return paragraph.createRun();
+        }
+
+        if (pos >= 0 && pos < paragraph.getRuns().size()) {
+            XWPFRun run = paragraph.getRuns().get(pos);
+            CTR ctr = run.getCTR();
+            XmlCursor newCursor = ctr.newCursor();
+            if (!isCursorInParagraph(newCursor)) {
+                // look up correct position for CTP -> XXX -> R array
+                newCursor.toParent();
+            }
+            if (isCursorInParagraph(newCursor)) {
+                boolean nextSibling = newCursor.toNextSibling();
+                if (!nextSibling) {
+                    return paragraph.createRun();
+                }
+                String uri = CTR.type.getName().getNamespaceURI();
+                String localPart = "r";
+                newCursor.beginElement(localPart, uri);
+                newCursor.toParent();
+                CTR r = (CTR) newCursor.getObject();
+                XWPFRun newRun = new XWPFRun(r, (IRunBody) this.paragraph);
+
+                List<IRunElement> iruns = getIRuns();
+                List<XWPFRun> runs = getRuns();
+                int iPos = iruns.size();
+                if (pos < runs.size()) {
+                    XWPFRun oldAtPos = runs.get(pos);
+                    int oldAt = iruns.indexOf(oldAtPos);
+                    if (oldAt != -1) {
+                        iPos = oldAt;
+                    }
+                }
+                if (iPos + 1 >= iruns.size()) {
+                    iruns.add(newRun);
+                } else {
+                    iruns.add(iPos + 1, newRun);
+                }
+                // Runs itself is easy to update
+                if (pos + 1 >= runs.size()) {
+                    runs.add(newRun);
+                } else {
+                    runs.add(pos + 1, newRun);
+                }
+                newCursor.dispose();
+                return newRun;
+            }
+            newCursor.dispose();
+        }
+        return null;
+
+    }
+
+    private boolean isCursorInParagraph(XmlCursor cursor) {
+        XmlCursor verify = cursor.newCursor();
+        verify.toParent();
+        boolean result = (verify.getObject() == this.paragraph.getCTP());
+        verify.dispose();
+        return result;
+    }
+
     public CTSimpleField insertNewFldSimple(int paramInt) {
         CTP ctp = paragraph.getCTP();
         synchronized (ctp.monitor()) {

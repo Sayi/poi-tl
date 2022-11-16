@@ -189,6 +189,62 @@ public class XWPFStructuredDocumentTagContent implements ISDTContent, IRunBody, 
         return null;
     }
 
+    public XWPFRun insertNewRunAfter(int pos) {
+        if (pos == runs.size()) {
+            return createRun();
+        }
+
+        if (pos >= 0 && pos < runs.size()) {
+            XWPFRun run = runs.get(pos);
+            CTR ctr = run.getCTR();
+            XmlCursor newCursor = ctr.newCursor();
+            if (!isCursorInRunContent(newCursor)) {
+                // look up correct position for CTP -> XXX -> R array
+                newCursor.toParent();
+            }
+            if (isCursorInRunContent(newCursor)) {
+                boolean nextSibling = newCursor.toNextSibling();
+                if (!nextSibling) {
+                    return createRun();
+                }
+                // provide a new run
+                String uri = CTR.type.getName().getNamespaceURI();
+                String localPart = "r";
+                // creates a new run, cursor is positioned inside the new
+                // element
+                newCursor.beginElement(localPart, uri);
+                // move the cursor to the START token to the run just created
+                newCursor.toParent();
+                CTR r = (CTR) newCursor.getObject();
+                XWPFRun newRun = new XWPFRun(r, (IRunBody) this);
+
+                // To update the iruns, find where we're going
+                // in the normal runs, and go in there
+                int iPos = sdtElements.size();
+                int oldAt = sdtElements.indexOf(run);
+                if (oldAt != -1) {
+                    iPos = oldAt;
+                }
+                if (iPos + 1 >= sdtElements.size()) {
+                    sdtElements.add(newRun);
+                } else {
+                    sdtElements.add(iPos, newRun);
+                }
+                // Runs itself is easy to update
+                if (pos + 1 >= runs.size()) {
+                    runs.add(newRun);
+                } else {
+                    runs.add(pos + 1, newRun);
+                }
+                newCursor.dispose();
+                return newRun;
+            }
+            newCursor.dispose();
+        }
+        return null;
+
+    }
+
     private boolean isCursorInRunContent(XmlCursor cursor) {
         XmlCursor verify = cursor.newCursor();
         verify.toParent();

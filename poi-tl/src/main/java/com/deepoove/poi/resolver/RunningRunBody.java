@@ -105,7 +105,7 @@ public class RunningRunBody {
                 String extra = endText.substring(endOffset + 1, endText.length());
                 if (startRunPos == endRunPos) {
                     // create run and set extra content
-                    XWPFRun extraRun = runBodyContext.insertNewRun(endRunPos + 1);
+                    XWPFRun extraRun = runBodyContext.insertNewRunAfter(endRunPos);
                     StyleUtils.styleRun(extraRun, runs.get(endRunPos));
                     buildExtra(extra, extraRun);
                 } else {
@@ -131,7 +131,7 @@ public class RunningRunBody {
                 XWPFRun extraRun = runs.get(startRunPos);
                 buildExtra(extra, extraRun);
 
-                XWPFRun templateRun = runBodyContext.insertNewRun(startRunPos + 1);
+                XWPFRun templateRun = runBodyContext.insertNewRunAfter(startRunPos);
                 StyleUtils.styleRun(templateRun, extraRun);
                 templateRun.setText(startEdge.getTag(), 0);
                 templateRuns.add(runs.get(startRunPos + 1));
@@ -161,7 +161,7 @@ public class RunningRunBody {
                     for (int j = size - 1; j >= 0; j--) {
                         Object obj = localArrayList.get(j);
                         if (obj instanceof CTEmpty) {
-                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRunAfter(i);
                             String tagName = ((CTEmpty) obj).getDomNode().getNodeName();
                             if ("w:br".equals(tagName) || "br".equals(tagName)) {
                                 insertNewRun.addBreak();
@@ -173,12 +173,12 @@ public class RunningRunBody {
                                 insertNewRun.addTab();
                             }
                         } else if (obj instanceof CTBr) {
-                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRunAfter(i);
                             CTBr addNewBr = insertNewRun.getCTR().addNewBr();
                             if (null != ((CTBr) obj).getType()) addNewBr.setType(((CTBr) obj).getType());
                             if (null != ((CTBr) obj).getClear()) addNewBr.setClear(((CTBr) obj).getClear());
                         } else if (obj instanceof CTText) {
-                            XWPFRun insertNewRun = runBodyContext.insertNewRun(i + 1);
+                            XWPFRun insertNewRun = runBodyContext.insertNewRunAfter(i);
                             StyleUtils.styleRun(insertNewRun, xwpfRun);
                             insertNewRun.setText(((CTText) obj).getStringValue());
                         }
