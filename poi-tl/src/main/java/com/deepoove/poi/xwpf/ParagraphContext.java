@@ -95,4 +95,9 @@ public class ParagraphContext implements RunBodyContext {
         return paragraphWrapper.insertNewRun(i);
     }
 
+    @Override
+    public XWPFRun insertNewRunAfter(int i) {
+        return paragraphWrapper.insertNewRunAfter(i);
+    }
+
 }

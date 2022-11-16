@@ -39,6 +39,11 @@ public class RowStyle implements Serializable {
     private String heightRule;
 
     /**
+     * Table Row can Break Across Pages
+     */
+    private boolean breakAcrossPage = true;
+
+    /**
      * Specifies that the current row should be repeated at the top each new page on
      * which the table is displayed. This can be specified for multiple rows to
      * generate a multi-row header. Note that if the row is not the first row, then
@@ -65,6 +70,14 @@ public class RowStyle implements Serializable {
 
     public void setHeightRule(String heightRule) {
         this.heightRule = heightRule;
+    }
+
+    public boolean isBreakAcrossPage() {
+        return breakAcrossPage;
+    }
+
+    public void setBreakAcrossPage(boolean breakAcrossPage) {
+        this.breakAcrossPage = breakAcrossPage;
     }
 
     public boolean isRepeated() {

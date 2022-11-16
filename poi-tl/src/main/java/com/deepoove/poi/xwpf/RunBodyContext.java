@@ -43,4 +43,6 @@ public interface RunBodyContext extends ParentContext {
 
     XWPFRun insertNewRun(int i);
 
+    XWPFRun insertNewRunAfter(int i);
+
 }

@@ -221,9 +221,12 @@ public final class StyleUtils {
             CTHeight h = properties.sizeOfTrHeightArray() == 0 ? properties.addNewTrHeight()
                     : properties.getTrHeightArray(0);
             String heightRule = rowStyle.getHeightRule();
-            if ("exact".equals(heightRule)) h.setHRule(STHeightRule.EXACT);
-            else if ("atleast".equals(heightRule)) h.setHRule(STHeightRule.AT_LEAST);
-            else h.setHRule(STHeightRule.AUTO);
+            if ("exact".equals(heightRule))
+                h.setHRule(STHeightRule.EXACT);
+            else if ("atleast".equals(heightRule))
+                h.setHRule(STHeightRule.AT_LEAST);
+            else
+                h.setHRule(STHeightRule.AUTO);
         }
 
         boolean repeated = rowStyle.isRepeated();
@@ -231,6 +234,15 @@ public final class StyleUtils {
             CTOnOff tblHeader = properties.sizeOfTblHeaderArray() == 0 ? properties.addNewTblHeader()
                     : properties.getTblHeaderArray(0);
             tblHeader.setVal(XWPFOnOff.ON);
+        }
+
+        boolean breakAcrossPage = rowStyle.isBreakAcrossPage();
+        if (!breakAcrossPage) {
+            if (properties.sizeOfCantSplitArray() == 0) {
+                properties.addNewCantSplit();
+            } else {
+                properties.getCantSplitArray(0).setVal(XWPFOnOff.ON);
+            }
         }
     }
 
