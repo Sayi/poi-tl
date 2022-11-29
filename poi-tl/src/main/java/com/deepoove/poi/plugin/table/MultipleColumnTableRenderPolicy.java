@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014-2021 Sayi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.deepoove.poi.plugin.table;
 
 import com.deepoove.poi.XWPFTemplate;
@@ -13,6 +28,7 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
+
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
@@ -56,9 +72,7 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 
 	private final String suffix;
 
-
 	private final boolean onSameLine;
-
 
 	public MultipleColumnTableRenderPolicy() {
 		this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, DEFAULT_PREFIX, DEFAULT_SUFFIX, false);
@@ -83,13 +97,9 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 	@Override
 	public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
 
+		RunTemplate runTemplate = (RunTemplate) eleTemplate;
+		XWPFRun run = runTemplate.getRun();
 		try {
-			if (!(data instanceof Iterable)) {
-				throw new RenderException(
-					data.toString() + " must  instanceof Iterable");
-			}
-			RunTemplate runTemplate = cast2runTemplate(eleTemplate);
-			XWPFRun run = runTemplate.getRun();
 			if (!TableTools.isInsideTable(run)) {
 				throw new IllegalStateException(
 					"The template tag " + runTemplate.getSource() + " must be inside a table");
@@ -98,80 +108,78 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 			XWPFTableRow tableRow = tagCell.getTableRow();
 			XWPFTable table = tableRow.getTable();
 			run.setText("", 0);
-			//循环的列数
+
 			int loopColumnNum = getLoopColumnNum(tagCell);
 			int templateColIndex = getTemplateColIndex(tagCell);
 			int rowSize = table.getRows().size();
-			int dataSize = getSize((Iterable<?>) data);
-			//得到 要循环的列 它们相应的 width
-			int[] loopColWidths = processLoopColWidth(table, tableRow, templateColIndex, dataSize, loopColumnNum);
-
-			//初始化resolver
-			TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
-			Iterator<?> iterator = ((Iterable<?>) data).iterator();
 			int index = 0;
-			boolean hasNext = iterator.hasNext();
-			//存放光标位置
-			XWPFTableCell tableCell4cursor;
-			while (hasNext) {
-				Object root = iterator.next();
-				hasNext = iterator.hasNext();
-				List<XWPFTableCell> cells = new ArrayList<>();
 
+//			if (data instanceof Iterable) {
+//				int dataSize = getSize((Iterable<?>) data);
+//				int[] loopColWidths = processLoopColWidth(table, tableRow, templateColIndex, dataSize, loopColumnNum);
+//				int[] newCellInsertPoint4row = new int[rowSize];
+//				XWPFTableCell[] cursorCell4row = new XWPFTableCell[rowSize];
+//
+//				boolean initFlag = true;
+//				TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
+//				Iterator<?> iterator = ((Iterable<?>) data).iterator();
+//				boolean hasNext = iterator.hasNext();
+//				while (hasNext) {
+//					Object root = iterator.next();
+//					hasNext = iterator.hasNext();
+//
+//					List<XWPFTableCell> cells = new ArrayList<>();
+//					int loopCellStartPoint = index * loopColumnNum + templateColIndex;
+//
+//					for (int j = 0; j < loopColumnNum * 2; j += 2) {
+//						for (int i = 0; i < rowSize; i++) {
+//							XWPFTableRow row = table.getRow(i);
+//							int actualLoopCellPosition = getActualInsertPosition(row, loopCellStartPoint + j);
+//							if (-1 == actualLoopCellPosition) {
+//								addColGridSpan(row, loopCellStartPoint + j);
+//								continue;
+//							}
+//							XWPFTableCell loopCell = row.getCell(actualLoopCellPosition);
+//							if (initFlag) {
+//								loopCell.setWidth(String.valueOf(loopColWidths[j / 2]));
+//								if (j == 0) {
+//									cursorCell4row[i] = loopCell;
+//									newCellInsertPoint4row[i] = actualLoopCellPosition;
+//								}
+//							}
+//							insertCell(row, newCellInsertPoint4row[i]);
+//							setTableCell(row, loopCell, newCellInsertPoint4row[i]);
+//							// double set row
+//							XmlCursor newCursor = cursorCell4row[i].getCTTc().newCursor();
+//							newCursor.toPrevSibling();
+//							XmlObject object = newCursor.getObject();
+//							XWPFTableCell nextCell = new XWPFTableCell((CTTc) object, row, (IBody) loopCell.getPart());
+//							setTableCell(row, nextCell, newCellInsertPoint4row[i]++);
+//							cells.add(nextCell);
+//						}
+//					}
+//					initFlag = false;
+//					RenderDataCompute dataCompute = template.getConfig()
+//						.getRenderDataComputeFactory()
+//						.newCompute(EnvModel.of(root, EnvIterator.makeEnv(index++, hasNext)));
+//					cells.forEach(cell -> {
+//						List<MetaTemplate> templates = resolver.resolveBodyElements(cell.getBodyElements());
+//						new DocumentProcessor(template, resolver, dataCompute).process(templates);
+//					});
+//
+//				}
+//			}
+
+			int endPoint = index * loopColumnNum + templateColIndex - 1;
+			for (int j = loopColumnNum; j > 0; j--) {
 				for (int i = 0; i < rowSize; i++) {
 					XWPFTableRow row = table.getRow(i);
-					int actualColIndex = getActualInsertPosition(row, templateColIndex);
-					if (-1 == actualColIndex) {
-						addColGridSpan(row, templateColIndex);
+					int actualInsertPosition = getActualInsertPosition(row, endPoint + j);
+					if (-1 == actualInsertPosition) {
+						minusGridSpan(row, endPoint + j);
 						continue;
 					}
-					int beginningPosition = actualColIndex + index * loopColumnNum;
-					int curInsertPosition = beginningPosition;
-					int tableCellPosition = beginningPosition;
-					int widthIdx = 0;
-					int size = loopColumnNum;
-					while (size-- > 0) {
-						XWPFTableCell templateCell = row.getCell(tableCellPosition);
-						tableCell4cursor = row.getCell(curInsertPosition);
-						int colWidth = loopColWidths[widthIdx++];
-						templateCell.setWidth(String.valueOf(colWidth));
-
-						XWPFTableCell nextCell = insertCell(row, curInsertPosition);
-						setTableCell(row, templateCell, curInsertPosition);
-						// double set row
-						XmlCursor newCursor = tableCell4cursor.getCTTc().newCursor();
-						newCursor.toPrevSibling();
-						XmlObject object = newCursor.getObject();
-						nextCell = new XWPFTableCell((CTTc) object, row, (IBody) nextCell.getPart());
-						setTableCell(row, nextCell, curInsertPosition);
-
-						cells.add(nextCell);
-						curInsertPosition++;
-						tableCellPosition += 2;
-					}
-				}
-
-				RenderDataCompute dataCompute = template.getConfig()
-					.getRenderDataComputeFactory()
-					.newCompute(EnvModel.of(root, EnvIterator.makeEnv(index++, hasNext)));
-				cells.forEach(cell -> {
-					List<MetaTemplate> templates = resolver.resolveBodyElements(cell.getBodyElements());
-					new DocumentProcessor(template, resolver, dataCompute).process(templates);
-				});
-			}
-			//移除用来循环渲染的列
-			for (int i = 0; i < rowSize; i++) {
-				XWPFTableRow row = table.getRow(i);
-				int actualInsertPosition = getActualInsertPosition(row, templateColIndex);
-				if (-1 == actualInsertPosition) {
-					minusGridSpan(row, templateColIndex);
-					continue;
-				}
-				int startColumn = dataSize * loopColumnNum + actualInsertPosition;
-				int size = loopColumnNum;
-				while (size > 0) {
-					removeCell(row, startColumn);
-					size--;
+					removeCell(row, actualInsertPosition);
 				}
 			}
 			afterloop(table, data);
@@ -208,12 +216,6 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 		return loopColumnNum;
 	}
 
-	protected RunTemplate cast2runTemplate(MetaTemplate template) {
-		if (!(template instanceof RunTemplate)) {
-			throw new ClassCastException("type conversion failed, template is not of type RunTemplate");
-		}
-		return (RunTemplate) template;
-	}
 
 	private int getTemplateColIndex(XWPFTableCell tagCell) {
 		return onSameLine ? getColIndex(tagCell) : (getColIndex(tagCell) + 1);
@@ -221,7 +223,6 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 
 	private void minusGridSpan(XWPFTableRow row, int templateColIndex) {
 		XWPFTableCell actualCell = getActualCell(row, templateColIndex);
-		if (actualCell == null) return;
 		CTTcPr tcPr = actualCell.getCTTc().getTcPr();
 		CTDecimalNumber gridSpan = tcPr.getGridSpan();
 		gridSpan.setVal(BigInteger.valueOf(gridSpan.getVal().longValue() - 1));
@@ -229,7 +230,6 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 
 	private void addColGridSpan(XWPFTableRow row, int insertPosition) {
 		XWPFTableCell actualCell = getActualCell(row, insertPosition);
-		if (actualCell == null) return;
 		CTTcPr tcPr = actualCell.getCTTc().getTcPr();
 		CTDecimalNumber gridSpan = tcPr.getGridSpan();
 		gridSpan.setVal(BigInteger.valueOf(gridSpan.getVal().longValue() + 1));
@@ -240,8 +240,8 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 		int[] loopColWidths = new int[loopColumnNum];
 		CTTblGrid tblGrid = TableTools.getTblGrid(table);
 
-		for (int idx = 0; idx < loopColumnNum; idx++) {
-			int actualColIndex = getActualInsertPosition(row, templateColIndex + idx);
+		for (int i = 0; i < loopColumnNum; i++) {
+			int actualColIndex = getActualInsertPosition(row, templateColIndex + i);
 			XWPFTableCell templateCell = row.getCell(actualColIndex);
 			int width = templateCell.getWidth();
 			TableWidthType widthType = templateCell.getWidthType();
@@ -249,7 +249,7 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 				throw new IllegalArgumentException("template col must set width in centimeters.");
 			}
 			int colWidth = width / dataSize;
-			loopColWidths[idx] = colWidth;
+			loopColWidths[i] = colWidth;
 		}
 
 		for (int i = 0; i < dataSize; i++) {
@@ -302,7 +302,6 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 		rows.set(pos, templateCell);
 		row.getCtRow().setTcArray(pos, templateCell.getCTTc());
 	}
-
 
 	private int getColIndex(XWPFTableCell cell) {
 		XWPFTableRow tableRow = cell.getTableRow();
