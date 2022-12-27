@@ -69,7 +69,7 @@ public class CLI {
             return;
         }
         if (v) {
-            JCommander.getConsole().println("1.0.0");
+            jCommander.getConsole().println("1.0.0");
             return;
         }
 
@@ -118,9 +118,9 @@ public class CLI {
                     .writeToFile(output);
         } catch (IOException e) {
             e.printStackTrace();
-            JCommander.getConsole().println(e.getMessage());
+            jCommander.getConsole().println(e.getMessage());
         }
-        JCommander.getConsole().println("Output file generated: " + Paths.get(output).toAbsolutePath().toString());
+        jCommander.getConsole().println("Output file generated: " + Paths.get(output).toAbsolutePath().toString());
     }
 
     private static boolean validate(String jsonStr) {
