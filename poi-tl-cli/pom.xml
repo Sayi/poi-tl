@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>com.deepoove</groupId>
 			<artifactId>poi-tl</artifactId>
-			<version>1.12.0</version>
+			<version>1.12.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.deepoove</groupId>
