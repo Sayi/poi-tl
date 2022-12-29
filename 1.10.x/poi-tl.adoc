@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.10.4
+v1.10.5
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -93,7 +93,7 @@ poi-tl是一个免费开源的Java类库，你可以非常方便的加入到你�
 * link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]
 * link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]
 
-V1.10.4版本作了一个不兼容的改动，升级的时候需要注意：
+V1.10.4+版本作了一个不兼容的改动，升级的时候需要注意：
 
 * 重构了PictureRenderData，改为抽象类，建议使用Pictures工厂方法来创建图片数据
 
@@ -104,13 +104,13 @@ V1.10.4版本作了一个不兼容的改动，升级的时候需要注意：
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.4</version>
+  <version>1.10.5</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-implementation 'com.deepoove:poi-tl:1.10.4'
+implementation 'com.deepoove:poi-tl:1.10.5'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 
