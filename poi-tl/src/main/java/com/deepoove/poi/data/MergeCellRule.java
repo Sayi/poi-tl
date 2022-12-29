@@ -16,8 +16,10 @@
 package com.deepoove.poi.data;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -34,7 +36,7 @@ public class MergeCellRule implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<Grid, Grid> mapping = new LinkedHashMap<>();
+    private List<GridRule> mapping = new ArrayList<>();
 
     private MergeCellRule() {
     }
@@ -54,16 +56,46 @@ public class MergeCellRule implements Serializable {
      * @return
      */
     public Iterator<Entry<Grid, Grid>> mappingIterator() {
-        return mapping.entrySet().iterator();
+        Map<Grid, Grid> ret = new LinkedHashMap<>();
+        mapping.forEach(r -> {
+            ret.put(r.getFrom(), r.getTo());
+        });
+        return ret.entrySet().iterator();
     }
 
-    public Map<Grid, Grid> getMapping() {
+    public List<GridRule> getMapping() {
         return mapping;
     }
 
-    @Override
-    public String toString() {
-        return mapping.toString();
+    public static class GridRule implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private Grid from;
+        private Grid to;
+
+        public GridRule() {
+        }
+
+        public GridRule(Grid f, Grid t) {
+            this.from = f;
+            this.to = t;
+        }
+
+        public Grid getFrom() {
+            return from;
+        }
+
+        public void setFrom(Grid from) {
+            this.from = from;
+        }
+
+        public Grid getTo() {
+            return to;
+        }
+
+        public void setTo(Grid to) {
+            this.to = to;
+        }
+
     }
 
     public static class Grid implements Serializable {
@@ -167,7 +199,11 @@ public class MergeCellRule implements Serializable {
 
         public MergeCellRule build() {
             MergeCellRule mergeCellRule = new MergeCellRule();
-            mergeCellRule.mapping = map;
+            List<GridRule> mapping = new ArrayList<>();
+            map.forEach((f, t) -> {
+                mapping.add(new GridRule(f, t));
+            });
+            mergeCellRule.mapping = mapping;
             return mergeCellRule;
         }
 

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.*;
+import com.deepoove.poi.data.MergeCellRule.Grid;
 import com.deepoove.poi.data.style.Style;
 import com.google.gson.reflect.TypeToken;
 
@@ -77,7 +78,11 @@ public class SerializableJsonTest {
     void testTableRenderData() throws Exception {
         RowRenderData row = Rows.of(Cells.of("lisi").create(), Cells.of(Pictures.ofLocal("sayi.png").create()).create())
                 .create();
-        TableRenderData data = Tables.of(row).width(10.01f, null).center().create();
+        TableRenderData data = Tables.of(row)
+                .width(10.01f, null)
+                .center()
+                .mergeRule(MergeCellRule.builder().map(Grid.of(0, 0), Grid.of(0, 1)).build())
+                .create();
 
         TableRenderData result = write(data).getResult(TableRenderData.class);
 
