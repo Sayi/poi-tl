@@ -11,7 +11,7 @@
 
 	<groupId>com.deepoove</groupId>
 	<artifactId>poi-tl</artifactId>
-	<version>1.12.1</version>
+	<version>1.12.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>poi-tl</name>
