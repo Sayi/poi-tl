@@ -29,7 +29,7 @@ import com.deepoove.poi.util.PoitlIOUtils;
 
 /**
  * Factory method to create {@link AttachmentRenderData}
- * 
+ *
  * @author Sayi
  *
  */
@@ -37,9 +37,21 @@ public class Attachments {
     private Attachments() {
     }
 
+	public static AttachmentBuilder of(String src, AttachmentType fileType) {
+		return new AttachmentBuilder(src, fileType);
+	}
+
+	public static AttachmentBuilder of(byte[] bytes, AttachmentType fileType) {
+		return new AttachmentBuilder(bytes, fileType);
+	}
+
     public static AttachmentBuilder ofLocal(String src, AttachmentType fileType) {
-        return ofBytes(ByteUtils.getLocalByteArray(new File(src)), fileType);
+		return new AttachmentBuilder(src, fileType);
     }
+
+	public static AttachmentBuilder ofRemote(String src, AttachmentType fileType) {
+		return new AttachmentBuilder(src, fileType);
+	}
 
     public static AttachmentBuilder ofWord(XWPFDocument src) {
         try {
@@ -82,9 +94,18 @@ public class Attachments {
         AttachmentRenderData data;
 
         private AttachmentBuilder(byte[] bytes, AttachmentType fileType) {
-            data = new AttachmentRenderData(bytes);
-            data.setFileType(fileType);
+            data = new ByteArrayAttachmentRenderData(bytes, fileType);
         }
+		private AttachmentBuilder(String src, AttachmentType fileType) {
+			if (null == src) {
+				throw new IllegalArgumentException("src must not be null");
+			}
+			if (src.startsWith("http")) {
+				data = new UrlAttachmentRenderData(src, fileType);
+			} else {
+				data = new FileAttachmentRenderData(src, fileType);
+			}
+		}
 
         @Override
         public AttachmentRenderData create() {
