@@ -15,7 +15,6 @@
  */
 package com.deepoove.poi.data;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -29,7 +28,7 @@ import com.deepoove.poi.util.PoitlIOUtils;
 
 /**
  * Factory method to create {@link AttachmentRenderData}
- * 
+ *
  * @author Sayi
  *
  */
@@ -37,8 +36,28 @@ public class Attachments {
     private Attachments() {
     }
 
-    public static AttachmentBuilder ofLocal(String src, AttachmentType fileType) {
-        return ofBytes(ByteUtils.getLocalByteArray(new File(src)), fileType);
+    public static AttachmentBuilder of(String src) {
+        if (src.startsWith("http")) {
+            return Attachments.ofUrl(src);
+        } else {
+            return Attachments.ofLocal(src);
+        }
+    }
+
+    public static AttachmentBuilder ofLocal(String path) {
+        return ofLocal(path, null);
+    }
+
+    public static AttachmentBuilder ofLocal(String path, AttachmentType fileType) {
+        return new AttachmentBuilder(new FileAttachmentRenderData(path, fileType));
+    }
+
+    public static AttachmentBuilder ofUrl(String url) {
+        return ofUrl(url, null);
+    }
+
+    public static AttachmentBuilder ofUrl(String url, AttachmentType fileType) {
+        return new AttachmentBuilder(new UrlAttachmentRenderData(url, fileType));
     }
 
     public static AttachmentBuilder ofWord(XWPFDocument src) {
@@ -69,8 +88,16 @@ public class Attachments {
         return ofBytes(ByteUtils.toByteArray(inputStream), fileType);
     }
 
+    public static AttachmentBuilder ofStream(InputStream inputStream) {
+        return ofBytes(ByteUtils.toByteArray(inputStream));
+    }
+
     public static AttachmentBuilder ofBytes(byte[] bytes, AttachmentType fileType) {
-        return new AttachmentBuilder(bytes, fileType);
+        return new AttachmentBuilder(new ByteArrayAttachmentRenderData(bytes, fileType));
+    }
+
+    public static AttachmentBuilder ofBytes(byte[] bytes) {
+        return ofBytes(bytes, null);
     }
 
     /**
@@ -81,9 +108,8 @@ public class Attachments {
 
         AttachmentRenderData data;
 
-        private AttachmentBuilder(byte[] bytes, AttachmentType fileType) {
-            data = new AttachmentRenderData(bytes);
-            data.setFileType(fileType);
+        private AttachmentBuilder(AttachmentRenderData data) {
+            this.data = data;
         }
 
         @Override
