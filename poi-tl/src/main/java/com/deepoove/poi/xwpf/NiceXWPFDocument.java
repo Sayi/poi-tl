@@ -504,4 +504,57 @@ public class NiceXWPFDocument extends XWPFDocument {
         }
     }
 
+	@Override
+	public boolean removeBodyElement(int pos) {
+		if (pos >= 0 && pos < this.bodyElements.size()) {
+			BodyElementType type = ((IBodyElement)this.bodyElements.get(pos)).getElementType();
+			int paraPos;
+			if (type == BodyElementType.TABLE) {
+				paraPos = this.getTablePos(pos);
+				this.tables.remove(paraPos);
+				this.getDocument().getBody().removeTbl(paraPos);
+			}
+			if (type == BodyElementType.PARAGRAPH) {
+				paraPos = this.getParagraphPos(pos);
+				this.paragraphs.remove(paraPos);
+				this.getDocument().getBody().removeP(paraPos);
+			}
+			if (type == BodyElementType.CONTENTCONTROL) {
+				paraPos = getBodyElementSpecificPos(pos, contentControls);
+				this.contentControls.remove(paraPos);
+				this.getDocument().getBody().removeSdt(paraPos);
+			}
+			this.bodyElements.remove(pos);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * Finds that for example the 2nd entry in the body list is the 1st paragraph
+	 */
+	private int getBodyElementSpecificPos(int pos, List<? extends IBodyElement> list) {
+		// If there's nothing to find, skip it
+		if (list.isEmpty()) {
+			return -1;
+		}
+		if (pos >= 0 && pos < bodyElements.size()) {
+			// Ensure the type is correct
+			IBodyElement needle = bodyElements.get(pos);
+			if (needle.getElementType() != list.get(0).getElementType()) {
+				// Wrong type
+				return -1;
+			}
+
+			// Work back until we find it
+			int startPos = Math.min(pos, list.size() - 1);
+			for (int i = startPos; i >= 0; i--) {
+				if (list.get(i) == needle) {
+					return i;
+				}
+			}
+		}
+		// Couldn't be found
+		return -1;
+	}
 }
