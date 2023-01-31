@@ -15,48 +15,25 @@
  */
 package com.deepoove.poi.data;
 
-import java.io.File;
-import java.io.InputStream;
-
-import com.deepoove.poi.util.ByteUtils;
-
 /**
- * attachment file:docx or xlsx
- * 
+ * attachment file
+ *
  * @author Sayi
  */
-public class AttachmentRenderData implements RenderData {
+public abstract class AttachmentRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
 
-    private byte[] attachment;
     private AttachmentType fileType;
     private PictureRenderData icon;
 
-    AttachmentRenderData() {
-    }
-
-    public AttachmentRenderData(File attachmentFile) {
-        this(ByteUtils.getLocalByteArray(attachmentFile));
-    }
-
-    public AttachmentRenderData(InputStream inputStream) {
-        this(ByteUtils.toByteArray(inputStream));
-    }
-
-    public AttachmentRenderData(byte[] input) {
-        this.attachment = input;
-    }
-
-    public byte[] getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(byte[] attachment) {
-        this.attachment = attachment;
-    }
+    public abstract byte[] readAttachmentData();
 
     public AttachmentType getFileType() {
+        if (null != fileType) {
+            return fileType;
+        }
+        setFileType(detectFileType());
         return fileType;
     }
 
@@ -70,6 +47,18 @@ public class AttachmentRenderData implements RenderData {
 
     public void setIcon(PictureRenderData icon) {
         this.icon = icon;
+    }
+
+    protected String getFileSrc() {
+        return null;
+    }
+
+    protected AttachmentType detectFileType() {
+        AttachmentType type = AttachmentType.suggestFileType(getFileSrc());
+        if (null == type) {
+            type = AttachmentType.suggestFileType(readAttachmentData());
+        }
+        return type;
     }
 
 }
