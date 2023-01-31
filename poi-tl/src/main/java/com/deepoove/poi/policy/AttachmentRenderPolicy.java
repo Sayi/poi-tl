@@ -19,7 +19,6 @@ import java.io.StringReader;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.deepoove.poi.exception.RenderException;
 import org.apache.poi.ooxml.POIXMLTypeLoader;
 import org.apache.poi.ooxml.util.DocumentHelper;
 import org.apache.poi.util.Units;
@@ -29,7 +28,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import com.deepoove.poi.data.*;
+import com.deepoove.poi.data.AttachmentRenderData;
+import com.deepoove.poi.data.AttachmentType;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
+import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
@@ -97,19 +100,9 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         AttachmentType fileType = data.getFileType();
         byte[] attachment = data.readAttachmentData();
 
-		if (null == attachment) {
-			throw new IllegalStateException("Can't read attachment byte arrays!");
-		}
-
-		if (null == fileType) {
-			throw new RenderException("PictureRenderData must set attachment type!");
-		}
-
         PictureRenderData icon = data.getIcon();
         if (null == icon) {
-            icon = Pictures.ofBase64(fileType.icon(), PictureType.PNG)
-                    .size(64, 64)
-                    .create();
+            icon = Pictures.ofBase64(fileType.icon(), PictureType.PNG).size(64, 64).create();
         }
         byte[] image = icon.readPictureData();
         PictureType pictureType = icon.getPictureType();
@@ -123,9 +116,9 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         double heightPt = Units.pixelToPoints(style.getHeight());
 
         String imageRId = doc.addPictureData(image, pictureType.type());
-        //String embeddId = doc.addEmbeddData(attachment, fileType.ordinal());
+        // String embeddId = doc.addEmbeddData(attachment, fileType.ordinal());
         String embeddId = doc.addEmbeddData(attachment, fileType.contentType(),
-			"/word/embeddings/" + uuidRandom + fileType.ext());
+                "/word/embeddings/" + uuidRandom + fileType.ext());
 
         String wObjectXml = "<w:object xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                 + "             xmlns:v=\"urn:schemas-microsoft-com:vml\""

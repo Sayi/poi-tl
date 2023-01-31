@@ -54,9 +54,6 @@ public abstract class AttachmentRenderData implements RenderData {
     }
 
     protected AttachmentType detectFileType() {
-        if (null == getFileSrc()) {
-            return null;
-        }
         AttachmentType type = AttachmentType.suggestFileType(getFileSrc());
         if (null == type) {
             type = AttachmentType.suggestFileType(readAttachmentData());
