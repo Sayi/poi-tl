@@ -67,7 +67,6 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
                 + "                        <o:lock v:ext=\"edit\" aspectratio=\"t\"/>\n"
                 + "                    </v:shapetype>\n";
 
-
     private static boolean haveShapeType;
 
     @Override
