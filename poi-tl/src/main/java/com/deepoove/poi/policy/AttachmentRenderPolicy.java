@@ -116,7 +116,7 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
 
         String imageRId = doc.addPictureData(image, pictureType.type());
         // String embeddId = doc.addEmbeddData(attachment, fileType.ordinal());
-        String embeddId = doc.addEmbeddData(attachment, fileType.contentType(),
+        String embeddId = doc.addEmbeddData(attachment, fileType.contentType(),fileType.relType(),
                 "/word/embeddings/" + uuidRandom + fileType.ext());
 
         String wObjectXml = "<w:object xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
