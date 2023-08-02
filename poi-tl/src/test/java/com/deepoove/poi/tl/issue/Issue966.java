@@ -21,10 +21,10 @@ public class Issue966 {
 		XWPFTemplate xwpfTemplate = XWPFTestSupport.readNewTemplate(template);
 		xwpfTemplate.render(new HashMap<String, Object>() {
 			{
-				put("docx", Includes.ofLocal("src/test/resources/issue/1032.docx")
+				put("docx", Includes.ofLocal("src/test/resources/issue/966.docx")
 					.create());
 			}
-		}).writeToFile("target/out_1032.docx");
+		}).writeToFile("target/out_966.docx");
 	}
 
 }
