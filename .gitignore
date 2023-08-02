@@ -26,3 +26,4 @@ merge_all
 complex.docx
 ~$*.docx
 poi-tl-cli/target/
+.DS_Store
