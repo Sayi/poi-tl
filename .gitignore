@@ -27,3 +27,5 @@ complex.docx
 ~$*.docx
 poi-tl-cli/target/
 poi-tl-jsonmodel-support/target/
+poi-tl/.DS_Store
+.DS_Store
