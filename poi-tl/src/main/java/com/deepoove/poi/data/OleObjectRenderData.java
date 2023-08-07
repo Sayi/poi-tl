@@ -13,38 +13,23 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class OleObjectRenderData extends AttachmentRenderData{
+public class OleObjectRenderData extends AttachmentRenderData {
 
-	private static final Logger logger = LoggerFactory.getLogger(ByteUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(ByteUtils.class);
 
-	private final byte[] origin;
+    private final byte[] origin;
 
-	private final String fileName;
+    private final String fileName;
 
-	public OleObjectRenderData(byte[] origin,String fileName) {
-		this.origin = origin;
-		this.fileName = fileName;
-		this.setFileType(AttachmentType.OLE);
-	}
+    public OleObjectRenderData(byte[] origin, String fileName) {
+        this.origin = origin;
+        this.fileName = fileName;
+        this.setFileType(AttachmentType.OLE);
+    }
 
-	@Override
-	public byte[] readAttachmentData() {
-		Ole10Native ole10 = new Ole10Native(fileName, fileName, fileName, origin);
+    @Override
+    public byte[] readAttachmentData() {
 
-		try (UnsynchronizedByteArrayOutputStream bos = new UnsynchronizedByteArrayOutputStream(origin.length+500)) {
-			ole10.writeOut(bos);
-			try (POIFSFileSystem poifs = new POIFSFileSystem()) {
-				DirectoryNode root = poifs.getRoot();
-				root.createDocument(Ole10Native.OLE10_NATIVE, bos.toInputStream());
-				root.setStorageClsid(ClassIDPredefined.OLE_V1_PACKAGE.getClassID());
-				try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-					poifs.writeFilesystem(os);
-					return os.toByteArray();
-				}
-			}
-		} catch (IOException e) {
-			logger.error("get OleObjectData error,{},{}", fileName, e);
-		}
-		return null;
-	}
+        return origin;
+    }
 }
