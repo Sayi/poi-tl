@@ -1,0 +1,22 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
+     xmlns:jfreesvg='http://www.jfree.org/jfreesvg/svg' width='200' height='20' text-rendering='auto'
+     shape-rendering='auto'>
+    <defs>
+        <linearGradient id='_28777750491583gp0' x1='0' y1='0' x2='200' y2='0' gradientUnits='userSpaceOnUse'>
+            <stop offset='0%' stop-color='rgb(95,63,163)'/>
+            <stop offset='100%' stop-color='rgb(87,91,212)'/>
+        </linearGradient>
+    </defs>
+    <g style='fill:rgb(128,128,128);fill-opacity:0.501960813999176;stroke:none'>
+        <path d='M0,5L0,15C0,17.76,2.24,20,5,20L195,20C197.76,20,200,17.76,200,15L200,5C200,2.24,197.76,0,195,0L5,0C2.24,0,0,2.24,0,5Z'/>
+    </g>
+    <g style='fill:url(#_28777750491583gp0);stroke:none'>
+        <path d='M0,5L0,15C0,17.76,2.24,20,5,20L55,20C57.76,20,60,17.76,60,15L60,5C60,2.24,57.76,0,55,0L5,0C2.24,0,0,2.24,0,5Z'/>
+    </g>
+    <g>
+        <text x='90' y='13'
+              style='fill: rgb(255,255,255); fill-opacity: 1.0; font-family: Arial; font-size: 10px; font-weight: bold;'>
+            30%
+        </text>
+    </g>
+</svg>
