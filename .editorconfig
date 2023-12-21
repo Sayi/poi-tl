@@ -2,6 +2,6 @@ root = true
 
 
 [*.{groovy,java,kt,kts,xml,xsd}]
-indent_style = tab
+indent_style = space
 indent_size = 4
 

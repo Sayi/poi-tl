@@ -166,6 +166,8 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         Map<String, String> hyperlinkMap = mergeHyperlink(source, merged);
         Map<String, String> chartIdsMap = mergeChart(source, merged);
         Map<String, String> attachmentIdsMap = mergeAttachment(source, merged);
+        Map<String, String> footnoteIdsMap = mergeFootnote(source, merged);
+        Map<String, String> endnoteIdsMap = mergeEndnote(source, merged);
 
         String appendString = mergedBody.xmlText(DefaultXmlOptions.OPTIONS_OUTER);
         String addPart = ridSectPr(appendString);
@@ -224,6 +226,21 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         }
         for (String relaId : attachmentIdsMap.keySet()) {
             addPart = addPart.replaceAll("r:id=\"" + relaId + "\"", "r:id=\"" + attachmentIdsMap.get(relaId) + "\"");
+        }
+
+        // footnote id
+        for (String relaId : footnoteIdsMap.keySet()) {
+            footnoteIdsMap.put(relaId, footnoteIdsMap.get(relaId) + CROSS_REPLACE_STRING);
+        }
+        for (String relaId : footnoteIdsMap.keySet()) {
+            addPart = addPart.replaceAll("footnoteReference\\sw:id=\"" + relaId + "\"", "footnoteReference w:id=\"" + footnoteIdsMap.get(relaId) + "\"");
+        }
+        // endnote id
+        for (String relaId : endnoteIdsMap.keySet()) {
+            endnoteIdsMap.put(relaId, endnoteIdsMap.get(relaId) + CROSS_REPLACE_STRING);
+        }
+        for (String relaId : endnoteIdsMap.keySet()) {
+            addPart = addPart.replaceAll("endnoteReference\\sw:id=\"" + relaId + "\"", "endnoteReference w:id=\"" + endnoteIdsMap.get(relaId) + "\"");
         }
 
         // numbering numId
@@ -433,6 +450,42 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
             }
         }
         return attachmentIdsMap;
+    }
+
+    protected Map<String, String> mergeFootnote(NiceXWPFDocument source, NiceXWPFDocument merged) {
+        Map<String, String> blipIdsMap = new HashMap<>();
+        FootnoteEndnoteIdManager footnoteEndnoteIdManager = new FootnoteEndnoteIdManager(source);
+
+        List<XWPFFootnote> footnotes = merged.getFootnotes();
+        if (!footnotes.isEmpty()) {
+            XWPFFootnotes sourceFootnotes = source.createFootnotes();
+            for (XWPFFootnote footnote : footnotes) {
+                String relationId = footnote.getId().toString();
+                footnote.getCTFtnEdn().setId(footnoteEndnoteIdManager.nextId());
+                sourceFootnotes.addFootnote(footnote);
+                String blidId = footnote.getId().toString();
+                blipIdsMap.put(relationId, blidId);
+            }
+        }
+        return blipIdsMap;
+    }
+
+    protected Map<String, String> mergeEndnote(NiceXWPFDocument source, NiceXWPFDocument merged) {
+        Map<String, String> blipIdsMap = new HashMap<>();
+        FootnoteEndnoteIdManager footnoteEndnoteIdManager = new FootnoteEndnoteIdManager(source);
+
+        List<XWPFEndnote> endnotes = merged.getEndnotes();
+        if (!endnotes.isEmpty()) {
+            XWPFEndnotes sourceEndnotes = source.createEndnotes();
+            for (XWPFEndnote endnote : endnotes) {
+                String relationId = endnote.getId().toString();
+                endnote.getCTFtnEdn().setId(footnoteEndnoteIdManager.nextId());
+                sourceEndnotes.addEndnote(endnote);
+                String blidId = endnote.getId().toString();
+                blipIdsMap.put(relationId, blidId);
+            }
+        }
+        return blipIdsMap;
     }
 
     public boolean getRenameAndMergeExistsStyle() {
