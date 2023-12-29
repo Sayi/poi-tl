@@ -1236,8 +1236,6 @@ builder.addPlugin('%', new HelloWorldRenderPolicy());
 
 此时，`{{%var}}` 将成为一种新的标签类型，它的执行函数是 `HelloWorldRenderPolicy`。
 
-== 更多插件
-
 [#plugin-list]
 === 插件列表
 除了八个通用的策略插件外，还内置了一些非常有用的插件。

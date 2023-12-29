@@ -497,35 +497,31 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_默认插件">7.1. 默认插件</a></li>
 <li><a href="#cus-policy-section">7.2. 开发一个插件</a></li>
 <li><a href="#_使用插件">7.3. 使用插件</a></li>
+<li><a href="#plugin-list">7.4. 插件列表</a></li>
+<li><a href="#hack-loop-table">7.5. 表格行循环</a></li>
+<li><a href="#loop-col-table">7.6. 表格列循环</a></li>
+<li><a href="#plugin-dynamic-table">7.7. 动态表格</a></li>
+<li><a href="#plugin-comment">7.8. 批注</a></li>
+<li><a href="#plugin-attachment">7.9. 插入附件</a></li>
+<li><a href="#plugin-highlight">7.10. 代码高亮</a></li>
+<li><a href="#plugin-markdown">7.11. Markdown</a></li>
 </ul>
 </li>
-<li><a href="#_更多插件">8. 更多插件</a>
+<li><a href="#_示例_5">8. 示例</a>
 <ul class="sectlevel2">
-<li><a href="#plugin-list">8.1. 插件列表</a></li>
-<li><a href="#hack-loop-table">8.2. 表格行循环</a></li>
-<li><a href="#loop-col-table">8.3. 表格列循环</a></li>
-<li><a href="#plugin-dynamic-table">8.4. 动态表格</a></li>
-<li><a href="#plugin-comment">8.5. 批注</a></li>
-<li><a href="#plugin-attachment">8.6. 插入附件</a></li>
-<li><a href="#plugin-highlight">8.7. 代码高亮</a></li>
-<li><a href="#plugin-markdown">8.8. Markdown</a></li>
+<li><a href="#_软件说明文档">8.1. 软件说明文档</a></li>
+<li><a href="#example-table">8.2. 付款通知书</a></li>
+<li><a href="#example-animal">8.3. 野生动物现状</a></li>
+<li><a href="#example-certificate">8.4. 证书奖状</a></li>
+<li><a href="#example-resume">8.5. 个人简历</a></li>
+<li><a href="#example-swagger">8.6. Swagger文档</a></li>
 </ul>
 </li>
-<li><a href="#_示例_5">9. 示例</a>
-<ul class="sectlevel2">
-<li><a href="#_软件说明文档">9.1. 软件说明文档</a></li>
-<li><a href="#example-table">9.2. 付款通知书</a></li>
-<li><a href="#example-animal">9.3. 野生动物现状</a></li>
-<li><a href="#example-certificate">9.4. 证书奖状</a></li>
-<li><a href="#example-resume">9.5. 个人简历</a></li>
-<li><a href="#example-swagger">9.6. Swagger文档</a></li>
-</ul>
-</li>
-<li><a href="#_源码">10. 源码</a></li>
-<li><a href="#_打赏个小费">11. 打赏个小费</a></li>
-<li><a href="#_vip专属服务">12. VIP专属服务</a></li>
-<li><a href="#_license">13. License</a></li>
-<li><a href="#_常见问题">14. 常见问题</a></li>
+<li><a href="#_源码">9. 源码</a></li>
+<li><a href="#_打赏个小费">10. 打赏个小费</a></li>
+<li><a href="#_vip专属服务">11. VIP专属服务</a></li>
+<li><a href="#_license">12. License</a></li>
+<li><a href="#_常见问题">13. 常见问题</a></li>
 </ul>
 </div>
 </div>
@@ -2684,13 +2680,8 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_更多插件"><a class="anchor" href="#_更多插件"></a><a class="link" href="#_更多插件">8. 更多插件</a></h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="plugin-list"><a class="anchor" href="#plugin-list"></a><a class="link" href="#plugin-list">8.1. 插件列表</a></h3>
+<h3 id="plugin-list"><a class="anchor" href="#plugin-list"></a><a class="link" href="#plugin-list">7.4. 插件列表</a></h3>
 <div class="paragraph">
 <p>除了八个通用的策略插件外，还内置了一些非常有用的插件。</p>
 </div>
@@ -2789,7 +2780,7 @@ builder.bind("report", new CustomTableRenderPolicy());</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="hack-loop-table"><a class="anchor" href="#hack-loop-table"></a><a class="link" href="#hack-loop-table">8.2. 表格行循环</a></h3>
+<h3 id="hack-loop-table"><a class="anchor" href="#hack-loop-table"></a><a class="link" href="#hack-loop-table">7.5. 表格行循环</a></h3>
 <div class="paragraph">
 <p><code>LoopRowTableRenderPolicy</code> 是一个特定场景的插件，根据集合数据循环表格行。</p>
 </div>
@@ -2892,7 +2883,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 <div class="sect2">
-<h3 id="loop-col-table"><a class="anchor" href="#loop-col-table"></a><a class="link" href="#loop-col-table">8.3. 表格列循环</a></h3>
+<h3 id="loop-col-table"><a class="anchor" href="#loop-col-table"></a><a class="link" href="#loop-col-table">7.6. 表格列循环</a></h3>
 <div class="paragraph">
 <p><code>LoopColumnTableRenderPolicy</code> 是一个特定场景的插件，根据集合数据循环表格列。<strong>要注意的是，由于文档宽度有限，因此模板列必须设置宽度，所有循环列将平分模板列的宽度。</strong></p>
 </div>
@@ -2954,7 +2945,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 <div class="sect2">
-<h3 id="plugin-dynamic-table"><a class="anchor" href="#plugin-dynamic-table"></a><a class="link" href="#plugin-dynamic-table">8.4. 动态表格</a></h3>
+<h3 id="plugin-dynamic-table"><a class="anchor" href="#plugin-dynamic-table"></a><a class="link" href="#plugin-dynamic-table">7.7. 动态表格</a></h3>
 <div class="paragraph">
 <p>当需求中的表格更加复杂的时候，我们完全可以设计好那些固定的部分，将需要动态渲染的部分单元格交给自定义模板渲染策略。poi-tl提供了抽象表格策略 <code>DynamicTableRenderPolicy</code> 来实现这样的功能。</p>
 </div>
@@ -3065,7 +3056,7 @@ XWPFTemplate template = XWPFTemplate.compile(resource, config).render(
 </div>
 </div>
 <div class="sect2">
-<h3 id="plugin-comment"><a class="anchor" href="#plugin-comment"></a><a class="link" href="#plugin-comment">8.5. 批注</a></h3>
+<h3 id="plugin-comment"><a class="anchor" href="#plugin-comment"></a><a class="link" href="#plugin-comment">7.8. 批注</a></h3>
 <div class="paragraph">
 <p><code>CommentRenderPolicy</code> 是内置插件，提供了对批注完整功能的支持。</p>
 </div>
@@ -3110,7 +3101,7 @@ XWPFTemplate.compile("comment_template.docx", config).render(data);</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">8.5.1. 示例</a></h4>
+<h4 id="_示例"><a class="anchor" href="#_示例"></a><a class="link" href="#_示例">7.8.1. 示例</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3139,7 +3130,7 @@ XWPFTemplate.compile("comment_template.docx", config).render(data);</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="plugin-attachment"><a class="anchor" href="#plugin-attachment"></a><a class="link" href="#plugin-attachment">8.6. 插入附件</a></h3>
+<h3 id="plugin-attachment"><a class="anchor" href="#plugin-attachment"></a><a class="link" href="#plugin-attachment">7.9. 插入附件</a></h3>
 <div class="paragraph">
 <p><code>AttachmentRenderPolicy</code> 是内置插件，提供了插入附件功能的支持。</p>
 </div>
@@ -3182,7 +3173,7 @@ XWPFTemplate.compile("attachment_template.docx", config).render(data);</code></p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_示例_2"><a class="anchor" href="#_示例_2"></a><a class="link" href="#_示例_2">8.6.1. 示例</a></h4>
+<h4 id="_示例_2"><a class="anchor" href="#_示例_2"></a><a class="link" href="#_示例_2">7.9.1. 示例</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3211,12 +3202,12 @@ XWPFTemplate.compile("attachment_template.docx", config).render(data);</code></p
 </div>
 </div>
 <div class="sect2">
-<h3 id="plugin-highlight"><a class="anchor" href="#plugin-highlight"></a><a class="link" href="#plugin-highlight">8.7. 代码高亮</a></h3>
+<h3 id="plugin-highlight"><a class="anchor" href="#plugin-highlight"></a><a class="link" href="#plugin-highlight">7.10. 代码高亮</a></h3>
 <div class="paragraph">
 <p><code>HighlightRenderPolicy</code> 插件对Word代码块进行高亮展示。</p>
 </div>
 <div class="sect3">
-<h4 id="_引入依赖"><a class="anchor" href="#_引入依赖"></a><a class="link" href="#_引入依赖">8.7.1. 引入依赖：</a></h4>
+<h4 id="_引入依赖"><a class="anchor" href="#_引入依赖"></a><a class="link" href="#_引入依赖">7.10.1. 引入依赖：</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
@@ -3228,7 +3219,7 @@ XWPFTemplate.compile("attachment_template.docx", config).render(data);</code></p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_快速开始"><a class="anchor" href="#_快速开始"></a><a class="link" href="#_快速开始">8.7.2. 快速开始</a></h4>
+<h4 id="_快速开始"><a class="anchor" href="#_快速开始"></a><a class="link" href="#_快速开始">7.10.2. 快速开始</a></h4>
 <div class="paragraph">
 <p>数据模型：</p>
 </div>
@@ -3290,7 +3281,7 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pr
 </div>
 </div>
 <div class="sect3">
-<h4 id="_示例_3"><a class="anchor" href="#_示例_3"></a><a class="link" href="#_示例_3">8.7.3. 示例</a></h4>
+<h4 id="_示例_3"><a class="anchor" href="#_示例_3"></a><a class="link" href="#_示例_3">7.10.3. 示例</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3318,7 +3309,7 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pr
 </div>
 </div>
 <div class="sect3">
-<h4 id="_常用语言支持"><a class="anchor" href="#_常用语言支持"></a><a class="link" href="#_常用语言支持">8.7.4. 常用语言支持</a></h4>
+<h4 id="_常用语言支持"><a class="anchor" href="#_常用语言支持"></a><a class="link" href="#_常用语言支持">7.10.4. 常用语言支持</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -3400,7 +3391,7 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pr
 </div>
 </div>
 <div class="sect3">
-<h4 id="_常用主题样式"><a class="anchor" href="#_常用主题样式"></a><a class="link" href="#_常用主题样式">8.7.5. 常用主题样式</a></h4>
+<h4 id="_常用主题样式"><a class="anchor" href="#_常用主题样式"></a><a class="link" href="#_常用主题样式">7.10.5. 常用主题样式</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -3462,12 +3453,12 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pr
 </div>
 </div>
 <div class="sect2">
-<h3 id="plugin-markdown"><a class="anchor" href="#plugin-markdown"></a><a class="link" href="#plugin-markdown">8.8. Markdown</a></h3>
+<h3 id="plugin-markdown"><a class="anchor" href="#plugin-markdown"></a><a class="link" href="#plugin-markdown">7.11. Markdown</a></h3>
 <div class="paragraph">
 <p><code>MarkdownRenderPolicy</code> 插件支持通过Markdown生成word文档。</p>
 </div>
 <div class="sect3">
-<h4 id="_引入依赖_2"><a class="anchor" href="#_引入依赖_2"></a><a class="link" href="#_引入依赖_2">8.8.1. 引入依赖：</a></h4>
+<h4 id="_引入依赖_2"><a class="anchor" href="#_引入依赖_2"></a><a class="link" href="#_引入依赖_2">7.11.1. 引入依赖：</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
@@ -3479,7 +3470,7 @@ XWPFTemplate.compile("highlight_template.docx", config).render(data);</code></pr
 </div>
 </div>
 <div class="sect3">
-<h4 id="_快速开始_2"><a class="anchor" href="#_快速开始_2"></a><a class="link" href="#_快速开始_2">8.8.2. 快速开始</a></h4>
+<h4 id="_快速开始_2"><a class="anchor" href="#_快速开始_2"></a><a class="link" href="#_快速开始_2">7.11.2. 快速开始</a></h4>
 <div class="paragraph">
 <p>数据模型：</p>
 </div>
@@ -3522,7 +3513,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect3">
-<h4 id="_示例_4"><a class="anchor" href="#_示例_4"></a><a class="link" href="#_示例_4">8.8.3. 示例</a></h4>
+<h4 id="_示例_4"><a class="anchor" href="#_示例_4"></a><a class="link" href="#_示例_4">7.11.3. 示例</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3553,13 +3544,13 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect1">
-<h2 id="_示例_5"><a class="anchor" href="#_示例_5"></a><a class="link" href="#_示例_5">9. 示例</a></h2>
+<h2 id="_示例_5"><a class="anchor" href="#_示例_5"></a><a class="link" href="#_示例_5">8. 示例</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>接下来的示例采取三段式output+template+data-model来说明，首先直接展示生成后的文档，然后一览模板的样子，最后我们对数据模型作个介绍。</p>
 </div>
 <div class="sect2">
-<h3 id="_软件说明文档"><a class="anchor" href="#_软件说明文档"></a><a class="link" href="#_软件说明文档">9.1. 软件说明文档</a></h3>
+<h3 id="_软件说明文档"><a class="anchor" href="#_软件说明文档"></a><a class="link" href="#_软件说明文档">8.1. 软件说明文档</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3603,7 +3594,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-table"><a class="anchor" href="#example-table"></a><a class="link" href="#example-table">9.2. 付款通知书</a></h3>
+<h3 id="example-table"><a class="anchor" href="#example-table"></a><a class="link" href="#example-table">8.2. 付款通知书</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3650,7 +3641,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-animal"><a class="anchor" href="#example-animal"></a><a class="link" href="#example-animal">9.3. 野生动物现状</a></h3>
+<h3 id="example-animal"><a class="anchor" href="#example-animal"></a><a class="link" href="#example-animal">8.3. 野生动物现状</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3694,7 +3685,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-certificate"><a class="anchor" href="#example-certificate"></a><a class="link" href="#example-certificate">9.4. 证书奖状</a></h3>
+<h3 id="example-certificate"><a class="anchor" href="#example-certificate"></a><a class="link" href="#example-certificate">8.4. 证书奖状</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3738,7 +3729,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-resume"><a class="anchor" href="#example-resume"></a><a class="link" href="#example-resume">9.5. 个人简历</a></h3>
+<h3 id="example-resume"><a class="anchor" href="#example-resume"></a><a class="link" href="#example-resume">8.5. 个人简历</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3753,7 +3744,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect3">
-<h4 id="_方案一使用区块对标签"><a class="anchor" href="#_方案一使用区块对标签"></a><a class="link" href="#_方案一使用区块对标签">9.5.1. 方案一：使用区块对标签</a></h4>
+<h4 id="_方案一使用区块对标签"><a class="anchor" href="#_方案一使用区块对标签"></a><a class="link" href="#_方案一使用区块对标签">8.5.1. 方案一：使用区块对标签</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3781,7 +3772,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect3">
-<h4 id="_方案二使用嵌套标签"><a class="anchor" href="#_方案二使用嵌套标签"></a><a class="link" href="#_方案二使用嵌套标签">9.5.2. 方案二：使用嵌套标签</a></h4>
+<h4 id="_方案二使用嵌套标签"><a class="anchor" href="#_方案二使用嵌套标签"></a><a class="link" href="#_方案二使用嵌套标签">8.5.2. 方案二：使用嵌套标签</a></h4>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3816,7 +3807,7 @@ XWPFTemplate.compile("markdown_template.docx", config).render(data);</code></pre
 </div>
 </div>
 <div class="sect2">
-<h3 id="example-swagger"><a class="anchor" href="#example-swagger"></a><a class="link" href="#example-swagger">9.6. Swagger文档</a></h3>
+<h3 id="example-swagger"><a class="anchor" href="#example-swagger"></a><a class="link" href="#example-swagger">8.6. Swagger文档</a></h3>
 <div class="exampleblock">
 <div class="content">
 <div class="paragraph">
@@ -3912,7 +3903,7 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_源码"><a class="anchor" href="#_源码"></a><a class="link" href="#_源码">10. 源码</a></h2>
+<h2 id="_源码"><a class="anchor" href="#_源码"></a><a class="link" href="#_源码">9. 源码</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://github.com/Sayi/poi-tl">GitHub</a></p>
@@ -3920,7 +3911,7 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_打赏个小费"><a class="anchor" href="#_打赏个小费"></a><a class="link" href="#_打赏个小费">11. 打赏个小费</a></h2>
+<h2 id="_打赏个小费"><a class="anchor" href="#_打赏个小费"></a><a class="link" href="#_打赏个小费">10. 打赏个小费</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎。</p>
@@ -3946,7 +3937,7 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_vip专属服务"><a class="anchor" href="#_vip专属服务"></a><a class="link" href="#_vip专属服务">12. VIP专属服务</a></h2>
+<h2 id="_vip专属服务"><a class="anchor" href="#_vip专属服务"></a><a class="link" href="#_vip专属服务">11. VIP专属服务</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>你应该不需要VIP专属服务，除非：</p>
@@ -3975,7 +3966,7 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_license"><a class="anchor" href="#_license"></a><a class="link" href="#_license">13. License</a></h2>
+<h2 id="_license"><a class="anchor" href="#_license"></a><a class="link" href="#_license">12. License</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Apache License 2.0</p>
@@ -3983,7 +3974,7 @@ template.writeToFile("out_example_swagger.docx");</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">14. 常见问题</a></h2>
+<h2 id="_常见问题"><a class="anchor" href="#_常见问题"></a><a class="link" href="#_常见问题">13. 常见问题</a></h2>
 <div class="sectionbody">
 <div class="qlist qanda">
 <ol>
