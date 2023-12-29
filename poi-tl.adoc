@@ -29,12 +29,6 @@ ____
 在文档的任何地方做任何事情（_Do Anything Anywhere_）是poi-tl的星辰大海。
 ____
 
-== License
-Apache License 2.0
-
-== 源码
-link:https://github.com/Sayi/poi-tl[GitHub]
-
 == Why poi-tl
 [options="header", stripes=none]
 |===
@@ -931,17 +925,6 @@ builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
 [source, java]
 builder.buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"));
 
-=== 计算标签值
-计算标签值是指如何在数据模型中索引标签Key的值，可以完全自定义获取标签值的方式。
-[source, java]
-----
-builder.setRenderDataComputeFactory(new RenderDataComputeFactory());
-----
-
-TIP: RenderDataComputeFactory是一个抽象工厂，你可以定义自己的工厂提供标签表达式计算接口 `RenderDataCompute` 的实现。
-
-我们可以通过此方式支持任何的表达式引擎，Spring表达式正是通过 `SpELRenderDataCompute` 实现。
-
 === Spring表达式
 Spring Expression Language 是一个强大的表达式语言，支持在运行时查询和操作对象图，可作为独立组件使用，需要引入相应的依赖：
 [source, xml]
@@ -1252,74 +1235,6 @@ builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderP
 builder.addPlugin('%', new HelloWorldRenderPolicy());
 
 此时，`{{%var}}` 将成为一种新的标签类型，它的执行函数是 `HelloWorldRenderPolicy`。
-
-=== Plugin Example
-接下来用一个完整的代码示例向你展示 _Do Anything Anywhere_ 的想法，它不使用任何poi-tl的默认插件，完全使用自定义函数完成。
-
-插件是一个函数，它的入参是anywhere和anything，函数体就是do something。
-
-[example]
---
-[source, java]
-----
-// where绑定policy
-Configure config = Configure.builder().bind("sea", new AbstractRenderPolicy<String>() {
-  @Override
-  public void doRender(RenderContext<String> context) throws Exception { <1>
-      // anywhere
-      XWPFRun where = context.getWhere();
-      // anything
-      String thing = context.getThing();
-      // do 文本
-      where.setText(thing, 0);
-  }
-}).bind("sea_img", new AbstractRenderPolicy<String>() {
-  @Override
-  public void doRender(RenderContext<String> context) throws Exception { <2>
-      // anywhere delegate
-      WhereDelegate where = context.getWhereDelegate();
-      // any thing
-      String thing = context.getThing();
-      // do 图片
-      FileInputStream stream = null;
-      try {
-          stream = new FileInputStream(thing);
-          where.addPicture(stream, XWPFDocument.PICTURE_TYPE_JPEG, 400, 450);
-      } finally {
-          IOUtils.closeQuietly(stream);
-      }
-      // clear
-      clearPlaceholder(context, false);
-  }
-}).bind("sea_feature", new AbstractRenderPolicy<List<String>>() {
-  @Override
-  public void doRender(RenderContext<List<String>> context) throws Exception { <3>
-      // anywhere delegate
-      WhereDelegate where = context.getWhereDelegate();
-      // anything
-      List<String> thing = context.getThing();
-      // do 列表
-      where.renderNumbering(Numberings.of(thing.toArray(new String[] {})).create());
-      // clear
-      clearPlaceholder(context, true);
-  }
-}).build();
-
-// 初始化where的数据
-HashMap<String, Object> args = new HashMap<String, Object>();
-args.put("sea", "Hello, world!");
-args.put("sea_img", "sea.jpg");
-args.put("sea_feature", Arrays.asList("面朝大海春暖花开", "今朝有酒今朝醉"));
-args.put("sea_location", Arrays.asList("日落：日落山花红四海", "花海：你想要的都在这里"));
-
-// 一行代码
-XWPFTemplate.compile("sea.docx", config).render(args).writeToFile("out_sea.docx");
-
-----
-<1> 自定义文本插件
-<2> 自定义图片插件
-<3> 自定义列表插件
---
 
 == 更多插件
 
@@ -1823,27 +1738,6 @@ image::./example/example_payment_template.png[align='center']
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/master/poi-tl/src/test/java/com/deepoove/poi/tl/example/PaymentExample.java[JUnit PaymentExample]
 
-[#example-okr]
-=== 目标制定
-[example]
---
-.output.docx
-需要制定一份OKR目标计划，业务目标和管理目标使用表格呈现，数量不等。下载最终生成的文件link:./example/okr.docx[okr.docx]
-
-image::./example/example_okr_output.png[align='center']
---
-
-[example]
---
-.template.docx
-将表格放到区块对中，当区块对取值为空集合或者null则不会展示目标表格，当区块对是一个非空集合则循环展示表格。
-
-image::./example/example_okr_template.png[align='center']
---
-
-这个示例展示了区块对的功能，它可以对文档内容进行循环渲染。
-
-NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/master/poi-tl/src/test/java/com/deepoove/poi/tl/example/OKRExample.java[JUnit OKRExample]
 
 [#example-animal]
 === 野生动物现状
@@ -1975,6 +1869,10 @@ template.writeToFile("out_example_swagger.docx");
 
 NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/master/poi-tl-plugin-highlight/src/test/java/com/deepoove/poi/plugin/highlight/example/SwaggerToWordExample.java[JUnit SwaggerToWordExample]
 
+== 源码
+link:https://github.com/Sayi/poi-tl[GitHub]
+
+
 == 打赏个小费
 poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎。
 
@@ -1999,6 +1897,8 @@ ____
 
 image::./xq.jpg[width=256, height=280]
 
+== License
+Apache License 2.0
 
 == 常见问题
 [qanda]
