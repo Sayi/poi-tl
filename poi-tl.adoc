@@ -1889,12 +1889,12 @@ ____
 
 - Word技术需要具备一定的专业背景，你需要和作者进行1V1的专属高质量答疑
 - 需要持续性的获得Word相关问题的解决方案
-- 在未来365天内获得代码指导
+- 获得代码指导
 - 单纯为知识付费
 
-可以加入poi-tl付费星球：
+可以赞赏poi-tl，成为VIP（请在赞赏留言中备注下你的微信号）：
 
-image::./xq.jpg[width=256, height=280]
+image::./xq.png[width=256, height=256]
 
 == License
 Apache License 2.0
