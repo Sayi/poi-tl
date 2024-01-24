@@ -40,9 +40,15 @@ public class DelegatePolicy {
                 model = preRenderDataCastor.preCast(policy, model);
             }
         }
-        LOGGER.info("Start render Template {}, Sign:{}, policy:{}", eleTemplate, eleTemplate.getSign(),
-                ClassUtils.getShortClassName(policy.getClass()));
+        LOGGER.info("Start render Template {}, Sign:{}, policy:{}",
+                    eleTemplate,
+                    logChar(eleTemplate.getSign()),
+                    ClassUtils.getShortClassName(policy.getClass()));
         policy.render(eleTemplate, model, template);
+    }
+
+    private static String logChar(Character character) {
+        return null == character ? "" : ('\0' == character ? "" : character.toString());
     }
 
 }
