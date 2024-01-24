@@ -27,7 +27,7 @@ import java.io.InputStream;
 
 /**
  * Factory method to build {@link PictureRenderData} instances.
- * 
+ *
  * @author Sayi
  */
 public class Pictures {
@@ -97,11 +97,8 @@ public class Pictures {
             return this;
         }
 
-        public PictureBuilder size(int width, int height, int svgScale) {
+        public PictureBuilder svgScale(int svgScale) {
             PictureStyle style = getPictureStyle();
-            style.setWidth(width);
-            style.setHeight(height);
-            style.setScalePattern(WidthScalePattern.NONE);
             style.setSvgScale(svgScale);
             return this;
         }

@@ -29,7 +29,8 @@ public class SVGConvertor {
 
     private static Logger logger = LoggerFactory.getLogger(SVGConvertor.class);
 
-    public static byte[] toPng(byte[] svgs, float width, float maxHeight, int svgScale) throws TranscoderException, IOException {
+    public static byte[] toPng(byte[] svgs, float width, float maxHeight,
+                               int svgScale) throws TranscoderException, IOException {
         Transcoder t = new PNGTranscoder();
         t.setErrorHandler(new ErrorHandler() {
 
@@ -48,10 +49,12 @@ public class SVGConvertor {
                 throw ex;
             }
         });
-        if (0 != width) t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width * svgScale);
-        if (0 != maxHeight) t.addTranscodingHint(PNGTranscoder.KEY_MAX_HEIGHT, maxHeight * svgScale);
-        try (ByteArrayInputStream instream = new ByteArrayInputStream(svgs);
-             ByteArrayOutputStream ostream = new ByteArrayOutputStream()) {
+        if (0 != width)
+            t.addTranscodingHint(PNGTranscoder.KEY_WIDTH, width * svgScale);
+        if (0 != maxHeight)
+            t.addTranscodingHint(PNGTranscoder.KEY_MAX_HEIGHT, maxHeight * svgScale);
+        try (ByteArrayInputStream instream = new ByteArrayInputStream(svgs); ByteArrayOutputStream ostream =
+                new ByteArrayOutputStream()) {
             TranscoderInput input = new TranscoderInput(instream);
             TranscoderOutput output = new TranscoderOutput(ostream);
             t.transcode(input, output);
@@ -59,7 +62,7 @@ public class SVGConvertor {
             return ostream.toByteArray();
         } catch (Exception e) {
             throw new RenderException("Unable transcode from svg to png, possibly some svg attribute is not supported.",
-                e);
+                                      e);
         }
     }
 

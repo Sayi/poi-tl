@@ -94,19 +94,13 @@ public class PictureRenderTest {
 
     @Test
     public void svgToPngScaleTest() throws IOException {
-        Map<String, Object> datas = new HashMap<String, Object>();
-
+        Map<String, Object> datas = new HashMap<>();
         Path path = Paths.get("src/test/resources/picture/svg_scale.svg");
-
-        datas.put("beforeScale", Pictures.ofStream(Files.newInputStream(path))
-            .size(200, 20, 1).create());
-
-
-        datas.put("afterScale", Pictures.ofStream(Files.newInputStream(path))
-            .size(200, 20, 3).create());
+        datas.put("beforeScale", Pictures.ofStream(Files.newInputStream(path)).size(200, 20).svgScale(1).create());
+        datas.put("afterScale", Pictures.ofStream(Files.newInputStream(path)).size(200, 20).svgScale(3).create());
 
         XWPFTemplate.compile("src/test/resources/template/reference_picture_svg.docx")
-            .render(datas)
-            .writeToFile("target/out_render_picture_svg.docx");
+                    .render(datas)
+                    .writeToFile("target/out_render_picture_svg.docx");
     }
 }
