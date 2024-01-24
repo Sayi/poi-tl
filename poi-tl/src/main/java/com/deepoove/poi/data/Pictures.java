@@ -15,9 +15,6 @@
  */
 package com.deepoove.poi.data;
 
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-
 import com.deepoove.poi.data.style.PictureStyle;
 import com.deepoove.poi.data.style.PictureStyle.PictureAlign;
 import com.deepoove.poi.util.BufferedImageUtils;
@@ -25,9 +22,12 @@ import com.deepoove.poi.util.ByteUtils;
 import com.deepoove.poi.util.UnitUtils;
 import com.deepoove.poi.xwpf.WidthScalePattern;
 
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
+
 /**
  * Factory method to build {@link PictureRenderData} instances.
- * 
+ *
  * @author Sayi
  */
 public class Pictures {
@@ -94,6 +94,12 @@ public class Pictures {
             style.setWidth(width);
             style.setHeight(height);
             style.setScalePattern(WidthScalePattern.NONE);
+            return this;
+        }
+
+        public PictureBuilder svgScale(int svgScale) {
+            PictureStyle style = getPictureStyle();
+            style.setSvgScale(svgScale);
             return this;
         }
 

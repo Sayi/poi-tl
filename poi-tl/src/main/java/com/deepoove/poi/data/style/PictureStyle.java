@@ -15,13 +15,12 @@
  */
 package com.deepoove.poi.data.style;
 
-import java.io.Serializable;
-
 import com.deepoove.poi.xwpf.WidthScalePattern;
+
+import java.io.Serializable;
 
 /**
  * @author Sayi
- *
  */
 public class PictureStyle implements Serializable {
 
@@ -41,6 +40,11 @@ public class PictureStyle implements Serializable {
         CENTER,
         RIGHT;
     }
+
+    /**
+     * This is used for setting the scaling factor for SVG to PNG conversion
+     */
+    private int svgScale = 1;
 
     public PictureAlign getAlign() {
         return align;
@@ -74,4 +78,11 @@ public class PictureStyle implements Serializable {
         this.scalePattern = scalePattern;
     }
 
+    public int getSvgScale() {
+        return svgScale;
+    }
+
+    public void setSvgScale(int svgScale) {
+        this.svgScale = svgScale;
+    }
 }

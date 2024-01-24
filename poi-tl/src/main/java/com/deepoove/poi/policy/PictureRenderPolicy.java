@@ -15,16 +15,6 @@
  */
 package com.deepoove.poi.policy;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import org.apache.poi.util.Units;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-
 import com.deepoove.poi.converter.ObjectToPictureRenderDataConverter;
 import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.PictureRenderData;
@@ -39,10 +29,19 @@ import com.deepoove.poi.util.UnitUtils;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.WidthScalePattern;
+import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 /**
  * picture render
- * 
+ *
  * @author Sayi
  */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
@@ -94,9 +93,10 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
             if (null == style) style = new PictureStyle();
             int width = style.getWidth();
             int height = style.getHeight();
+            int svgScale = style.getSvgScale();
 
             if (pictureType == PictureType.SVG) {
-                imageBytes = SVGConvertor.toPng(imageBytes, (float) width, (float) height);
+                imageBytes = SVGConvertor.toPng(imageBytes, (float) width, (float) height, svgScale);
                 pictureType = PictureType.PNG;
             }
             if (!isSetSize(style)) {
@@ -106,7 +106,7 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                 if (style.getScalePattern() == WidthScalePattern.FIT) {
                     BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
                     int pageWidth = UnitUtils
-                            .twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
+                        .twips2Pixel(bodyContainer.elementPageWidth((IBodyElement) run.getParent()));
                     if (width > pageWidth) {
                         double ratio = pageWidth / (double) width;
                         width = pageWidth;
@@ -120,13 +120,13 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
                     ((XWPFParagraph) run.getParent()).setAlignment(ParagraphAlignment.valueOf(align.ordinal() + 1));
                 }
                 run.addPicture(stream, pictureType.type(), "Generated", Units.pixelToEMU(width),
-                        Units.pixelToEMU(height));
+                    Units.pixelToEMU(height));
             }
         }
 
         private static boolean isSetSize(PictureStyle style) {
             return (style.getWidth() != 0 || style.getHeight() != 0)
-                    && style.getScalePattern() == WidthScalePattern.NONE;
+                && style.getScalePattern() == WidthScalePattern.NONE;
         }
     }
 }
