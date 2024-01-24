@@ -139,7 +139,7 @@ public class LoopRowTableRenderPolicy implements RenderPolicy {
             table.removeRow(templateRowIndex);
             afterloop(table, data);
         } catch (Exception e) {
-            throw new RenderException("HackLoopTable for " + eleTemplate + "error: " + e.getMessage(), e);
+            throw new RenderException("HackLoopTable for " + eleTemplate + " error: " + e.getMessage(), e);
         }
     }
 
