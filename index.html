@@ -932,12 +932,16 @@ OutputStream out = response.getOutputStream();
 BufferedOutputStream bos = new BufferedOutputStream(out);
 template.write(bos);
 bos.flush();
-out.flush();
-PoitlIOUtils.closeQuietlyMulti(template, bos, out);</code></pre>
+out.flush();</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p><strong>最后不要忘记关闭这些流。</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">PoitlIOUtils.closeQuietlyMulti(template, bos, out);</code></pre>
+</div>
 </div>
 </div>
 </div>

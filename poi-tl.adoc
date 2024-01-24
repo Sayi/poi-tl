@@ -198,9 +198,13 @@ BufferedOutputStream bos = new BufferedOutputStream(out);
 template.write(bos);
 bos.flush();
 out.flush();
+----
+
+**最后不要忘记关闭这些流。**
+[source, java]
+----
 PoitlIOUtils.closeQuietlyMulti(template, bos, out);
 ----
-**最后不要忘记关闭这些流。**
 
 == 标签
 poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制结构和变量赋值，只有标签。标签由前后两个大括号组成，{{title}}是标签，{{?title}}也是标签，title是这个标签的名称，问号标识了标签类型，接下来我们来看看有哪些默认标签类型（用户可以创建新的标签类型，这属于更高级的话题）。
