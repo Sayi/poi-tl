@@ -44,22 +44,23 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
 
         if (null == compute || (compute instanceof Boolean && !(Boolean) compute)) {
             handleNever(iterableTemplate, bodyContainer);
+            afterHandle(iterableTemplate, bodyContainer, true);
         } else if (compute instanceof Iterable) {
             handleIterable(iterableTemplate, bodyContainer, (Iterable<?>) compute);
+            afterHandle(iterableTemplate, bodyContainer, false);
         } else {
             if (compute instanceof Boolean && (Boolean) compute) {
                 handleOnceWithScope(iterableTemplate, renderDataCompute);
             } else {
                 handleOnce(iterableTemplate, compute);
             }
+            afterHandle(iterableTemplate, bodyContainer, false);
         }
-
-        afterHandle(iterableTemplate, bodyContainer);
     }
 
-    protected void afterHandle(IterableTemplate iterableTemplate, BodyContainer bodyContainer) {
-        bodyContainer.clearPlaceholder(iterableTemplate.getStartRun());
-        bodyContainer.clearPlaceholder(iterableTemplate.getEndRun());
+    protected void afterHandle(IterableTemplate iterableTemplate, BodyContainer bodyContainer, boolean remove) {
+        bodyContainer.clearPlaceholder(iterableTemplate.getStartRun(), remove);
+        bodyContainer.clearPlaceholder(iterableTemplate.getEndRun(), remove);
     }
 
     protected abstract void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer);

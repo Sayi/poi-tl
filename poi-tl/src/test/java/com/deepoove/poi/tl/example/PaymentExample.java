@@ -51,7 +51,7 @@ public class PaymentExample {
         RowRenderData good = Rows.of("4", "墙纸", "书房+卧室", "1500", "/", "400", "1600").center().create();
         List<RowRenderData> goods = Arrays.asList(good, good, good);
         RowRenderData labor = Rows.of("油漆工", "2", "200", "400").center().create();
-        List<RowRenderData> labors = Arrays.asList(labor, labor, labor, labor);
+        List<RowRenderData> labors = Arrays.asList(labor, labor, labor);
         detailTable.setGoods(goods);
         detailTable.setLabors(labors);
         datas.setDetailTable(detailTable);

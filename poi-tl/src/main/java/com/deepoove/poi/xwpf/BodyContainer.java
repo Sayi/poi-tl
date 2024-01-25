@@ -33,7 +33,7 @@ import com.deepoove.poi.util.ReflectionUtils;
 
 /**
  * {@link IBody} operation
- * 
+ *
  * @author Sayi
  *
  */
@@ -41,7 +41,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * get the position of paragraph in bodyElements
-     * 
+     *
      * @param ctp paragraph
      * @return the position of paragraph
      */
@@ -61,7 +61,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * get the position of paragraph in bodyElements
-     * 
+     *
      * @param paragraph
      * @return the position of paragraph
      */
@@ -71,7 +71,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * get all bodyElements
-     * 
+     *
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -81,14 +81,14 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * remove body element from bodyElements
-     * 
+     *
      * @param pos the position of bodyElement
      */
     void removeBodyElement(int pos);
 
     /**
      * insert paragraph at position of the cursor
-     * 
+     *
      * @param insertPostionCursor
      * @return the inserted paragraph
      */
@@ -98,7 +98,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * insert paragraph at position of run
-     * 
+     *
      * @param run
      * @return the inserted paragraph
      */
@@ -109,7 +109,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * get the position of paragraph in paragraphs
-     * 
+     *
      * @param paragraph
      * @return the position of paragraph
      */
@@ -125,7 +125,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * set paragraph at position
-     * 
+     *
      * @param paragraph
      * @param pos
      */
@@ -133,14 +133,14 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * container itself
-     * 
+     *
      * @return
      */
     IBody getTarget();
 
     /**
      * insert table at position of the cursor
-     * 
+     *
      * @param insertPostionCursor
      * @return the inserted table
      */
@@ -150,7 +150,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * get the position of table in tables
-     * 
+     *
      * @param table
      * @return the position of table
      */
@@ -166,7 +166,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * set table
-     * 
+     *
      * @param tablePos
      * @param table
      */
@@ -174,7 +174,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * update body elements
-     * 
+     *
      * @param bodyElement
      * @param copy
      */
@@ -191,7 +191,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * insert table at position of the run
-     * 
+     *
      * @param run
      * @param row
      * @param col
@@ -201,16 +201,27 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * clear run
-     * 
+     *
      * @param run
      */
     default void clearPlaceholder(XWPFRun run) {
+        clearPlaceholder(run, false);
+    }
+
+    /**
+     * clear run
+     *
+     * @param run
+     * @param remove
+     */
+    default void clearPlaceholder(XWPFRun run, boolean remove) {
         IRunBody parent = run.getParent();
         run.setText("", 0);
         if (parent instanceof XWPFParagraph) {
+            if (remove) new XWPFParagraphWrapper((XWPFParagraph) parent).removeRun(ParagraphUtils.getRunPos(run));
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
-            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);
+            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);;
             boolean haveObject = ParagraphUtils.haveObject((XWPFParagraph) parent);
             if ("".equals(paragraphText) && !havePictures && !havePageBreak && !haveObject) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
@@ -221,7 +232,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * Get closely SectPr
-     * 
+     *
      * @param element
      * @return
      */
@@ -229,7 +240,7 @@ public interface BodyContainer extends ParentContext {
 
     /**
      * Get width of the element page
-     * 
+     *
      * @param element
      * @return
      */
