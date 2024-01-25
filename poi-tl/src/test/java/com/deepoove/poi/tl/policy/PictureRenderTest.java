@@ -86,9 +86,9 @@ public class PictureRenderTest {
         assertEquals(PictureType.TIFF,
                 PictureType.suggestFileType(ByteUtils.getLocalByteArray(new File("src/test/resources/picture/p.tif"))));
         assertEquals(PictureType.PNG,
-                PictureType.suggestFileType(ByteUtils.getUrlByteArray("http://deepoove.com/images/icecream.png")));
+                PictureType.suggestFileType(ByteUtils.getUrlByteArray("https://deepoove.com/images/icecream.png")));
         assertEquals(PictureType.SVG, PictureType
-                .suggestFileType(ByteUtils.getUrlByteArray("http://deepoove.com/images/%E8%8C%84%E5%AD%90.svg")));
+                .suggestFileType(ByteUtils.getUrlByteArray("https://deepoove.com/images/%E8%8C%84%E5%AD%90.svg")));
     }
 
 }
