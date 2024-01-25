@@ -112,6 +112,8 @@ public final class ByteUtils {
         URL url = new URL(urlPath);
         URLConnection connection = url.openConnection();
         connection.addRequestProperty("User-Agent", "Mozilla/4.0");
+        connection.setConnectTimeout(15000);
+        connection.setReadTimeout(15000);
         InputStream inputStream = connection.getInputStream();
         if (connection instanceof HttpURLConnection) {
             if (200 != ((HttpURLConnection) connection).getResponseCode()) {
