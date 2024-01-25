@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi90@163.com>
-v1.10.5
+v1.10.6
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -104,13 +104,13 @@ V1.10.4+版本作了一个不兼容的改动，升级的时候需要注意：
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.10.5</version>
+  <version>1.10.6</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-implementation 'com.deepoove:poi-tl:1.10.5'
+implementation 'com.deepoove:poi-tl:1.10.6'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 

@@ -1,6 +1,6 @@
 = Poi-tl Documentation
 Sayi <sayi@apache.org>
-v1.12.1
+v1.12.2
 :description: word模板引擎
 :keywords: poi,word,docx,template,模板,导出,图表,合并
 :doctype: book
@@ -74,7 +74,7 @@ CAUTION: **poi-tl**是一个基于Apache POI的Word模板引擎，也是一个�
 == 版本
 Apache POI已经进入5.0.0+时代，如果你仍希望使用低版本的Apache POI，请查阅历史版本。
 
-* icon:tags[role="red"] 当前版本 1.12.1 Documentation，Apache POI5.2.2+，JDK1.8+
+* icon:tags[role="red"] 当前版本 1.12.2 Documentation，Apache POI5.2.2+，JDK1.8+
 * link:http://deepoove.com/poi-tl/1.11.x/[1.11.x Documentation , window=_blank]，Apache POI5.1.0+，JDK1.8+
 * link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
 * link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
@@ -94,13 +94,13 @@ V1.12.x版本作了一个不兼容的改动，升级的时候需要注意：
 <dependency>
   <groupId>com.deepoove</groupId>
   <artifactId>poi-tl</artifactId>
-  <version>1.12.1</version>
+  <version>1.12.2</version>
 </dependency>
 ----
 
 === Gradle 
 [source, groovy]
-implementation 'com.deepoove:poi-tl:1.12.1'
+implementation 'com.deepoove:poi-tl:1.12.2'
 
 === 2分钟快速入门
 新建Word文档template.docx，包含标签 `{{title}}` 
