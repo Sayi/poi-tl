@@ -1889,4 +1889,4 @@ image::./xq.png[width=256, height=256]
 我不是很熟悉Apache POI，我该怎么编写插件？::
   编写插件还是需要熟悉下POI，你可以参考现有插件的源码，或者Google下Apache POI的用法，这里有一个入门教程：link:http://deepoove.com/poi-tl/apache-poi-guide.html[Apache POI Word快速入门 , window=_blank]
 我有一些问题要请教或者指导，该怎么办？::
-  请参阅本文档的11章节😆。
+  请参阅本文档的12章节😆。
