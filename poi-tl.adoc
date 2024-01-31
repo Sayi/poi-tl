@@ -11,9 +11,10 @@ v1.12.2
 :icons: font
 // :source-highlighter: rouge
 // :rouge-style: monokai
-:source-highlighter: highlightjs
-:highlightjs-theme: zenburn
-:highlightjs-languages: groovy
+// :source-highlighter: highlightjs
+// :highlightjs-theme: zenburn
+// :highlightjs-languages: groovy
+:source-highlighter: prettify
 :numbered:
 :nofooter:
 :sectlinks:
@@ -22,7 +23,7 @@ v1.12.2
 // :stylesheet: asciidoctor.css
 // :linkcss:
 
-poi-tl（poi template language）是Word模板引擎，使用Word模板和数据**创建很棒的Word文档**。
+poi-tl（poi template language）是Word模板引擎，使用模板和数据**创建很棒的Word文档**。
 
 [quote]
 ____
@@ -41,7 +42,7 @@ ____
 | Jacob、winlib | Windows平台 | - | 复杂，完全不推荐使用
 |===
 
-CAUTION: **poi-tl**是一个基于Apache POI的Word模板引擎，也是一个免费开源的Java类库，你可以非常方便的加入到你的项目中，并且拥有着让人喜悦的特性。
+**poi-tl**是一个基于Apache POI的Word模板引擎，也是一个免费开源的Java类库，你可以非常方便的加入到你的项目中，并且拥有着让人喜悦的特性。
 
 [cols=",", options="header"]
 |===
@@ -71,23 +72,11 @@ CAUTION: **poi-tl**是一个基于Apache POI的Word模板引擎，也是一个�
 |icon:check-circle[role="green"]    用户自定义函数(插件) |插件化设计，在文档任何位置执行函数
 |===
 
-== 版本
-Apache POI已经进入5.0.0+时代，如果你仍希望使用低版本的Apache POI，请查阅历史版本。
-
-* icon:tags[role="red"] 当前版本 1.12.2 Documentation，Apache POI5.2.2+，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.11.x/[1.11.x Documentation , window=_blank]，Apache POI5.1.0+，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.8.x/[1.8.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.7.x/[1.7.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
-* link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]，Apache POI3.16+，JDK1.6+
-
-V1.12.x版本作了一个不兼容的改动，升级的时候需要注意：
-
-* 重构了PictureRenderData，改为抽象类，建议使用Pictures工厂方法来创建图片数据
-
 == Getting Started
+=== 前提
+- JDK1.8+
+- Apache POI5.2.2+
+
 === Maven
 [source, xml]
 ----
@@ -102,7 +91,7 @@ V1.12.x版本作了一个不兼容的改动，升级的时候需要注意：
 [source, groovy]
 implementation 'com.deepoove:poi-tl:1.12.2'
 
-=== 2分钟快速入门
+=== 2分钟入门
 新建Word文档template.docx，包含标签 `{{title}}` 
 [example]
 --
@@ -163,13 +152,9 @@ public class Data {
 }
 ----
 
-TIP: 数据可以是树结构，每级之间用点来分隔开，比如``{{author.name}}``标签对应的数据是author对象的name属性值。
+数据可以是树结构，每级之间用点来分隔开，比如``{{author.name}}``标签对应的数据是author对象的name属性值。
 
-FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径、宽和高：
-[source, html]
-<img src="{{path}}" width="{{width}}" height="{{height}}">
-
-但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口RenderData，比如图片数据模型PictureRenderData包含图片路径、宽、高三个属性。
+CAUTION: FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径、宽和高：`<img src="{{path}}" width="{{width}}" height="{{height}}">`， 但是Word模板不是由简单的文本表示，所以在渲染图片、表格等元素时提供了数据模型，它们都实现了接口 `RenderData` ，比如图片数据模型 `PictureRenderData` 包含图片路径、宽、高三个属性。
 
 === Output：输出
 以流的方式进行输出：
@@ -179,7 +164,7 @@ FreeMarker、Velocity文本模板中可以通过三个标签设置图片路径�
 template.write(OutputStream stream);
 ----
 
-可以写到任意输出流中，比如文件流：
+比如文件流：
 
 [source, java]
 ----
@@ -222,24 +207,14 @@ poi-tl是一种无逻辑「logic-less」的模板引擎，没有复杂的控制�
 - `HyperlinkTextRenderData` ：超链接和锚点文本
 - `Object` ：调用 toString() 方法转化为文本
 
+推荐使用工厂 `Texts` 构建文本模型。
+
 [sidebar]
 .代码示例
 --
 [source, java]
 ----
 put("name", "Sayi");
-put("author", new TextRenderData("000000", "Sayi"));
-put("link", new HyperlinkTextRenderData("website", "http://deepoove.com"));
-put("anchor", new HyperlinkTextRenderData("anchortxt", "anchor:appendix1"));
-----
---
-
-除了new操作符，还提供了更加优雅的工厂 `Texts` 和链式调用的方式轻松构建文本模型。
-[sidebar]
-.链式代码示例
---
-[source, java]
-----
 put("author", Texts.of("Sayi").color("000000").create());
 put("link", Texts.of("website").link("http://deepoove.com").create());
 put("anchor", Texts.of("anchortxt").anchor("appendix1").create());
@@ -289,7 +264,6 @@ TIP: 文本换行使用 `\n` 字符。
 数据模型：
 
 - `String` ：图片url或者本地路径，默认使用图片自身尺寸
-- `PictureRenderData`  
 - `ByteArrayPictureRenderData`
 - `FilePictureRenderData`
 - `UrlPictureRenderData`
@@ -305,7 +279,7 @@ put("image", "logo.png");
 // svg图片
 put("svg", "https://img.shields.io/badge/jdk-1.6%2B-orange.svg");
 
-// 设置图片宽高
+// 图片文件
 put("image1", Pictures.ofLocal("logo.png").size(120, 120).create());
 
 // 图片流
@@ -316,12 +290,11 @@ put("streamImg", Pictures.ofStream(new FileInputStream("logo.jpeg"), PictureType
 put("urlImg", Pictures.ofUrl("http://deepoove.com/images/icecream.png")
   .size(100, 100).create());
 
-// java图片
+// java图片，我们可以利用Java生成图表插入到word文档中
 put("buffered", Pictures.ofBufferedImage(bufferImage, PictureType.PNG)
   .size(100, 100).create());
 ----
 --
-图片支持BufferedImage，这意味着我们可以利用Java生成图表插入到word文档中。
 
 [sidebar]
 .FilePictureRenderData的结构体
@@ -920,7 +893,7 @@ builder.addPlugin('#', new PictureRenderPolicy());
 这样{{@var}}就变成了表格标签，{{#var}}变成了图片标签，虽然不建议改变默认标签标识，但是从中可以看到poi-tl插件的灵活度，在插件章节中我们将会看到如何自定义自己的标签。
 
 
-=== 标签正则
+=== 标签格式
 标签默认支持**中文、字母、数字、下划线**的组合，我们可以通过正则表达式来配置标签的规则，比如不允许中文：
 [source, java]
 builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
@@ -1006,21 +979,6 @@ Find A Pet
 
 TIP: 使用SpringEL时区块对的结束标签可以是：{{/}}。
 
-=== 数据模型序列化
-数据模型支持JSON字符串序列化，可以方便的构造远程HTTP或者RPC服务，需要引入相应依赖：
-[source, xml]
-----
-<dependency>
-	<groupId>com.deepoove</groupId>
-	<artifactId>poi-tl-jsonmodel-support</artifactId>
-	<version>1.0.0</version>
-</dependency>
-----
-
-然后配置数据模型前置转化器即可：
-[source, java]
-builder.addPreRenderDataCastor(new GsonPreRenderDataCastor());
-
 === 错误处理
 poi-tl支持在发生错误的时候定制引擎的行为。
 
@@ -1089,12 +1047,12 @@ poi-tl使用slf4j作为日志门面，你可以自由选择日志实现，比如
 <dependency>
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-core</artifactId>
-  <version>1.2.3</version>
+  <version>1.2.13</version>
 </dependency>
 <dependency>
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-classic</artifactId>
-  <version>1.2.3</version>
+  <version>1.2.13</version>
 </dependency>
 ----
 
@@ -1228,10 +1186,6 @@ ConfigureBuilder builder = Configure.builder();
 builder.bind("report", new CustomTableRenderPolicy());
 
 此时，`{{report}}` 将不再是一个文本标签，而是一个自定义标签。
-
-ConfigureBuilder采用了链式调用的方式，可以一次性设置多个标签的插件：
-[source, java]
-builder.bind("report", new CustomTableRenderPolicy()).bind("name", new MyRenderPolicy());
 
 ==== 将插件注册为新标签类型
 当开发的插件具有一定的通用能力就可以将其注册为新的标签类型。比如增加%标识：`{{%var}}`，对应自定义的渲染策略 `HelloWorldRenderPolicy`：
@@ -1874,6 +1828,21 @@ NOTE: 源码参见 link:https://github.com/Sayi/poi-tl/tree/master/poi-tl-plugin
 == 源码
 link:https://github.com/Sayi/poi-tl[GitHub]
 
+== License
+Apache License 2.0
+
+== 版本
+Apache POI已经进入5.0.0+时代，如果你仍希望使用低版本的Apache POI，请查阅历史版本。
+
+* icon:tags[role="red"] 当前版本 1.12.2 Documentation，Apache POI5.2.2+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.11.x/[1.11.x Documentation , window=_blank]，Apache POI5.1.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.10.x/[1.10.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.9.x/[1.9.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.8.x/[1.8.x Documentation , window=_blank]，Apache POI4.1.2，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.7.x/[1.7.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.6.x/[1.6.x Documentation , window=_blank]，Apache POI4.0.0+，JDK1.8+
+* link:http://deepoove.com/poi-tl/1.5.x/[1.5.x Documentation, window=_blank]，Apache POI3.16+，JDK1.6+
+
 
 == 打赏个小费
 poi-tl开源的初衷是希望让所有有需要的人享受Word模板引擎的功能，而且它可能是Java中最好的Word模板引擎。
@@ -1901,8 +1870,7 @@ ____
 
 image::./xq.png[width=256, height=256]
 
-== License
-Apache License 2.0
+
 
 == 常见问题
 [qanda]
