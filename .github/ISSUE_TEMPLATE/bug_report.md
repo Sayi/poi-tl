@@ -1,15 +1,11 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: 报告问题
+about: 请务必按照格式规范提交问题，必须提供可复现代码和模板，否则视为无效
 title: ''
 labels: ''
 assignees: ''
 
 ---
-
-> **务必按照如下格式规范提交问题，必须提供可复现代码和模板，否则视为无效ISSUE。**
-> 
-> **Be sure to submit questions according to the following format specifications, and provide reproducible code and templates.**
 
 ### Issue description (Required*) 
 
