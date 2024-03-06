@@ -184,6 +184,9 @@ public class NiceXWPFDocument extends XWPFDocument {
             numbering = this.createNumbering();
         }
 
+        XWPFNum xwpfNum = useExistNum(numbering, numFmts);
+        if (null != xwpfNum) return xwpfNum.getCTNum().getNumId();
+
         XWPFNumberingWrapper numberingWrapper = new XWPFNumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
@@ -217,6 +220,33 @@ public class NiceXWPFDocument extends XWPFDocument {
         XWPFAbstractNum abstractNum = new XWPFAbstractNum(cTAbstractNum);
         BigInteger abstractNumID = numbering.addAbstractNum(abstractNum);
         return numbering.addNum(abstractNumID);
+    }
+
+    private static XWPFNum useExistNum(XWPFNumbering numbering, NumberingFormat[] numFmts) {
+        List<XWPFNum> nums = numbering.getNums();
+        for (XWPFNum num : nums) {
+            BigInteger abstractNumID = numbering.getAbstractNumID(num.getCTNum().getNumId());
+            XWPFAbstractNum abstractNum = numbering.getAbstractNum(abstractNumID);
+            CTAbstractNum ctAbstractNum = abstractNum.getCTAbstractNum();
+            List<CTLvl> lvlList = ctAbstractNum.getLvlList();
+            int size = lvlList.size();
+            int length = numFmts.length;
+            if (size == length) {
+                for (int i = 0; i < size; i++) {
+                    CTLvl ctLvl = lvlList.get(i);
+                    NumberingFormat numFmt = numFmts[i];
+                    if (ctLvl.getNumFmt().getVal() != Enum.forInt(numFmt.getNumFmt())
+                        || !ctLvl.getLvlText().getVal().equals(numFmt.getLvlText())) {
+                        break;
+                    }
+                    if (i == size -1) {
+                        return num;
+                    }
+
+                }
+            }
+        }
+        return null;
     }
 
     public RelationPart addChartData(XWPFChart chart) throws InvalidFormatException, IOException {

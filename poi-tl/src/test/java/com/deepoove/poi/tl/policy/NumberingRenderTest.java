@@ -30,7 +30,7 @@ public class NumberingRenderTest {
         // 1. 2. 3.
         datas.put("number123", getDataList(NumberingFormat.DECIMAL));
         // 1) 2) 3)
-        datas.put("number123_kuohao", getDataList(NumberingFormat.DECIMAL_PARENTHESES));
+        datas.put("number123_kuohao", getDataList(NumberingFormat.DECIMAL));
         // bullet
         datas.put("bullet", getDataList(NumberingFormat.BULLET));
         // A B C
