@@ -150,12 +150,7 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
         if (null != src.getUnderlineColor()) dest.setUnderlineColor(src.getUnderlineColor());
-        boolean isVanish = pr != null && pr.isSetVanish() && isCTOnOff(pr.getVanish());
-        if (isVanish) {
-            CTRPr destPr = getRunProperties(dest);
-            CTOnOff vanish = destPr.isSetVanish() ? destPr.getVanish() : destPr.addNewVanish();
-            vanish.setVal(STOnOff.TRUE);
-        }
+        if (Boolean.TRUE.equals(src.isVanish())) dest.setVanish(src.isVanish());
     }
 
     /**
@@ -629,18 +624,6 @@ public final class StyleUtils {
 
     private static CTRPr getRunProperties(XWPFRun run) {
         return run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
-    }
-
-    private static boolean isCTOnOff(CTOnOff onoff) {
-        if (!onoff.isSetVal()) {
-            return true;
-        }
-        final STOnOff.Enum val = onoff.getVal();
-        return (
-                (STOnOff.TRUE == val) ||
-                        (STOnOff.X_1 == val) ||
-                        (STOnOff.ON == val)
-        );
     }
 
 }
