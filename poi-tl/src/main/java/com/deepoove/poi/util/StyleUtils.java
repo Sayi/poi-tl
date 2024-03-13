@@ -32,36 +32,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable.XWPFBorderType;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.SimpleValue;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorAuto;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColorRGB;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 import com.deepoove.poi.data.style.BorderStyle;
 import com.deepoove.poi.data.style.CellStyle;
@@ -179,6 +150,12 @@ public final class StyleUtils {
         if (Boolean.TRUE.equals(src.isStrikeThrough())) dest.setStrikeThrough(src.isStrikeThrough());
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
         if (null != src.getUnderlineColor()) dest.setUnderlineColor(src.getUnderlineColor());
+        boolean isVanish = pr != null && pr.isSetVanish() && isCTOnOff(pr.getVanish());
+        if (isVanish) {
+            CTRPr destPr = getRunProperties(dest);
+            CTOnOff vanish = destPr.isSetVanish() ? destPr.getVanish() : destPr.addNewVanish();
+            vanish.setVal(STOnOff.TRUE);
+        }
     }
 
     /**
@@ -652,6 +629,18 @@ public final class StyleUtils {
 
     private static CTRPr getRunProperties(XWPFRun run) {
         return run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+    }
+
+    private static boolean isCTOnOff(CTOnOff onoff) {
+        if (!onoff.isSetVal()) {
+            return true;
+        }
+        final STOnOff.Enum val = onoff.getVal();
+        return (
+                (STOnOff.TRUE == val) ||
+                        (STOnOff.X_1 == val) ||
+                        (STOnOff.ON == val)
+        );
     }
 
 }
