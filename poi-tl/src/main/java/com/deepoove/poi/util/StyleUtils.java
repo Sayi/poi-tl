@@ -145,7 +145,6 @@ public final class StyleUtils {
         if (UnderlinePatterns.NONE != src.getUnderline()) dest.setUnderline(src.getUnderline());
         if (null != src.getUnderlineColor()) dest.setUnderlineColor(src.getUnderlineColor());
         if (Boolean.TRUE.equals(src.isVanish())) dest.setVanish(src.isVanish());
-
     }
 
     /**
