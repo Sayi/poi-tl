@@ -15,12 +15,20 @@
  */
 package com.deepoove.poi.policy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.apache.poi.hpsf.ClassIDPredefined;
+import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.ooxml.POIXMLTypeLoader;
 import org.apache.poi.ooxml.util.DocumentHelper;
+import org.apache.poi.poifs.filesystem.DirectoryNode;
+import org.apache.poi.poifs.filesystem.Ole10Native;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlObject;
@@ -98,6 +106,9 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         AttachmentRenderData data = context.getData();
         AttachmentType fileType = data.getFileType();
         byte[] attachment = data.readAttachmentData();
+		if (fileType.relType() == POIXMLDocument.OLE_OBJECT_REL_TYPE) {
+			attachment = wrapByOLE(attachment,fileType,uuidRandom);
+		}
 
         PictureRenderData icon = data.getIcon();
         if (null == icon) {
@@ -139,4 +150,20 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         ctr.set(XmlObject.Factory.parse(document.getDocumentElement(), POIXMLTypeLoader.DEFAULT_XML_OPTIONS));
     }
 
+	private byte[] wrapByOLE(byte[] data, AttachmentType fileType, String uuid) throws IOException {
+		String fileName = uuid+fileType.ext();
+		Ole10Native ole10 = new Ole10Native(fileName, fileName, fileName, data);
+		try (UnsynchronizedByteArrayOutputStream bos = new UnsynchronizedByteArrayOutputStream(data.length+500)) {
+			ole10.writeOut(bos);
+			try (POIFSFileSystem poifs = new POIFSFileSystem()) {
+				DirectoryNode root = poifs.getRoot();
+				root.createDocument(Ole10Native.OLE10_NATIVE, bos.toInputStream());
+				root.setStorageClsid(ClassIDPredefined.OLE_V1_PACKAGE.getClassID());
+				try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+					poifs.writeFilesystem(os);
+					return os.toByteArray();
+				}
+			}
+		}
+	}
 }

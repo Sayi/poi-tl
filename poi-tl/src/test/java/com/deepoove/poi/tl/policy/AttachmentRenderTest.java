@@ -2,21 +2,21 @@ package com.deepoove.poi.tl.policy;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.deepoove.poi.data.*;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.AttachmentType;
+import com.deepoove.poi.data.Attachments;
+import com.deepoove.poi.data.Charts;
+import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.data.Texts;
 import com.deepoove.poi.data.style.Style;
 import com.deepoove.poi.policy.AttachmentRenderPolicy;
 import com.deepoove.poi.xwpf.XWPFHighlightColor;
@@ -80,7 +80,8 @@ public class AttachmentRenderTest {
                                 .create());
                 put("xlsx", Attachments.ofLocal("src/test/resources/template/attachment.xlsx", AttachmentType.XLSX)
                         .create());
-				put("oleObject", new OleObjectRenderData(Files.readAllBytes(Paths.get("src/test/resources/logo.png")),"logo.png"));
+				put("oleObject", Attachments.ofLocal("src/test/resources/test.pdf", AttachmentType.PDF)
+					.create());
                 put("chart", Charts
                         .ofMultiSeries("CustomTitle",
                                 new String[] { "中文", "English", "日本語", "português", "中文", "English", "日本語",
