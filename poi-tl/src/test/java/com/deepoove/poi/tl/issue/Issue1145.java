@@ -14,7 +14,7 @@ import java.util.Map;
 public class Issue1145 {
 
 	@Test
-	public void test966() throws IOException {
+	public void test1145() throws IOException {
         Configure configure = Configure.builder().
             addPlugin('~', new LoopRowTableRenderPolicy())
             .build();
