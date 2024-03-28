@@ -18,13 +18,7 @@ package com.deepoove.poi.xwpf;
 
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.IRunBody;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 
@@ -220,10 +214,10 @@ public interface BodyContainer extends ParentContext {
         if (parent instanceof XWPFParagraph) {
             if (remove) new XWPFParagraphWrapper((XWPFParagraph) parent).removeRun(ParagraphUtils.getRunPos(run));
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
-            boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
-            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);;
-            boolean haveObject = ParagraphUtils.haveObject((XWPFParagraph) parent);
-            if ("".equals(paragraphText) && !havePictures && !havePageBreak && !haveObject) {
+            if ("".equals(paragraphText)
+                && !ParagraphUtils.havePictures((XWPFParagraph) parent)
+                && !ParagraphUtils.havePageBreak((XWPFParagraph) parent)
+                && !ParagraphUtils.haveObject((XWPFParagraph) parent)) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
                 removeBodyElement(pos);
             }

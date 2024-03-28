@@ -18,6 +18,8 @@ package com.deepoove.poi.render.processor;
 
 import java.util.List;
 
+import com.deepoove.poi.xwpf.CellBodyContainer;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,14 +44,14 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
         BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(iterableTemplate);
         Object compute = renderDataCompute.compute(iterableTemplate.getStartMark().getTagName());
 
-        if (null == compute || (compute instanceof Boolean && !(Boolean) compute)) {
+        if (null == compute || (compute instanceof Boolean && !(Boolean) compute) || (compute instanceof Iterable && !((Iterable<?>) compute).iterator().hasNext())) {
             handleNever(iterableTemplate, bodyContainer);
             afterHandle(iterableTemplate, bodyContainer, true);
         } else if (compute instanceof Iterable) {
             handleIterable(iterableTemplate, bodyContainer, (Iterable<?>) compute);
             afterHandle(iterableTemplate, bodyContainer, false);
         } else {
-            if (compute instanceof Boolean && (Boolean) compute) {
+            if (compute instanceof Boolean) {
                 handleOnceWithScope(iterableTemplate, renderDataCompute);
             } else {
                 handleOnce(iterableTemplate, compute);
@@ -61,6 +63,12 @@ public abstract class AbstractIterableProcessor extends DefaultTemplateProcessor
     protected void afterHandle(IterableTemplate iterableTemplate, BodyContainer bodyContainer, boolean remove) {
         bodyContainer.clearPlaceholder(iterableTemplate.getStartRun(), remove);
         bodyContainer.clearPlaceholder(iterableTemplate.getEndRun(), remove);
+        if(bodyContainer.getTarget() instanceof XWPFTableCell) {
+            XWPFTableCell target = (XWPFTableCell) bodyContainer.getTarget();
+            if(target.getParagraphs().size() == 0) {
+                target.addParagraph();
+            }
+        }
     }
 
     protected abstract void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer);
