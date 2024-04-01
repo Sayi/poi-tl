@@ -113,16 +113,19 @@ public class CellBodyContainer implements BodyContainer {
     }
 
     @Override
-    public void clearPlaceholder(XWPFRun run) {
+    public void clearPlaceholder(XWPFRun run, boolean remove) {
         IRunBody parent = run.getParent();
         run.setText("", 0);
-        // <p>elements must be located before </tc> elements
         if (parent instanceof XWPFParagraph) {
+            if (remove) new XWPFParagraphWrapper((XWPFParagraph) parent).removeRun(ParagraphUtils.getRunPos(run));
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
-            if ("".equals(paragraphText) && !havePictures) {
+            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);;
+            boolean haveObject = ParagraphUtils.haveObject((XWPFParagraph) parent);
+            if ("".equals(paragraphText) && !havePictures && !havePageBreak && !haveObject) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
                 int lastPos = cell.getBodyElements().size() - 1;
+                // <p>elements must be located before </tc> elements
                 if (canRemoveParagraph(pos, lastPos)) {
                     removeBodyElement(pos);
                 }
