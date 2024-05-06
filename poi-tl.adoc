@@ -1873,14 +1873,10 @@ image::./xq.png[width=256, height=256]
 [qanda]
 出现NoSuchMethodError 、ClassNotFoundException 、NoClassDefFoundError异常？::
   poi-tl依赖的apache-poi版本是5.2.2+，如果你的项目引用了低版本，请升级或删除。
-是否支持Android客户端使用？::
-  参考link:https://github.com/Sayi/poi-tl/issues/227[issue227]。
 有没有HTML转Word的插件？::
-  参考link:https://github.com/Sayi/poi-tl/issues/219[issue219]。
+  参考link:https://github.com/draco1023/poi-tl-ext[poi-tl-ext]。
 有没有公式的插件？::
-  参考link:https://github.com/Sayi/poi-tl/issues/27[issue27]。
-出现异常 `不支持：http://javax.xml.XMLConstants/property/accessExternalDTD` ？::
-  参考link:https://github.com/Sayi/poi-tl/issues/708[issue708]。
+  参考link:https://github.com/draco1023/poi-tl-ext[poi-tl-ext]。
 如何通过标签指定格式化函数？::
   Spring表达式，应有尽有。
 我不是很熟悉Apache POI，我该怎么编写插件？::
