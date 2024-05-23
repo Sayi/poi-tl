@@ -24,17 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.deepoove.poi.policy.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.exception.RenderException;
-import com.deepoove.poi.policy.DocxRenderPolicy;
-import com.deepoove.poi.policy.NumberingRenderPolicy;
-import com.deepoove.poi.policy.PictureRenderPolicy;
-import com.deepoove.poi.policy.RenderPolicy;
-import com.deepoove.poi.policy.TableRenderPolicy;
-import com.deepoove.poi.policy.TextRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultPictImageTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
@@ -55,7 +50,7 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * The config of template
- * 
+ *
  * @author Sayi
  */
 public class Configure implements Cloneable {
@@ -138,7 +133,8 @@ public class Configure implements Cloneable {
     Configure() {
         plugin(GramerSymbol.TEXT, new TextRenderPolicy());
         plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
-        plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
+//        plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
+        plugin(GramerSymbol.IMAGE, new PicturesRenderPolicy());
         plugin(GramerSymbol.TABLE, new TableRenderPolicy());
         plugin(GramerSymbol.NUMBERING, new NumberingRenderPolicy());
         plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
@@ -165,7 +161,7 @@ public class Configure implements Cloneable {
 
     /**
      * create default config
-     * 
+     *
      * @return
      */
     public static Configure createDefault() {
@@ -174,7 +170,7 @@ public class Configure implements Cloneable {
 
     /**
      * Builder to build {@link Configure}
-     * 
+     *
      * @return
      */
     public static ConfigureBuilder builder() {
@@ -183,7 +179,7 @@ public class Configure implements Cloneable {
 
     /**
      * add grammar plugin
-     * 
+     *
      * @param c      grammar char
      * @param policy render function
      */

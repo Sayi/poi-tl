@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.deepoove.poi.policy;
+package com.deepoove.poi.converter;
 
-import com.deepoove.poi.XWPFTemplate;
-import com.deepoove.poi.template.ElementTemplate;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.Pictures;
 
 import java.util.List;
 
 /**
- * Do Anything Anywhere
+ * Convert Object to PictureRenderData
  *
- * @author Sayi
- * @version 0.0.1
+ * @author sayi
+ *
  */
-@FunctionalInterface
-public interface RenderPolicy {
+public class ObjectToPicturesRenderDataConverter implements ToRenderDataConverter<Object, PictureRenderData> {
 
-    /**
-     * @param eleTemplate template tag
-     * @param data        render data
-     * @param template    XWPFTemplate instance
-     */
-    void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template);
+    @Override
+    public PictureRenderData convert(Object source) throws Exception {
+        if (null == source || source instanceof PictureRenderData) return (PictureRenderData) source;
+        return Pictures.of(source.toString()).fitSize().create();
+    }
 
 }

@@ -21,8 +21,8 @@ import com.deepoove.poi.data.*;
 import com.deepoove.poi.data.Numberings.NumberingBuilder;
 
 /**
- * Convert Object to NumberingRenderData
- * 
+ * Convert Object to Numbering Render Data
+ *
  * @author Sayi
  *
  */

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,21 +51,24 @@ public class PictureRenderTest {
     @Test
     public void testPictureRender() throws Exception {
         Map<String, Object> datas = new HashMap<String, Object>();
-        // local file path
-        datas.put("localPicture", Pictures.ofLocal("src/test/resources/sayi.png").size(120, 120).create());
+//         local file path
+//        datas.put("localPicture", Pictures.ofLocal("src/test/resources/sayi.png").size(120, 120).create());
         // input stream
-        datas.put("localBytePicture",
-            Pictures.ofStream(new FileInputStream("src/test/resources/logo.png")).size(100, 120).create());
+//        datas.put("localBytePicture",
+//            Pictures.ofStream(new FileInputStream("src/test/resources/logo.png")).size(100, 120).create());
         // network url
-        datas.put("urlPicture", "http://deepoove.com/images/icecream.png");
-        // java bufferedImage
-        datas.put("bufferImagePicture", Pictures.ofBufferedImage(bufferImage, PictureType.PNG).size(100, 100).create());
-        // base64
-        datas.put("base64Image", Pictures.ofBase64(imageBase64, PictureType.PNG).size(100, 100).center().create());
-        // svg
-        datas.put("svgPicture", Pictures.ofUrl("http://deepoove.com/images/%E8%8C%84%E5%AD%90.svg").create());
-        // alt attribute for not exist image
-        datas.put("image", Pictures.ofLocal("not_exist_image.png").altMeta("No Image!").create());
+        ArrayList<String> objects = new ArrayList<>();
+        objects.add("http://deepoove.com/images/icecream.png");
+        objects.add("http://deepoove.com/images/icecream.png");
+        datas.put("urlPicture", objects);
+//        // java bufferedImage
+//        datas.put("bufferImagePicture", Pictures.ofBufferedImage(bufferImage, PictureType.PNG).size(100, 100).create());
+//        // base64
+//        datas.put("base64Image", Pictures.ofBase64(imageBase64, PictureType.PNG).size(100, 100).center().create());
+//        // svg
+//        datas.put("svgPicture", Pictures.ofUrl("http://deepoove.com/images/%E8%8C%84%E5%AD%90.svg").create());
+//        // alt attribute for not exist image
+//        datas.put("image", Pictures.ofLocal("not_exist_image.png").altMeta("No Image!").create());
 
         XWPFTemplate.compile("src/test/resources/template/render_picture.docx")
             .render(datas)

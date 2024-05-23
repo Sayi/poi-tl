@@ -28,10 +28,12 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
+import java.util.List;
+
 /**
  * General logic for data verification, rendering, clearing template tags, and
  * exception handling
- * 
+ *
  * @author Sayi
  */
 public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
@@ -46,31 +48,50 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
 
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
-        T model = null;
-        try {
-            model = cast(data);
-        } catch (Exception e) {
-            throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
-        }
-
-        RenderContext<T> context = new RenderContext<T>(eleTemplate, model, template);
-        try {
-            // validate
-            if (!validate(model)) {
-                postValidError(context);
-                return;
+        // 多图片
+        if (data instanceof List) {
+            T model = null;
+            try {
+                model = cast(data);
+            } catch (Exception e) {
+                throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
             }
-
+            RenderContext<T> context = new RenderContext<T>(eleTemplate, model, template);
             // do render
             beforeRender(context);
-            doRender(context);
+            try {
+                doRender(context);
+            } catch (Exception e) {
+                reThrowException(context, e);
+            }
             afterRender(context);
-        } catch (Exception e) {
-            reThrowException(context, e);
+        } else {
+            T model = null;
+            try {
+                model = cast(data);
+            } catch (Exception e) {
+                throw new RenderException("Error Render Data format for template: " + eleTemplate.getSource(), e);
+            }
+            
+            RenderContext<T> context = new RenderContext<T>(eleTemplate, model, template);
+            try {
+                // validate
+                if (!validate(model)) {
+                    postValidError(context);
+                    return;
+                }
+                
+                // do render
+                beforeRender(context);
+                doRender(context);
+                afterRender(context);
+            } catch (Exception e) {
+                reThrowException(context, e);
+            }
         }
-
     }
-
+    
+    
     public abstract void doRender(RenderContext<T> context) throws Exception;
 
     protected boolean validate(T data) {
@@ -97,10 +118,10 @@ public abstract class AbstractRenderPolicy<T> implements RenderPolicy {
     /**
      * For operations that are not in the current tag position, the tag needs to be
      * cleared
-     * 
+     *
      * @param context
      * @param clearParagraph if clear paragraph
-     * 
+     *
      */
     protected void clearPlaceholder(RenderContext<?> context, boolean clearParagraph) {
         XWPFRun run = context.getRun();
