@@ -16,6 +16,7 @@
 package com.deepoove.poi.policy;
 
 import com.deepoove.poi.converter.ObjectToPictureRenderDataConverter;
+import com.deepoove.poi.converter.ObjectToPicturesRenderDataConverter;
 import com.deepoove.poi.converter.ToRenderDataConverter;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.PictureType;
@@ -48,28 +49,14 @@ import java.util.List;
  * @author Sayi
  */
 public class PicturesRenderPolicy extends AbstractRenderPolicy<List<PictureRenderData>> {
-
-
+    private static final ObjectToPicturesRenderDataConverter converter = new ObjectToPicturesRenderDataConverter();
+    
     @Override
     public List<PictureRenderData> cast(Object source) throws Exception {
         // 转换开始
-        List<PictureRenderData> pictureRenderData = new ArrayList<>();
-        
-        
-        convert(source);
-        
-        return (List<PictureRenderData>) source;
+        List<PictureRenderData> convert = converter.convert(source);
+        return convert;
     }
-    
-    public PictureRenderData convert(Object source) throws Exception {
-        if (null == source || source instanceof PictureRenderData) return (PictureRenderData) source;
-        return Pictures.of(source.toString()).fitSize().create();
-    }
-
-//    @Override
-//    protected boolean validate(PictureRenderData data) {
-//        return null != data;
-//    }
 
     @Override
     public void doRender(RenderContext<List<PictureRenderData>> context) throws Exception {

@@ -18,6 +18,7 @@ package com.deepoove.poi.converter;
 import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.Pictures;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,12 +27,18 @@ import java.util.List;
  * @author sayi
  *
  */
-public class ObjectToPicturesRenderDataConverter implements ToRenderDataConverter<Object, PictureRenderData> {
+public class ObjectToPicturesRenderDataConverter    {
 
-    @Override
-    public PictureRenderData convert(Object source) throws Exception {
-        if (null == source || source instanceof PictureRenderData) return (PictureRenderData) source;
-        return Pictures.of(source.toString()).fitSize().create();
+    public List<PictureRenderData> convert(Object source) throws Exception {
+//        if (null == source || source instanceof List) return (List<PictureRenderData>) source;
+        List<PictureRenderData> pictureRenderDataList = new ArrayList<>();
+        
+        if (source instanceof List) {
+            for (Object o : ((List) source)) {
+                pictureRenderDataList.add(Pictures.of((String) o).fitSize().create());
+            }
+        }
+        return pictureRenderDataList;
     }
 
 }

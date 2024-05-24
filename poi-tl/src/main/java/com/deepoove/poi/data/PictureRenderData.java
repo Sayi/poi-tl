@@ -17,9 +17,11 @@ package com.deepoove.poi.data;
 
 import com.deepoove.poi.data.style.PictureStyle;
 
+import java.util.List;
+
 /**
  * Picture structure
- * 
+ *
  * @author Sayi
  */
 public abstract class PictureRenderData implements RenderData {
@@ -58,5 +60,4 @@ public abstract class PictureRenderData implements RenderData {
     public void setPictureType(PictureType pictureType) {
         this.pictureType = pictureType;
     }
-
 }

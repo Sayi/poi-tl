@@ -46,7 +46,7 @@ import java.io.InputStream;
  */
 public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData> {
 
-    private static ToRenderDataConverter<Object, PictureRenderData> converter = new ObjectToPictureRenderDataConverter();
+    private static final ToRenderDataConverter<Object, PictureRenderData> converter = new ObjectToPictureRenderDataConverter();
 
     @Override
     public PictureRenderData cast(Object source) throws Exception {
