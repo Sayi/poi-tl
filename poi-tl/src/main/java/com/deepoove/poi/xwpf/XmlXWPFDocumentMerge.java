@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ooxml.POIXMLDocument;
@@ -41,12 +42,7 @@ import org.apache.poi.openxml4j.opc.TargetMode;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTAbstractNum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBody;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
 public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
 
@@ -301,6 +297,49 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         return blipIdsMap;
     }
 
+    protected Map<BigInteger, BigInteger> mergeAbstractNumId(XWPFNumbering source, XWPFNumbering merged) {
+        List<XWPFAbstractNum> abstractNums = source.getAbstractNums();
+        // 获取source 文档abstractNum的lvl结构, key->lvl结构, value->abstractNumId
+        Map<String, BigInteger> sourceMap = new HashMap<>(abstractNums.size());
+        for (XWPFAbstractNum abstractNum : abstractNums) {
+            CTAbstractNum ctAbstractNum = abstractNum.getAbstractNum();
+            BigInteger abstractNumId = ctAbstractNum.getAbstractNumId();
+            String lvlString = getLvlString(ctAbstractNum);
+            sourceMap.put(lvlString, abstractNumId);
+        }
+
+        // 获取与源文档相同的AbstractNumId映射，key->mergedAbstractNumId, value->sourceAbstractNumId
+        Map<BigInteger, BigInteger> abstractNumMap = new HashMap<>();
+        List<XWPFAbstractNum> mergedAbstractNums = merged.getAbstractNums();
+        for (XWPFAbstractNum mergedAbstractNum : mergedAbstractNums) {
+            CTAbstractNum ctAbstractNum = mergedAbstractNum.getAbstractNum();
+            BigInteger abstractNumId = ctAbstractNum.getAbstractNumId();
+            String lvlString = getLvlString(ctAbstractNum);
+            if (sourceMap.containsKey(lvlString)) {
+                abstractNumMap.put(abstractNumId, sourceMap.get(lvlString));
+            }
+        }
+        return abstractNumMap;
+    }
+
+    /**
+     * 拼接numlvl关键结构用于去重
+     * @param ctAbstractNum
+     * @return
+     */
+    private static String getLvlString(CTAbstractNum ctAbstractNum) {
+        List<CTLvl> lvlList = ctAbstractNum.getLvlList();
+        String lvlString = lvlList.stream().map(ctLvl -> {
+            BigInteger ilvl = ctLvl.getIlvl();
+            BigInteger startVal = ctLvl.getStart().getVal();
+            String numFmt = ctLvl.getNumFmt().getFormat();
+            String lvlText = ctLvl.getLvlText().getVal();
+            String lvlJc = ctLvl.getLvlJc().getVal().toString();
+            return StringUtils.join(ilvl, startVal, numFmt, lvlText, lvlJc);
+        }).collect(Collectors.joining());
+        return lvlString;
+    }
+
     protected Map<String, String> mergeNumbering(NiceXWPFDocument source, NiceXWPFDocument merged) {
         Map<String, String> numIdsMap = new HashMap<String, String>();
         XWPFNumbering numberingMerge = merged.getNumbering();
@@ -312,6 +351,15 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
         XWPFNumbering numbering = source.getNumbering();
         if (null == numbering) numbering = source.createNumbering();
         XWPFNumberingWrapper wrapper = new XWPFNumberingWrapper(numbering);
+        // 获取与source同样式的abstractNumId映射 key->mergedAbstractNumId, value->sourceAbstractNumId
+        Map<BigInteger, BigInteger> mergeAbstractNumId = mergeAbstractNumId(numbering, numberingMerge);
+        // 通样式的原numId映射，key->sourceAbstractNumId，value->sourceNumId
+        Map<BigInteger, BigInteger> sourceNumIdMap = new HashMap<>();
+        numbering.getNums().forEach(xwpfNum -> {
+            BigInteger numId = xwpfNum.getCTNum().getNumId();
+            BigInteger abstractNumId = xwpfNum.getCTNum().getAbstractNumId().getVal();
+            sourceNumIdMap.put(abstractNumId, numId);
+        });
 
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;
@@ -332,6 +380,13 @@ public class XmlXWPFDocumentMerge extends AbstractXWPFDocumentMerge {
                 if (cTAbstractNum.isSetNsid()) cTAbstractNum.unsetNsid();
                 if (cTAbstractNum.isSetTmpl()) cTAbstractNum.unsetTmpl();
                 cache.put(xwpfNum.getCTNum().getAbstractNumId().getVal(), cTAbstractNum);
+            }
+            // source存在同样式的AbstractNumId，将merge的AbstractNumId进行替换
+            if (mergeAbstractNumId.containsKey(cTAbstractNum.getAbstractNumId())) {
+                BigInteger sourceAbstractNumId = mergeAbstractNumId.get(cTAbstractNum.getAbstractNumId());
+                cTAbstractNum.setAbstractNumId(sourceAbstractNumId);
+                numIdsMap.put(mergeNumId.toString(), sourceNumIdMap.get(sourceAbstractNumId).toString());
+                continue;
             }
             ret.put(mergeNumId, cTAbstractNum);
         }
