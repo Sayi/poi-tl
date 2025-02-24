@@ -179,8 +179,9 @@ public final class StyleUtils {
      */
     public static void styleTable(XWPFTable table, TableStyle tableStyle) {
         if (null == table || null == tableStyle) return;
-
-        TableTools.setWidth(table, tableStyle.getWidth(), tableStyle.getColWidths());
+        if (null != tableStyle.getWidth()) {
+            TableTools.setWidth(table, tableStyle.getWidth(), tableStyle.getColWidths());
+        }
 
         TableTools.setBorder(table::setLeftBorder, tableStyle.getLeftBorder());
         TableTools.setBorder(table::setRightBorder, tableStyle.getRightBorder());
