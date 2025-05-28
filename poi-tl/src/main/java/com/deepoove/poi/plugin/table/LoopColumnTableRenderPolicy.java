@@ -159,6 +159,11 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
                     continue;
                 }
                 removeCell(row, actualInsertPosition);
+                if (row.getTableCells().isEmpty()) {
+                    table.removeRow(i);
+                    rowSize--;
+                    i--;
+                }
             }
             afterloop(table, data);
         } catch (Exception e) {
