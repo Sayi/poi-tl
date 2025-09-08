@@ -52,7 +52,7 @@ import com.deepoove.poi.util.TableTools;
 
 /**
  * Hack for loop table column
- * 
+ *
  * @author Sayi
  */
 public class LoopColumnTableRenderPolicy implements RenderPolicy {
@@ -86,7 +86,7 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
         try {
             if (!TableTools.isInsideTable(run)) {
                 throw new IllegalStateException(
-                        "The template tag " + runTemplate.getSource() + " must be inside a table");
+                    "The template tag " + runTemplate.getSource() + " must be inside a table");
             }
             XWPFTableCell tagCell = (XWPFTableCell) ((XWPFParagraph) run.getParent()).getBody();
             XWPFTable table = tagCell.getTableRow().getTable();
@@ -102,7 +102,7 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
             }
 
             int rowSize = table.getRows().size();
-            if (null != data && data instanceof Iterable) {
+            if (null != data && data instanceof Iterable && ((Iterable<?>) data).iterator().hasNext()) {
                 int colWidth = processLoopColWidth(table, width, templateColIndex, data);
 
                 Iterator<?> iterator = ((Iterable<?>) data).iterator();
@@ -142,8 +142,8 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
                     }
 
                     RenderDataCompute dataCompute = template.getConfig()
-                            .getRenderDataComputeFactory()
-                            .newCompute(EnvModel.of(root, EnvIterator.makeEnv(index++, hasNext)));
+                        .getRenderDataComputeFactory()
+                        .newCompute(EnvModel.of(root, EnvIterator.makeEnv(index++, hasNext)));
                     cells.forEach(cell -> {
                         List<MetaTemplate> templates = resolver.resolveBodyElements(cell.getBodyElements());
                         new DocumentProcessor(template, resolver, dataCompute).process(templates);
@@ -159,6 +159,11 @@ public class LoopColumnTableRenderPolicy implements RenderPolicy {
                     continue;
                 }
                 removeCell(row, actualInsertPosition);
+                if (row.getTableCells().isEmpty()) {
+                    table.removeRow(i);
+                    rowSize--;
+                    i--;
+                }
             }
             afterloop(table, data);
         } catch (Exception e) {
