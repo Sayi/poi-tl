@@ -80,6 +80,8 @@ public class AttachmentRenderTest {
                                 .create());
                 put("xlsx", Attachments.ofLocal("src/test/resources/template/attachment.xlsx", AttachmentType.XLSX)
                         .create());
+				put("oleObject", Attachments.ofLocal("src/test/resources/test.pdf", AttachmentType.PDF)
+					.create());
                 put("chart", Charts
                         .ofMultiSeries("CustomTitle",
                                 new String[] { "中文", "English", "日本語", "português", "中文", "English", "日本語",
@@ -94,6 +96,7 @@ public class AttachmentRenderTest {
         Configure configure = Configure.builder()
                 .bind("attachment", new AttachmentRenderPolicy())
                 .bind("xlsx", new AttachmentRenderPolicy())
+				.bind("oleObject", new AttachmentRenderPolicy())
                 .build();
 
         XWPFTemplate.compile("src/test/resources/template/render_attachment.docx", configure)
