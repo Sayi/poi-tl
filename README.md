@@ -1,6 +1,6 @@
 # poi-tl(poi-template-language)
 
-[![Build Status](https://app.travis-ci.com/Sayi/poi-tl.svg?branch=master)](https://app.travis-ci.com/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi5.1.0](https://img.shields.io/badge/apache--poi-5.1.0-blue.svg) [![Gitter](https://badges.gitter.im/Sayi/poi-tl.svg)](https://gitter.im/Sayi/poi-tl?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Build Status](https://app.travis-ci.com/Sayi/poi-tl.svg?branch=master)](https://app.travis-ci.com/Sayi/poi-tl) ![jdk1.6+](https://img.shields.io/badge/jdk-1.6%2B-orange.svg) ![jdk1.8](https://img.shields.io/badge/jdk-1.8-orange.svg) ![poi3.16%2B](https://img.shields.io/badge/apache--poi-3.16%2B-blue.svg) ![poi5.1.0](https://img.shields.io/badge/apache--poi-5.1.0-blue.svg) 
 
 A better way to generate word(docx) with template，based on Apache POI。
 
