@@ -57,7 +57,7 @@
 		<junit-jupiter.version>5.6.0</junit-jupiter.version>
 		<logback.version>1.2.13</logback.version>
 		<swagger-parser.version>1.0.50</swagger-parser.version>
-		<jsoup.version>1.15.3</jsoup.version>
+		<jsoup.version>1.23.2</jsoup.version>
 		<gson.version>2.9.0</gson.version>
 		<gson-extras.version>0.4.0</gson-extras.version>
 		<typetools.version>0.6.3</typetools.version>
