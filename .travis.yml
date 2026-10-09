@@ -1,5 +1,5 @@
 language: java
-script: mvn clean install -f poi-tl/pom.xml
+script: mvn clean install -pl poi-tl -am
 
 after_success:
   - cd poi-tl
