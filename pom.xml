@@ -55,7 +55,7 @@
 		<batik.version>1.17</batik.version>
 		<spring-expression.version>5.3.26</spring-expression.version>
 		<junit-jupiter.version>5.6.0</junit-jupiter.version>
-		<logback.version>1.2.13</logback.version>
+		<logback.version>1.5.34</logback.version>
 		<swagger-parser.version>1.0.50</swagger-parser.version>
 		<jsoup.version>1.15.3</jsoup.version>
 		<gson.version>2.9.0</gson.version>
