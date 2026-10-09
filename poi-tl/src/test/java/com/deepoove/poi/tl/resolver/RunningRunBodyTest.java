@@ -151,4 +151,26 @@ public class RunningRunBodyTest {
 
     }
 
+    @Test
+    public void testEmptyOrNonTextRunWithTemplate() throws IOException {
+        TemplateResolver templateResolver = new TemplateResolver(Configure.createDefault());
+        XWPFDocument doc = new XWPFDocument();
+        XWPFParagraph paragraph = doc.createParagraph();
+        // Run with null text (simulate non-text run like embedded object or empty run)
+        XWPFRun emptyRun = paragraph.createRun();
+        // Second run with template
+        XWPFRun tagRun = paragraph.createRun();
+        tagRun.setText("prefix {{title}} suffix");
+
+        assertEquals(2, paragraph.getRuns().size());
+        new RunningRunBody(RunBodyContextFactory.getRunBodyContext(paragraph), templateResolver.getTemplatePattern())
+                .refactorRun();
+
+        List<MetaTemplate> templates = templateResolver.resolveDocument(doc);
+        assertEquals(1, templates.size());
+        assertEquals("{{title}}", templates.get(0).variable());
+
+        doc.close();
+    }
+
 }

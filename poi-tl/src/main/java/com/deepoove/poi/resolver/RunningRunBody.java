@@ -75,7 +75,10 @@ public class RunningRunBody {
     private String getText(RunBodyContext context) {
         StringBuilder out = new StringBuilder(64);
         for (XWPFRun run : runs) {
-            out.append(run.text());
+            String text = run.text();
+            if (null != text) {
+                out.append(text);
+            }
         }
         return out.toString();
     }
@@ -214,9 +217,7 @@ public class RunningRunBody {
             XWPFRun run = runs.get(i);
             String text = run.text();
             // empty run
-            if (null == text) {
-                LOG.warn("found the empty text run,may be produce bug:" + run);
-                cursor += run.toString().length();
+            if (null == text || text.isEmpty()) {
                 continue;
             }
             LOG.debug(text);

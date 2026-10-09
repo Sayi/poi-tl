@@ -23,16 +23,20 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
 
 import com.deepoove.poi.xwpf.XWPFStructuredDocumentTagContent;
 
 public final class ParagraphUtils {
 
     public static String trimLine(XWPFParagraph paragraph) {
-        return trimLine(paragraph.getText());
+        return null == paragraph ? "" : trimLine(paragraph.getText());
     }
 
     public static String trimLine(String value) {
+        if (null == value) return "";
         int len = value.length();
         int st = 0;
         char[] val = value.toCharArray();
@@ -69,6 +73,7 @@ public final class ParagraphUtils {
     }
 
     public static boolean havePictures(XWPFParagraph paragraph) {
+        if (null == paragraph) return false;
         List<XWPFRun> runs = paragraph.getRuns();
         for (XWPFRun run : runs) {
             if (CollectionUtils.isNotEmpty(run.getEmbeddedPictures())) return true;
@@ -77,17 +82,28 @@ public final class ParagraphUtils {
     }
 
     public static boolean havePageBreak(XWPFParagraph paragraph) {
+        if (null == paragraph) return false;
         List<XWPFRun> runs = paragraph.getRuns();
         for (XWPFRun run : runs) {
-            if (CollectionUtils.isNotEmpty(run.getCTR().getLastRenderedPageBreakList())) return true;
+            CTR ctr = run.getCTR();
+            if (null == ctr) continue;
+            if (CollectionUtils.isNotEmpty(ctr.getLastRenderedPageBreakList())) return true;
+            List<CTBr> brList = ctr.getBrList();
+            if (CollectionUtils.isNotEmpty(brList)) {
+                for (CTBr br : brList) {
+                    if (STBrType.PAGE.equals(br.getType())) return true;
+                }
+            }
         }
         return false;
     }
 
     public static boolean haveObject(XWPFParagraph paragraph) {
+        if (null == paragraph) return false;
         List<XWPFRun> runs = paragraph.getRuns();
         for (XWPFRun run : runs) {
-            if (CollectionUtils.isNotEmpty(run.getCTR().getObjectList())) return true;
+            CTR ctr = run.getCTR();
+            if (null != ctr && CollectionUtils.isNotEmpty(ctr.getObjectList())) return true;
         }
         return false;
     }

@@ -97,8 +97,7 @@ public class CellBodyContainer implements BodyContainer {
         XWPFTable table = insertNewTbl(cursor);
 
         // hack for cursor.removeXmlContents(); in XWPFTableCell
-        List<XWPFTableRow> rows = table.getRows();
-        for (int i = 0; i < rows.size(); i++) {
+        for (int i = table.getRows().size() - 1; i >= 0; i--) {
             table.removeRow(i);
         }
         for (int i = 0; i < row; i++) {
@@ -120,22 +119,30 @@ public class CellBodyContainer implements BodyContainer {
             if (remove) new XWPFParagraphWrapper((XWPFParagraph) parent).removeRun(ParagraphUtils.getRunPos(run));
             String paragraphText = ParagraphUtils.trimLine((XWPFParagraph) parent);
             boolean havePictures = ParagraphUtils.havePictures((XWPFParagraph) parent);
-            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);;
+            boolean havePageBreak = ParagraphUtils.havePageBreak((XWPFParagraph) parent);
             boolean haveObject = ParagraphUtils.haveObject((XWPFParagraph) parent);
             if ("".equals(paragraphText) && !havePictures && !havePageBreak && !haveObject) {
                 int pos = getPosOfParagraph((XWPFParagraph) parent);
                 int lastPos = cell.getBodyElements().size() - 1;
                 // <p>elements must be located before </tc> elements
-                if (canRemoveParagraph(pos, lastPos)) {
+                if (pos >= 0 && canRemoveParagraph(pos, lastPos)) {
                     removeBodyElement(pos);
                 }
+            }
+            if (cell.getParagraphs().isEmpty()) {
+                cell.addParagraph();
             }
         }
     }
 
     private boolean canRemoveParagraph(int pos, int lastPos) {
-        return pos < lastPos
-                || (pos > 0 && cell.getBodyElements().get(pos - 1).getElementType() == BodyElementType.PARAGRAPH);
+        if (cell.getParagraphs().size() <= 1) {
+            return false;
+        }
+        if (pos == lastPos) {
+            return pos > 0 && cell.getBodyElements().get(pos - 1).getElementType() == BodyElementType.PARAGRAPH;
+        }
+        return pos < lastPos;
     }
 
     @Override

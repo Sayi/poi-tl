@@ -16,7 +16,10 @@
 package com.deepoove.poi.policy;
 
 import java.io.StringReader;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
+import java.util.WeakHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.poi.ooxml.POIXMLTypeLoader;
@@ -67,7 +70,8 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
                 + "                        <o:lock v:ext=\"edit\" aspectratio=\"t\"/>\n"
                 + "                    </v:shapetype>\n";
 
-    private static boolean haveShapeType;
+    private static final Set<NiceXWPFDocument> RENDERED_DOCS = Collections
+            .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     @Override
     protected boolean validate(AttachmentRenderData data) {
@@ -85,12 +89,7 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
         XWPFRun run = context.getRun();
         CTR ctr = run.getCTR();
 
-        // Only one shapetype is needed
-        String shapeTypeXml = "";
-        if (!haveShapeType) {
-            haveShapeType = true;
-            shapeTypeXml = SHAPE_TYPE_XML;
-        }
+        String shapeTypeXml = getShapeTypeXml(doc);
 
         String uuidRandom = UUID.randomUUID().toString().replace("-", "") + ThreadLocalRandom.current().nextInt(1024);
         String shapeId = "_x0000_i20" + uuidRandom;
@@ -137,6 +136,16 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
 
         Document document = DocumentHelper.readDocument(new InputSource(new StringReader(wObjectXml)));
         ctr.set(XmlObject.Factory.parse(document.getDocumentElement(), POIXMLTypeLoader.DEFAULT_XML_OPTIONS));
+    }
+
+    private String getShapeTypeXml(NiceXWPFDocument doc) {
+        if (!RENDERED_DOCS.add(doc)) {
+            return "";
+        }
+        if (doc.getDocument().xmlText().contains(SHAPE_TYPE_ID)) {
+            return "";
+        }
+        return SHAPE_TYPE_XML;
     }
 
 }

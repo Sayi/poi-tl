@@ -1,14 +1,21 @@
 package com.deepoove.poi.tl.policy;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -109,6 +116,29 @@ public class AttachmentRenderTest {
                 })
                 .writeToFile("target/out_render_attachment.docx");
 
+    }
+
+    @Test
+    public void testMultiDocumentAttachmentShapeType() throws Exception {
+        Configure configure = Configure.builder()
+                .bind("attachment", new AttachmentRenderPolicy())
+                .build();
+
+        for (int i = 0; i < 2; i++) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            XWPFTemplate.compile("src/test/resources/template/render_attachment.docx", configure)
+                    .render(Collections.singletonMap("attachment",
+                            Attachments.ofLocal("src/test/resources/template/attachment.docx", AttachmentType.DOCX).create()))
+                    .write(out);
+
+            try (XWPFDocument doc = new XWPFDocument(new ByteArrayInputStream(out.toByteArray()))) {
+                String xml = doc.getDocument().xmlText();
+                int firstIdx = xml.indexOf("_x0000_t79");
+                assertTrue(firstIdx >= 0, "Document " + i + " should contain _x0000_t79");
+                int secondIdx = xml.indexOf("<v:shapetype", xml.indexOf("<v:shapetype") + 1);
+                assertEquals(-1, secondIdx, "Shapetype should only be defined once in document " + i);
+            }
+        }
     }
 
 }
