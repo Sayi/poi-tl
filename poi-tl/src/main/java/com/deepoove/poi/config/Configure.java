@@ -26,6 +26,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.xddf.usermodel.chart.ChartTypes;
+import org.apache.poi.xddf.usermodel.chart.XDDFBubbleChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.exception.RenderException;
@@ -35,6 +37,7 @@ import com.deepoove.poi.policy.PictureRenderPolicy;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
+import com.deepoove.poi.policy.reference.BubbleChartTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultChartTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultPictImageTemplateRenderPolicy;
 import com.deepoove.poi.policy.reference.DefaultPictureTemplateRenderPolicy;
@@ -80,6 +83,11 @@ public class Configure implements Cloneable {
      */
     protected final Map<ChartTypes, RenderPolicy> DEFAULT_CHART_POLICYS = new EnumMap<ChartTypes, RenderPolicy>(
             ChartTypes.class);
+
+    /**
+     * template by xddf chart data class: Medium priority
+     */
+    protected final Map<Class<? extends XDDFChartData>, RenderPolicy> DEFAULT_CHART_DATA_POLICYS = new HashMap<>();
 
     /**
      * template by element template: Lowest priority
@@ -158,6 +166,8 @@ public class Configure implements Cloneable {
         plugin(ChartTypes.PIE3D, singleSeriesRenderPolicy);
         plugin(ChartTypes.DOUGHNUT, singleSeriesRenderPolicy);
 
+        pluginChart(XDDFBubbleChartData.class, new BubbleChartTemplateRenderPolicy());
+
         plugin(PictureTemplate.class, new DefaultPictureTemplateRenderPolicy());
         plugin(PictImageTemplate.class, new DefaultPictImageTemplateRenderPolicy());
         plugin(ChartTemplate.class, new DefaultChartTemplateRenderPolicy());
@@ -207,6 +217,11 @@ public class Configure implements Cloneable {
         return this;
     }
 
+    public Configure pluginChart(Class<? extends XDDFChartData> chartDataClass, RenderPolicy policy) {
+        DEFAULT_CHART_DATA_POLICYS.put(chartDataClass, policy);
+        return this;
+    }
+
     public void customPolicy(String tagName, RenderPolicy policy) {
         CUSTOM_POLICYS.put(tagName, policy);
     }
@@ -225,6 +240,10 @@ public class Configure implements Cloneable {
 
     public RenderPolicy getChartPolicy(ChartTypes type) {
         return DEFAULT_CHART_POLICYS.get(type);
+    }
+
+    public RenderPolicy getChartPolicy(Class<? extends XDDFChartData> chartDataClass) {
+        return DEFAULT_CHART_DATA_POLICYS.get(chartDataClass);
     }
 
     public Map<Character, RenderPolicy> getDefaultPolicys() {

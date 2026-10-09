@@ -58,6 +58,7 @@ public class SingleSeriesChartTemplateRenderPolicy
         XDDFChartData.Series currentSeries = pie.getSeries(0);
         currentSeries.replaceData(categoriesData, valuesData);
         currentSeries.setTitle(seriesDatas.getName(), chart.setSheetTitle(seriesDatas.getName(), 1));
+        applySeriesStyle(currentSeries, seriesDatas);
         updateCTTable(chart.getWorkbook().getSheetAt(0), Arrays.asList(seriesDatas));
 
         plot(chart, pie);

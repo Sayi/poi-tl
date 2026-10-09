@@ -40,6 +40,26 @@ public class SeriesRenderData implements Serializable {
      */
     private ComboType comboType;
 
+    /**
+     * Custom series color (hex string, e.g. "#FF5733" or "FF5733", or "transparent")
+     */
+    private String color;
+
+    /**
+     * Custom colors for individual data points / slices in pie or doughnut charts
+     */
+    private String[] colors;
+
+    /**
+     * Whether to show data labels for this series
+     */
+    private Boolean showDataLabels;
+
+    /**
+     * Whether to bind this series to the secondary value axis (right Y-axis) in a combo chart
+     */
+    private boolean secondaryAxis = false;
+
     public SeriesRenderData() {
     }
 
@@ -74,6 +94,58 @@ public class SeriesRenderData implements Serializable {
 
     public void setComboType(ComboType comboType) {
         this.comboType = comboType;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String[] getColors() {
+        return colors;
+    }
+
+    public void setColors(String[] colors) {
+        this.colors = colors;
+    }
+
+    public Boolean getShowDataLabels() {
+        return showDataLabels;
+    }
+
+    public void setShowDataLabels(Boolean showDataLabels) {
+        this.showDataLabels = showDataLabels;
+    }
+
+    public boolean isSecondaryAxis() {
+        return secondaryAxis;
+    }
+
+    public void setSecondaryAxis(boolean secondaryAxis) {
+        this.secondaryAxis = secondaryAxis;
+    }
+
+    public SeriesRenderData color(String color) {
+        this.color = color;
+        return this;
+    }
+
+    public SeriesRenderData colors(String... colors) {
+        this.colors = colors;
+        return this;
+    }
+
+    public SeriesRenderData showDataLabels(Boolean showDataLabels) {
+        this.showDataLabels = showDataLabels;
+        return this;
+    }
+
+    public SeriesRenderData secondaryAxis(boolean secondaryAxis) {
+        this.secondaryAxis = secondaryAxis;
+        return this;
     }
 
 }

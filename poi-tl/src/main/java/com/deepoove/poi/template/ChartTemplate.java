@@ -38,6 +38,7 @@ public class ChartTemplate extends ElementTemplate {
 
     protected XWPFChart chart;
     protected ChartTypes chartType;
+    protected Class<? extends XDDFChartData> chartDataClass;
     protected XWPFRun run;
 
     public ChartTemplate(String tagName, XWPFChart chart, XWPFRun run) {
@@ -45,6 +46,10 @@ public class ChartTemplate extends ElementTemplate {
         this.chart = chart;
         this.run = run;
         this.chartType = readChartType(this.chart);
+        List<XDDFChartData> chartSeries = ChartUtils.getChartSeries(this.chart);
+        if (!CollectionUtils.isEmpty(chartSeries)) {
+            this.chartDataClass = chartSeries.get(0).getClass();
+        }
     }
 
     private ChartTypes readChartType(XWPFChart chart) {
@@ -108,8 +113,11 @@ public class ChartTemplate extends ElementTemplate {
     @Override
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy policy = config.getCustomPolicy(tagName);
-        if (null == policy) {
+        if (null == policy && null != chartType) {
             policy = config.getChartPolicy(chartType);
+        }
+        if (null == policy && null != chartDataClass) {
+            policy = config.getChartPolicy(chartDataClass);
         }
         return null == policy ? config.getTemplatePolicy(this.getClass()) : policy;
     }

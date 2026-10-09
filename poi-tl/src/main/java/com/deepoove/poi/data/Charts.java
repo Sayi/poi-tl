@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.deepoove.poi.data.SeriesRenderData.ComboType;
+import com.deepoove.poi.data.builder.GanttChartBuilder;
+import com.deepoove.poi.data.builder.GaugeChartBuilder;
 
 /**
  * Factory method to create chart
@@ -96,10 +98,30 @@ public class Charts {
         return new ChartSingles(chartTitle, categories);
     }
 
+    public static ChartBubbles ofBubble(String chartTitle) {
+        return new ChartBubbles(chartTitle);
+    }
+
+    public static GanttChartBuilder ofGantt(String chartTitle) {
+        return new GanttChartBuilder(chartTitle);
+    }
+
+    public static GaugeChartBuilder ofGauge(String chartTitle) {
+        return new GaugeChartBuilder(chartTitle);
+    }
+
     public static interface ChartSetting<T extends RenderData> {
         ChartBuilder<T> setxAsixTitle(String xAxisTitle);
 
+        default ChartBuilder<T> setxAxisTitle(String xAxisTitle) {
+            return setxAsixTitle(xAxisTitle);
+        }
+
         ChartBuilder<T> setyAsixTitle(String yAxisTitle);
+
+        default ChartBuilder<T> setyAxisTitle(String yAxisTitle) {
+            return setyAsixTitle(yAxisTitle);
+        }
     }
 
     public static abstract class ChartBuilder<T extends RenderData> implements RenderDataBuilder<T>, ChartSetting<T> {
@@ -125,9 +147,17 @@ public class Charts {
             return this;
         }
 
+        public ChartBuilder<T> setxAxisTitle(String xAxisTitle) {
+            return setxAsixTitle(xAxisTitle);
+        }
+
         public ChartBuilder<T> setyAsixTitle(String yAxisTitle) {
             this.yAxisTitle = yAxisTitle;
             return this;
+        }
+
+        public ChartBuilder<T> setyAxisTitle(String yAxisTitle) {
+            return setyAsixTitle(yAxisTitle);
         }
     }
 
@@ -149,6 +179,36 @@ public class Charts {
             return this;
         }
 
+        public ChartMultis addSeries(SeriesRenderData series) {
+            checkLengh(series.getValues().length);
+            seriesDatas.add(series);
+            return this;
+        }
+
+        @Override
+        public ChartMultis setxAsixTitle(String xAxisTitle) {
+            super.setxAsixTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartMultis setxAxisTitle(String xAxisTitle) {
+            super.setxAxisTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartMultis setyAsixTitle(String yAxisTitle) {
+            super.setyAsixTitle(yAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartMultis setyAxisTitle(String yAxisTitle) {
+            super.setyAxisTitle(yAxisTitle);
+            return this;
+        }
+
         @Override
         public ChartMultiSeriesRenderData create() {
             ChartMultiSeriesRenderData data = new ChartMultiSeriesRenderData();
@@ -167,30 +227,84 @@ public class Charts {
      */
     public static class ChartCombos extends ChartBuilder<ChartMultiSeriesRenderData> {
         private List<SeriesRenderData> seriesDatas = new ArrayList<>();
+        private String secondaryYAxisTitle;
 
         private ChartCombos(String chartTitle, String[] categories) {
             super(chartTitle, categories);
         }
 
         public ChartCombos addBarSeries(String name, Number[] value) {
-            addSeries(ComboType.BAR, name, value);
+            return addBarSeries(name, value, false);
+        }
+
+        public ChartCombos addBarSeries(String name, Number[] value, boolean secondaryAxis) {
+            addSeries(ComboType.BAR, name, value, secondaryAxis);
             return this;
         }
 
         public ChartCombos addLineSeries(String name, Number[] value) {
-            addSeries(ComboType.LINE, name, value);
+            return addLineSeries(name, value, false);
+        }
+
+        public ChartCombos addLineSeries(String name, Number[] value, boolean secondaryAxis) {
+            addSeries(ComboType.LINE, name, value, secondaryAxis);
             return this;
         }
 
         public ChartCombos addAreaSeries(String name, Number[] value) {
-            addSeries(ComboType.AREA, name, value);
+            return addAreaSeries(name, value, false);
+        }
+
+        public ChartCombos addAreaSeries(String name, Number[] value, boolean secondaryAxis) {
+            addSeries(ComboType.AREA, name, value, secondaryAxis);
             return this;
         }
 
-        private void addSeries(ComboType type, String name, Number[] value) {
+        public ChartCombos addSeries(SeriesRenderData series) {
+            checkLengh(series.getValues().length);
+            seriesDatas.add(series);
+            return this;
+        }
+
+        public ChartCombos setSecondaryYAsixTitle(String secondaryYAxisTitle) {
+            this.secondaryYAxisTitle = secondaryYAxisTitle;
+            return this;
+        }
+
+        public ChartCombos setSecondaryYAxisTitle(String secondaryYAxisTitle) {
+            this.secondaryYAxisTitle = secondaryYAxisTitle;
+            return this;
+        }
+
+        @Override
+        public ChartCombos setxAsixTitle(String xAxisTitle) {
+            super.setxAsixTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartCombos setxAxisTitle(String xAxisTitle) {
+            super.setxAxisTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartCombos setyAsixTitle(String yAxisTitle) {
+            super.setyAsixTitle(yAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartCombos setyAxisTitle(String yAxisTitle) {
+            super.setyAxisTitle(yAxisTitle);
+            return this;
+        }
+
+        private void addSeries(ComboType type, String name, Number[] value, boolean secondaryAxis) {
             checkLengh(value.length);
             SeriesRenderData seriesRenderData = new SeriesRenderData(name, value);
             seriesRenderData.setComboType(type);
+            seriesRenderData.setSecondaryAxis(secondaryAxis);
             seriesDatas.add(seriesRenderData);
         }
 
@@ -200,6 +314,7 @@ public class Charts {
             data.setChartTitle(chartTitle);
             data.setxAxisTitle(xAxisTitle);
             data.setyAxisTitle(yAxisTitle);
+            data.setSecondaryYAxisTitle(secondaryYAxisTitle);
             data.setCategories(categories);
             data.setSeriesDatas(seriesDatas);
             return data;
@@ -223,6 +338,36 @@ public class Charts {
             return this;
         }
 
+        public ChartSingles series(SeriesRenderData series) {
+            checkLengh(series.getValues().length);
+            this.series = series;
+            return this;
+        }
+
+        @Override
+        public ChartSingles setxAsixTitle(String xAxisTitle) {
+            super.setxAsixTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartSingles setxAxisTitle(String xAxisTitle) {
+            super.setxAxisTitle(xAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartSingles setyAsixTitle(String yAxisTitle) {
+            super.setyAsixTitle(yAxisTitle);
+            return this;
+        }
+
+        @Override
+        public ChartSingles setyAxisTitle(String yAxisTitle) {
+            super.setyAxisTitle(yAxisTitle);
+            return this;
+        }
+
         @Override
         public ChartSingleSeriesRenderData create() {
             ChartSingleSeriesRenderData data = new ChartSingleSeriesRenderData();
@@ -231,6 +376,58 @@ public class Charts {
             data.setyAxisTitle(yAxisTitle);
             data.setCategories(categories);
             data.setSeriesData(series);
+            return data;
+        }
+    }
+
+    /**
+     * builder to build bubble chart
+     */
+    public static class ChartBubbles implements RenderDataBuilder<ChartBubbleRenderData> {
+        private String chartTitle;
+        private String xAxisTitle;
+        private String yAxisTitle;
+        private List<BubbleSeriesRenderData> seriesDatas = new ArrayList<>();
+
+        private ChartBubbles(String chartTitle) {
+            this.chartTitle = chartTitle;
+        }
+
+        public ChartBubbles addSeries(String name, Number[] xValues, Number[] yValues, Number[] bubbleSizes) {
+            seriesDatas.add(new BubbleSeriesRenderData(name, xValues, yValues, bubbleSizes));
+            return this;
+        }
+
+        public ChartBubbles addSeries(BubbleSeriesRenderData series) {
+            seriesDatas.add(series);
+            return this;
+        }
+
+        public ChartBubbles setxAsixTitle(String xAxisTitle) {
+            this.xAxisTitle = xAxisTitle;
+            return this;
+        }
+
+        public ChartBubbles setxAxisTitle(String xAxisTitle) {
+            return setxAsixTitle(xAxisTitle);
+        }
+
+        public ChartBubbles setyAsixTitle(String yAxisTitle) {
+            this.yAxisTitle = yAxisTitle;
+            return this;
+        }
+
+        public ChartBubbles setyAxisTitle(String yAxisTitle) {
+            return setyAsixTitle(yAxisTitle);
+        }
+
+        @Override
+        public ChartBubbleRenderData create() {
+            ChartBubbleRenderData data = new ChartBubbleRenderData();
+            data.setChartTitle(chartTitle);
+            data.setxAxisTitle(xAxisTitle);
+            data.setyAxisTitle(yAxisTitle);
+            data.setSeriesDatas(seriesDatas);
             return data;
         }
     }

@@ -20,20 +20,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xddf.usermodel.XDDFColor;
+import org.apache.poi.xddf.usermodel.XDDFLineProperties;
+import org.apache.poi.xddf.usermodel.XDDFNoFillProperties;
+import org.apache.poi.xddf.usermodel.XDDFSolidFillProperties;
 import org.apache.poi.xddf.usermodel.chart.AxisPosition;
+import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFBubbleChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChart;
 import org.apache.poi.xddf.usermodel.chart.XDDFChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFDataPoint;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFDataSourcesFactory;
+import org.apache.poi.xddf.usermodel.chart.XDDFDoughnutChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
+import org.apache.poi.xddf.usermodel.chart.XDDFPieChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFRadarChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFScatterChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFTable;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTAreaSer;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTAxDataSource;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBarSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTBubbleSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTDLbls;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTLineSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTPieSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTRadarSer;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTScatterSer;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTTitle;
 import org.openxmlformats.schemas.drawingml.x2006.chart.CTTx;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTRegularTextRun;
@@ -162,7 +184,11 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
     }
 
     protected void setAxisTitle(XWPFChart chart, String xAxisTitle, String yAxisTitle) {
-        if (null == xAxisTitle && null == yAxisTitle) return;
+        setAxisTitle(chart, xAxisTitle, yAxisTitle, null);
+    }
+
+    protected void setAxisTitle(XWPFChart chart, String xAxisTitle, String yAxisTitle, String secondaryYAxisTitle) {
+        if (null == xAxisTitle && null == yAxisTitle && null == secondaryYAxisTitle) return;
         Map<Long, XDDFValueAxis> valueAxes = ChartUtils.getValueAxes(chart);
         if (valueAxes.isEmpty()) return;
         for (XDDFValueAxis valueAxe : valueAxes.values()) {
@@ -172,12 +198,145 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
                     valueAxe.setTitle(xAxisTitle);
                 }
             }
-            if (position == AxisPosition.LEFT || position == AxisPosition.RIGHT) {
+            if (position == AxisPosition.LEFT) {
                 if (null != yAxisTitle) {
                     valueAxe.setTitle(yAxisTitle);
                 }
             }
+            if (position == AxisPosition.RIGHT) {
+                if (null != secondaryYAxisTitle) {
+                    valueAxe.setTitle(secondaryYAxisTitle);
+                } else if (null != yAxisTitle) {
+                    valueAxe.setTitle(yAxisTitle);
+                }
+            }
         }
+    }
+
+    protected void applySeriesStyle(XDDFChartData.Series series, SeriesRenderData seriesData) {
+        if (null == series || null == seriesData) return;
+        applySeriesColor(series, seriesData.getColor());
+        applySeriesDataPointColors(series, seriesData.getColors());
+        applySeriesDataLabels(series, seriesData.getShowDataLabels());
+    }
+
+    protected void applySeriesColor(XDDFChartData.Series series, String color) {
+        if (StringUtils.isBlank(color)) return;
+        if ("transparent".equalsIgnoreCase(color) || "none".equalsIgnoreCase(color)) {
+            series.setFillProperties(new XDDFNoFillProperties());
+            if (series instanceof XDDFLineChartData.Series) {
+                XDDFLineProperties lineProps = new XDDFLineProperties();
+                lineProps.setFillProperties(new XDDFNoFillProperties());
+                ((XDDFLineChartData.Series) series).setLineProperties(lineProps);
+            }
+            return;
+        }
+
+        byte[] rgb = parseHexRgb(color);
+        if (null != rgb) {
+            XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(rgb));
+            series.setFillProperties(fill);
+            if (series instanceof XDDFLineChartData.Series) {
+                XDDFLineProperties lineProps = new XDDFLineProperties();
+                lineProps.setFillProperties(fill);
+                ((XDDFLineChartData.Series) series).setLineProperties(lineProps);
+            }
+        }
+    }
+
+    protected void applySeriesDataPointColors(XDDFChartData.Series series, String[] colors) {
+        if (null == colors) return;
+        for (int i = 0; i < colors.length; i++) {
+            String color = colors[i];
+            if (StringUtils.isBlank(color)) continue;
+            XDDFDataPoint dataPoint = series.getDataPoint(i);
+            if (null == dataPoint) continue;
+            if ("transparent".equalsIgnoreCase(color) || "none".equalsIgnoreCase(color)) {
+                dataPoint.setFillProperties(new XDDFNoFillProperties());
+            } else {
+                byte[] rgb = parseHexRgb(color);
+                if (null != rgb) {
+                    dataPoint.setFillProperties(new XDDFSolidFillProperties(XDDFColor.from(rgb)));
+                }
+            }
+        }
+    }
+
+    protected void applySeriesDataLabels(XDDFChartData.Series series, Boolean showDataLabels) {
+        if (null == showDataLabels) return;
+        CTDLbls dLbls = getOrCreateDLbls(series);
+        if (null == dLbls) return;
+        if (Boolean.TRUE.equals(showDataLabels)) {
+            if (dLbls.isSetDelete()) {
+                dLbls.unsetDelete();
+            }
+            if (!dLbls.isSetShowVal()) {
+                dLbls.addNewShowVal();
+            }
+            dLbls.getShowVal().setVal(true);
+        } else {
+            if (!dLbls.isSetDelete()) {
+                dLbls.addNewDelete();
+            }
+            dLbls.getDelete().setVal(true);
+            if (dLbls.isSetShowVal()) {
+                dLbls.getShowVal().setVal(false);
+            }
+        }
+    }
+
+    private CTDLbls getOrCreateDLbls(XDDFChartData.Series series) {
+        if (series instanceof XDDFBarChartData.Series) {
+            CTBarSer s = ((XDDFBarChartData.Series) series).getCTBarSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFLineChartData.Series) {
+            CTLineSer s = ((XDDFLineChartData.Series) series).getCTLineSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFAreaChartData.Series) {
+            CTAreaSer s = ((XDDFAreaChartData.Series) series).getCTAreaSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFPieChartData.Series) {
+            CTPieSer s = ((XDDFPieChartData.Series) series).getCTPieSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFDoughnutChartData.Series) {
+            CTPieSer s = ((XDDFDoughnutChartData.Series) series).getCTPieSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFRadarChartData.Series) {
+            CTRadarSer s = ((XDDFRadarChartData.Series) series).getCTRadarSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFScatterChartData.Series) {
+            CTScatterSer s = ((XDDFScatterChartData.Series) series).getCTScatterSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        } else if (series instanceof XDDFBubbleChartData.Series) {
+            CTBubbleSer s = ((XDDFBubbleChartData.Series) series).getCTBubbleSer();
+            return s.isSetDLbls() ? s.getDLbls() : s.addNewDLbls();
+        }
+        return null;
+    }
+
+    protected byte[] parseHexRgb(String color) {
+        if (StringUtils.isBlank(color)) return null;
+        String hex = color.trim();
+        if (hex.startsWith("#")) {
+            hex = hex.substring(1);
+        }
+        if (hex.length() == 3) {
+            char r = hex.charAt(0);
+            char g = hex.charAt(1);
+            char b = hex.charAt(2);
+            hex = "" + r + r + g + g + b + b;
+        }
+        if (hex.length() == 6) {
+            try {
+                int r = Integer.parseInt(hex.substring(0, 2), 16);
+                int g = Integer.parseInt(hex.substring(2, 4), 16);
+                int b = Integer.parseInt(hex.substring(4, 6), 16);
+                return new byte[] { (byte) r, (byte) g, (byte) b };
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private boolean setCTTitle(CTTitle ctTitle, String title) {

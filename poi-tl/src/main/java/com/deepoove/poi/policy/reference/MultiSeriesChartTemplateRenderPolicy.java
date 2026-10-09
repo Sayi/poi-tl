@@ -16,11 +16,19 @@
 package com.deepoove.poi.policy.reference;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.xml.namespace.QName;
+
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+
+import org.apache.poi.xddf.usermodel.chart.AxisPosition;
 import org.apache.poi.xddf.usermodel.chart.XDDFAreaChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFBarChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFChart;
@@ -30,8 +38,14 @@ import org.apache.poi.xddf.usermodel.chart.XDDFDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFLineChartData;
 import org.apache.poi.xddf.usermodel.chart.XDDFNumericalDataSource;
 import org.apache.poi.xddf.usermodel.chart.XDDFScatterChartData;
+import org.apache.poi.xddf.usermodel.chart.XDDFValueAxis;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xwpf.usermodel.XWPFChart;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTCatAx;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTPlotArea;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTUnsignedInt;
+import org.openxmlformats.schemas.drawingml.x2006.chart.CTValAx;
+import org.openxmlformats.schemas.drawingml.x2006.chart.STAxPos;
 
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.ChartMultiSeriesRenderData;
@@ -39,6 +53,7 @@ import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData.ComboType;
 import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ChartTemplate;
+import com.deepoove.poi.util.ChartUtils;
 import com.deepoove.poi.util.ReflectionUtils;
 
 /**
@@ -55,6 +70,7 @@ public class MultiSeriesChartTemplateRenderPolicy
         XWPFChart chart = eleTemplate.getChart();
         List<XDDFChartData> chartSeries = chart.getChartSeries();
         validate(chartSeries, data);
+        ensureSecondaryAxis(chart, chartSeries, data);
 
         int totalSeriesCount = ensureSeriesCount(chart, chartSeries);
         int valueCol = 1;
@@ -93,6 +109,7 @@ public class MultiSeriesChartTemplateRenderPolicy
                 }
                 String name = currentSeriesData.get(i).getName();
                 currentSeries.setTitle(name, chart.setSheetTitle(name, valueCol));
+                applySeriesStyle(currentSeries, currentSeriesData.get(i));
                 valueCol++;
             }
             // clear extra series
@@ -108,7 +125,96 @@ public class MultiSeriesChartTemplateRenderPolicy
             plot(chart, chartData);
         }
         setTitle(chart, data.getChartTitle());
-        setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle());
+        setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle(), data.getSecondaryYAxisTitle());
+    }
+
+    private void ensureSecondaryAxis(XWPFChart chart, List<XDDFChartData> chartSeries,
+            ChartMultiSeriesRenderData data) {
+        boolean hasSecondarySeries = data.getSeriesDatas().stream().anyMatch(SeriesRenderData::isSecondaryAxis);
+        if (!hasSecondarySeries && null == data.getSecondaryYAxisTitle()) {
+            return;
+        }
+
+        Map<Long, XDDFValueAxis> valueAxes = ChartUtils.getValueAxes(chart);
+        boolean hasRightAxis = valueAxes.values().stream()
+                .anyMatch(ax -> ax.getPosition() == AxisPosition.RIGHT);
+        if (hasRightAxis) {
+            return;
+        }
+
+        if (chartSeries.size() <= 1) {
+            return;
+        }
+
+        for (XDDFChartData chartData : chartSeries) {
+            List<SeriesRenderData> currentSeries = obtainSeriesData(chartData.getClass(), data.getSeriesDatas());
+            boolean containsSecondary = currentSeries.stream().anyMatch(SeriesRenderData::isSecondaryAxis);
+            if (containsSecondary) {
+                attachSecondaryAxis(chart, chartData);
+                break;
+            }
+        }
+    }
+
+    private void attachSecondaryAxis(XWPFChart chart, XDDFChartData chartData) {
+        try {
+            CTPlotArea plotArea = chart.getCTChart().getPlotArea();
+            if (plotArea.sizeOfValAxArray() == 0) return;
+            CTValAx primaryValAx = plotArea.getValAxArray(0);
+
+            long newAxId = primaryValAx.getAxId().getVal() + 1000;
+            while (isAxisIdExists(plotArea, newAxId)) {
+                newAxId++;
+            }
+
+            CTValAx secondaryValAx = plotArea.addNewValAx();
+            secondaryValAx.addNewAxId().setVal(newAxId);
+            secondaryValAx.addNewScaling().addNewOrientation().setVal(primaryValAx.getScaling().getOrientation().getVal());
+            secondaryValAx.addNewAxPos().setVal(STAxPos.R);
+            if (null != primaryValAx.getCrossAx()) {
+                secondaryValAx.addNewCrossAx().setVal(primaryValAx.getCrossAx().getVal());
+            }
+            if (primaryValAx.isSetCrosses()) {
+                secondaryValAx.addNewCrosses().setVal(primaryValAx.getCrosses().getVal());
+            }
+
+            Object ctChart = ReflectionUtils.getValue("chart", chartData);
+            if (ctChart instanceof XmlObject) {
+                XmlCursor cursor = ((XmlObject) ctChart).newCursor();
+                try {
+                    int axIdCount = 0;
+                    if (cursor.toFirstChild()) {
+                        do {
+                            if ("axId".equals(cursor.getName().getLocalPart())) {
+                                axIdCount++;
+                                if (axIdCount == 2) {
+                                    cursor.setAttributeText(new QName("val"), String.valueOf(newAxId));
+                                    break;
+                                }
+                            }
+                        } while (cursor.toNextSibling());
+                    }
+                } finally {
+                    cursor.dispose();
+                }
+            }
+
+            XDDFValueAxis secondaryAxis = new XDDFValueAxis(secondaryValAx);
+            chartData.getValueAxes().clear();
+            chartData.getValueAxes().add(secondaryAxis);
+        } catch (Exception e) {
+            // fallback gracefully
+        }
+    }
+
+    private boolean isAxisIdExists(CTPlotArea plotArea, long id) {
+        for (CTValAx ax : plotArea.getValAxArray()) {
+            if (ax.getAxId().getVal() == id) return true;
+        }
+        for (CTCatAx ax : plotArea.getCatAxArray()) {
+            if (ax.getAxId().getVal() == id) return true;
+        }
+        return false;
     }
 
     protected void processNewSeries(XDDFChartData chartData, Series addSeries) {

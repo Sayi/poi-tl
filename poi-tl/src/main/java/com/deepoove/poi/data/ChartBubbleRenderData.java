@@ -15,25 +15,24 @@
  */
 package com.deepoove.poi.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * multi series chart: Bar(3D), Line(3D), Radar， Area(3D)
+ * Bubble chart render data
  * 
  * @author Sayi
  */
-public class ChartMultiSeriesRenderData implements RenderData {
+public class ChartBubbleRenderData implements RenderData {
 
     private static final long serialVersionUID = 1L;
 
     private String chartTitle;
     private String xAxisTitle;
     private String yAxisTitle;
-    private String secondaryYAxisTitle;
-    private String[] categories;
-    private List<SeriesRenderData> seriesDatas;
+    private List<BubbleSeriesRenderData> seriesDatas = new ArrayList<>();
 
-    public ChartMultiSeriesRenderData() {
+    public ChartBubbleRenderData() {
     }
 
     public String getChartTitle() {
@@ -60,27 +59,11 @@ public class ChartMultiSeriesRenderData implements RenderData {
         this.yAxisTitle = yAxisTitle;
     }
 
-    public String getSecondaryYAxisTitle() {
-        return secondaryYAxisTitle;
-    }
-
-    public void setSecondaryYAxisTitle(String secondaryYAxisTitle) {
-        this.secondaryYAxisTitle = secondaryYAxisTitle;
-    }
-
-    public String[] getCategories() {
-        return categories;
-    }
-
-    public void setCategories(String[] categories) {
-        this.categories = categories;
-    }
-
-    public List<SeriesRenderData> getSeriesDatas() {
+    public List<BubbleSeriesRenderData> getSeriesDatas() {
         return seriesDatas;
     }
 
-    public void setSeriesDatas(List<SeriesRenderData> seriesDatas) {
+    public void setSeriesDatas(List<BubbleSeriesRenderData> seriesDatas) {
         this.seriesDatas = seriesDatas;
     }
 
