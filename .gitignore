@@ -14,7 +14,8 @@ bin/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/target/
+target/
+**/target/
 out*.docx
 out_*
 merge_all
@@ -25,7 +26,9 @@ merge_all
 **/**/mk.md
 complex.docx
 ~$*.docx
-poi-tl-cli/target/
-poi-tl-jsonmodel-support/target/
 poi-tl/.DS_Store
 .DS_Store
+
+# local AI notes, not part of the project
+/ai-docs/
+.flattened-pom.xml
