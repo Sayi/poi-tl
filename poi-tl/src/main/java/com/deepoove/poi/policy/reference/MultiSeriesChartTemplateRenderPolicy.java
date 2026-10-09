@@ -124,6 +124,26 @@ public class MultiSeriesChartTemplateRenderPolicy
     }
 
     private void validate(List<XDDFChartData> chartSeries, ChartMultiSeriesRenderData data) {
+        if (null == data) {
+            throw new RenderException("ChartMultiSeriesRenderData must not be null!");
+        }
+        if (null == data.getCategories()) {
+            throw new RenderException("Categories in chart must not be null!");
+        }
+        if (null == data.getSeriesDatas()) {
+            throw new RenderException("SeriesDatas in chart must not be null!");
+        }
+        int categoryLength = data.getCategories().length;
+        for (SeriesRenderData series : data.getSeriesDatas()) {
+            if (null == series.getValues()) {
+                throw new RenderException(String.format("Values in series [%s] must not be null!", series.getName()));
+            }
+            if (series.getValues().length != categoryLength) {
+                throw new RenderException(String.format(
+                        "The length of categories (%d) and series [%s] values (%d) in chart must be the same!",
+                        categoryLength, series.getName(), series.getValues().length));
+            }
+        }
         // validate combo
         if (chartSeries.size() >= 2) {
             long nullCount = data.getSeriesDatas().stream().filter(d -> null == d.getComboType()).count();

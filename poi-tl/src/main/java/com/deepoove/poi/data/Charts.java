@@ -32,6 +32,10 @@ public class Charts {
         return ofMultiSeries(chartTitle, categories);
     }
 
+    public static ChartMultis ofStackedBar(String chartTitle, String[] categories) {
+        return ofMultiSeries(chartTitle, categories);
+    }
+
     public static ChartMultis ofLine(String chartTitle, String[] categories) {
         return ofMultiSeries(chartTitle, categories);
     }
@@ -40,11 +44,23 @@ public class Charts {
         return ofMultiSeries(chartTitle, categories);
     }
 
+    public static ChartMultis ofStackedArea(String chartTitle, String[] categories) {
+        return ofMultiSeries(chartTitle, categories);
+    }
+
     public static ChartMultis ofBar3D(String chartTitle, String[] categories) {
         return ofMultiSeries(chartTitle, categories);
     }
 
+    public static ChartMultis ofStackedBar3D(String chartTitle, String[] categories) {
+        return ofMultiSeries(chartTitle, categories);
+    }
+
     public static ChartMultis ofArea3D(String chartTitle, String[] categories) {
+        return ofMultiSeries(chartTitle, categories);
+    }
+
+    public static ChartMultis ofStackedArea3D(String chartTitle, String[] categories) {
         return ofMultiSeries(chartTitle, categories);
     }
 

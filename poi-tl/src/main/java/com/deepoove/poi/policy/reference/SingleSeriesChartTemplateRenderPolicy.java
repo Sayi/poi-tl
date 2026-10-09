@@ -26,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.XWPFChart;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.ChartSingleSeriesRenderData;
 import com.deepoove.poi.data.SeriesRenderData;
+import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ChartUtils;
 
@@ -40,6 +41,7 @@ public class SingleSeriesChartTemplateRenderPolicy
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
             throws Exception {
+        validate(data);
         XWPFChart chart = eleTemplate.getChart();
         XDDFChartData pie = ChartUtils.getChartSeries(chart).get(0);
         SeriesRenderData seriesDatas = data.getSeriesData();
@@ -61,6 +63,27 @@ public class SingleSeriesChartTemplateRenderPolicy
         plot(chart, pie);
         setTitle(chart, data.getChartTitle());
         setAxisTitle(chart, data.getxAxisTitle(), data.getyAxisTitle());
+    }
+
+    private void validate(ChartSingleSeriesRenderData data) {
+        if (null == data) {
+            throw new RenderException("ChartSingleSeriesRenderData must not be null!");
+        }
+        if (null == data.getCategories()) {
+            throw new RenderException("Categories in chart must not be null!");
+        }
+        SeriesRenderData seriesData = data.getSeriesData();
+        if (null == seriesData) {
+            throw new RenderException("SeriesData in chart must not be null!");
+        }
+        if (null == seriesData.getValues()) {
+            throw new RenderException(String.format("Values in series [%s] must not be null!", seriesData.getName()));
+        }
+        if (seriesData.getValues().length != data.getCategories().length) {
+            throw new RenderException(String.format(
+                    "The length of categories (%d) and series [%s] values (%d) in chart must be the same!",
+                    data.getCategories().length, seriesData.getName(), seriesData.getValues().length));
+        }
     }
 
 }
