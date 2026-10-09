@@ -15,8 +15,10 @@
  */
 package com.deepoove.poi.data;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -100,6 +102,25 @@ public class Attachments {
         return ofBytes(bytes, null);
     }
 
+    public static GeneralAttachmentBuilder ofGeneral(byte[] bytes, String fileName) {
+        return new GeneralAttachmentBuilder(new GeneralAttachmentRenderData(bytes, fileName));
+    }
+
+    public static GeneralAttachmentBuilder ofGeneral(File file) {
+        Objects.requireNonNull(file, "File must not be null");
+        return ofGeneral(ByteUtils.getLocalByteArray(file), file.getName());
+    }
+
+    public static GeneralAttachmentBuilder ofGeneral(File file, String fileName) {
+        Objects.requireNonNull(file, "File must not be null");
+        return ofGeneral(ByteUtils.getLocalByteArray(file), fileName);
+    }
+
+    public static GeneralAttachmentBuilder ofGeneral(InputStream inputStream, String fileName) {
+        Objects.requireNonNull(inputStream, "InputStream must not be null");
+        return ofGeneral(ByteUtils.toByteArray(inputStream), fileName);
+    }
+
     /**
      * Builder to build {@link AttachmentRenderData}
      *
@@ -112,8 +133,36 @@ public class Attachments {
             this.data = data;
         }
 
+        public AttachmentBuilder icon(PictureRenderData icon) {
+            data.setIcon(icon);
+            return this;
+        }
+
         @Override
         public AttachmentRenderData create() {
+            return data;
+        }
+    }
+
+    /**
+     * Builder to build {@link GeneralAttachmentRenderData}
+     *
+     */
+    public static class GeneralAttachmentBuilder implements RenderDataBuilder<GeneralAttachmentRenderData> {
+
+        GeneralAttachmentRenderData data;
+
+        private GeneralAttachmentBuilder(GeneralAttachmentRenderData data) {
+            this.data = data;
+        }
+
+        public GeneralAttachmentBuilder icon(PictureRenderData icon) {
+            data.setIcon(icon);
+            return this;
+        }
+
+        @Override
+        public GeneralAttachmentRenderData create() {
             return data;
         }
     }
