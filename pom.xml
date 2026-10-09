@@ -53,7 +53,7 @@
 		<slf4j.version>1.7.32</slf4j.version>
 		<commons-lang3.version>3.18.0</commons-lang3.version>
 		<batik.version>1.17</batik.version>
-		<spring-expression.version>5.3.26</spring-expression.version>
+		<spring-expression.version>6.0.8</spring-expression.version>
 		<junit-jupiter.version>5.6.0</junit-jupiter.version>
 		<logback.version>1.2.13</logback.version>
 		<swagger-parser.version>1.0.50</swagger-parser.version>
