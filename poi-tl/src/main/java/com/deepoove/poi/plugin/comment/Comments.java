@@ -16,6 +16,7 @@
 package com.deepoove.poi.plugin.comment;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import com.deepoove.poi.data.DocumentRenderData;
 import com.deepoove.poi.data.Documents;
@@ -70,6 +71,15 @@ public final class Comments {
             comment.setInitials(initials);
             comment.setDate(date);
             return this;
+        }
+
+        public CommentBuilder signature(String author, String initials, Date date) {
+            if (null == date) {
+                return signature(author, initials, (Calendar) null);
+            }
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            return signature(author, initials, calendar);
         }
 
         public CommentBuilder comment(DocumentRenderData content) {

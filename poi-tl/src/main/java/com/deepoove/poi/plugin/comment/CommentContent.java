@@ -17,6 +17,7 @@ package com.deepoove.poi.plugin.comment;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.deepoove.poi.data.DocumentRenderData;
 
@@ -55,6 +56,16 @@ public class CommentContent implements Serializable {
 
     public void setDate(Calendar date) {
         this.date = date;
+    }
+
+    public void setDate(Date date) {
+        if (null == date) {
+            this.date = null;
+        } else {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            this.date = cal;
+        }
     }
 
     public DocumentRenderData getContent() {
