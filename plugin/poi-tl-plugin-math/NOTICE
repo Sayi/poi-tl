@@ -1,0 +1,16 @@
+poi-tl-plugin-math
+Copyright 2014-2026 Sayi
+
+This product includes software developed at The Apache Software Foundation.
+
+The following files are copied verbatim from Apache POI (Apache License 2.0)
+to complete the OMML bindings that poi-ooxml-lite does not ship:
+
+  src/main/java/org/openxmlformats/schemas/officeDocument/x2006/math/**
+      generated from poi-ooxml-full-<version>-sources.jar
+
+  src/main/resources/org/apache/poi/schemas/ooxml/system/ooxml/*.xsb
+      extracted from poi-ooxml-full-<version>.jar
+
+They are unmodified except that only the types missing from poi-ooxml-lite are
+included. See https://poi.apache.org/ for the original project.

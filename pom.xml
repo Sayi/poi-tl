@@ -38,6 +38,7 @@
 		<module>plugin/poi-tl-plugin-highlight</module>
 		<module>plugin/poi-tl-plugin-markdown</module>
 		<module>plugin/poi-tl-plugin-barcode</module>
+		<module>plugin/poi-tl-plugin-math</module>
 		<module>support/poi-tl-jsonmodel-support</module>
 		<module>support/poi-tl-cli</module>
 	</modules>
@@ -113,6 +114,11 @@
 			<dependency>
 				<groupId>com.deepoove</groupId>
 				<artifactId>poi-tl-plugin-barcode</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.deepoove</groupId>
+				<artifactId>poi-tl-plugin-math</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
