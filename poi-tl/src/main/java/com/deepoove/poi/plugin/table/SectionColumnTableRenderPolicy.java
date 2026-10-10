@@ -35,11 +35,29 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.TableTools;
 
 /**
- * 
+ * Marks a table section for deletion when the bound value is false.
+ * <p>
+ * When the data is {@code null} or {@link Boolean#FALSE} the tag is replaced by
+ * the {@code _delete_} marker so that a following
+ * {@link RemoveTableColumnRenderPolicy} can drop the whole column, and the
+ * vertically merged continuation cell in the next row is marked as well. Any other
+ * value clears the tag and keeps the row.
+ * </p>
+ *
  * @author Sayi
  */
 public class SectionColumnTableRenderPolicy implements RenderPolicy {
 
+    /**
+     * Marks the tagged section for deletion when the bound value is false.
+     *
+     * @param eleTemplate the tag that marks the section
+     * @param data        {@code null} or {@code false} to delete the section, any other
+     *                    value keeps it
+     * @param template    the template instance being rendered
+     * @throws RenderException if the tag is not inside a table or the section cannot be
+     *         marked
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;

@@ -28,8 +28,26 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
+/**
+ * Renders a Word simple field in place of the tag.
+ * <p>
+ * The tag value is written as the field instruction, so any field code such as
+ * {@code PAGE} or an equation field can be emitted. The field is built from four
+ * runs (begin, instruction, separate, end) that copy the style of the tag run.
+ * </p>
+ */
 public class SimpleFieldRenderPolicy extends AbstractRenderPolicy<String> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Clears the tag run and surrounds it with the four runs of a simple field whose
+     * instruction is the bound value.
+     * </p>
+     *
+     * @param context the render context holding the target run and the field instruction
+     * @throws Exception if the field runs cannot be inserted
+     */
     @Override
     public void doRender(RenderContext<String> context) throws Exception {
 

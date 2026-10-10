@@ -19,8 +19,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 
- * default el expression
+ * Default EL implementation
+ * <p>
+ * It evaluates a dot expression such as {@code user.name} against a model that
+ * can be a Map or a Java bean, and caches the resolved values.
+ * </p>
  * 
  * @author Sayi
  *
@@ -34,14 +37,31 @@ public class DefaultEL {
     // Same variable reference with SpEL
     private static final String THIS = "#this";
 
+    /**
+     * Create a default EL with the model
+     * 
+     * @param model model data
+     */
     public DefaultEL(Object model) {
         this.model = model;
     }
 
+    /**
+     * Create a default EL with the model
+     * 
+     * @param model model data
+     * @return a new {@link DefaultEL} instance
+     */
     public static DefaultEL create(Object model) {
         return new DefaultEL(model);
     }
 
+    /**
+     * Evaluate the expression against the model
+     * 
+     * @param el expression, {@code #this} refers to the model itself
+     * @return the evaluated value, or null if it cannot be found
+     */
     public Object eval(String el) {
         if (THIS.equals(el)) {
             return model;

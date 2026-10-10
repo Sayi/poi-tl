@@ -19,12 +19,23 @@ import com.deepoove.poi.data.TextRenderData;
 
 /**
  * Convert Object to TextRenderData
+ * <p>
+ * A {@link TextRenderData} is used as is, any other object is converted with
+ * its {@code toString()} value.
+ * </p>
  * 
  * @author Sayi
  *
  */
 public class ObjectToTextRenderDataConverter implements ToRenderDataConverter<Object, TextRenderData> {
 
+    /**
+     * Convert an object to {@link TextRenderData}
+     * 
+     * @param source source object
+     * @return text render data, or null if the source is null
+     * @throws Exception if the conversion fails
+     */
     @Override
     public TextRenderData convert(Object source) throws Exception {
         if (null == source) return null;

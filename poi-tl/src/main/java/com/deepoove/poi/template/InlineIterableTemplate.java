@@ -19,8 +19,21 @@ package com.deepoove.poi.template;
 import com.deepoove.poi.render.processor.Visitor;
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * An {@link IterableTemplate} whose start and end marks live in the same
+ * paragraph.
+ * <p>
+ * Rendering inline keeps the text that surrounds the block, so several loops
+ * can be written inside a single paragraph without breaking its layout.
+ * </p>
+ */
 public class InlineIterableTemplate extends IterableTemplate {
 
+    /**
+     * Creates an inline iterable template with the given start mark.
+     *
+     * @param startMark the run holding the block start tag
+     */
     public InlineIterableTemplate(RunTemplate startMark) {
         super(startMark);
     }

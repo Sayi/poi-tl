@@ -29,17 +29,37 @@ import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
+ * Renders a tag as a list of mixed contents
+ * <p>
+ * Each element of the bound list is rendered in order at the tag position
+ * depending on its type: text, tables, numbering lists and pictures are
+ * supported.
+ * </p>
+ * 
  * @author Sayi
  *
  * @Deprecated use {@link DocumentRenderPolicy} instead
  */
 public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and not empty.
+     * </p>
+     */
     @Override
     protected boolean validate(List<Object> data) {
         return (null != data && !data.isEmpty());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It inserts each element as a paragraph, table, numbering list or picture,
+     * depending on its runtime type.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<List<Object>> context) throws Exception {
         XWPFRun run = context.getRun();
@@ -61,6 +81,12 @@ public class ListRenderPolicy extends AbstractRenderPolicy<List<Object>> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<List<Object>> context) {
         clearPlaceholder(context, true);

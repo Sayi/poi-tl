@@ -41,7 +41,13 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * attachment render
+ * Renders a tag as a file attachment icon
+ * <p>
+ * The attachment bytes are embedded as an OLE object and the icon of the
+ * {@link AttachmentType} is drawn as the visible shape, so that the reader can
+ * open the embedded file from Word. The VML shape type required by the object is
+ * written only once per document.
+ * </p>
  * 
  * @author sayi
  *
@@ -73,16 +79,37 @@ public class AttachmentRenderPolicy extends AbstractRenderPolicy<AttachmentRende
     private static final Set<NiceXWPFDocument> RENDERED_DOCS = Collections
             .synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when the attachment bytes and the file type are present.
+     * </p>
+     */
     @Override
     protected boolean validate(AttachmentRenderData data) {
         return null != data && null != data.readAttachmentData() && null != data.getFileType();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the tag text without removing the paragraph.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<AttachmentRenderData> context) {
         super.clearPlaceholder(context, false);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It embeds the attachment as an OLE object and replaces the run of the tag with
+     * the generated object markup.
+     * </p>
+     * 
+     * @throws Exception when the attachment can not be embedded
+     */
     @Override
     public void doRender(RenderContext<AttachmentRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();

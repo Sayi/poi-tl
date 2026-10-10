@@ -31,13 +31,25 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ChartUtils;
 
 /**
- * single series chart
+ * Render policy of a single-series chart.
+ * <p>
+ * It is used for charts whose template contains exactly one series, such as a
+ * pie, doughnut, line or scatter chart, and replaces that series with the bound
+ * data.
+ * </p>
  * 
  * @author Sayi
  */
 public class SingleSeriesChartTemplateRenderPolicy
         extends AbstractChartTemplateRenderPolicy<ChartSingleSeriesRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is validated first: categories, series and their values must all
+     * be present and have the same length.
+     * </p>
+     */
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartSingleSeriesRenderData data, XWPFTemplate template)
             throws Exception {

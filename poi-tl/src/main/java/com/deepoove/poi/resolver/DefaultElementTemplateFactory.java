@@ -30,15 +30,32 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.CTPictWrapper;
 
 /**
+ * Default factory to create Element template
+ * <p>
+ * It creates the built-in run, picture, pict image and chart templates.
+ * </p>
+ * 
  * @author Sayi
  */
 public class DefaultElementTemplateFactory implements ElementTemplateFactory {
 
+    /**
+     * The empty grammar char, it means the tag has no grammar char
+     */
     public static final char EMPTY_CHAR = '\0';
 
+    /**
+     * Create a default element template factory
+     */
     public DefaultElementTemplateFactory() {
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The grammar char is detected from the first char of the tag.
+     * </p>
+     */
     @Override
     public RunTemplate createRunTemplate(Configure config, String tag, XWPFRun run) {
         RunTemplate template = new RunTemplate();
@@ -60,6 +77,12 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
         return template;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The tag of an embedded picture has no grammar char.
+     * </p>
+     */
     @Override
     public PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic) {
         PictureTemplate template = new PictureTemplate();
@@ -70,6 +93,12 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
         return template;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The tag of a chart has no grammar char.
+     * </p>
+     */
     @Override
     public ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run) {
         ChartTemplate template = new ChartTemplate(tag, chart, run);
@@ -78,6 +107,12 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
         return template;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The tag of a w:pict image has no grammar char.
+     * </p>
+     */
     @Override
     public PictImageTemplate createPictImageTemplate(Configure config, String tag, CTPictWrapper pic, XWPFRun run) {
         PictImageTemplate template = new PictImageTemplate();

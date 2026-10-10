@@ -57,13 +57,27 @@ import com.deepoove.poi.util.ChartUtils;
 import com.deepoove.poi.util.ReflectionUtils;
 
 /**
- * multi series chart
+ * Render policy of a multi-series chart.
+ * <p>
+ * It replaces the series of the chart with the bound data, adds or removes
+ * series as needed and keeps the workbook in sync. A combo chart, where one
+ * series is drawn as bars, areas or lines, and an optional secondary value axis
+ * are supported as well.
+ * </p>
  * 
  * @author Sayi
  */
 public class MultiSeriesChartTemplateRenderPolicy
         extends AbstractChartTemplateRenderPolicy<ChartMultiSeriesRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is validated first; categories and every series must have the
+     * same length, and a combo chart must declare the combo type of each
+     * series.
+     * </p>
+     */
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartMultiSeriesRenderData data, XWPFTemplate template)
             throws Exception {

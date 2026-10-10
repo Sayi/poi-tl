@@ -40,6 +40,11 @@ import com.deepoove.poi.xwpf.RunBodyContext;
 
 /**
  * Running Run algorithm
+ * <p>
+ * A tag may be split across several runs of a paragraph; this class finds the
+ * tag boundaries, merges the runs that hold one tag into a single run and
+ * splits the extra text into new runs.
+ * </p>
  * 
  * @author Sayi
  * @version
@@ -59,6 +64,12 @@ public class RunningRunBody {
 
     List<Pair<RunEdge, RunEdge>> pairs = new ArrayList<>();
 
+    /**
+     * Create a running run body and locate the tag boundaries
+     * 
+     * @param context run body context of the paragraph
+     * @param pattern pattern that matches a whole tag
+     */
     public RunningRunBody(RunBodyContext context, Pattern pattern) {
         this.runBodyContext = context;
         this.runs = context.getRuns();
@@ -83,6 +94,11 @@ public class RunningRunBody {
         return out.toString();
     }
 
+    /**
+     * Refactor the runs so that every tag is held by a single run
+     * 
+     * @return the runs that hold a tag, or null if no tag was found
+     */
     public List<XWPFRun> refactorRun() {
         if (pairs.isEmpty()) return null;
         List<XWPFRun> templateRuns = new ArrayList<XWPFRun>();
@@ -259,6 +275,9 @@ public class RunningRunBody {
         loggerInfo();
     }
 
+    /**
+     * Log the start and end boundary of every resolved tag at debug level
+     */
     public void loggerInfo() {
         for (Pair<RunEdge, RunEdge> runEdges : pairs) {
             LOG.debug("[Start]:" + runEdges.getLeft().toString());

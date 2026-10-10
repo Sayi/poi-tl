@@ -18,8 +18,24 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
 
+/**
+ * Removes the table column that holds the tag.
+ * <p>
+ * The tag marks the column to delete: for every row the cell in that column is
+ * removed and grid span counts are adjusted. When the cell text is the literal
+ * {@code _delete_} the whole row is removed instead, which lets
+ * {@link SectionColumnTableRenderPolicy} mark a section for deletion.
+ * </p>
+ */
 public class RemoveTableColumnRenderPolicy implements RenderPolicy {
 
+    /**
+     * Removes the column that contains the tag from every row.
+     *
+     * @param eleTemplate the tag that marks the column
+     * @param data        the bound data, ignored by this policy
+     * @param template    the template instance being rendered
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;

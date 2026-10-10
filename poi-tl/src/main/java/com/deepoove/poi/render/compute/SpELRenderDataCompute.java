@@ -25,7 +25,12 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
- * Spring expression language compute
+ * Expression evaluator backed by the Spring Expression Language.
+ * <p>
+ * It is enabled through {@code ConfigureBuilder#useSpringEL()}. Besides the
+ * root model, custom SpEL functions can be registered and are callable from
+ * within a tag.
+ * </p>
  * 
  * @author Sayi
  * @since 1.5.0
@@ -37,14 +42,34 @@ public class SpELRenderDataCompute implements RenderDataCompute {
     private EvaluationContext envContext;
     private boolean isStrict;
 
+    /**
+     * Creates a strict evaluator for the given environment model.
+     *
+     * @param model the data model together with its loop environment
+     */
     public SpELRenderDataCompute(EnvModel model) {
         this(model, true);
     }
 
+    /**
+     * Creates an evaluator for the given environment model.
+     *
+     * @param model    the data model together with its loop environment
+     * @param isStrict whether an unresolvable expression must throw instead of
+     *                 resolving to {@code null}
+     */
     public SpELRenderDataCompute(EnvModel model, boolean isStrict) {
         this(model, isStrict, Collections.emptyMap());
     }
 
+    /**
+     * Creates an evaluator with custom SpEL functions.
+     *
+     * @param model        the data model together with its loop environment
+     * @param isStrict     whether an unresolvable expression must throw instead
+     *                     of resolving to {@code null}
+     * @param spELFunction the functions registered under their method name
+     */
     public SpELRenderDataCompute(EnvModel model, boolean isStrict, Map<String, Method> spELFunction) {
         this.isStrict = isStrict;
         this.parser = new SpelExpressionParser();
@@ -57,6 +82,13 @@ public class SpELRenderDataCompute implements RenderDataCompute {
         spELFunction.forEach(((StandardEvaluationContext) context)::registerFunction);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The loop environment is tried first for expressions that do not contain
+     * {@code #this}; when it yields no value, the root model is evaluated.
+     * </p>
+     */
     @Override
     public Object compute(String el) {
         if (null == el || el.trim().isEmpty()) {

@@ -33,12 +33,31 @@ import org.commonmark.node.Paragraph;
 import org.commonmark.node.Text;
 import org.commonmark.parser.Parser;
 
+/**
+ * Markdown render data that reads its content from the file system.
+ * <p>
+ * The configured path may point to a single Markdown file or to a
+ * <a href="https://docsify.js.org/">docsify</a> directory. A directory is
+ * expanded through its {@code _sidebar.md} (or {@code README.md}) so that the
+ * whole documentation is rendered into one document.
+ * </p>
+ */
 public class FileMarkdownRenderData extends MarkdownRenderData {
 
     private static final long serialVersionUID = 1L;
 
     private String path;
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The content is read from {@link #getPath()} instead of being set directly;
+     * a directory is expanded through its {@code _sidebar.md} or
+     * {@code README.md}.
+     * </p>
+     *
+     * @throws RuntimeException when the path cannot be read
+     */
     public String getMarkdown() {
         try {
             return suggest();
@@ -97,10 +116,20 @@ public class FileMarkdownRenderData extends MarkdownRenderData {
 
     }
 
+    /**
+     * Returns the file or directory the Markdown content is read from.
+     *
+     * @return the path
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * Sets the file or directory the Markdown content is read from.
+     *
+     * @param path the path to set
+     */
     public void setPath(String path) {
         this.path = path;
     }

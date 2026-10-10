@@ -37,7 +37,13 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * default render
+ * Default implementation of {@link Render}.
+ * <p>
+ * It resolves the expression evaluator from the configuration, logs the
+ * resolved template tree, renders all templates and finally handles nested
+ * docx templates, which have to be merged after the first pass because they
+ * replace the whole document.
+ * </p>
  * 
  * @author Sayi
  * @since 1.7.0
@@ -49,6 +55,13 @@ public class DefaultRender implements Render {
     public DefaultRender() {
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Any failure is wrapped into a {@link RenderException}, unless it already
+     * is one.
+     * </p>
+     */
     @Override
     public void render(XWPFTemplate template, Object root) {
         Objects.requireNonNull(template, "Template must not be null.");

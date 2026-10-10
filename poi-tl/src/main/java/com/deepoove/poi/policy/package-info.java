@@ -15,7 +15,14 @@
  */
 
 /**
- * 
  * Plugins and functions
+ * <p>
+ * A render policy decides how the value bound to a template tag is written back
+ * into the document, for example plain text, pictures, tables, numbering lists,
+ * paragraphs, nested docx documents or attachments. This package holds the
+ * built-in policies and their static {@code Helper} utilities, while
+ * {@link com.deepoove.poi.policy.reference} holds the chart and reference
+ * policies.
+ * </p>
  */
 package com.deepoove.poi.policy;

@@ -19,7 +19,13 @@ import com.deepoove.poi.exception.ExpressionEvalException;
 import com.deepoove.poi.expression.DefaultEL;
 
 /**
- * default expression compute
+ * Default expression evaluator backed by {@link DefaultEL}.
+ * <p>
+ * Loop variables are resolved against the environment before the root model,
+ * unless the expression explicitly uses {@code #this}. In non-strict mode an
+ * expression that cannot be evaluated resolves to {@code null} instead of
+ * failing the rendering.
+ * </p>
  * 
  * @author Sayi
  */
@@ -29,6 +35,13 @@ public class DefaultELRenderDataCompute implements RenderDataCompute {
     private DefaultEL envObject;
     private boolean isStrict;
 
+    /**
+     * Creates an evaluator for the given environment model.
+     *
+     * @param model    the data model together with its loop environment
+     * @param isStrict whether an unresolvable expression must throw instead of
+     *                 resolving to {@code null}
+     */
     public DefaultELRenderDataCompute(EnvModel model, boolean isStrict) {
         this.elObject = DefaultEL.create(model.getRoot());
         if (null != model.getEnv() && !model.getEnv().isEmpty()) {
@@ -37,6 +50,13 @@ public class DefaultELRenderDataCompute implements RenderDataCompute {
         this.isStrict = isStrict;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The loop environment is tried first for expressions that do not contain
+     * {@code #this}; when it yields no value, the root model is evaluated.
+     * </p>
+     */
     @Override
     public Object compute(String el) {
         try {

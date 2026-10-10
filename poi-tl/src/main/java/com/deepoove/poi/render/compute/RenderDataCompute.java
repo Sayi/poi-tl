@@ -16,8 +16,12 @@
 package com.deepoove.poi.render.compute;
 
 /**
- * 
- * Expression compute
+ * Evaluates the expression written inside a template tag.
+ * <p>
+ * Implementations typically wrap an expression language such as the built-in
+ * {@code DefaultEL} or Spring EL, and turn a tag name into the data bound to
+ * it.
+ * </p>
  * 
  * @author Sayi
  * @since 1.5.0
@@ -25,6 +29,13 @@ package com.deepoove.poi.render.compute;
 @FunctionalInterface
 public interface RenderDataCompute {
 
+    /**
+     * Evaluates one expression against the current data model.
+     *
+     * @param el the expression to evaluate
+     * @return the value bound to the expression, or {@code null} when it cannot
+     *         be resolved
+     */
     Object compute(String el);
 
 }

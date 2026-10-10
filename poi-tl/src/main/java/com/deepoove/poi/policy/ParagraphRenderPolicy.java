@@ -34,35 +34,80 @@ import com.deepoove.poi.util.StyleUtils;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * paragraph render
+ * Renders a tag as a paragraph
+ * <p>
+ * The paragraph of the tag is reused: the contents of the
+ * {@link ParagraphRenderData} are written as runs into it, supporting
+ * {@link TextRenderData}, {@link PictureRenderData} and comment data, and the
+ * paragraph and text styles of the data are applied on top of the inherited
+ * default styles.
+ * </p>
  * 
  * @author Sayi
  *
  */
 public class ParagraphRenderPolicy extends AbstractRenderPolicy<ParagraphRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and has at least one content.
+     * </p>
+     */
     @Override
     protected boolean validate(ParagraphRenderData data) {
         return null != data && !data.getContents().isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the tag text without removing the paragraph.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<ParagraphRenderData> context) {
         clearPlaceholder(context, false);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderParagraph(XWPFRun, ParagraphRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<ParagraphRenderData> context) throws Exception {
         Helper.renderParagraph(context.getRun(), context.getData());
 
     }
 
+    /**
+     * Utilities that fill a paragraph with mixed contents.
+     */
     public static class Helper {
 
+        /**
+         * Renders the contents into the paragraph of the given run.
+         * 
+         * @param run  the run holding the tag
+         * @param data the paragraph render data
+         * @throws Exception when a content can not be rendered
+         */
         public static void renderParagraph(XWPFRun run, ParagraphRenderData data) throws Exception {
             renderParagraph(run, data, null);
         }
 
+        /**
+         * Renders the contents into the paragraph of the given run, applying the
+         * default styles first.
+         * 
+         * @param run                   the run holding the tag
+         * @param data                  the paragraph render data
+         * @param defaultControlStyles the default paragraph styles inherited from the
+         *                              surrounding control, may be {@code null}
+         * @throws Exception when a content can not be rendered
+         */
         public static void renderParagraph(XWPFRun run, ParagraphRenderData data,
                 List<ParagraphStyle> defaultControlStyles) throws Exception {
             List<RenderData> contents = data.getContents();

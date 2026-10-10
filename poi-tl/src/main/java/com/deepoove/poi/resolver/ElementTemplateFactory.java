@@ -28,17 +28,55 @@ import com.deepoove.poi.xwpf.CTPictWrapper;
 
 /**
  * Factory to create Element template
+ * <p>
+ * Implement it to customize how the meta templates(run, picture, pict image and
+ * chart) are created from the resolved tags.
+ * </p>
  * 
  * @author Sayi
  */
 public interface ElementTemplateFactory {
 
+    /**
+     * Create a run template
+     * 
+     * @param config template config
+     * @param tag    tag name
+     * @param run    run that holds the tag
+     * @return run template
+     */
     RunTemplate createRunTemplate(Configure config, String tag, XWPFRun run);
 
+    /**
+     * Create a picture template from an embedded picture
+     * 
+     * @param config template config
+     * @param tag    tag name
+     * @param pic    embedded picture that holds the tag
+     * @return picture template
+     */
     PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic);
 
+    /**
+     * Create a picture template from a w:pict v:imagedata element
+     * 
+     * @param config template config
+     * @param tag    tag name
+     * @param pic    wrapper of the picture element
+     * @param run    run that holds the tag
+     * @return pict image template
+     */
     PictImageTemplate createPictImageTemplate(Configure config, String tag, CTPictWrapper pic, XWPFRun run);
 
+    /**
+     * Create a chart template
+     * 
+     * @param config template config
+     * @param tag    tag name
+     * @param chart  chart that holds the tag
+     * @param run    run that holds the tag
+     * @return chart template
+     */
     ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run);
 
 }

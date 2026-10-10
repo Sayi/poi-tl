@@ -17,8 +17,22 @@ package com.deepoove.poi.config;
 
 import com.deepoove.poi.policy.RenderPolicy;
 
+/**
+ * Castor that casts the render data before rendering
+ * <p>
+ * It can be used to convert the value of a tag to the render data expected by
+ * the bound {@link RenderPolicy}.
+ * </p>
+ */
 public interface PreRenderDataCastor {
 
+    /**
+     * Cast the render data of a tag before rendering
+     * 
+     * @param policy render policy bound to the tag
+     * @param data   original data of the tag
+     * @return the casted data
+     */
     Object preCast(RenderPolicy policy, Object data);
 
 }

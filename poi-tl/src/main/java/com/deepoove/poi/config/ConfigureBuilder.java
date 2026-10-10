@@ -34,6 +34,10 @@ import com.deepoove.poi.util.RegexUtils;
 
 /**
  * Builder to build {@link Configure}
+ * <p>
+ * It customizes the template grammar, the expression language, the render
+ * policies and the render hooks, then builds a {@link Configure} instance.
+ * </p>
  * 
  * @author Sayi
  *
@@ -43,6 +47,9 @@ public class ConfigureBuilder {
     private boolean usedSpringEL;
     private boolean changeRegex;
 
+    /**
+     * Create a builder with a default config
+     */
     ConfigureBuilder() {
         config = new Configure();
     }
@@ -114,75 +121,174 @@ public class ConfigureBuilder {
         return buildGrammarRegex(reg);
     }
 
+    /**
+     * Use Spring Expression Language in strict mode
+     * 
+     * @return this builder
+     */
     public ConfigureBuilder useSpringEL() {
         return useSpringEL(true);
     }
 
+    /**
+     * Use Spring Expression Language
+     * 
+     * @param isStrict whether the expression is parsed in strict mode
+     * @return this builder
+     */
     public ConfigureBuilder useSpringEL(boolean isStrict) {
         usedSpringEL = true;
         return setRenderDataComputeFactory(model -> new SpELRenderDataCompute(model, isStrict));
     }
 
+    /**
+     * Use Spring Expression Language with custom static methods
+     * 
+     * @param spELFunction function name to static method map
+     * @return this builder
+     */
     public ConfigureBuilder useSpringEL(Map<String, Method> spELFunction) {
         usedSpringEL = true;
         return setRenderDataComputeFactory(model -> new SpELRenderDataCompute(model, true, spELFunction));
     }
 
+    /**
+     * Use the default expression language
+     * 
+     * @param isStrict whether the expression is parsed in strict mode
+     * @return this builder
+     */
     public ConfigureBuilder useDefaultEL(boolean isStrict) {
         usedSpringEL = false;
         return setRenderDataComputeFactory(model -> new DefaultELRenderDataCompute(model, isStrict));
     }
 
+    /**
+     * Set the handler of a valid render data error, such as a null or illegal
+     * value
+     * 
+     * @param handler valid error handler
+     * @return this builder
+     */
     public ConfigureBuilder setValidErrorHandler(ValidErrorHandler handler) {
         config.handler = handler;
         return this;
     }
 
+    /**
+     * Set the factory of the render data compute
+     * 
+     * @param renderDataComputeFactory render data compute factory
+     * @return this builder
+     */
     public ConfigureBuilder setRenderDataComputeFactory(RenderDataComputeFactory renderDataComputeFactory) {
         config.renderDataComputeFactory = renderDataComputeFactory;
         return this;
     }
 
+    /**
+     * Set the factory of the element template
+     * 
+     * @param elementTemplateFactory element template factory
+     * @return this builder
+     */
     public ConfigureBuilder setElementTemplateFactory(ElementTemplateFactory elementTemplateFactory) {
         config.elementTemplateFactory = elementTemplateFactory;
         return this;
     }
 
+    /**
+     * Set the castors that cast the render data before rendering
+     * 
+     * @param providers list of pre render data castors
+     * @return this builder
+     */
     public ConfigureBuilder setPreRenderDataCastors(List<PreRenderDataCastor> providers) {
         config.preRenderDataCastors = providers;
         return this;
     }
 
+    /**
+     * Add a castor that casts the render data before rendering
+     * 
+     * @param provider pre render data castor
+     * @return this builder
+     */
     public ConfigureBuilder addPreRenderDataCastor(PreRenderDataCastor provider) {
         config.preRenderDataCastors.add(provider);
         return this;
     }
 
+    /**
+     * Add a grammar plugin bound to a grammar char
+     * 
+     * @param c      grammar char
+     * @param policy render policy of the grammar char
+     * @return this builder
+     */
     public ConfigureBuilder addPlugin(char c, RenderPolicy policy) {
         config.plugin(c, policy);
         return this;
     }
 
+    /**
+     * Add a template plugin bound to a template class
+     * 
+     * @param clazz  template class
+     * @param policy render policy of the template class
+     * @return this builder
+     */
     public ConfigureBuilder addPlugin(Class<? extends MetaTemplate> clazz, RenderPolicy policy) {
         config.plugin(clazz, policy);
         return this;
     }
 
+    /**
+     * Add a chart plugin bound to a chart type
+     * 
+     * @param chartType chart type
+     * @param policy    render policy of the chart type
+     * @return this builder
+     */
     public ConfigureBuilder addPlugin(ChartTypes chartType, RenderPolicy policy) {
         config.plugin(chartType, policy);
         return this;
     }
 
+    /**
+     * Bind a render policy to a tag name
+     * 
+     * @param tagName tag name
+     * @param policy  render policy of the tag name
+     * @return this builder
+     */
     public ConfigureBuilder bind(String tagName, RenderPolicy policy) {
         config.customPolicy(tagName, policy);
         return this;
     }
 
+    /**
+     * Bind a render policy to multiple tag names
+     * 
+     * @param policy   render policy of the tag names
+     * @param tagNames tag names
+     * @return this builder
+     */
     public ConfigureBuilder bind(RenderPolicy policy, String... tagNames) {
         Stream.of(tagNames).forEach(tagName -> config.customPolicy(tagName, policy));
         return this;
     }
 
+    /**
+     * Build the config
+     * <p>
+     * When Spring Expression Language is enabled and the tag regular expression
+     * was not customized, the regular expression is rebuilt from the tag prefix
+     * and suffix.
+     * </p>
+     * 
+     * @return the built {@link Configure} instance
+     */
     public Configure build() {
         if (usedSpringEL && !changeRegex) {
             config.grammarRegex = RegexUtils.createGeneral(config.grammarPrefix, config.grammarSuffix);

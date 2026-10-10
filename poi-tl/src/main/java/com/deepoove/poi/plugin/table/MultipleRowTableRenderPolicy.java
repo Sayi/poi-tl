@@ -31,12 +31,14 @@ import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
 
 /**
- * word模板替换，多行表格复用渲染
+ * Repeats a multi-row block of a table for every element of the bound data.
  * <p>
- * 该插件旨在替换多行表格内容
+ * The tag marks the first cell of a reusable block; the number of template rows is
+ * read from the {@code $(n)} marker inside the tag and the block is copied and
+ * rendered once per element of the {@link Iterable} bound to the tag.
  * </p>
  * <p>
- * 单行表格循环可以使用{@link LoopRowTableRenderPolicy}
+ * For a single-row loop use {@link LoopRowTableRenderPolicy} instead.
  * </p>
  *
  * @author llzero54
@@ -64,10 +66,19 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
 
     private final String suffix;
 
+    /**
+     * Creates a policy with the default {@code [} and {@code ]} delimiters.
+     */
     public MultipleRowTableRenderPolicy() {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, DEFAULT_PREFIX, DEFAULT_SUFFIX);
     }
 
+    /**
+     * Creates a policy with custom tag delimiters.
+     *
+     * @param prefix the tag prefix
+     * @param suffix the tag suffix
+     */
     public MultipleRowTableRenderPolicy(String prefix, String suffix) {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, prefix, suffix);
     }
@@ -79,6 +90,14 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         this.suffix = suffix;
     }
 
+    /**
+     * Expands the template block once per element of the bound {@link Iterable}.
+     *
+     * @param eleTemplate the tag that marks the first template row
+     * @param data        the {@link Iterable} whose items fill the copied blocks
+     * @param template    the template instance being rendered
+     * @throws RenderException if the target is not a table or rendering fails
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         try {
@@ -90,11 +109,11 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
             final XWPFTable table = tagCell.getTableRow().getTable();
             run.setText("", 0);
             TemplateResolver resolver = new TemplateResolver(template.getConfig().copy(prefix, suffix));
-            // 获取模板所在的起始行
+            // the first row of the template block
             int position = getRowIndex(tagCell.getTableRow());
             List<XWPFTableRow> tempRows = getAllTemplateRow(table, position);
             if (null != data && data instanceof Iterable) {
-                // 保存第行模板，以便在后续操作中获取光标
+                // keep the template rows so the cursor can be resolved later
                 final XWPFTableRow firstTempRow = tempRows.get(0);
                 Iterator<?> dataIt = ((Iterable<?>) data).iterator();
                 boolean hasNextData = dataIt.hasNext();
@@ -112,7 +131,7 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
                             throw new RenderException("创建新的表格行失败");
                         }
 
-                        // 光标操作，移动光标到目标行，以便后续的模板渲染
+                        // move the cursor to the target row so the copied row can be rendered
                         XmlCursor newCursor = firstTempRow.getCtRow().newCursor();
                         newCursor.toPrevSibling();
                         XmlObject object = newCursor.getObject();
@@ -140,10 +159,21 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         }
     }
 
+    /**
+     * Collects the template rows that the tag block covers.
+     * <p>
+     * Reads the {@code $(n)} marker from the first cell to decide how many rows form
+     * the block and strips the marker from the cell text.
+     * </p>
+     *
+     * @param table      the table that holds the tag
+     * @param startIndex the index of the first template row
+     * @return the template rows, in document order
+     */
     protected List<XWPFTableRow> getAllTemplateRow(XWPFTable table, int startIndex) {
         List<XWPFTableRow> rows = table.getRows();
         int tempRowNum = DEFAULT_MULTIPLE_ROW_NUM;
-        // 去除模板行数标记 如：$(3)
+        // strip the row count marker such as $(3)
         String text = rows.get(startIndex).getCell(0).getText();
         Matcher matcher = Pattern.compile(regex).matcher(text);
         if (matcher.find()) {
@@ -158,12 +188,26 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         return new Vector<>(rows.subList(startIndex, startIndex + tempRowNum));
     }
 
+    /**
+     * Removes the template rows that were used to render the block.
+     *
+     * @param table      the table to update
+     * @param startIndex the index of the first row to remove
+     * @param size       the number of rows to remove
+     */
     protected void removeTableRow(XWPFTable table, int startIndex, int size) {
         for (int i = 0; i < size; ++i) {
             table.removeRow(startIndex);
         }
     }
 
+    /**
+     * Casts a template to a run template.
+     *
+     * @param template the template to cast
+     * @return the template as a {@link RunTemplate}
+     * @throws ClassCastException if the template is not a run template
+     */
     protected RunTemplate cast2runTemplate(MetaTemplate template) {
         if (!(template instanceof RunTemplate)) {
             throw new ClassCastException("type conversion failed, template is not of type RunTemplate");
@@ -171,12 +215,26 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         return (RunTemplate) template;
     }
 
+    /**
+     * Checks that the tag run sits inside a table.
+     *
+     * @param run     the tag run
+     * @param message the message of the thrown exception
+     * @throws IllegalStateException if the run is {@code null} or outside a table
+     */
     protected void checkTargetIsTable(XWPFRun run, String message) {
         if (Objects.isNull(run) || !TableTools.isInsideTable(run)) {
             throw new IllegalStateException(message);
         }
     }
 
+    /**
+     * Replaces the row at the given index in the POI view and in the XML tree.
+     *
+     * @param table the table to update
+     * @param row   the row to store
+     * @param pos   the row index
+     */
     @SuppressWarnings("unchecked")
     protected void setTableRow(XWPFTable table, XWPFTableRow row, int pos) {
         List<XWPFTableRow> rows = (List<XWPFTableRow>) ReflectionUtils.getValue("tableRows", table);
@@ -184,6 +242,12 @@ public class MultipleRowTableRenderPolicy implements RenderPolicy {
         table.getCTTbl().setTrArray(pos, row.getCtRow());
     }
 
+    /**
+     * Returns the index of the given row in its table.
+     *
+     * @param row the row to locate
+     * @return the zero-based row index
+     */
     protected int getRowIndex(XWPFTableRow row) {
         List<XWPFTableRow> rows = row.getTable().getRows();
         return rows.indexOf(row);

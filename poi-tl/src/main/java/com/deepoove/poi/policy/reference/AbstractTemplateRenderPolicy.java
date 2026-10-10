@@ -20,8 +20,29 @@ import com.deepoove.poi.exception.RenderException;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
+/**
+ * Base class of the render policies that operate on an existing document part.
+ * <p>
+ * Unlike the policies extending
+ * {@link com.deepoove.poi.policy.AbstractRenderPolicy}, these policies render a
+ * template that already exists in the document, such as a chart or a picture,
+ * and replace its content instead of inserting new content at the tag position.
+ * </p>
+ *
+ * @param <E> the element template this policy renders
+ * @param <T> the type of the data bound to the template
+ */
 public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T> implements RenderPolicy {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is cast to the expected type and passed to
+     * {@link #doRender(ElementTemplate, Object, XWPFTemplate)}; a null data
+     * model leaves the template untouched, and any failure is wrapped into a
+     * {@link RenderException}.
+     * </p>
+     */
     @SuppressWarnings("unchecked")
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
@@ -45,6 +66,14 @@ public abstract class AbstractTemplateRenderPolicy<E extends ElementTemplate, T>
 
     }
 
+    /**
+     * Renders the given element template with the given data.
+     *
+     * @param eleTemplate the element template to render
+     * @param data        the data bound to the template
+     * @param template    the template instance being rendered
+     * @throws Exception when rendering fails
+     */
     public abstract void doRender(E eleTemplate, T data, XWPFTemplate template) throws Exception;
 
 }

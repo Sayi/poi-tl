@@ -38,18 +38,47 @@ import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
+/**
+ * Iterable processor for block loops written at paragraph level.
+ * <p>
+ * The body elements between the start and end paragraph are copied once per
+ * element, inserted before the end mark and re-parsed, so that nested tags keep
+ * working through any number of iterations. Numbering definitions are cloned
+ * when needed to keep the list sequence correct.
+ * </p>
+ *
+ * @see InlineIterableProcessor
+ */
 public class IterableProcessor extends AbstractIterableProcessor {
 
+    /**
+     * Creates a processor for paragraph level loops.
+     *
+     * @param template          the template being rendered
+     * @param resolver          the resolver used to re-parse copied content
+     * @param renderDataCompute the expression evaluator of the current data model
+     */
     public IterableProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
     }
 
+    /**
+     * Logs and renders a paragraph level loop.
+     *
+     * @param iterableTemplate the iterable template to render
+     */
     @Override
     public void visit(IterableTemplate iterableTemplate) {
         logger.info("Process iterableTemplate:{}", iterableTemplate);
         super.visit(iterableTemplate);
     }
 
+    /**
+     * Removes the whole block, including the paragraphs between the marks.
+     *
+     * @param iterableTemplate the block to remove
+     * @param bodyContainer    the container holding the block
+     */
     @Override
     protected void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer) {
         XWPFParagraph startParagraph = (XWPFParagraph) iterableTemplate.getStartRun().getParent();
@@ -79,6 +108,13 @@ public class IterableProcessor extends AbstractIterableProcessor {
         }
     }
 
+    /**
+     * Repeats the paragraphs between the marks once per element.
+     *
+     * @param iterableTemplate the block to repeat
+     * @param bodyContainer    the container holding the block
+     * @param compute          the collection to iterate
+     */
     @Override
     protected void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer, Iterable<?> compute) {
         CTP startCtp = ((XWPFParagraph) iterableTemplate.getStartRun().getParent()).getCTP();
@@ -98,6 +134,14 @@ public class IterableProcessor extends AbstractIterableProcessor {
         }
     }
 
+    /**
+     * Copies the block content for one element and renders the copy.
+     *
+     * @param iterable      the block being iterated
+     * @param parentContext the container holding the block
+     * @param context       the positions delimiting the content to copy
+     * @param model         the model of the current element
+     */
     @Override
     public void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model) {
         BodyContainer bodyContainer = (BodyContainer) parentContext;

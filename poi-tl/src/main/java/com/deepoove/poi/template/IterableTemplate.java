@@ -21,8 +21,25 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import com.deepoove.poi.render.processor.Visitor;
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * A block template that renders its nested content more than once.
+ * <p>
+ * It is created for the grammar rules {@code {{?tag}}...{{/tag}}} and
+ * {@code {{tag}}...{{/tag}}}, which stand for conditional blocks and foreach
+ * loops. Whether the block repeats or is simply kept/removed depends on the
+ * bound data: a collection is iterated, an unknown or empty value drops the
+ * block.
+ * </p>
+ *
+ * @see InlineIterableTemplate
+ */
 public class IterableTemplate extends BlockTemplate {
 
+    /**
+     * Creates an iterable template with the given start mark.
+     *
+     * @param startMark the run holding the block start tag
+     */
     public IterableTemplate(RunTemplate startMark) {
         super(startMark);
     }
@@ -32,6 +49,17 @@ public class IterableTemplate extends BlockTemplate {
         visitor.visit(this);
     }
 
+    /**
+     * Converts this template to an {@link InlineIterableTemplate} when its start
+     * and end marks live in the same paragraph.
+     * <p>
+     * The inline form can be rendered without copying whole paragraphs, which
+     * preserves the surrounding text when the loop is written inline.
+     * </p>
+     *
+     * @return an inline iterable template when both marks share a parent,
+     *         otherwise this instance
+     */
     public IterableTemplate buildIfInline() {
         XWPFRun startRun = startMark.getRun();
         XWPFRun endRun = endMark.getRun();

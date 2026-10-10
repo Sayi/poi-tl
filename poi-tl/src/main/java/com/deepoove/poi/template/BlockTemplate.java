@@ -23,6 +23,14 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * A meta template that spans a block of the document.
+ * <p>
+ * A block template is delimited by a start mark and an end mark and owns the
+ * meta templates nested between them. Subclasses such as
+ * {@link IterableTemplate} render the enclosed content repeatedly.
+ * </p>
+ */
 public abstract class BlockTemplate implements MetaTemplate {
 
     protected RunTemplate startMark;
@@ -33,43 +41,94 @@ public abstract class BlockTemplate implements MetaTemplate {
      */
     protected List<MetaTemplate> templates = new ArrayList<MetaTemplate>();
 
+    /**
+     * Creates a block template delimited by the given start mark.
+     *
+     * @param startMark the run holding the block start tag
+     */
     public BlockTemplate(RunTemplate startMark) {
         this.startMark = startMark;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The variable name of a block template is the one of its start mark.
+     * </p>
+     */
     @Override
     public String variable() {
         return startMark.variable();
     }
 
+    /**
+     * Returns the run holding the block start tag.
+     *
+     * @return the start mark
+     */
     public RunTemplate getStartMark() {
         return startMark;
     }
 
+    /**
+     * Returns the run holding the block start tag.
+     *
+     * @return the start run
+     */
     public XWPFRun getStartRun() {
         return startMark.getRun();
     }
 
+    /**
+     * Sets the run holding the block start tag.
+     *
+     * @param startMark the start mark
+     */
     public void setStartMark(RunTemplate startMark) {
         this.startMark = startMark;
     }
 
+    /**
+     * Returns the run holding the block end tag.
+     *
+     * @return the end mark
+     */
     public RunTemplate getEndMark() {
         return endMark;
     }
 
+    /**
+     * Returns the run holding the block end tag.
+     *
+     * @return the end run
+     */
     public XWPFRun getEndRun() {
         return endMark.getRun();
     }
 
+    /**
+     * Sets the run holding the block end tag.
+     *
+     * @param endMark the end mark
+     */
     public void setEndMark(RunTemplate endMark) {
         this.endMark = endMark;
     }
 
+    /**
+     * Returns the meta templates nested inside this block.
+     *
+     * @return the nested meta templates
+     */
     public List<MetaTemplate> getTemplates() {
         return templates;
     }
 
+    /**
+     * Sets the meta templates nested inside this block.
+     *
+     * @param templates the nested meta templates
+     */
     public void setTemplates(List<MetaTemplate> templates) {
         this.templates = templates;
     }

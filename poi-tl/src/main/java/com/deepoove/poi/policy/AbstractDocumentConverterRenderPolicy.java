@@ -20,27 +20,55 @@ import com.deepoove.poi.data.DocumentRenderData;
 import com.deepoove.poi.render.RenderContext;
 
 /**
- * Use document renderer policy render type <T>
+ * Base class of a render policy that renders a value of type {@code T} as a
+ * document.
+ * <p>
+ * The subclass supplies a {@link ToRenderDataConverter} that maps the bound value
+ * to {@link DocumentRenderData}, and the converted contents are inserted by
+ * {@link DocumentRenderPolicy.Helper#renderDocument}.
+ * </p>
  * 
  * @author Sayi
  *
- * @param <T>
+ * @param <T> the type of the data bound to the tag
  */
 public abstract class AbstractDocumentConverterRenderPolicy<T> extends AbstractRenderPolicy<T> {
 
     protected final ToRenderDataConverter<T, DocumentRenderData> documentConverter;
 
+    /**
+     * Returns the converter used to turn the bound value into document render data.
+     * 
+     * @return the document render data converter
+     */
     public abstract ToRenderDataConverter<T, DocumentRenderData> getDocumentRenderDataConverter();
 
+    /**
+     * Creates the policy and resolves its converter through
+     * {@link #getDocumentRenderDataConverter()}.
+     */
     public AbstractDocumentConverterRenderPolicy() {
         this.documentConverter = getDocumentRenderDataConverter();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<T> context) {
         super.clearPlaceholder(context, true);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It converts the data and inserts the resulting contents with
+     * {@link DocumentRenderPolicy.Helper#renderDocument}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<T> context) throws Exception {
         DocumentRenderPolicy.Helper.renderDocument(context.getRun(), documentConverter.convert(context.getData()));

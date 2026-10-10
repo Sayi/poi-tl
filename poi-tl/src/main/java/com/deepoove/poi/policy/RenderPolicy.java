@@ -20,6 +20,11 @@ import com.deepoove.poi.template.ElementTemplate;
 
 /**
  * Do Anything Anywhere
+ * <p>
+ * A render policy expands the tag of a template with the data bound to it. The
+ * interface is functional, so a policy can be supplied as a lambda and
+ * registered through {@link com.deepoove.poi.config.Configure}.
+ * </p>
  * 
  * @author Sayi
  * @version 0.0.1
@@ -28,6 +33,8 @@ import com.deepoove.poi.template.ElementTemplate;
 public interface RenderPolicy {
 
     /**
+     * Renders the data bound to a template tag.
+     * 
      * @param eleTemplate template tag
      * @param data        render data
      * @param template    XWPFTemplate instance

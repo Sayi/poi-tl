@@ -39,8 +39,23 @@ import com.deepoove.poi.util.TableTools;
  */
 public abstract class DynamicTableRenderPolicy extends AbstractRenderPolicy<Object> {
 
+    /**
+     * Renders the data into the table that contains the tag.
+     * 
+     * @param table the table containing the tag
+     * @param data  the data bound to the tag
+     * @throws Exception when the table can not be rendered
+     */
     public abstract void render(XWPFTable table, Object data) throws Exception;
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It resolves the table that contains the tag and delegates to
+     * {@link #render(XWPFTable, Object)}. The tag must be placed inside a table,
+     * otherwise an {@link IllegalStateException} is thrown.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<Object> context) throws Exception {
         RunTemplate runTemplate = (RunTemplate) context.getEleTemplate();

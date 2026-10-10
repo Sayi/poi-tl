@@ -26,12 +26,29 @@ import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * Skeleton {@link Visitor} that carries the state shared by all template
+ * processors.
+ * <p>
+ * It holds the template being rendered, the resolver used to re-parse copied
+ * content and the expression evaluator that provides the data model. The
+ * {@code visit} methods default to {@link #visitOther(MetaTemplate)}, so
+ * subclasses only need to override the template kinds they care about.
+ * </p>
+ */
 public abstract class DefaultTemplateProcessor implements Visitor {
 
     protected XWPFTemplate template;
     protected final RenderDataCompute renderDataCompute;
     protected final Resolver resolver;
 
+    /**
+     * Creates a processor bound to the given render state.
+     *
+     * @param template          the template being rendered
+     * @param resolver          the resolver used to re-parse copied content
+     * @param renderDataCompute the expression evaluator of the current data model
+     */
     public DefaultTemplateProcessor(XWPFTemplate template, final Resolver resolver,
             final RenderDataCompute renderDataCompute) {
         this.template = template;
@@ -69,6 +86,14 @@ public abstract class DefaultTemplateProcessor implements Visitor {
         visitOther(iterableTemplate);
     }
 
+    /**
+     * Handles any template kind that a subclass does not override.
+     * <p>
+     * The default implementation does nothing.
+     * </p>
+     *
+     * @param template the template to handle
+     */
     protected void visitOther(MetaTemplate template) {
         // no-op
     }

@@ -18,8 +18,21 @@ package com.deepoove.poi.policy.reference;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.template.ChartTemplate;
 
+/**
+ * Default render policy of a chart template, which keeps the chart as it is.
+ * <p>
+ * It is used when the chart of the template is not bound to any data, so the
+ * chart defined in the template is preserved in the output document.
+ * </p>
+ */
 public class DefaultChartTemplateRenderPolicy extends AbstractChartTemplateRenderPolicy<Object> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * This implementation does nothing on purpose.
+     * </p>
+     */
     @Override
     public void doRender(ChartTemplate eleTemplate, Object data, XWPFTemplate template) throws Exception {
         // no-op

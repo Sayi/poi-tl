@@ -40,7 +40,14 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 /**
- * picture render
+ * Renders a tag as a picture
+ * <p>
+ * It converts the bound value into {@link PictureRenderData} and inserts the
+ * image into the run of the tag. SVG data is converted to PNG, the picture is
+ * sized from its {@link PictureStyle} and, when no size is set, the original size
+ * or the {@code FIT} width scale pattern is applied. When rendering fails, the
+ * alt text of the data is written instead.
+ * </p>
  *
  * @author Sayi
  */
@@ -48,26 +55,58 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
 
     private static ToRenderDataConverter<Object, PictureRenderData> converter = new ObjectToPictureRenderDataConverter();
 
+    /**
+     * Converts the bound value into picture render data.
+     * 
+     * @param source the value bound to the tag
+     * @return the converted picture render data
+     * @throws Exception when the conversion fails
+     */
     @Override
     public PictureRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null}.
+     * </p>
+     */
     @Override
     protected boolean validate(PictureRenderData data) {
         return null != data;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderPicture(XWPFRun, PictureRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<PictureRenderData> context) throws Exception {
         Helper.renderPicture(context.getRun(), context.getData());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the tag text without removing the paragraph that holds the picture.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<PictureRenderData> context) {
         clearPlaceholder(context, false);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Instead of failing the rendering, it writes the alt text of the data into the
+     * run.
+     * </p>
+     */
     @Override
     protected void reThrowException(RenderContext<PictureRenderData> context, Exception e) {
         logger.info("Render picture " + context.getEleTemplate() + " error: {}", e.getMessage());
@@ -75,7 +114,17 @@ public class PictureRenderPolicy extends AbstractRenderPolicy<PictureRenderData>
         context.getRun().setText(alt, 0);
     }
 
+    /**
+     * Utilities that insert pictures into a Word run.
+     */
     public static class Helper {
+        /**
+         * Inserts the picture into the given run.
+         * 
+         * @param run     the run to write into
+         * @param picture the picture render data
+         * @throws Exception when the picture can not be read, converted or inserted
+         */
         public static void renderPicture(XWPFRun run, PictureRenderData picture) throws Exception {
             byte[] imageBytes = picture.readPictureData();
             if (null == imageBytes) {

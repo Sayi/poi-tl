@@ -41,8 +41,23 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import com.deepoove.poi.xwpf.IdenifierManagerWrapper;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
+/**
+ * Repairs drawing references inside copied content.
+ * <p>
+ * When the content of a template is copied, every drawing keeps the
+ * {@code docPr} id and the chart relationship id of the original. Word requires
+ * those ids to be unique, so this helper reserves new {@code docPr} ids and
+ * rebinds charts to a fresh data part after a copy.
+ * </p>
+ */
 public class DrawingSupport {
 
+    /**
+     * Refreshes the drawing ids of every paragraph in the table, including
+     * nested tables.
+     *
+     * @param table the table to walk through
+     */
     public static void updateDocPrId(XWPFTable table) {
         List<XWPFTableRow> rows = table.getRows();
         rows.forEach(row -> {
@@ -54,15 +69,35 @@ public class DrawingSupport {
         });
     }
 
+    /**
+     * Refreshes the drawing ids of every run in the paragraph.
+     *
+     * @param paragraph the paragraph to walk through
+     */
     public static void updateDocPrId(XWPFParagraph paragraph) {
         updateDocPrId(paragraph.getRuns());
 
     }
 
+    /**
+     * Refreshes the drawing ids of every given run.
+     *
+     * @param runs the runs to walk through
+     */
     public static void updateDocPrId(List<XWPFRun> runs) {
         runs.forEach(DrawingSupport::updateDocPrId);
     }
 
+    /**
+     * Refreshes the drawing ids of one run.
+     * <p>
+     * Both the inline and the anchor drawings are processed, and charts are
+     * rebound to a new data part so that the copy does not share its data with
+     * the original.
+     * </p>
+     *
+     * @param run the run to walk through
+     */
     public static void updateDocPrId(XWPFRun run) {
         NiceXWPFDocument document = (NiceXWPFDocument) run.getDocument();
         if (!document.getDocPrIdenifierManager().isValid()) return;

@@ -22,10 +22,24 @@ import java.lang.reflect.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Find the read method of a property with the JavaBeans introspector
+ * <p>
+ * It is used by the default expression language to read a property from a Java
+ * bean.
+ * </p>
+ */
 class ReadMethodFinder {
 
     private static Logger logger = LoggerFactory.getLogger(ReadMethodFinder.class);
 
+    /**
+     * Find the read method of a property
+     * 
+     * @param objClass class of the object
+     * @param key      property name
+     * @return the read method, or null if the property has no read method
+     */
     public static Method find(Class<?> objClass, String key) {
         try {
             PropertyDescriptor propDesc = new PropertyDescriptor(key, objClass);

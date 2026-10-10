@@ -36,18 +36,44 @@ import com.deepoove.poi.xwpf.ParentContext;
 import com.deepoove.poi.xwpf.RunBodyContext;
 import com.deepoove.poi.xwpf.RunBodyContextFactory;
 
+/**
+ * Iterable processor for inline loops whose marks share a single paragraph.
+ * <p>
+ * Only the runs between the two marks are copied, which keeps the text
+ * surrounding the loop intact. This allows several loops to be written inside
+ * one paragraph without breaking its layout.
+ * </p>
+ */
 public class InlineIterableProcessor extends AbstractIterableProcessor {
 
+    /**
+     * Creates a processor for inline loops.
+     *
+     * @param template          the template being rendered
+     * @param resolver          the resolver used to re-parse copied content
+     * @param renderDataCompute the expression evaluator of the current data model
+     */
     public InlineIterableProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
     }
 
+    /**
+     * Logs and renders an inline loop.
+     *
+     * @param iterableTemplate the inline iterable template to render
+     */
     @Override
     public void visit(InlineIterableTemplate iterableTemplate) {
         logger.info("Process InlineIterableTemplate:{}", iterableTemplate);
         super.visit((IterableTemplate) iterableTemplate);
     }
 
+    /**
+     * Removes the runs between the marks, leaving the rest of the paragraph.
+     *
+     * @param iterableTemplate the block to remove
+     * @param bodyContainer    the container holding the block
+     */
     @Override
     protected void handleNever(IterableTemplate iterableTemplate, BodyContainer bodyContainer) {
         RunBodyContext parentContext = RunBodyContextFactory.getRunBodyContext(iterableTemplate);
@@ -60,6 +86,13 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
         }
     }
 
+    /**
+     * Repeats the runs between the marks once per element.
+     *
+     * @param iterableTemplate the block to repeat
+     * @param bodyContainer    the container holding the block
+     * @param compute          the collection to iterate
+     */
     @Override
     protected void handleIterable(IterableTemplate iterableTemplate, BodyContainer bodyContainer, Iterable<?> compute) {
         RunTemplate start = iterableTemplate.getStartMark();
@@ -78,6 +111,14 @@ public class InlineIterableProcessor extends AbstractIterableProcessor {
         }
     }
 
+    /**
+     * Copies the runs of the block for one element and renders the copy.
+     *
+     * @param iterable      the block being iterated
+     * @param parentContext the paragraph context holding the runs
+     * @param context       the run positions delimiting the content to copy
+     * @param model         the model of the current element
+     */
     @Override
     public void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model) {
         RunBodyContext paragraphContext = (RunBodyContext) parentContext;

@@ -33,7 +33,13 @@ import com.deepoove.poi.util.TableTools;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * text render policy
+ * Renders a tag as text
+ * <p>
+ * It converts the bound value into {@link TextRenderData} and writes it into the
+ * run of the tag. Hyperlink data produces a hyperlink run and bookmark data adds
+ * a bookmark, while line breaks inside the text become carriage returns or, when
+ * the tag is inside a table, text wrapping breaks.
+ * </p>
  * 
  * @author Sayi
  *
@@ -42,25 +48,61 @@ public class TextRenderPolicy extends AbstractRenderPolicy<TextRenderData> {
 
     private static ToRenderDataConverter<Object, TextRenderData> converter = new ObjectToTextRenderDataConverter();
 
+    /**
+     * Converts the bound value into text render data.
+     * 
+     * @param source the value bound to the tag
+     * @return the converted text render data
+     * @throws Exception when the conversion fails
+     */
     @Override
     public TextRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null}.
+     * </p>
+     */
     @Override
     protected boolean validate(TextRenderData data) {
         return null != data;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderTextRun(XWPFRun, TextRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<TextRenderData> context) throws Exception {
         Helper.renderTextRun(context.getRun(), context.getData());
     }
 
+    /**
+     * Utilities that write text into a Word run.
+     */
     public static class Helper {
 
+        /**
+         * Regex matching the line separator characters of a text.
+         */
         public static final String REGEX_LINE_CHARACTOR = "\\n|(\\r\\n)";
 
+        /**
+         * Writes the text of the data into the given run.
+         * <p>
+         * The run is styled with the style of the data, the text is split on line
+         * separators, and hyperlink or bookmark data is materialized as Word hyperlink
+         * or bookmark markup.
+         * </p>
+         * 
+         * @param run  the run to write into
+         * @param data the text render data
+         */
         public static void renderTextRun(XWPFRun run, TextRenderData data) {
             XWPFRun textRun = run;
             if (data instanceof HyperlinkTextRenderData) {

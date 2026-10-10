@@ -22,6 +22,10 @@ import com.deepoove.poi.data.style.Style;
 
 /**
  * Convert ParagraphRenderData to DocumentRenderData
+ * <p>
+ * A new paragraph is started at every newline of the text; when line numbers
+ * are enabled, the line number is prepended to each paragraph.
+ * </p>
  * 
  * @author Sayi
  *
@@ -29,18 +33,41 @@ import com.deepoove.poi.data.style.Style;
 public class ParagraphToDocumentRenderDataConverter
         implements ToRenderDataConverter<ParagraphRenderData, DocumentRenderData> {
 
+    /**
+     * Whether the line number is shown at the beginning of each paragraph
+     */
     protected final boolean SHOW_LINE;
+
+    /**
+     * The number of the first line
+     */
     protected final int FIRST_LINE;
 
+    /**
+     * Create a converter without line numbers
+     */
     public ParagraphToDocumentRenderDataConverter() {
         this(false);
     }
 
+    /**
+     * Create a converter
+     * 
+     * @param showLine whether the line number is shown at the beginning of each
+     *                 paragraph
+     */
     public ParagraphToDocumentRenderDataConverter(boolean showLine) {
         SHOW_LINE = showLine;
         FIRST_LINE = 1;
     }
 
+    /**
+     * Convert a paragraph to a document
+     * 
+     * @param para paragraph render data
+     * @return document render data
+     * @throws Exception if the conversion fails
+     */
     @Override
     public DocumentRenderData convert(ParagraphRenderData para) throws Exception {
         int line = FIRST_LINE;

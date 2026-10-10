@@ -168,6 +168,14 @@ final class ControlHelper {
         }
     }
 
+    /**
+     * Fills a checkbox content control.
+     *
+     * @param sdt       the run-level content control to fill
+     * @param data      the checkbox model
+     * @param source    the tag run whose style is copied
+     * @param paragraph the paragraph that owns the control
+     */
     static void renderCheckBox(CTSdtRun sdt, CheckBoxControlRenderData data, CTR source, XWPFParagraph paragraph) {
         CTSdtPr pr = sdt.addNewSdtPr();
         initCommon(pr, data);
@@ -182,6 +190,14 @@ final class ControlHelper {
         setText(content, glyph(data.isChecked() ? checkedHex : uncheckedHex, data));
     }
 
+    /**
+     * Fills a drop-down or combo-box content control.
+     *
+     * @param sdt       the run-level content control to fill
+     * @param data      the drop-down model
+     * @param source    the tag run whose style is copied
+     * @param paragraph the paragraph that owns the control
+     */
     static void renderDropDown(CTSdtRun sdt, DropDownControlRenderData data, CTR source, XWPFParagraph paragraph) {
         CTSdtPr pr = sdt.addNewSdtPr();
         initCommon(pr, data);
@@ -196,6 +212,18 @@ final class ControlHelper {
         setText(content, shown);
     }
 
+    /**
+     * Fills a date picker content control.
+     * <p>
+     * When no date is set the placeholder text is shown instead of the generation
+     * timestamp.
+     * </p>
+     *
+     * @param sdt       the run-level content control to fill
+     * @param data      the date model
+     * @param source    the tag run whose style is copied
+     * @param paragraph the paragraph that owns the control
+     */
     static void renderDate(CTSdtRun sdt, DateControlRenderData data, CTR source, XWPFParagraph paragraph) {
         CTSdtPr pr = sdt.addNewSdtPr();
         initCommon(pr, data);

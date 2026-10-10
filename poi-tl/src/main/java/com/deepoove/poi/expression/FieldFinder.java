@@ -22,7 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Find field based on field name or annotation @Name
+ * Find field based on field name or annotation {@link Name}
+ * <p>
+ * The declared fields of a class are cached, and a field can be found by its
+ * own name or by the value of its {@link Name} annotation.
+ * </p>
  * 
  * @author Sayi
  *

@@ -28,9 +28,25 @@ import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.util.ReflectionUtils;
 
+/**
+ * Default render policy that replaces the picture of a
+ * {@link PictureTemplate} with the bound picture data.
+ * <p>
+ * The existing drawing is kept, including its size and position, and only the
+ * image relationship is exchanged. Pictures inside a header or footer are
+ * registered on that part instead of the main document.
+ * </p>
+ */
 public class DefaultPictureTemplateRenderPolicy
         extends AbstractTemplateRenderPolicy<PictureTemplate, PictureRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * When the picture data carries no type, the type is guessed from the image
+     * bytes.
+     * </p>
+     */
     @Override
     public void doRender(PictureTemplate pictureTemplate, PictureRenderData data, XWPFTemplate template)
             throws Exception {

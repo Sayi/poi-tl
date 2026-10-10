@@ -21,8 +21,26 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import com.deepoove.poi.policy.AbstractRenderPolicy;
 import com.deepoove.poi.render.RenderContext;
 
+/**
+ * Inserts a page break where the tag sits.
+ * <p>
+ * Accepts a {@link Boolean}: when the value is {@code true} a page break is added
+ * after the placeholder is cleared, otherwise the tag is simply removed. Use it to
+ * start a new printed page conditionally.
+ * </p>
+ */
 public class PaginationRenderPolicy extends AbstractRenderPolicy<Boolean> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Clears the placeholder and adds a page break when the bound value is
+     * {@code Boolean.TRUE}.
+     * </p>
+     *
+     * @param context the render context holding the target run and the boolean flag
+     * @throws Exception if the break cannot be added
+     */
     @Override
     public void doRender(RenderContext<Boolean> context) throws Exception {
         XWPFRun run = context.getRun();

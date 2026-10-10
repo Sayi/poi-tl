@@ -32,21 +32,46 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
  * Nested/Merge/Include/Reference docx render
+ * <p>
+ * The merged document is inserted at the tag position. When the data carries a
+ * list of data models, the document is compiled and rendered once per model and
+ * every rendered instance is merged in turn, which supports repeating includes
+ * and iterating over a collection.
+ * </p>
  * 
  * @author Sayi
  */
 public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and provides a merged document.
+     * </p>
+     */
     @Override
     protected boolean validate(DocxRenderData data) {
         return null != data && null != data.getMergedDoc();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the tag text before the merged document replaces the position.
+     * </p>
+     */
     @Override
     protected void beforeRender(RenderContext<DocxRenderData> context) {
         clearPlaceholder(context, false);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It merges one rendered instance of the document per data model into the
+     * current document and reloads the template.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<DocxRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
@@ -56,6 +81,10 @@ public class DocxRenderPolicy extends AbstractRenderPolicy<DocxRenderData> {
     }
 
     // use iterator to retrieve XWPFTemplate objects, for gc
+    /**
+     * Lazily creates one {@link NiceXWPFDocument} per data model, so that the
+     * rendered documents can be collected one by one during the merge.
+     */
     class XWPFDocumentIterator implements Iterator<NiceXWPFDocument> {
 
         private Configure config;

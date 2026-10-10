@@ -45,7 +45,13 @@ import com.deepoove.poi.util.ReflectionUtils;
 import com.deepoove.poi.util.TableTools;
 
 /**
- * Hack for loop table row
+ * Repeats one table row for every element of the bound data.
+ * <p>
+ * The tag sits in the row that acts as the template; that row is duplicated once
+ * per element of the {@link Iterable} bound to the tag and the template row is
+ * removed afterwards. The default tag prefix and suffix are {@code [} and
+ * {@code ]}.
+ * </p>
  * 
  * @author Sayi
  */
@@ -55,24 +61,56 @@ public class LoopRowTableRenderPolicy implements RenderPolicy {
     private String suffix;
     private boolean onSameLine;
 
+    /**
+     * Creates a policy with the default {@code [} and {@code ]} delimiters where the
+     * template row follows the tag row.
+     */
     public LoopRowTableRenderPolicy() {
         this(false);
     }
 
+    /**
+     * Creates a policy with the default delimiters, choosing whether the tag shares
+     * the template row.
+     *
+     * @param onSameLine {@code true} when the tag sits in the template row itself
+     */
     public LoopRowTableRenderPolicy(boolean onSameLine) {
         this("[", "]", onSameLine);
     }
 
+    /**
+     * Creates a policy with custom tag delimiters where the template row follows the
+     * tag row.
+     *
+     * @param prefix the tag prefix
+     * @param suffix the tag suffix
+     */
     public LoopRowTableRenderPolicy(String prefix, String suffix) {
         this(prefix, suffix, false);
     }
 
+    /**
+     * Creates a policy with custom tag delimiters.
+     *
+     * @param prefix     the tag prefix
+     * @param suffix     the tag suffix
+     * @param onSameLine {@code true} when the tag sits in the template row itself
+     */
     public LoopRowTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
         this.prefix = prefix;
         this.suffix = suffix;
         this.onSameLine = onSameLine;
     }
 
+    /**
+     * Expands the tag row once per element of the bound {@link Iterable}.
+     *
+     * @param eleTemplate the tag that marks the template row
+     * @param data        the {@link Iterable} whose items fill the new rows
+     * @param template    the template instance being rendered
+     * @throws RenderException if the tag is not inside a table
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         RunTemplate runTemplate = (RunTemplate) eleTemplate;
@@ -148,6 +186,13 @@ public class LoopRowTableRenderPolicy implements RenderPolicy {
         return onSameLine ? getRowIndex(tagRow) : (getRowIndex(tagRow) + 1);
     }
 
+    /**
+     * Hook invoked after the loop has been expanded, for subclasses that need to
+     * adjust the table.
+     *
+     * @param table the table that was rendered
+     * @param data  the data bound to the tag
+     */
     protected void afterloop(XWPFTable table, Object data) {
     }
 

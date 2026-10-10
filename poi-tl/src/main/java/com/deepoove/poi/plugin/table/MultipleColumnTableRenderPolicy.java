@@ -40,12 +40,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * word模板替换，多列表格复用渲染
+ * Repeats a multi-column block of a table for every element of the bound data.
  * <p>
- * 该插件旨在替换多列表格内容
+ * The tag marks the first cell of a reusable block; the number of template columns
+ * is read from the {@code $(n)} marker inside the tag and the block is copied and
+ * rendered once per element of the {@link Iterable} bound to the tag.
  * </p>
  * <p>
- * 单列表格循环可以使用{@link LoopColumnTableRenderPolicy}
+ * For a single-column loop use {@link LoopColumnTableRenderPolicy} instead.
  * </p>
  *
  * @author show1999
@@ -74,14 +76,31 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
 
     private final boolean onSameLine;
 
+    /**
+     * Creates a policy with default delimiters where the template block follows the
+     * tag cell.
+     */
     public MultipleColumnTableRenderPolicy() {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, DEFAULT_PREFIX, DEFAULT_SUFFIX, false);
     }
 
+    /**
+     * Creates a policy with default delimiters, choosing whether the tag shares the
+     * template block.
+     *
+     * @param onSameLine {@code true} when the tag sits in the first template cell itself
+     */
     public MultipleColumnTableRenderPolicy(boolean onSameLine) {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, DEFAULT_PREFIX, DEFAULT_SUFFIX, onSameLine);
     }
 
+    /**
+     * Creates a policy with custom tag delimiters.
+     *
+     * @param prefix     the tag prefix
+     * @param suffix     the tag suffix
+     * @param onSameLine {@code true} when the tag sits in the first template cell itself
+     */
     public MultipleColumnTableRenderPolicy(String prefix, String suffix, boolean onSameLine) {
         this(DEFAULT_MULTIPLE_PREFIX, DEFAULT_MULTIPLE_SUFFIX, prefix, suffix, onSameLine);
     }
@@ -95,6 +114,14 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
         this.onSameLine = onSameLine;
     }
 
+    /**
+     * Expands the template block once per element of the bound {@link Iterable}.
+     *
+     * @param eleTemplate the tag that marks the first template cell
+     * @param data        the {@link Iterable} whose items fill the copied blocks
+     * @param template    the template instance being rendered
+     * @throws RenderException if the tag is not inside a table or rendering fails
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
 
@@ -188,6 +215,16 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
         }
     }
 
+    /**
+     * Resolves how many template columns the tag block covers.
+     * <p>
+     * Reads the {@code $(n)} marker from the tag cell and strips it from the cell
+     * text. Defaults to one column when no marker is present.
+     * </p>
+     *
+     * @param tagCell the cell that holds the tag
+     * @return the number of template columns
+     */
     protected int getLoopColumnNum(XWPFTableCell tagCell) {
         int loopColumnNum = DEFAULT_MULTIPLE_COLUMN_NUM;
         String text = tagCell.getText();
@@ -294,6 +331,13 @@ public class MultipleColumnTableRenderPolicy implements RenderPolicy {
         return cell;
     }
 
+    /**
+     * Hook invoked after the loop has been expanded, for subclasses that need to
+     * adjust the table.
+     *
+     * @param table the table that was rendered
+     * @param data  the data bound to the tag
+     */
     protected void afterloop(XWPFTable table, Object data) {
     }
 

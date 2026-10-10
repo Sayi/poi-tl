@@ -15,7 +15,12 @@
  */
 
 /**
- * 
- * plugin
+ * Built-in plugins that extend poi-tl beyond plain text replacement.
+ * <p>
+ * Each subpackage provides a {@link com.deepoove.poi.policy.RenderPolicy} for one
+ * family of template tags: bookmarks, comments, content controls, simple fields,
+ * page breaks, tables and tables of contents. A plugin is activated by binding its
+ * policy to a tag name through the {@code Configure} builder.
+ * </p>
  */
 package com.deepoove.poi.plugin;

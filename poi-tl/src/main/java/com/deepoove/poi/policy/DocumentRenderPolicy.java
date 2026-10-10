@@ -32,27 +32,60 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * Document Render
+ * <p>
+ * The contents of the {@link DocumentRenderData} are inserted in order at the tag
+ * position. Paragraphs, tables and numbering lists are supported and each of them
+ * is rendered by the matching policy helper.
+ * </p>
  * 
  * @author Sayi
  */
 public class DocumentRenderPolicy extends AbstractRenderPolicy<DocumentRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and has at least one content.
+     * </p>
+     */
     @Override
     protected boolean validate(DocumentRenderData data) {
         return null != data && !data.getContents().isEmpty();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<DocumentRenderData> context) {
         clearPlaceholder(context, true);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderDocument(XWPFRun, DocumentRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<DocumentRenderData> context) throws Exception {
         Helper.renderDocument(context.getRun(), context.getData());
     }
 
+    /**
+     * Utilities that insert block level contents into a document.
+     */
     public static class Helper {
+        /**
+         * Inserts the contents of the data one by one at the tag position.
+         * 
+         * @param run  the run holding the tag
+         * @param data the document render data
+         * @throws Exception when a content can not be rendered
+         */
         public static void renderDocument(XWPFRun run, DocumentRenderData data) throws Exception {
             List<RenderData> contents = data.getContents();
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);

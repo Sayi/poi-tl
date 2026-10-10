@@ -24,9 +24,25 @@ import com.deepoove.poi.data.PictureType;
 import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.xwpf.CTPictWrapper;
 
+/**
+ * Default render policy that replaces the image of a legacy VML
+ * {@link PictImageTemplate}.
+ * <p>
+ * It mirrors {@link DefaultPictureTemplateRenderPolicy} for documents that
+ * store their pictures inside a {@code w:pict} element, keeping the original
+ * shape and exchanging only the image data.
+ * </p>
+ */
 public class DefaultPictImageTemplateRenderPolicy
         extends AbstractTemplateRenderPolicy<PictImageTemplate, PictureRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * When the picture data carries no type, the type is guessed from the image
+     * bytes.
+     * </p>
+     */
     @Override
     public void doRender(PictImageTemplate pictImageTemplate, PictureRenderData data, XWPFTemplate template)
             throws Exception {

@@ -22,12 +22,24 @@ import com.deepoove.poi.data.Numberings.NumberingBuilder;
 
 /**
  * Convert Object to NumberingRenderData
+ * <p>
+ * A {@link NumberingRenderData} is used as is, an {@link Iterable} is converted
+ * to a bullet numbering, each item being a text, a picture, a paragraph or the
+ * {@code toString()} value of the item.
+ * </p>
  * 
  * @author Sayi
  *
  */
 public class ObjectToNumberingRenderDataConverter implements ToRenderDataConverter<Object, NumberingRenderData> {
 
+    /**
+     * Convert an object to {@link NumberingRenderData}
+     * 
+     * @param source source object
+     * @return numbering render data, or null if the source is null
+     * @throws Exception if the conversion fails
+     */
     @Override
     public NumberingRenderData convert(Object source) throws Exception {
         if (null == source || source instanceof NumberingRenderData) return (NumberingRenderData) source;

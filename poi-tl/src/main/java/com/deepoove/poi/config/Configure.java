@@ -58,6 +58,12 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
  * The config of template
+ * <p>
+ * It holds the template grammar (tag prefix, tag suffix and tag regular
+ * expression), the built-in and custom {@link RenderPolicy} bindings, the
+ * {@link RenderDataComputeFactory}, the {@link ElementTemplateFactory} and the
+ * {@link ValidErrorHandler} used while resolving and rendering a template.
+ * </p>
  * 
  * @author Sayi
  */
@@ -182,28 +188,33 @@ public class Configure implements Cloneable {
     }
 
     /**
-     * create default config
+     * Create the default config
+     * <p>
+     * The default config registers all the built-in plugins and uses the default
+     * expression language.
+     * </p>
      * 
-     * @return
+     * @return the default {@link Configure} instance
      */
     public static Configure createDefault() {
         return builder().build();
     }
 
     /**
-     * Builder to build {@link Configure}
+     * Create a builder to build {@link Configure}
      * 
-     * @return
+     * @return a new {@link ConfigureBuilder} instance
      */
     public static ConfigureBuilder builder() {
         return new ConfigureBuilder();
     }
 
     /**
-     * add grammar plugin
+     * Add a grammar plugin bound to a grammar char
      * 
      * @param c      grammar char
-     * @param policy render function
+     * @param policy render policy of the grammar char
+     * @return this config
      */
     public Configure plugin(char c, RenderPolicy policy) {
         DEFAULT_POLICYS.put(Character.valueOf(c), policy);
@@ -225,47 +236,111 @@ public class Configure implements Cloneable {
         return this;
     }
 
+    /**
+     * Add a chart plugin bound to a XDDF chart data class
+     * 
+     * @param chartDataClass XDDF chart data class
+     * @param policy         render policy of the chart data class
+     * @return this config
+     */
     public Configure pluginChart(Class<? extends XDDFChartData> chartDataClass, RenderPolicy policy) {
         DEFAULT_CHART_DATA_POLICYS.put(chartDataClass, policy);
         return this;
     }
 
+    /**
+     * Bind a render policy to a tag name, it has the highest priority
+     * 
+     * @param tagName tag name
+     * @param policy  render policy of the tag name
+     */
     public void customPolicy(String tagName, RenderPolicy policy) {
         CUSTOM_POLICYS.put(tagName, policy);
     }
 
+    /**
+     * Get the render policy bound to a template class
+     * 
+     * @param clazz template class
+     * @return render policy, or null if no policy is bound to the template class
+     */
     public RenderPolicy getTemplatePolicy(Class<?> clazz) {
         return DEFAULT_TEMPLATE_POLICYS.get(clazz);
     }
 
+    /**
+     * Get the render policy bound to a tag name
+     * 
+     * @param tagName tag name
+     * @return render policy, or null if the tag name is not bound
+     */
     public RenderPolicy getCustomPolicy(String tagName) {
         return CUSTOM_POLICYS.get(tagName);
     }
 
+    /**
+     * Get the render policy bound to a grammar char
+     * 
+     * @param sign grammar char
+     * @return render policy, or null if the grammar char is not bound
+     */
     public RenderPolicy getDefaultPolicy(Character sign) {
         return DEFAULT_POLICYS.get(sign);
     }
 
+    /**
+     * Get the render policy bound to a chart type
+     * 
+     * @param type chart type
+     * @return render policy, or null if the chart type is not bound
+     */
     public RenderPolicy getChartPolicy(ChartTypes type) {
         return DEFAULT_CHART_POLICYS.get(type);
     }
 
+    /**
+     * Get the render policy bound to a XDDF chart data class
+     * 
+     * @param chartDataClass XDDF chart data class
+     * @return render policy, or null if the chart data class is not bound
+     */
     public RenderPolicy getChartPolicy(Class<? extends XDDFChartData> chartDataClass) {
         return DEFAULT_CHART_DATA_POLICYS.get(chartDataClass);
     }
 
+    /**
+     * Get all the render policies bound to grammar chars
+     * 
+     * @return grammar char to render policy map
+     */
     public Map<Character, RenderPolicy> getDefaultPolicys() {
         return DEFAULT_POLICYS;
     }
 
+    /**
+     * Get all the render policies bound to tag names
+     * 
+     * @return tag name to render policy map
+     */
     public Map<String, RenderPolicy> getCustomPolicys() {
         return CUSTOM_POLICYS;
     }
 
+    /**
+     * Get all the render policies bound to chart types
+     * 
+     * @return chart type to render policy map
+     */
     public Map<ChartTypes, RenderPolicy> getChartPolicys() {
         return DEFAULT_CHART_POLICYS;
     }
 
+    /**
+     * Get the grammar chars, including the registered grammar chars and the
+     * if/foreach block start and end chars
+     * 
+     * @return grammar chars
+     */
     public Set<Character> getGrammarChars() {
         Set<Character> ret = new HashSet<Character>(DEFAULT_POLICYS.keySet());
         // ? /
@@ -274,19 +349,36 @@ public class Configure implements Cloneable {
         return ret;
     }
 
+    /**
+     * Get the tag prefix, the default value is "{{"
+     * 
+     * @return tag prefix
+     */
     public String getGrammarPrefix() {
         return grammarPrefix;
     }
 
+    /**
+     * Get the tag suffix, the default value is "}}"
+     * 
+     * @return tag suffix
+     */
     public String getGrammarSuffix() {
         return grammarSuffix;
     }
 
+    /**
+     * Get the tag regular expression
+     * 
+     * @return tag regular expression
+     */
     public String getGrammarRegex() {
         return grammarRegex;
     }
 
     /**
+     * Get the grammar chars
+     * 
      * @return grammar chars
      * @deprecated misspelled, use {@link #getGrammarChars()} instead.
      */
@@ -296,6 +388,8 @@ public class Configure implements Cloneable {
     }
 
     /**
+     * Get the tag prefix
+     * 
      * @return tag prefix
      * @deprecated misspelled, use {@link #getGrammarPrefix()} instead.
      */
@@ -305,6 +399,8 @@ public class Configure implements Cloneable {
     }
 
     /**
+     * Get the tag suffix
+     * 
      * @return tag suffix
      * @deprecated misspelled, use {@link #getGrammarSuffix()} instead.
      */
@@ -314,6 +410,8 @@ public class Configure implements Cloneable {
     }
 
     /**
+     * Get the tag regular expression
+     * 
      * @return tag regular expression
      * @deprecated misspelled, use {@link #getGrammarRegex()} instead.
      */
@@ -322,26 +420,57 @@ public class Configure implements Cloneable {
         return getGrammarRegex();
     }
 
+    /**
+     * Get the handler of a valid render data error, such as a null or illegal
+     * value
+     * 
+     * @return valid error handler
+     */
     public ValidErrorHandler getValidErrorHandler() {
         return handler;
     }
 
+    /**
+     * Get the factory of the render data compute
+     * 
+     * @return render data compute factory
+     */
     public RenderDataComputeFactory getRenderDataComputeFactory() {
         return renderDataComputeFactory;
     }
 
+    /**
+     * Get the factory of the element template
+     * 
+     * @return element template factory
+     */
     public ElementTemplateFactory getElementTemplateFactory() {
         return elementTemplateFactory;
     }
 
+    /**
+     * Get the start and end chars of the if &amp; foreach block
+     * 
+     * @return pair of the block start char and the block end char
+     */
     public Pair<Character, Character> getIterable() {
         return iterable;
     }
 
+    /**
+     * Get the custom static methods of SpEL
+     * 
+     * @return function name to static method map
+     */
     public Map<String, Method> getSpELFunction() {
         return spELFunction;
     }
 
+    /**
+     * Get the castors that cast the render data before rendering
+     * 
+     * @return list of pre render data castors
+     */
     public List<PreRenderDataCastor> getPreRenderDataCastors() {
         return preRenderDataCastors;
     }
@@ -390,6 +519,17 @@ public class Configure implements Cloneable {
         return (Configure) super.clone();
     }
 
+    /**
+     * Copy a config with a new tag prefix and suffix
+     * <p>
+     * The tag regular expression is rebuilt from the new prefix and suffix.
+     * </p>
+     * 
+     * @param prefix new tag prefix
+     * @param suffix new tag suffix
+     * @return the copied config
+     * @throws CloneNotSupportedException if the config cannot be cloned
+     */
     public Configure copy(String prefix, String suffix) throws CloneNotSupportedException {
         Configure clone = clone();
         clone.grammarPrefix = prefix;
@@ -398,11 +538,25 @@ public class Configure implements Cloneable {
         return clone;
     }
 
+    /**
+     * The handler of a valid render data error, such as a null or illegal value
+     */
     public interface ValidErrorHandler {
+        /**
+         * Handle the render data error of a tag
+         * 
+         * @param context render context of the tag
+         */
         void handler(RenderContext<?> context);
     }
 
     public static class DiscardHandler implements ValidErrorHandler {
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Discard the error silently.
+         * </p>
+         */
         @Override
         public void handler(RenderContext<?> context) {
             // no-op
@@ -410,6 +564,12 @@ public class Configure implements Cloneable {
     }
 
     public static class ClearHandler implements ValidErrorHandler {
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Clear the placeholder of the tag.
+         * </p>
+         */
         @Override
         public void handler(RenderContext<?> context) {
             XWPFRun run = context.getRun();
@@ -419,6 +579,12 @@ public class Configure implements Cloneable {
     }
 
     public static class AbortHandler implements ValidErrorHandler {
+        /**
+         * {@inheritDoc}
+         * <p>
+         * Abort the render by throwing a {@link RenderException}.
+         * </p>
+         */
         @Override
         public void handler(RenderContext<?> context) {
             throw new RenderException("Non-existent variable and a variable with illegal value for "

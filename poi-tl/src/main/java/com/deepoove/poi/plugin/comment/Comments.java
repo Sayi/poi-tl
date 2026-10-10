@@ -28,6 +28,10 @@ import com.deepoove.poi.data.Texts;
 
 /**
  * Factory method to create {@link CommentRenderData}
+ * <p>
+ * Start with {@link #of()} or one of the text overloads and chain the builder to
+ * describe both the rendered content and the comment bubble.
+ * </p>
  * 
  * @author Sayi
  *
@@ -37,16 +41,33 @@ public final class Comments {
     private Comments() {
     }
 
+    /**
+     * Creates a builder for a comment without initial content.
+     *
+     * @return a new comment builder
+     */
     public static CommentBuilder of() {
         return new CommentBuilder();
     }
 
+    /**
+     * Creates a builder for a comment whose visible content is the given text.
+     *
+     * @param text the text rendered where the tag sits
+     * @return a new comment builder
+     */
     public static CommentBuilder of(TextRenderData text) {
         CommentBuilder builder = new CommentBuilder();
         builder.addText(text);
         return builder;
     }
 
+    /**
+     * Creates a builder for a comment whose visible content is the given text.
+     *
+     * @param text the text rendered where the tag sits
+     * @return a new comment builder
+     */
     public static CommentBuilder of(String text) {
         CommentBuilder builder = new CommentBuilder();
         builder.addText(text);
@@ -55,7 +76,11 @@ public final class Comments {
 
     /**
      * Builder to build {@link CommentRenderData}
-     *
+     * <p>
+     * Chains the visible content ({@code addText}, {@code addPicture},
+     * {@code addSubComment}) with the optional comment bubble described by
+     * {@code signature} and {@code comment}.
+     * </p>
      */
     public static class CommentBuilder implements RenderDataBuilder<CommentRenderData> {
 
@@ -65,6 +90,14 @@ public final class Comments {
             data = new CommentRenderData();
         }
 
+        /**
+         * Sets the author, initials and date shown on the comment bubble.
+         *
+         * @param author   the comment author
+         * @param initials the author initials
+         * @param date     the creation date, may be {@code null}
+         * @return this builder
+         */
         public CommentBuilder signature(String author, String initials, Calendar date) {
             CommentContent comment = getCommentContent();
             comment.setAuthor(author);
@@ -73,6 +106,14 @@ public final class Comments {
             return this;
         }
 
+        /**
+         * Sets the author, initials and date shown on the comment bubble.
+         *
+         * @param author   the comment author
+         * @param initials the author initials
+         * @param date     the creation date, may be {@code null}
+         * @return this builder
+         */
         public CommentBuilder signature(String author, String initials, Date date) {
             if (null == date) {
                 return signature(author, initials, (Calendar) null);
@@ -82,31 +123,67 @@ public final class Comments {
             return signature(author, initials, calendar);
         }
 
+        /**
+         * Sets the rich body shown inside the comment bubble.
+         *
+         * @param content the comment body
+         * @return this builder
+         */
         public CommentBuilder comment(DocumentRenderData content) {
             CommentContent comment = getCommentContent();
             comment.setContent(content);
             return this;
         }
 
+        /**
+         * Sets a plain-text body shown inside the comment bubble.
+         *
+         * @param text the comment body text
+         * @return this builder
+         */
         public CommentBuilder comment(String text) {
             return comment(Documents.of().addParagraph(Paragraphs.of(text).create()).create());
         }
 
+        /**
+         * Appends text rendered where the tag sits.
+         *
+         * @param text the text to append
+         * @return this builder
+         */
         public CommentBuilder addText(TextRenderData text) {
             data.getContents().add(text);
             return this;
         }
 
+        /**
+         * Appends text rendered where the tag sits.
+         *
+         * @param text the text to append
+         * @return this builder
+         */
         public CommentBuilder addText(String text) {
             data.getContents().add(Texts.of(text).create());
             return this;
         }
 
+        /**
+         * Appends a picture rendered where the tag sits.
+         *
+         * @param picture the picture to append
+         * @return this builder
+         */
         public CommentBuilder addPicture(PictureRenderData picture) {
             data.getContents().add(picture);
             return this;
         }
 
+        /**
+         * Appends a nested comment as part of the visible content.
+         *
+         * @param subcomment the nested comment data
+         * @return this builder
+         */
         public CommentBuilder addSubComment(CommentRenderData subcomment) {
             data.getContents().add(subcomment);
             return this;
@@ -121,6 +198,11 @@ public final class Comments {
             return comment;
         }
 
+        /**
+         * Returns the assembled comment data.
+         *
+         * @return the comment render data
+         */
         @Override
         public CommentRenderData create() {
             return data;

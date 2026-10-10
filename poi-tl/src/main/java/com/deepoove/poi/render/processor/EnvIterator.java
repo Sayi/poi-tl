@@ -22,8 +22,23 @@ import java.util.function.Consumer;
 
 import com.deepoove.poi.render.compute.EnvModel;
 
+/**
+ * Iterates a collection while exposing the loop environment of each element.
+ * <p>
+ * Every element is wrapped into an {@link EnvModel} that carries metadata such
+ * as {@code _index}, {@code _is_first}, {@code _is_last} and
+ * {@code _has_next}, so that templates can react to the position of an element
+ * without extra data.
+ * </p>
+ */
 public class EnvIterator {
 
+    /**
+     * Consumes every element of the iterator together with its loop environment.
+     *
+     * @param iterator the elements to iterate
+     * @param consumer the callback invoked for each element
+     */
     public static void foreach(Iterator<?> iterator, Consumer<EnvModel> consumer) {
         int index = 0;
         boolean hasNext = iterator.hasNext();
@@ -34,6 +49,13 @@ public class EnvIterator {
         }
     }
 
+    /**
+     * Builds the loop environment of one element.
+     *
+     * @param index   the zero based index of the element
+     * @param hasNext whether another element follows
+     * @return the environment variables of the element
+     */
     public static Map<String, Object> makeEnv(int index, boolean hasNext) {
         Map<String, Object> env = new HashMap<>();
         env.put("_is_first", index == 0);

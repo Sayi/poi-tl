@@ -49,11 +49,32 @@ import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
  */
 public class ControlRenderPolicy extends AbstractRenderPolicy<Object> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Any non-null value is accepted; values that cannot be converted are rejected
+     * while rendering.
+     * </p>
+     *
+     * @param data the value bound to the tag
+     * @return {@code true} when the value is not {@code null}
+     */
     @Override
     protected boolean validate(Object data) {
         return data != null;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Converts the bound value into a content control model, inserts the matching
+     * {@code w:sdt} element before the tag run and removes the placeholder run.
+     * </p>
+     *
+     * @param context the render context holding the target run and the control data
+     * @throws Exception if the placeholder is not in a paragraph or the value cannot
+     *         be converted
+     */
     @Override
     public void doRender(RenderContext<Object> context) throws Exception {
         ControlRenderData data = convert(context.getData());

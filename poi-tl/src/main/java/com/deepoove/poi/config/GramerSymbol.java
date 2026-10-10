@@ -17,6 +17,10 @@ package com.deepoove.poi.config;
 
 /**
  * Built-in template syntax.
+ * <p>
+ * Deprecated misspelled alias of {@link GrammarSymbol}, kept for backward
+ * compatibility.
+ * </p>
  * 
  * @author Sayi
  * @deprecated misspelled, use {@link GrammarSymbol} instead.
@@ -24,20 +28,28 @@ package com.deepoove.poi.config;
 @Deprecated
 public interface GramerSymbol {
 
+    /** Picture in the template, alias of {@link GrammarSymbol#IMAGE} */
     GrammarSymbol IMAGE = GrammarSymbol.IMAGE;
 
+    /** Text in the template, alias of {@link GrammarSymbol#TEXT} */
     GrammarSymbol TEXT = GrammarSymbol.TEXT;
 
+    /** Text alias in the template, alias of {@link GrammarSymbol#TEXT_ALIAS} */
     GrammarSymbol TEXT_ALIAS = GrammarSymbol.TEXT_ALIAS;
 
+    /** Table in the template, alias of {@link GrammarSymbol#TABLE} */
     GrammarSymbol TABLE = GrammarSymbol.TABLE;
 
+    /** Numbering in the template, alias of {@link GrammarSymbol#NUMBERING} */
     GrammarSymbol NUMBERING = GrammarSymbol.NUMBERING;
 
+    /** Nested docx in the template, alias of {@link GrammarSymbol#DOCX_TEMPLATE} */
     GrammarSymbol DOCX_TEMPLATE = GrammarSymbol.DOCX_TEMPLATE;
 
+    /** Block start, alias of {@link GrammarSymbol#ITERABLE_START} */
     GrammarSymbol ITERABLE_START = GrammarSymbol.ITERABLE_START;
 
+    /** Block end, alias of {@link GrammarSymbol#BLOCK_END} */
     GrammarSymbol BLOCK_END = GrammarSymbol.BLOCK_END;
 
 }

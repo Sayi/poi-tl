@@ -19,8 +19,21 @@ package com.deepoove.poi.render.processor;
 import com.deepoove.poi.template.IterableTemplate;
 import com.deepoove.poi.xwpf.ParentContext;
 
+/**
+ * Callback invoked once per element of an iterable block.
+ *
+ * @see AbstractIterableProcessor
+ */
 public interface Iteration {
 
+    /**
+     * Renders one element of the iteration.
+     *
+     * @param iterable      the block being iterated
+     * @param parentContext the container holding the block
+     * @param context       the positions delimiting the content to copy
+     * @param model         the model of the current element
+     */
     void next(IterableTemplate iterable, ParentContext parentContext, IterableContext context, Object model);
 
 }

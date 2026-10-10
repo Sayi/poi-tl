@@ -53,7 +53,14 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * Word 中插入通用附件渲染策略
+ * Renders a tag as a generic file attachment
+ * <p>
+ * Unlike {@link AttachmentRenderPolicy}, which is bound to a known
+ * {@link com.deepoove.poi.data.AttachmentType}, this policy embeds any file as an
+ * OLE object and takes the file name and the program id from the
+ * {@link GeneralAttachmentRenderData}. The VML shape type required by the object
+ * is written only once per document.
+ * </p>
  *
  * @author yangxiao, Sayi
  */
@@ -83,16 +90,37 @@ public class GeneralAttachmentRenderPolicy extends AbstractRenderPolicy<GeneralA
 
     private static final Set<NiceXWPFDocument> RENDERED_DOCS = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when the attachment bytes and the file name are present.
+     * </p>
+     */
     @Override
     protected boolean validate(GeneralAttachmentRenderData data) {
         return null != data && null != data.readAttachmentData() && null != data.getFileName();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the tag text without removing the paragraph.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<GeneralAttachmentRenderData> context) {
         super.clearPlaceholder(context, false);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It embeds the file as an OLE object and replaces the run of the tag with the
+     * generated object markup.
+     * </p>
+     * 
+     * @throws Exception when the file can not be embedded
+     */
     @Override
     public void doRender(RenderContext<GeneralAttachmentRenderData> context) throws Exception {
         NiceXWPFDocument doc = context.getXWPFDocument();
@@ -153,7 +181,15 @@ public class GeneralAttachmentRenderPolicy extends AbstractRenderPolicy<GeneralA
     }
 
     /**
-     * 创建 OLE Object
+     * Creates the OLE object part that carries the embedded file and returns the id
+     * of its relationship.
+     * 
+     * @param document the document that owns the part
+     * @param fileData the bytes of the embedded file
+     * @param filename the name of the embedded file
+     * @return the relationship id of the created part
+     * @throws InvalidFormatException when the part can not be created
+     * @throws IOException            when the part can not be written
      */
     private String createOLEObject(XWPFDocument document, byte[] fileData, String filename)
             throws InvalidFormatException, IOException {

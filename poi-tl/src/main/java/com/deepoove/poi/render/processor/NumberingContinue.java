@@ -38,17 +38,49 @@ import com.deepoove.poi.template.MetaTemplate;
 import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.XWPFNumberingWrapper;
 
+/**
+ * Keeps list numbering continuous when iterable content is copied.
+ * <p>
+ * Word binds a paragraph to a numbering definition through a {@code numId}. If
+ * the copied paragraphs kept the same id, every iteration would restart the
+ * list. This helper clones the abstract numbering definition per copied
+ * paragraph, so the sequence keeps counting across iterations, and leaves the
+ * numbering of the original block untouched when it already continues.
+ * </p>
+ */
 public class NumberingContinue {
 
     private Map<BigInteger, BigInteger> consistCache = new HashMap<>();
     private BigInteger continueNumID;
 
+    /**
+     * Creates a helper that does not continue any numbering.
+     */
     public NumberingContinue() {}
 
+    /**
+     * Creates a helper that leaves the given numbering id continuous.
+     *
+     * @param numID the numbering id whose sequence must not be cloned
+     */
     public NumberingContinue(BigInteger numID) {
         this.continueNumID = numID;
     }
 
+    /**
+     * Inspects the content of a block and creates the matching helper.
+     * <p>
+     * A helper is only created when the block body contains exactly one
+     * numbered paragraph at its first level; otherwise the numbering is left
+     * alone.
+     * </p>
+     *
+     * @param bodyContainer the container holding the block
+     * @param start         the start position of the block content
+     * @param end           the end position of the block content
+     * @param iterable      the block being iterated
+     * @return the helper to use for the iterations
+     */
     public static NumberingContinue of(BodyContainer bodyContainer, int start, int end, IterableTemplate iterable) {
         if (start + 1 >= end) return new NumberingContinue();
 
@@ -97,11 +129,28 @@ public class NumberingContinue {
         return new NumberingContinue(first.getNumId().getVal());
     }
 
+    /**
+     * Clears the cache of numbering definitions created for this iteration.
+     *
+     * @return this helper, for chaining
+     */
     public NumberingContinue resetCache() {
         this.consistCache.clear();
         return this;
     }
 
+    /**
+     * Rebinds the numbering of a copied paragraph when it would restart a list.
+     * <p>
+     * When the paragraph keeps continuing numbering, or when a clone of its
+     * definition has already been created during this iteration, the cached
+     * numbering id is reused; otherwise a fresh abstract numbering definition
+     * is added to the document and assigned to the copy.
+     * </p>
+     *
+     * @param source the original paragraph
+     * @param target the copied paragraph
+     */
     public void updateNumbering(XWPFParagraph source, XWPFParagraph target) {
         XWPFDocument document = source.getDocument();
         XWPFNumbering numbering = document.getNumbering();

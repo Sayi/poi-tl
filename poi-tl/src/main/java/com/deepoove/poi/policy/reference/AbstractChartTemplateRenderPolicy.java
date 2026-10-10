@@ -69,21 +69,56 @@ import com.deepoove.poi.data.SeriesRenderData;
 import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ChartUtils;
 
+/**
+ * Base class of the render policies that fill an existing chart.
+ * <p>
+ * It provides the shared plumbing of chart rendering: building the data sources
+ * of the embedded workbook, plotting the series, styling them and updating the
+ * chart and axis titles. Concrete policies only have to map their render data
+ * onto these helpers.
+ * </p>
+ *
+ * @param <T> the type of the data bound to the chart template
+ */
 public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTemplateRenderPolicy<ChartTemplate, T> {
 
     protected final int FIRST_ROW = 1;
 
+    /**
+     * Creates a category data source backed by the embedded workbook.
+     *
+     * @param chart      the chart whose workbook is filled
+     * @param categories the category values
+     * @param col        the workbook column index
+     * @return the data source
+     */
     protected XDDFDataSource<?> createStringDataSource(XWPFChart chart, String[] categories, int col) {
         return XDDFDataSourcesFactory.fromArray(categories,
                 chart.formatRange(new CellRangeAddress(FIRST_ROW, categories.length, col, col)), col);
     }
 
+    /**
+     * Creates a numerical data source backed by the embedded workbook.
+     *
+     * @param chart the chart whose workbook is filled
+     * @param data  the numerical values
+     * @param col   the workbook column index
+     * @param <N>   the number type of the values
+     * @return the data source
+     */
     protected <N extends Number> XDDFNumericalDataSource<Number> createNumbericalDataSource(XWPFChart chart, N[] data,
             int col) {
         return XDDFDataSourcesFactory.fromArray(data,
                 chart.formatRange(new CellRangeAddress(FIRST_ROW, data.length, col, col)), col);
     }
 
+    /**
+     * Removes the series that are no longer present in the new data.
+     *
+     * @param chartData  the chart data to trim
+     * @param orignSize  the number of series currently in the chart
+     * @param seriesSize the number of series of the new data
+     */
     protected void removeExtraSeries(final XDDFChartData chartData, final int orignSize, final int seriesSize) {
         if (orignSize - seriesSize > 0) {
             // clear extra series
@@ -93,6 +128,14 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Removes the workbook cells that are no longer covered by the new data.
+     *
+     * @param sheet       the sheet backing the chart
+     * @param numOfPoints the number of categories
+     * @param orignSize   the number of series currently in the sheet
+     * @param seriesSize  the number of series of the new data
+     */
     protected void removeExtraSheetCell(XSSFSheet sheet, final int numOfPoints, final int orignSize,
             final int seriesSize) {
         if (orignSize - seriesSize > 0) {
@@ -108,6 +151,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Rewrites the column definitions of the workbook table backing the chart.
+     *
+     * @param sheet      the sheet backing the chart
+     * @param seriesDatas the series of the new data
+     */
     protected void updateCTTable(XSSFSheet sheet, List<SeriesRenderData> seriesDatas) {
         final int seriesSize = seriesDatas.size();
         final int numOfPoints = seriesDatas.get(0).getValues().length;
@@ -137,6 +186,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Returns the workbook table backing the chart, creating it when absent.
+     *
+     * @param sheet the sheet backing the chart
+     * @return the table definition
+     */
     protected CTTable getSheetTable(XSSFSheet sheet) {
         if (sheet.getTables().size() == 0) {
             XSSFTable newTable = sheet.createTable(null);
@@ -146,6 +201,17 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         return sheet.getTables().get(0).getCTTable();
     }
 
+    /**
+     * Plots the given series and fills the embedded workbook accordingly.
+     * <p>
+     * String categories are stored as literal data so that the workbook keeps
+     * the expected layout.
+     * </p>
+     *
+     * @param chart the chart to plot
+     * @param data  the chart data to draw
+     * @throws Exception when the underlying POI reflection fails
+     */
     @SuppressWarnings("deprecation")
     protected void plot(XWPFChart chart, XDDFChartData data) throws Exception {
         XSSFSheet sheet = chart.getWorkbook().getSheetAt(0);
@@ -170,6 +236,13 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Sets the chart title, removing the existing one when {@code title} is
+     * null.
+     *
+     * @param chart the chart to update
+     * @param title the new title, or {@code null} to remove it
+     */
     protected void setTitle(XWPFChart chart, String title) {
         if (null == title && chart.getCTChart().isSetTitle()) {
             chart.getCTChart().unsetTitle();
@@ -183,10 +256,28 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Sets the titles of the horizontal and vertical axes.
+     *
+     * @param chart      the chart to update
+     * @param xAxisTitle the title of the horizontal axis, may be {@code null}
+     * @param yAxisTitle the title of the vertical axis, may be {@code null}
+     */
     protected void setAxisTitle(XWPFChart chart, String xAxisTitle, String yAxisTitle) {
         setAxisTitle(chart, xAxisTitle, yAxisTitle, null);
     }
 
+    /**
+     * Sets the titles of the horizontal, vertical and secondary vertical axes.
+     *
+     * @param chart               the chart to update
+     * @param xAxisTitle          the title of the horizontal axis, may be
+     *                            {@code null}
+     * @param yAxisTitle          the title of the vertical axis, may be
+     *                            {@code null}
+     * @param secondaryYAxisTitle the title of the secondary vertical axis, may
+     *                            be {@code null}
+     */
     protected void setAxisTitle(XWPFChart chart, String xAxisTitle, String yAxisTitle, String secondaryYAxisTitle) {
         if (null == xAxisTitle && null == yAxisTitle && null == secondaryYAxisTitle) return;
         Map<Long, XDDFValueAxis> valueAxes = ChartUtils.getValueAxes(chart);
@@ -213,6 +304,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Applies the color, per point colors and data label settings of one series.
+     *
+     * @param series     the series to style
+     * @param seriesData the styling configuration
+     */
     protected void applySeriesStyle(XDDFChartData.Series series, SeriesRenderData seriesData) {
         if (null == series || null == seriesData) return;
         applySeriesColor(series, seriesData.getColor());
@@ -220,6 +317,16 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         applySeriesDataLabels(series, seriesData.getShowDataLabels());
     }
 
+    /**
+     * Applies the fill color of one series.
+     * <p>
+     * {@code transparent} and {@code none} remove the fill instead of setting a
+     * color.
+     * </p>
+     *
+     * @param series the series to style
+     * @param color  the color as {@code #RGB} or {@code #RRGGBB}
+     */
     protected void applySeriesColor(XDDFChartData.Series series, String color) {
         if (StringUtils.isBlank(color)) return;
         if ("transparent".equalsIgnoreCase(color) || "none".equalsIgnoreCase(color)) {
@@ -244,6 +351,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Applies one color per data point of a series.
+     *
+     * @param series the series to style
+     * @param colors the colors as {@code #RGB} or {@code #RRGGBB}
+     */
     protected void applySeriesDataPointColors(XDDFChartData.Series series, String[] colors) {
         if (null == colors) return;
         for (int i = 0; i < colors.length; i++) {
@@ -262,6 +375,13 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         }
     }
 
+    /**
+     * Shows or hides the value labels of one series.
+     *
+     * @param series         the series to style
+     * @param showDataLabels whether the labels must be shown, may be {@code null}
+     *                       to leave the setting untouched
+     */
     protected void applySeriesDataLabels(XDDFChartData.Series series, Boolean showDataLabels) {
         if (null == showDataLabels) return;
         CTDLbls dLbls = getOrCreateDLbls(series);
@@ -314,6 +434,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         return null;
     }
 
+    /**
+     * Parses a hex color into its RGB bytes.
+     *
+     * @param color the color as {@code #RGB} or {@code #RRGGBB}
+     * @return the RGB bytes, or {@code null} when the color is blank or invalid
+     */
     protected byte[] parseHexRgb(String color) {
         if (StringUtils.isBlank(color)) return null;
         String hex = color.trim();
@@ -372,6 +498,12 @@ public abstract class AbstractChartTemplateRenderPolicy<T> extends AbstractTempl
         return isSet;
     }
 
+    /**
+     * Converts string categories into their numeric values.
+     *
+     * @param categories the categories to convert
+     * @return the numeric values
+     */
     protected Double[] toNumberArray(String[] categories) {
         return Stream.of(categories).mapToDouble(Double::parseDouble).boxed().toArray(Double[]::new);
     }

@@ -18,16 +18,27 @@ package com.deepoove.poi.converter;
 import com.deepoove.poi.data.RenderData;
 
 /**
- * Convert <T> to RenderData
+ * Convert {@code T} to {@code RenderData}
+ * <p>
+ * It is a functional interface used to convert a source object to the render
+ * data expected by a render policy.
+ * </p>
  * 
  * @author Sayi
  *
- * @param <T>
- * @param <R>
+ * @param <T> source type
+ * @param <R> render data type
  */
 @FunctionalInterface
 public interface ToRenderDataConverter<T, R extends RenderData> {
 
+    /**
+     * Convert the source object to render data
+     * 
+     * @param t source object
+     * @return the converted render data
+     * @throws Exception if the conversion fails
+     */
     R convert(T t) throws Exception;
 
 }

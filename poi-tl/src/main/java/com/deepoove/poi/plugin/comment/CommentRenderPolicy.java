@@ -60,7 +60,12 @@ import com.deepoove.poi.xwpf.NiceXWPFDocument;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * comment render
+ * Renders a Word comment anchored to the tag.
+ * <p>
+ * The visible content is supplied by the {@link CommentRenderData}; when a
+ * {@link CommentContent} is present the tag is wrapped in a comment range and a
+ * comment bubble carrying the author, date and body is created in the comments part.
+ * </p>
  * 
  * @author Sayi
  */
@@ -68,6 +73,16 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentRenderPolicy.class);
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Rejects {@code null} data and fails fast when the comment body has not been set.
+     * </p>
+     *
+     * @param data the comment data bound to the tag
+     * @return {@code true} when the data can be rendered
+     * @throws RenderException if the content list is {@code null}
+     */
     @Override
     protected boolean validate(CommentRenderData data) {
         if (null == data) return false;
@@ -77,16 +92,40 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Delegates to {@link Helper#renderComment(org.apache.poi.xwpf.usermodel.XWPFRun, CommentRenderData)}.
+     * </p>
+     *
+     * @param context the render context holding the target run and the comment data
+     * @throws Exception if the comment range cannot be written
+     */
     @Override
     public void doRender(RenderContext<CommentRenderData> context) throws Exception {
         Helper.renderComment(context.getRun(), context.getData());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Removes the placeholder text without deleting the enclosing paragraph.
+     * </p>
+     *
+     * @param context the render context of the finished tag
+     */
     @Override
     protected void afterRender(RenderContext<CommentRenderData> context) {
         clearPlaceholder(context, false);
     }
 
+    /**
+     * Low-level helpers that write comment markup into the document.
+     * <p>
+     * Exposed so that custom policies can reuse the same comment, range and
+     * extended-property logic.
+     * </p>
+     */
     public static class Helper {
 
         private static final QName W14_PARA_ID = new QName(
@@ -95,6 +134,20 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
         private static final String CID_NS = "http://schemas.microsoft.com/office/word/2016/wordml/cid";
         private static final String W15_NS = "http://schemas.microsoft.com/office/word/2012/wordml";
 
+        /**
+         * Writes a comment range into the paragraph that owns the tag run.
+         * <p>
+         * When a {@link CommentContent} is present the comment part is created, its body
+         * is rendered, the tag content is wrapped in a comment range and a comment
+         * reference run is appended. The {@code commentsIds}, {@code commentsExtended}
+         * and {@code commentsExtensible} parts are kept in sync so Word shows the author
+         * and date.
+         * </p>
+         *
+         * @param run  the run that holds the comment tag
+         * @param data the comment data bound to the tag
+         * @throws Exception if the comment cannot be created or rendered
+         */
         public static void renderComment(XWPFRun run, CommentRenderData data) throws Exception {
             XWPFParagraph paragraph = (XWPFParagraph) run.getParent();
             XWPFParagraphWrapper parentContext = new XWPFParagraphWrapper(paragraph);
@@ -126,6 +179,13 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
             }
         }
 
+        /**
+         * Converts a calendar to the UTC time zone used by the comment XML.
+         *
+         * @param calendar the source calendar, may be {@code null}
+         * @return an equivalent UTC calendar, or {@code null} when the input is
+         *         {@code null}
+         */
         public static Calendar toUtcCalendar(Calendar calendar) {
             if (null == calendar) {
                 return null;
@@ -138,6 +198,19 @@ public class CommentRenderPolicy extends AbstractRenderPolicy<CommentRenderData>
             return utcCalendar;
         }
 
+        /**
+         * Synchronizes the extended comment parts with a newly created comment.
+         * <p>
+         * Updates or creates the matching entries in {@code commentsIds.xml},
+         * {@code commentsExtended.xml} and {@code commentsExtensible.xml} so Word can
+         * resolve the comment author and creation date. Missing parts are left untouched
+         * and any failure is only logged.
+         * </p>
+         *
+         * @param document    the document that owns the comments part
+         * @param newComment  the comment that was just created
+         * @param utcCalendar the comment date in UTC
+         */
         public static void syncCommentsExtensible(XWPFDocument document, XWPFComment newComment, Calendar utcCalendar) {
             if (null == document || null == newComment || null == utcCalendar) {
                 return;

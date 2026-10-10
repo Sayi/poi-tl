@@ -22,7 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * template tag name
+ * Template tag name
+ * <p>
+ * Annotate a field with it to map the field to a different tag name, used by
+ * the default expression language.
+ * </p>
  * 
  * @author Sayi
  */
@@ -31,6 +35,11 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Name {
 
+    /**
+     * Get the tag name of the annotated field
+     * 
+     * @return tag name
+     */
     public String value();
 
 }

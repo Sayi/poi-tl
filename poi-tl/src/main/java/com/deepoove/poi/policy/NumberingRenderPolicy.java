@@ -34,7 +34,13 @@ import com.deepoove.poi.xwpf.BodyContainerFactory;
 import com.deepoove.poi.xwpf.NiceXWPFDocument;
 
 /**
- * Numbering render
+ * Renders a tag as a multi level numbering list
+ * <p>
+ * A new numbering definition with one level per {@link NumberingFormat} is added
+ * to the document, then one paragraph is inserted for every
+ * {@link NumberingItemRenderData} and the level of the item is applied to it.
+ * Items on the normal level are rendered as plain paragraphs.
+ * </p>
  * 
  * @author Sayi
  */
@@ -42,29 +48,65 @@ public class NumberingRenderPolicy extends AbstractRenderPolicy<NumberingRenderD
 
     private static ToRenderDataConverter<Object, NumberingRenderData> converter = new ObjectToNumberingRenderDataConverter();
 
+    /**
+     * Converts the bound value into numbering render data.
+     * 
+     * @param source the value bound to the tag
+     * @return the converted numbering render data
+     * @throws Exception when the conversion fails
+     */
     @Override
     public NumberingRenderData cast(Object source) throws Exception {
         return converter.convert(source);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and has at least one item.
+     * </p>
+     */
     @Override
     protected boolean validate(NumberingRenderData data) {
         if (null == data) return false;
         return CollectionUtils.isNotEmpty(((NumberingRenderData) data).getItems());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderNumbering(XWPFRun, NumberingRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<NumberingRenderData> context) throws Exception {
         Helper.renderNumbering(context.getRun(), context.getData());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<NumberingRenderData> context) {
         clearPlaceholder(context, true);
     }
 
+    /**
+     * Utilities that insert numbering lists into a document.
+     */
     public static class Helper {
 
+        /**
+         * Inserts the numbering list at the tag position.
+         * 
+         * @param run  the run holding the tag
+         * @param data the numbering render data
+         * @throws Exception when the numbering definition or the paragraphs can not be
+         *                   created
+         */
         public static void renderNumbering(XWPFRun run, NumberingRenderData data) throws Exception {
             List<NumberingItemRenderData> items = data.getItems();
             NumberingFormat[] array = data.getFormats().toArray(new NumberingFormat[] {});

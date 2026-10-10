@@ -29,20 +29,40 @@ import com.deepoove.poi.template.PictImageTemplate;
 import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
+/**
+ * Diagnostic {@link Visitor} that logs the resolved template tree.
+ * <p>
+ * Nested blocks are indented, so the log mirrors the structure of the
+ * document and helps to locate a tag that is not rendered as expected.
+ * </p>
+ */
 public class LogProcessor implements Visitor {
 
     private static Logger log = LoggerFactory.getLogger(LogProcessor.class);
 
     private String indentState;
 
+    /**
+     * Creates a log processor without indentation.
+     */
     public LogProcessor() {
         this.indentState = "";
     }
 
+    /**
+     * Creates a log processor with the given indentation prefix.
+     *
+     * @param indent the prefix prepended to every log line
+     */
     public LogProcessor(String indent) {
         this.indentState = indent;
     }
 
+    /**
+     * Logs the given templates and everything nested inside them.
+     *
+     * @param templates the templates to log
+     */
     public void process(List<MetaTemplate> templates) {
         templates.forEach(template -> template.accept(this));
     }

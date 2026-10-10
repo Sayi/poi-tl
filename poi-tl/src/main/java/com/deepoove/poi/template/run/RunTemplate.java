@@ -24,7 +24,12 @@ import com.deepoove.poi.template.ElementTemplate;
 import com.deepoove.poi.util.ParagraphUtils;
 
 /**
- * Basic docx template element: XWPFRun
+ * The most basic docx template element, backed by an {@link XWPFRun}.
+ * <p>
+ * Tags such as {@code {{title}}}, {@code {{@image}}} and {@code {{#table}}} are
+ * resolved into a run template, because Word splits the text of a tag across
+ * one or more runs.
+ * </p>
  * 
  * @author Sayi
  * @version 0.0.1
@@ -41,6 +46,11 @@ public class RunTemplate extends ElementTemplate {
         this.run = run;
     }
 
+    /**
+     * Returns the index of the backing run inside its paragraph.
+     *
+     * @return the position of the run
+     */
     public Integer getRunPos() {
         return ParagraphUtils.getRunPos(run);
     }
@@ -64,6 +74,16 @@ public class RunTemplate extends ElementTemplate {
         visitor.visit(this);
     }
 
+    /**
+     * Finds the render policy of this template.
+     * <p>
+     * The policy bound to the tag name wins, then the default policy of the
+     * grammar sign, and finally the policy registered for this template type.
+     * </p>
+     *
+     * @param config the template configuration
+     * @return the render policy for this template
+     */
     @Override
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy policy = config.getCustomPolicy(tagName);

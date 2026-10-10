@@ -52,6 +52,11 @@ import com.deepoove.poi.xwpf.*;
 
 /**
  * Resolver
+ * <p>
+ * It walks the document tree, splits the runs that hold a tag, and creates the
+ * corresponding {@link MetaTemplate} for paragraphs, tables, text boxes,
+ * pictures, charts and content controls.
+ * </p>
  * 
  * @author Sayi
  */
@@ -61,6 +66,11 @@ public class TemplateResolver extends AbstractResolver {
 
     private ElementTemplateFactory elementTemplateFactory;
 
+    /**
+     * Create a resolver with the config
+     * 
+     * @param config template config
+     */
     public TemplateResolver(Configure config) {
         this(config, config.getElementTemplateFactory());
     }
@@ -70,6 +80,16 @@ public class TemplateResolver extends AbstractResolver {
         this.elementTemplateFactory = elementTemplateFactory;
     }
 
+    /**
+     * Resolve the whole document
+     * <p>
+     * It resolves the body elements, the headers, the footers, the footnotes,
+     * the endnotes and the comments of the document.
+     * </p>
+     * 
+     * @param doc document to resolve
+     * @return the resolved meta templates
+     */
     @Override
     public List<MetaTemplate> resolveDocument(XWPFDocument doc) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
@@ -88,6 +108,16 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
+    /**
+     * Resolve the body elements
+     * <p>
+     * Paragraphs, tables and content controls that hold tags are resolved, and
+     * the if &amp; foreach blocks are kept balanced.
+     * </p>
+     * 
+     * @param bodyElements body elements to resolve
+     * @return the resolved meta templates
+     */
     @Override
     public List<MetaTemplate> resolveBodyElements(List<IBodyElement> bodyElements) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();
@@ -165,6 +195,13 @@ public class TemplateResolver extends AbstractResolver {
         return metaTemplates;
     }
 
+    /**
+     * Resolve the runs of a paragraph and the content controls inside it
+     * 
+     * @param paragraph     paragraph to resolve
+     * @param metaTemplates collected meta templates
+     * @param stack         stack of the currently open if &amp; foreach blocks
+     */
     public void resolveParagraph(XWPFParagraph paragraph, List<MetaTemplate> metaTemplates,
             Deque<BlockTemplate> stack) {
         XWPFParagraphWrapper paragraphWrapper = new XWPFParagraphWrapper(paragraph);
@@ -174,6 +211,13 @@ public class TemplateResolver extends AbstractResolver {
                 .forEach(sdtEle -> addNewMeta(metaTemplates, stack, resolveSDTElements(sdtEle.getContent())));
     }
 
+    /**
+     * Resolve the cells of a table row
+     * 
+     * @param row           table row to resolve
+     * @param metaTemplates collected meta templates
+     * @param stack         stack of the currently open if &amp; foreach blocks
+     */
     public void resolveTableRow(XWPFTableRow row, List<MetaTemplate> metaTemplates, Deque<BlockTemplate> stack) {
         XWPFTableRowWrapper rowWrapper = new XWPFTableRowWrapper(row);
         List<ICell> cells = rowWrapper.getTableICells();
@@ -187,6 +231,12 @@ public class TemplateResolver extends AbstractResolver {
         });
     }
 
+    /**
+     * Resolve the runs at the same paragraph
+     * 
+     * @param runs runs to resolve
+     * @return the resolved meta templates
+     */
     @Override
     public List<MetaTemplate> resolveXWPFRuns(List<XWPFRun> runs) {
         List<MetaTemplate> metaTemplates = new ArrayList<>();

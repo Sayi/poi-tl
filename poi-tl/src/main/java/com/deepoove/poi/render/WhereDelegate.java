@@ -34,8 +34,12 @@ import com.deepoove.poi.policy.TableRenderPolicy;
 import com.deepoove.poi.policy.TextRenderPolicy;
 
 /**
- * The delegation of the current location provides more methods of operating the
- * current location.
+ * Renders standard content at the location of the current tag.
+ * <p>
+ * It is exposed through {@link RenderContext#getWhereDelegate()} and gives a
+ * render policy a shortcut to render text, pictures, tables or numbering
+ * directly at the tag position, reusing the built-in render policies.
+ * </p>
  * 
  * @author Sayi
  * @since 1.5.1
@@ -46,31 +50,76 @@ public class WhereDelegate {
 
     private final XWPFRun run;
 
+    /**
+     * Creates a delegate for the given location.
+     *
+     * @param run the run where the tag sits
+     */
     public WhereDelegate(XWPFRun run) {
         this.run = run;
     }
 
+    /**
+     * Returns the run where the tag sits.
+     *
+     * @return the run
+     */
     public XWPFRun getRun() {
         return this.run;
     }
 
+    /**
+     * Renders the given data as text at the current location.
+     *
+     * @param data the data to render, converted to text automatically
+     * @throws Exception when rendering fails
+     */
     public void renderText(Object data) throws Exception {
         TextRenderData renderData = converter.convert(data);
         TextRenderPolicy.Helper.renderTextRun(run, renderData);
     }
 
+    /**
+     * Renders the given data as an ordered or unordered list at the current
+     * location.
+     *
+     * @param data the numbering to render
+     * @throws Exception when rendering fails
+     */
     public void renderNumbering(NumberingRenderData data) throws Exception {
         NumberingRenderPolicy.Helper.renderNumbering(run, data);
     }
 
+    /**
+     * Renders the given data as a picture at the current location.
+     *
+     * @param data the picture to render
+     * @throws Exception when rendering fails
+     */
     public void renderPicture(PictureRenderData data) throws Exception {
         PictureRenderPolicy.Helper.renderPicture(run, data);
     }
 
+    /**
+     * Renders the given data as a table at the current location.
+     *
+     * @param data the table to render
+     * @throws Exception when rendering fails
+     */
     public void renderTable(TableRenderData data) throws Exception {
         TableRenderPolicy.Helper.renderTable(run, data);
     }
 
+    /**
+     * Inserts a picture from the given stream at the current location.
+     *
+     * @param inputStream the picture data
+     * @param type        the picture type, see {@code Document.PICTURE_TYPE_*}
+     * @param width       the width in pixels
+     * @param height      the height in pixels
+     * @throws InvalidFormatException when the picture format is not supported
+     * @throws IOException            when the stream cannot be read
+     */
     public void addPicture(InputStream inputStream, int type, int width, int height)
             throws InvalidFormatException, IOException {
         run.addPicture(inputStream, type, "Generated", Units.pixelToEMU(width), Units.pixelToEMU(height));

@@ -19,12 +19,24 @@ import com.deepoove.poi.XWPFTemplate;
 
 /**
  * The interface of render
+ * <p>
+ * A render expands every tag of a compiled {@link XWPFTemplate} with the values
+ * provided by a data model. The default implementation is
+ * {@link DefaultRender}; a custom implementation can be registered through the
+ * configuration to replace the rendering process.
+ * </p>
  * 
  * @author Sayi
  *
  */
 public interface Render {
 
+    /**
+     * Renders the given template with the given data model.
+     *
+     * @param template the compiled template
+     * @param root     the root object of the data model
+     */
     void render(XWPFTemplate template, Object root);
 
 }

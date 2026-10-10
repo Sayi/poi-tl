@@ -24,7 +24,12 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.util.RegexUtils;
 
 /**
- * initial pattern by config
+ * The base resolver that creates the template pattern and the grammar pattern
+ * from the config
+ * <p>
+ * The template pattern matches a whole tag, and the grammar pattern matches the
+ * tag prefix and suffix.
+ * </p>
  * 
  * @author Sayi
  * @version
@@ -39,6 +44,11 @@ public abstract class AbstractResolver implements Resolver {
     private static final String FORMAT_TEMPLATE = "{0}{1}{2}{3}";
     private static final String FORMAT_GRAMMAR = "({0})|({1})";
 
+    /**
+     * Create a resolver and build the patterns from the config
+     * 
+     * @param config template config
+     */
     public AbstractResolver(Configure config) {
         this.config = config;
         patternCreated();
@@ -68,15 +78,27 @@ public abstract class AbstractResolver implements Resolver {
         return reg.toString();
     }
 
+    /**
+     * Get the pattern that matches a whole tag
+     * 
+     * @return template pattern
+     */
     public Pattern getTemplatePattern() {
         return templatePattern;
     }
 
+    /**
+     * Get the pattern that matches the tag prefix and suffix
+     * 
+     * @return grammar pattern
+     */
     public Pattern getGrammarPattern() {
         return grammarPattern;
     }
 
     /**
+     * Get the pattern that matches the tag prefix and suffix
+     * 
      * @return grammar pattern
      * @deprecated misspelled, use {@link #getGrammarPattern()} instead.
      */

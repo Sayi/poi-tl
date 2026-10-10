@@ -28,13 +28,25 @@ import com.deepoove.poi.template.PictureTemplate;
 import com.deepoove.poi.template.run.RunTemplate;
 
 /**
- * process element template
+ * Renders the leaf templates of a document.
+ * <p>
+ * It looks up the render policy of every element template, evaluates the bound
+ * data and delegates the actual rendering. Nested document policies are skipped
+ * here, because they are handled by the iterable processors.
+ * </p>
  * 
  * @author Sayi
  *
  */
 public class ElementProcessor extends DefaultTemplateProcessor {
 
+    /**
+     * Creates a processor that renders leaf templates.
+     *
+     * @param template          the template being rendered
+     * @param resolver          the resolver used to re-parse copied content
+     * @param renderDataCompute the expression evaluator of the current data model
+     */
     public ElementProcessor(XWPFTemplate template, Resolver resolver, RenderDataCompute renderDataCompute) {
         super(template, resolver, renderDataCompute);
     }

@@ -27,10 +27,27 @@ import com.deepoove.poi.config.PreRenderDataCastor;
 import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.template.ElementTemplate;
 
+/**
+ * Bridges a resolved template to its render policy.
+ * <p>
+ * Before handing control to the policy, every registered
+ * {@link PreRenderDataCastor} gets the chance to adapt the data model, which is
+ * how JSON model support and similar extensions hook into rendering.
+ * </p>
+ */
 public class DelegatePolicy {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DelegatePolicy.class);
 
+    /**
+     * Applies the pre-render castors and invokes the render policy.
+     *
+     * @param policy      the policy that renders the template
+     * @param eleTemplate the template to render
+     * @param data        the raw data bound to the template
+     * @param template    the template instance being rendered
+     * @throws NullPointerException if no render policy is available for the tag
+     */
     public static void invoke(RenderPolicy policy, ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         Objects.requireNonNull(policy, "Cannot find render policy: [" + eleTemplate.getTagName() + "]");
         Object model = data;

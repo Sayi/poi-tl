@@ -25,11 +25,27 @@ import com.deepoove.poi.render.RenderContext;
 import com.deepoove.poi.xwpf.XWPFParagraphWrapper;
 
 /**
- * Book mark plug-in
- * @Deprecated use BookmarkTextRenderData instead.
+ * Bookmark plug-in
+ * <p>
+ * Renders the tag value as ordinary text and wraps the resulting run in a Word
+ * bookmark whose name is that text. The tag keeps the {@code TextRenderData}
+ * grammar, so a plain string value is enough.
+ * </p>
+ *
+ * @deprecated use {@link com.deepoove.poi.data.BookmarkTextRenderData} instead.
  */
 public class BookmarkRenderPolicy extends TextRenderPolicy {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Writes the text into the run and inserts a bookmark start before it, naming the
+     * bookmark after the rendered text, so the value becomes a navigable bookmark.
+     * </p>
+     *
+     * @param context the render context holding the target run and the text data
+     * @throws Exception if the text or the bookmark cannot be written
+     */
     @Override
     public void doRender(RenderContext<TextRenderData> context) throws Exception {
         Helper.renderTextRun(context.getRun(), context.getData());

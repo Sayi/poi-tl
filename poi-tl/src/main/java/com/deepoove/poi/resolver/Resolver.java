@@ -25,6 +25,10 @@ import com.deepoove.poi.template.MetaTemplate;
 
 /**
  * Resolver document and part
+ * <p>
+ * It scans a document, a group of body elements or a list of runs and creates
+ * the meta templates found in the template.
+ * </p>
  * 
  * @author Sayi
  * @version
@@ -32,26 +36,26 @@ import com.deepoove.poi.template.MetaTemplate;
 public interface Resolver {
 
     /**
-     * resolve document
+     * Resolve the whole document
      * 
-     * @param doc
-     * @return
+     * @param doc document to resolve
+     * @return the resolved meta templates
      */
     List<MetaTemplate> resolveDocument(XWPFDocument doc);
 
     /**
-     * resolve body elements
+     * Resolve the body elements
      * 
-     * @param bodyElements
-     * @return
+     * @param bodyElements body elements to resolve
+     * @return the resolved meta templates
      */
     List<MetaTemplate> resolveBodyElements(List<IBodyElement> bodyElements);
 
     /**
-     * resolve runs at same paragraph
+     * Resolve the runs at the same paragraph
      * 
-     * @param runs
-     * @return
+     * @param runs runs to resolve
+     * @return the resolved meta templates
      */
     List<MetaTemplate> resolveXWPFRuns(List<XWPFRun> runs);
 

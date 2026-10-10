@@ -20,12 +20,23 @@ import com.deepoove.poi.data.Pictures;
 
 /**
  * Convert Object to PictureRenderData
+ * <p>
+ * A {@link PictureRenderData} is used as is, any other object is treated as the
+ * path of the picture.
+ * </p>
  * 
  * @author sayi
  *
  */
 public class ObjectToPictureRenderDataConverter implements ToRenderDataConverter<Object, PictureRenderData> {
 
+    /**
+     * Convert an object to {@link PictureRenderData}
+     * 
+     * @param source source object
+     * @return picture render data, or null if the source is null
+     * @throws Exception if the conversion fails
+     */
     @Override
     public PictureRenderData convert(Object source) throws Exception {
         if (null == source || source instanceof PictureRenderData) return (PictureRenderData) source;

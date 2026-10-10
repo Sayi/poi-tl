@@ -20,27 +20,55 @@ import com.deepoove.poi.data.ParagraphRenderData;
 import com.deepoove.poi.render.RenderContext;
 
 /**
- * Use paragraph renderer policy render type <T>
+ * Base class of a render policy that renders a value of type {@code T} as a
+ * paragraph.
+ * <p>
+ * The subclass supplies a {@link ToRenderDataConverter} that maps the bound value
+ * to {@link ParagraphRenderData}, and the converted contents are written by
+ * {@link ParagraphRenderPolicy.Helper}.
+ * </p>
  * 
  * @author Sayi
  *
- * @param <T>
+ * @param <T> the type of the data bound to the tag
  */
 public abstract class AbstractParagraphConverterRenderPolicy<T> extends AbstractRenderPolicy<T> {
 
     protected final ToRenderDataConverter<T, ParagraphRenderData> paragraphConverter;
 
+    /**
+     * Returns the converter used to turn the bound value into paragraph render data.
+     * 
+     * @return the paragraph render data converter
+     */
     public abstract ToRenderDataConverter<T, ParagraphRenderData> getParagraphRenderDataConverter();
 
+    /**
+     * Creates the policy and resolves its converter through
+     * {@link #getParagraphRenderDataConverter()}.
+     */
     public AbstractParagraphConverterRenderPolicy() {
         this.paragraphConverter = getParagraphRenderDataConverter();
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<T> context) {
         super.clearPlaceholder(context, true);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It converts the data and writes the resulting contents with
+     * {@link ParagraphRenderPolicy.Helper}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<T> context) throws Exception {
         ParagraphRenderPolicy.Helper.renderParagraph(context.getRun(), paragraphConverter.convert(context.getData()));

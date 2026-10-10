@@ -35,12 +35,27 @@ import com.deepoove.poi.xwpf.BodyContainer;
 import com.deepoove.poi.xwpf.BodyContainerFactory;
 
 /**
- * table render
+ * Renders a tag as a table
+ * <p>
+ * It inserts a new {@link XWPFTable} at the tag position and fills it with the
+ * rows and cells of the {@link TableRenderData}. All rows must have the same
+ * number of cells and the column widths of the table style must match the column
+ * count, otherwise an {@link IllegalArgumentException} is thrown. After the table
+ * is filled its merge rules are applied.
+ * </p>
  * 
  * @author Sayi
  */
 public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is valid when it is not {@code null} and has at least one column;
+     * inconsistent row sizes or column widths raise an
+     * {@link IllegalArgumentException}.
+     * </p>
+     */
     @Override
     protected boolean validate(TableRenderData data) {
         if (null == data || 0 == data.obtainColSize()) return false;
@@ -62,18 +77,41 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It delegates to {@link Helper#renderTable(XWPFRun, TableRenderData)}.
+     * </p>
+     */
     @Override
     public void doRender(RenderContext<TableRenderData> context) throws Exception {
         Helper.renderTable(context.getRun(), context.getData());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * It clears the placeholder paragraph that held the tag.
+     * </p>
+     */
     @Override
     protected void afterRender(RenderContext<TableRenderData> context) {
         clearPlaceholder(context, true);
     }
 
+    /**
+     * Utilities that build tables, rows and cells.
+     */
     public static class Helper {
 
+        /**
+         * Inserts a new table at the tag position and fills it with the given data.
+         * 
+         * @param run  the run holding the tag
+         * @param data the table render data
+         * @return the created table
+         * @throws Exception when the table can not be inserted or filled
+         */
         public static XWPFTable renderTable(XWPFRun run, TableRenderData data) throws Exception {
             BodyContainer bodyContainer = BodyContainerFactory.getBodyContainer(run);
             XWPFTable table = bodyContainer.insertNewTable(run, data.obtainRowSize(), data.obtainColSize());
@@ -89,10 +127,26 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             return table;
         }
 
+        /**
+         * Fills a table row with the given data.
+         * 
+         * @param row  the row to fill
+         * @param data the row render data
+         * @throws Exception when the row can not be filled
+         */
         public static void renderRow(XWPFTableRow row, RowRenderData data) throws Exception {
             renderRow(row, data, null);
         }
 
+        /**
+         * Fills a table row with the given data and a default text style.
+         * 
+         * @param row              the row to fill
+         * @param data             the row render data
+         * @param defaultTextStyle the text style inherited from the tag, may be
+         *                         {@code null}
+         * @throws Exception when the row can not be filled
+         */
         public static void renderRow(XWPFTableRow row, RowRenderData data, Style defaultTextStyle) throws Exception {
             if (null == data) return;
             int size = row.getTableCells().size();
@@ -107,11 +161,28 @@ public class TableRenderPolicy extends AbstractRenderPolicy<TableRenderData> {
             }
         }
 
+        /**
+         * Fills a table cell with the given data.
+         * 
+         * @param cell             the cell to fill
+         * @param data             the cell render data
+         * @param defaultCellStyle the default cell style, may be {@code null}
+         * @throws Exception when the cell can not be filled
+         */
         public static void renderCell(XWPFTableCell cell, CellRenderData data, CellStyle defaultCellStyle)
                 throws Exception {
             renderCell(cell, data, defaultCellStyle, null);
         }
 
+        /**
+         * Fills a table cell with the given data and default styles.
+         * 
+         * @param cell             the cell to fill
+         * @param data             the cell render data
+         * @param defaultCellStyle the default cell style, may be {@code null}
+         * @param defaultTextStyle the default text style, may be {@code null}
+         * @throws Exception when the cell can not be filled
+         */
         public static void renderCell(XWPFTableCell cell, CellRenderData data, CellStyle defaultCellStyle,
                 Style defaultTextStyle) throws Exception {
             if (null == data) return;

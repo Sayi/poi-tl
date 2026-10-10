@@ -35,13 +35,26 @@ import com.deepoove.poi.template.ChartTemplate;
 import com.deepoove.poi.util.ChartUtils;
 
 /**
- * Bubble chart render policy
+ * Render policy of a bubble chart.
+ * <p>
+ * Every series of a bubble chart has three dimensions, X, Y and the bubble
+ * size. The policy replaces those values in the chart and rebuilds the
+ * corresponding columns of the embedded workbook; the template chart must
+ * already be a bubble chart.
+ * </p>
  * 
  * @author Sayi
  */
 public class BubbleChartTemplateRenderPolicy
         extends AbstractChartTemplateRenderPolicy<ChartBubbleRenderData> {
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The data is validated first; every series must provide X, Y and size
+     * values of the same length.
+     * </p>
+     */
     @Override
     public void doRender(ChartTemplate eleTemplate, ChartBubbleRenderData data, XWPFTemplate template)
             throws Exception {

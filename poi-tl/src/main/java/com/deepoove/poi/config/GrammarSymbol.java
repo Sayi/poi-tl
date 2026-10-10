@@ -17,6 +17,10 @@ package com.deepoove.poi.config;
 
 /**
  * Built-in template syntax
+ * <p>
+ * Each constant holds the sign char that prefixes a tag, for example
+ * {@code {{@name}}} for a picture and {@code {{name}}} for text.
+ * </p>
  * 
  * @author Sayi
  */
@@ -69,6 +73,11 @@ public enum GrammarSymbol {
         this.symbol = symbol;
     }
 
+    /**
+     * Get the sign char of the grammar symbol
+     * 
+     * @return sign char of the grammar symbol
+     */
     public char getSymbol() {
         return this.symbol;
     }

@@ -22,7 +22,11 @@ import com.deepoove.poi.policy.RenderPolicy;
 import com.deepoove.poi.render.processor.Visitor;
 
 /**
- * Picture docx template element: XWPFPicture
+ * Picture docx template element, backed by an {@link XWPFPicture}.
+ * <p>
+ * It is resolved when a picture of the template carries a data binding tag, so
+ * that the existing picture is replaced instead of inserting a new one.
+ * </p>
  * 
  * @author Sayi
  * @version 1.8.0
@@ -38,10 +42,20 @@ public class PictureTemplate extends ElementTemplate {
         this.picture = picture;
     }
 
+    /**
+     * Returns the picture of the template.
+     *
+     * @return the picture
+     */
     public XWPFPicture getPicture() {
         return picture;
     }
 
+    /**
+     * Sets the picture of the template.
+     *
+     * @param picture the picture to set
+     */
     public void setPicture(XWPFPicture picture) {
         this.picture = picture;
     }
@@ -51,6 +65,16 @@ public class PictureTemplate extends ElementTemplate {
         visitor.visit(this);
     }
 
+    /**
+     * Finds the render policy of this template.
+     * <p>
+     * The policy bound to the tag name wins over the policy registered for this
+     * template type.
+     * </p>
+     *
+     * @param config the template configuration
+     * @return the render policy for this template
+     */
     @Override
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy renderPolicy = config.getCustomPolicy(tagName);

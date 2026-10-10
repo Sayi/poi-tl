@@ -36,7 +36,13 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.XWPFTextboxContent;
 
 /**
- * Process all templates of the document
+ * Dispatches every template of a document to its dedicated processor.
+ * <p>
+ * Leaf templates go to the {@link ElementProcessor}, block loops to the
+ * {@link IterableProcessor} and inline loops to the
+ * {@link InlineIterableProcessor}. After the templates have been rendered, the
+ * content of touched text boxes is written back to the XML.
+ * </p>
  * 
  * @author Sayi
  *
@@ -47,6 +53,13 @@ public class DocumentProcessor implements Visitor {
     private IterableProcessor iterableProcessor;
     private InlineIterableProcessor inlineIterableProcessor;
 
+    /**
+     * Creates a processor for a whole document.
+     *
+     * @param template          the template being rendered
+     * @param resolver          the resolver used to re-parse copied content
+     * @param renderDataCompute the expression evaluator of the current data model
+     */
     public DocumentProcessor(XWPFTemplate template, final Resolver resolver,
             final RenderDataCompute renderDataCompute) {
         elementProcessor = new ElementProcessor(template, resolver, renderDataCompute);
@@ -54,6 +67,11 @@ public class DocumentProcessor implements Visitor {
         inlineIterableProcessor = new InlineIterableProcessor(template, resolver, renderDataCompute);
     }
 
+    /**
+     * Renders the given templates in document order.
+     *
+     * @param templates the templates to render
+     */
     public void process(List<MetaTemplate> templates) {
         // process in order( or sort first)
         templates.forEach(template -> template.accept(this));

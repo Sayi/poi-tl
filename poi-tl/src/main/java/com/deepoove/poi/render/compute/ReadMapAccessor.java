@@ -26,7 +26,12 @@ import org.springframework.expression.spel.CompilablePropertyAccessor;
 import org.springframework.util.Assert;
 
 /**
- * org.springframework.context.expression.MapAccessor
+ * Spring EL property accessor that reads values from a {@link Map}.
+ * <p>
+ * It mirrors {@code org.springframework.context.expression.MapAccessor} but
+ * only supports reading; when a key is absent, reading fails so that the
+ * expression can fall back to the root model.
+ * </p>
  * 
  * @author Sayi
  * @version
@@ -38,11 +43,28 @@ public class ReadMapAccessor implements CompilablePropertyAccessor {
         return new Class<?>[] { Map.class };
     }
 
+    /**
+     * Tells whether the map contains the requested key.
+     *
+     * @param context the evaluation context
+     * @param target  the map being read
+     * @param name    the property name
+     * @return {@code true} when the key exists
+     */
     @Override
     public boolean canRead(EvaluationContext context, Object target, String name) throws AccessException {
         return (target instanceof Map && ((Map<?, ?>) target).containsKey(name));
     }
 
+    /**
+     * Reads the value bound to the given key.
+     *
+     * @param context the evaluation context
+     * @param target  the map being read
+     * @param name    the property name
+     * @return the value of the key
+     * @throws AccessException when the key does not exist
+     */
     @Override
     public TypedValue read(EvaluationContext context, Object target, String name) throws AccessException {
         Assert.state(target instanceof Map, "Target must be of type Map");

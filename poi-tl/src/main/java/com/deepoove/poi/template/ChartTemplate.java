@@ -29,7 +29,13 @@ import com.deepoove.poi.util.ChartUtils;
 import com.deepoove.poi.xwpf.XDDFOfPieChartData;
 
 /**
- * chart docx template element: XWPFChart
+ * Chart docx template element, backed by an {@link XWPFChart}.
+ * <p>
+ * The chart already exists in the template as a chart placeholder; poi-tl
+ * resolves its data binding tag and replaces the series with the bound data.
+ * Both the {@link ChartTypes} and the concrete chart data class are inspected
+ * so that a policy can be registered per chart type.
+ * </p>
  * 
  * @author Sayi
  * @version 1.8.0
@@ -89,18 +95,38 @@ public class ChartTemplate extends ElementTemplate {
         return chartType;
     }
 
+    /**
+     * Returns the chart of the template.
+     *
+     * @return the chart
+     */
     public XWPFChart getChart() {
         return chart;
     }
 
+    /**
+     * Sets the chart of the template.
+     *
+     * @param chart the chart to set
+     */
     public void setChart(XWPFChart chart) {
         this.chart = chart;
     }
 
+    /**
+     * Returns the run that contains the chart.
+     *
+     * @return the run
+     */
     public XWPFRun getRun() {
         return run;
     }
 
+    /**
+     * Sets the run that contains the chart.
+     *
+     * @param run the run to set
+     */
     public void setRun(XWPFRun run) {
         this.run = run;
     }
@@ -110,6 +136,17 @@ public class ChartTemplate extends ElementTemplate {
         visitor.visit(this);
     }
 
+    /**
+     * Finds the render policy of this template.
+     * <p>
+     * The policy bound to the tag name wins, then the policy registered for the
+     * chart type, then the one registered for the concrete chart data class, and
+     * finally the policy registered for this template type.
+     * </p>
+     *
+     * @param config the template configuration
+     * @return the render policy for this template
+     */
     @Override
     public RenderPolicy findPolicy(Configure config) {
         RenderPolicy policy = config.getCustomPolicy(tagName);

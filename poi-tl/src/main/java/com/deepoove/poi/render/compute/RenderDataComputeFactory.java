@@ -16,14 +16,32 @@
 package com.deepoove.poi.render.compute;
 
 /**
+ * Factory of {@link RenderDataCompute} instances.
+ * <p>
+ * Registering a custom factory on the configuration is the way to plug another
+ * expression language, for example OGNL or MVEL, into poi-tl.
+ * </p>
+ * 
  * @author Sayi
  * @version 1.7.0
  */
 @FunctionalInterface
 public interface RenderDataComputeFactory {
 
+    /**
+     * Creates an evaluator for the given environment model.
+     *
+     * @param model the data model together with its loop environment
+     * @return the evaluator
+     */
     RenderDataCompute newCompute(EnvModel model);
 
+    /**
+     * Creates an evaluator for a plain data model.
+     *
+     * @param model the root object of the data model
+     * @return the evaluator
+     */
     default RenderDataCompute newCompute(Object model) {
         return newCompute(model instanceof EnvModel ? (EnvModel)model : EnvModel.ofModel(model));
     }

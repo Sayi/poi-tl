@@ -19,8 +19,13 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.policy.RenderPolicy;
 
 /**
- * sign + tagName == source
- * 
+ * A meta template that belongs to a single document element.
+ * <p>
+ * An element template is composed of a grammar sign, a tag name and the source
+ * text it was resolved from, where {@code sign + tagName == source}. It also
+ * knows which {@link RenderPolicy} has to render it.
+ * </p>
+ *
  * @author Sayi
  */
 public abstract class ElementTemplate implements MetaTemplate {
@@ -32,31 +37,56 @@ public abstract class ElementTemplate implements MetaTemplate {
     }
 
     /**
-     * @return the tagName
+     * Returns the variable name of this template, namely its tag name.
+     *
+     * @return the tag name
      */
     public String getTagName() {
         return tagName;
     }
 
     /**
-     * @param tagName the tagName to set
+     * Sets the variable name of this template.
+     *
+     * @param tagName the tag name to set
      */
     public void setTagName(String tagName) {
         this.tagName = tagName;
     }
 
+    /**
+     * Returns the raw tag text this template was resolved from.
+     *
+     * @return the source text
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * Sets the raw tag text this template was resolved from.
+     *
+     * @param source the source text to set
+     */
     public void setSource(String source) {
         this.source = source;
     }
 
+    /**
+     * Returns the grammar sign of this template, for example {@code @} for a
+     * picture tag.
+     *
+     * @return the grammar sign
+     */
     public Character getSign() {
         return sign;
     }
 
+    /**
+     * Sets the grammar sign of this template.
+     *
+     * @param sign the grammar sign to set
+     */
     public void setSign(Character sign) {
         this.sign = sign;
     }
@@ -66,11 +96,23 @@ public abstract class ElementTemplate implements MetaTemplate {
         return source;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * An element template is identified by its source text.
+     * </p>
+     */
     @Override
     public String variable() {
         return source;
     }
 
+    /**
+     * Finds the render policy that must be applied to this template.
+     *
+     * @param config the template configuration
+     * @return the render policy for this template
+     */
     public abstract RenderPolicy findPolicy(Configure config);
 
 }

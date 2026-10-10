@@ -27,10 +27,22 @@ import com.deepoove.poi.template.run.RunTemplate;
 import com.deepoove.poi.xwpf.XWPFOnOff;
 
 /**
- * Experimental: Table of contents
+ * Inserts a Word table of contents field in place of the tag.
+ * <p>
+ * The generated field is marked dirty so that Word refreshes the entries when the
+ * document is opened. The bound data is ignored; bind this policy to a dedicated
+ * tag name.
+ * </p>
  */
 public class TOCRenderPolicy implements RenderPolicy {
 
+    /**
+     * Replaces the tag with a dirty {@code TOC} field.
+     *
+     * @param eleTemplate the tag to render
+     * @param data        the bound data, ignored by this policy
+     * @param template    the template instance being rendered
+     */
     @Override
     public void render(ElementTemplate eleTemplate, Object data, XWPFTemplate template) {
         XWPFRun run = ((RunTemplate) eleTemplate).getRun();

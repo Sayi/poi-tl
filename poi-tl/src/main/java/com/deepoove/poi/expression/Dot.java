@@ -28,7 +28,11 @@ import org.slf4j.LoggerFactory;
 import com.deepoove.poi.exception.ExpressionEvalException;
 
 /**
- * dot expression
+ * Dot expression
+ * <p>
+ * It is a linked expression node: {@code user.name} is split into the key
+ * {@code name} and the target {@code user}, which is evaluated recursively.
+ * </p>
  * 
  * @author Sayi
  *
@@ -42,6 +46,12 @@ public class Dot {
 
     final static Pattern EL_PATTERN = Pattern.compile("^[^\\.]+(\\.[^\\.]+)*$");
 
+    /**
+     * Create a dot expression
+     * 
+     * @param el dot expression, such as {@code user.name}
+     * @throws ExpressionEvalException if the expression format is illegal
+     */
     public Dot(String el) {
         Objects.requireNonNull(el, "EL cannot be null.");
         if (!EL_PATTERN.matcher(el).matches()) {
@@ -58,6 +68,12 @@ public class Dot {
         }
     }
 
+    /**
+     * Evaluate the expression against a default EL
+     * 
+     * @param elObject default EL that holds the model and the cache
+     * @return the evaluated value, or null if it cannot be found
+     */
     public Object eval(DefaultEL elObject) {
         if (elObject.cache.containsKey(el)) return elObject.cache.get(el);
         Object result = null != target ? result = evalKey(target.eval(elObject)) : evalKey(elObject.model);
@@ -103,14 +119,29 @@ public class Dot {
         }
     }
 
+    /**
+     * Get the expression
+     * 
+     * @return expression
+     */
     public String getEl() {
         return el;
     }
 
+    /**
+     * Get the target expression, the part before the last dot
+     * 
+     * @return target expression, or null if the expression has a single key
+     */
     public Dot getTarget() {
         return target;
     }
 
+    /**
+     * Get the key, the part after the last dot
+     * 
+     * @return key
+     */
     public String getKey() {
         return key;
     }

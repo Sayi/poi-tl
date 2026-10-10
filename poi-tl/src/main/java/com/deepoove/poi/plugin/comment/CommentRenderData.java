@@ -22,6 +22,11 @@ import com.deepoove.poi.data.RenderData;
 
 /**
  * Comment structure
+ * <p>
+ * Holds the visible runs of the tag together with an optional
+ * {@link CommentContent} that supplies the comment author, date and body. Bind it
+ * to a tag handled by {@link CommentRenderPolicy}.
+ * </p>
  * 
  * @author Sayi
  *
@@ -33,18 +38,38 @@ public class CommentRenderData implements RenderData {
     private List<RenderData> contents = new ArrayList<>();
     private CommentContent commentContent;
 
+    /**
+     * Returns the runs rendered where the tag sits.
+     *
+     * @return the visible content, never {@code null}
+     */
     public List<RenderData> getContents() {
         return contents;
     }
 
+    /**
+     * Sets the runs rendered where the tag sits.
+     *
+     * @param contents the visible content
+     */
     public void setContents(List<RenderData> contents) {
         this.contents = contents;
     }
 
+    /**
+     * Returns the comment bubble metadata and body.
+     *
+     * @return the comment content, may be {@code null}
+     */
     public CommentContent getCommentContent() {
         return commentContent;
     }
 
+    /**
+     * Sets the comment bubble metadata and body.
+     *
+     * @param comment the comment content
+     */
     public void setCommentContent(CommentContent comment) {
         this.commentContent = comment;
     }

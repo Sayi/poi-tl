@@ -18,6 +18,14 @@ package com.deepoove.poi.plugin.highlight.converter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * One parsed CSS rule of a highlight stylesheet.
+ * <p>
+ * It pairs a selector, for example {@code .keyword} or {@code .cm-comment},
+ * with the declarations that were found for it. The stylesheet parser feeds
+ * these rules to the converter, which turns them into Word run styles.
+ * </p>
+ */
 public class SelectorStyle {
 
     private String selectorName;
@@ -26,22 +34,47 @@ public class SelectorStyle {
     public SelectorStyle() {
     }
 
+    /**
+     * Creates a rule for the given selector.
+     *
+     * @param name the selector name
+     */
     public SelectorStyle(String name) {
         this.selectorName = name;
     }
 
+    /**
+     * Returns the selector name of this rule.
+     *
+     * @return the selector name
+     */
     public String getSelectorName() {
         return selectorName;
     }
 
+    /**
+     * Sets the selector name of this rule.
+     *
+     * @param selectorName the selector name to set
+     */
     public void setSelectorName(String selectorName) {
         this.selectorName = selectorName;
     }
 
+    /**
+     * Returns the declarations of this rule, keyed by property name.
+     *
+     * @return the property values
+     */
     public Map<String, String> getPropertyValues() {
         return propertyValues;
     }
 
+    /**
+     * Sets the declarations of this rule.
+     *
+     * @param propertyValues the property values to set
+     */
     public void setPropertyValues(Map<String, String> propertyValues) {
         this.propertyValues = propertyValues;
     }
