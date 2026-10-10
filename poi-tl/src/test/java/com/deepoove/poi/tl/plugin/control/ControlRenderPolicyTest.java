@@ -6,9 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +45,84 @@ import com.deepoove.poi.plugin.control.ControlRenderPolicy;
 public class ControlRenderPolicyTest {
 
     private static final String W14 = "http://schemas.microsoft.com/office/word/2010/wordml";
+
+    @Test
+    public void testWriteSampleDocument() throws Exception {
+        XWPFDocument doc = new XWPFDocument();
+        XWPFParagraph title = doc.createParagraph();
+        XWPFRun titleRun = title.createRun();
+        titleRun.setText("审批单");
+        titleRun.setBold(true);
+        titleRun.setFontSize(16);
+
+        doc.createParagraph().createRun().setText("申请人：{{name}}    部门：{{dept}}");
+        doc.createParagraph().createRun().setText("是否已婚：{{married}}    是否加急：{{urgent}}");
+        doc.createParagraph().createRun().setText("审批意见：{{audit}}    处理方式：{{method}}");
+        doc.createParagraph().createRun().setText("签署日期：{{signDate}}    空日期：{{emptyDate}}");
+
+        XWPFTable table = doc.createTable(2, 3);
+        setCell(table, 0, 0, "检查项");
+        setCell(table, 0, 1, "结果");
+        setCell(table, 0, 2, "复核");
+        setCell(table, 1, 0, "资料齐全");
+        setCell(table, 1, 1, "{{itemOk}}");
+        setCell(table, 1, 2, "{{review}}");
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(2025, Calendar.MAY, 20, 0, 0, 0);
+
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("name", "张三");
+        data.put("dept", "研发部");
+        data.put("married", Controls.ofCheckBox(true).title("婚姻状况").tag("married").create());
+        data.put("urgent", false);
+        data.put("audit", Controls.ofDropDown("REJECT")
+                .title("审批意见")
+                .tag("audit")
+                .addOption("请选择...", "")
+                .addOption("同意", "AGREE")
+                .addOption("退回", "REJECT")
+                .lock(LockType.CONTENT_LOCKED)
+                .create());
+        data.put("method", Controls.ofDropDown("邮件")
+                .title("处理方式")
+                .tag("method")
+                .comboBox(true)
+                .addOption("当面", "当面")
+                .addOption("邮件", "邮件")
+                .create());
+        data.put("signDate", Controls.ofDate(calendar.getTime())
+                .title("签署日期")
+                .tag("signDate")
+                .format("yyyy年MM月dd日")
+                .locale(Locale.SIMPLIFIED_CHINESE)
+                .create());
+        data.put("emptyDate", Controls.ofDate().placeholder("请选择日期").tag("emptyDate").create());
+        data.put("itemOk", Controls.ofCheckBox(true).wingdings2().tag("itemOk").create());
+        data.put("review", Arrays.asList(Option.of("通过", "PASS"), Option.of("不通过", "FAIL")));
+
+        Configure config = Configure.builder()
+                .bind(new ControlRenderPolicy(), "married", "urgent", "audit", "method", "signDate", "emptyDate",
+                        "itemOk", "review")
+                .build();
+        File out = new File("target/out_render_control.docx");
+        XWPFTemplate.compile(doc, config).render(data).writeToFile(out.getPath());
+
+        assertTrue(out.isFile(), out.getPath());
+        assertTrue(out.length() > 0, out.getPath());
+        String xml = documentXml(new ByteArrayInputStream(java.nio.file.Files.readAllBytes(out.toPath())));
+        assertTrue(xml.contains("<w14:checkbox>"), xml);
+        assertTrue(xml.contains("<w:dropDownList"), xml);
+        assertTrue(xml.contains("<w:comboBox"), xml);
+        assertTrue(xml.contains("<w:date"), xml);
+        assertTrue(xml.contains("<w:t>2025年05月20日</w:t>"), xml);
+        assertTrue(xml.contains("<w:t>张三</w:t>"), xml);
+        assertTrue(xml.contains("<w:t>请选择日期</w:t>"), xml);
+        assertTrue(xml.contains("<w:t>退回</w:t>"), xml);
+        assertEquals(1, countOf(xml, "w:fullDate"), xml);
+        assertFalse(xml.contains("{{married}}"), xml);
+    }
 
     @Test
     public void testCheckBoxStatesGlyphsAndNamespace() throws Exception {
@@ -269,11 +349,21 @@ public class ControlRenderPolicyTest {
         return documentXml(XWPFTemplate.compile(doc, config).render(data));
     }
 
+    private static void setCell(XWPFTable table, int row, int col, String text) {
+        XWPFTableCell cell = table.getRow(row).getCell(col);
+        cell.removeParagraph(0);
+        cell.addParagraph().createRun().setText(text);
+    }
+
     private String documentXml(XWPFTemplate template) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         template.write(out);
         template.close();
-        ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(out.toByteArray()));
+        return documentXml(new ByteArrayInputStream(out.toByteArray()));
+    }
+
+    private String documentXml(ByteArrayInputStream in) throws Exception {
+        ZipInputStream zip = new ZipInputStream(in);
         ZipEntry entry;
         while ((entry = zip.getNextEntry()) != null) {
             if ("word/document.xml".equals(entry.getName())) {
