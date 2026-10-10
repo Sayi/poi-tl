@@ -21,7 +21,7 @@ public class DefaultRunTemplateFactoryTest {
         TemplateResolver resolver = new TemplateResolver(config);
 
         Pattern templatePattern = resolver.getTemplatePattern();
-        Pattern gramerPattern = resolver.getGramerPattern();
+        Pattern grammarPattern = resolver.getGrammarPattern();
 
         DefaultElementTemplateFactory runTemplateFactory = new DefaultElementTemplateFactory();
 
@@ -30,7 +30,7 @@ public class DefaultRunTemplateFactoryTest {
 
         String text = "{{/}}";
         if (templatePattern.matcher(text).matches()) {
-            tag = gramerPattern.matcher(text).replaceAll("").trim();
+            tag = grammarPattern.matcher(text).replaceAll("").trim();
             template = (RunTemplate) runTemplateFactory.createRunTemplate(config, tag, null);
         }
         assertEquals(tag, "/");
@@ -39,7 +39,7 @@ public class DefaultRunTemplateFactoryTest {
 
         text = "{{}}";
         if (templatePattern.matcher(text).matches()) {
-            tag = gramerPattern.matcher(text).replaceAll("").trim();
+            tag = grammarPattern.matcher(text).replaceAll("").trim();
             template = (RunTemplate) runTemplateFactory.createRunTemplate(config, tag, null);
         }
         assertEquals(tag, "");
@@ -48,7 +48,7 @@ public class DefaultRunTemplateFactoryTest {
 
         text = "{{name}}";
         if (templatePattern.matcher(text).matches()) {
-            tag = gramerPattern.matcher(text).replaceAll("").trim();
+            tag = grammarPattern.matcher(text).replaceAll("").trim();
             template = (RunTemplate) runTemplateFactory.createRunTemplate(config, tag, null);
         }
         assertEquals(tag, "name");
@@ -57,7 +57,7 @@ public class DefaultRunTemplateFactoryTest {
 
         text = "{{?name}}";
         if (templatePattern.matcher(text).matches()) {
-            tag = gramerPattern.matcher(text).replaceAll("").trim();
+            tag = grammarPattern.matcher(text).replaceAll("").trim();
             template = (RunTemplate) runTemplateFactory.createRunTemplate(config, tag, null);
         }
         assertEquals(tag, "?name");

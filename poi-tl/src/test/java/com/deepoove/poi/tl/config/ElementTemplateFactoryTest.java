@@ -36,7 +36,7 @@ public class ElementTemplateFactoryTest {
                 return runTemplate;
             }
         };
-        Configure config = Configure.builder().buildGrammerRegex(RegexUtils.createGeneral("{{", "}}"))
+        Configure config = Configure.builder().buildGrammarRegex(RegexUtils.createGeneral("{{", "}}"))
                 .setElementTemplateFactory(elementTemplateFactory).build();
 
         XWPFDocument doc = new XWPFDocument();

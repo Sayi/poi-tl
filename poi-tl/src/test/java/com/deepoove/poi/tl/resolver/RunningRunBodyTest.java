@@ -24,7 +24,7 @@ import com.deepoove.poi.xwpf.RunBodyContextFactory;
 public class RunningRunBodyTest {
 
     @Test
-    public void testDefaultGramer() throws IOException {
+    public void testDefaultGrammar() throws IOException {
 
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/resolver_running_run.docx");
         List<MetaTemplate> elementTemplates = template.getElementTemplates();
@@ -59,9 +59,9 @@ public class RunningRunBodyTest {
     }
 
     @Test
-    public void testCustomGramer() throws IOException {
+    public void testCustomGrammar() throws IOException {
 
-        Configure config = Configure.builder().buildGramer("${", "}").build();
+        Configure config = Configure.builder().buildGrammar("${", "}").build();
         XWPFTemplate template = XWPFTemplate.compile("src/test/resources/template/resolver_running_run_custom.docx",
                 config);
         List<MetaTemplate> elementTemplates = template.getElementTemplates();

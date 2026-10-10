@@ -47,21 +47,71 @@ public class ConfigureBuilder {
         config = new Configure();
     }
 
-    public ConfigureBuilder buildGramer(String prefix, String suffix) {
-        config.gramerPrefix = prefix;
-        config.gramerSuffix = suffix;
+    /**
+     * Customize the tag prefix and suffix of the template syntax
+     * 
+     * @param prefix tag prefix
+     * @param suffix tag suffix
+     * @return builder
+     */
+    public ConfigureBuilder buildGrammar(String prefix, String suffix) {
+        config.grammarPrefix = prefix;
+        config.grammarSuffix = suffix;
         return this;
     }
 
-    public ConfigureBuilder buidIterableLeft(char c) {
+    /**
+     * Customize the start symbol of the if &amp; foreach block
+     * 
+     * @param c block start char
+     * @return builder
+     */
+    public ConfigureBuilder buildIterableLeft(char c) {
         config.iterable = Pair.of(c, config.iterable.getRight());
         return this;
     }
 
-    public ConfigureBuilder buildGrammerRegex(String reg) {
+    /**
+     * Customize the tag regular expression
+     * 
+     * @param reg tag regex
+     * @return builder
+     */
+    public ConfigureBuilder buildGrammarRegex(String reg) {
         changeRegex = true;
-        config.grammerRegex = reg;
+        config.grammarRegex = reg;
         return this;
+    }
+
+    /**
+     * @param prefix tag prefix
+     * @param suffix tag suffix
+     * @return builder
+     * @deprecated misspelled, use {@link #buildGrammar(String, String)} instead.
+     */
+    @Deprecated
+    public ConfigureBuilder buildGramer(String prefix, String suffix) {
+        return buildGrammar(prefix, suffix);
+    }
+
+    /**
+     * @param c block start char
+     * @return builder
+     * @deprecated misspelled, use {@link #buildIterableLeft(char)} instead.
+     */
+    @Deprecated
+    public ConfigureBuilder buidIterableLeft(char c) {
+        return buildIterableLeft(c);
+    }
+
+    /**
+     * @param reg tag regex
+     * @return builder
+     * @deprecated misspelled, use {@link #buildGrammarRegex(String)} instead.
+     */
+    @Deprecated
+    public ConfigureBuilder buildGrammerRegex(String reg) {
+        return buildGrammarRegex(reg);
     }
 
     public ConfigureBuilder useSpringEL() {
@@ -135,7 +185,7 @@ public class ConfigureBuilder {
 
     public Configure build() {
         if (usedSpringEL && !changeRegex) {
-            config.grammerRegex = RegexUtils.createGeneral(config.gramerPrefix, config.gramerSuffix);
+            config.grammarRegex = RegexUtils.createGeneral(config.grammarPrefix, config.grammarSuffix);
         }
         return config;
     }

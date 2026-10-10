@@ -147,7 +147,7 @@ public class IterableTemplateTest {
 
     @SuppressWarnings("serial")
     @Test
-    @DisplayName("using all gramer together")
+    @DisplayName("using all grammar together")
     public void testTogetherBasic() throws Exception {
         RowRenderData row0 = Rows
                 .of(new HyperlinkTextRenderData("张三", "http://deepoove.com"), new TextRenderData("1E915D", "研究生"))

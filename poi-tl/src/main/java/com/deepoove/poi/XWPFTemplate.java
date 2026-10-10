@@ -194,7 +194,7 @@ public class XWPFTemplate implements Closeable {
         Configure configure = Configure.builder().bind(TEMPLATE_TAG_NAME, new DocumentRenderPolicy()).build();
         XWPFDocument document = new NiceXWPFDocument();
         XWPFRun run = document.createParagraph().createRun();
-        run.setText(configure.getGramerPrefix() + TEMPLATE_TAG_NAME + configure.getGramerSuffix());
+        run.setText(configure.getGrammarPrefix() + TEMPLATE_TAG_NAME + configure.getGrammarSuffix());
         StyleUtils.styleRun(run, templateTagStyle);
         return compile(document, configure).render(Collections.singletonMap(TEMPLATE_TAG_NAME, data));
     }

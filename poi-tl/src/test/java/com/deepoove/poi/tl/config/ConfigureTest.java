@@ -46,7 +46,7 @@ public class ConfigureTest {
     public void init() {
         builder = Configure.builder();
         // 自定义语法以[[开头，以]]结尾
-        builder.buildGramer("[[", "]]");
+        builder.buildGrammar("[[", "]]");
         // 自定义标签text的策略：不是文本，是图片
         builder.bind("text", new PictureRenderPolicy());
         // 添加%语法：%开头的也是文本
@@ -114,7 +114,7 @@ public class ConfigureTest {
     @Test
     public void testRegex() throws IOException {
         // A~Z,a~z,0~9,_ 组合
-        builder.buildGrammerRegex("[\\w]+(\\.[\\w]+)*");
+        builder.buildGrammarRegex("[\\w]+(\\.[\\w]+)*");
 
         XWPFTemplate template = XWPFTemplate.compile(resource, builder.build());
         assertEquals(template.getElementTemplates().size(), 3);

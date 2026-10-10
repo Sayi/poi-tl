@@ -66,7 +66,15 @@ public class Configure implements Cloneable {
     /**
      * regular expression: Chinese, letters, numbers and underscores
      */
-    public static final String DEFAULT_GRAMER_REGEX = "((#)?[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*)?";
+    public static final String DEFAULT_GRAMMAR_REGEX = "((#)?[\\w\\u4e00-\\u9fa5]+(\\.[\\w\\u4e00-\\u9fa5]+)*)?";
+
+    /**
+     * regular expression: Chinese, letters, numbers and underscores
+     * 
+     * @deprecated misspelled, use {@link #DEFAULT_GRAMMAR_REGEX} instead.
+     */
+    @Deprecated
+    public static final String DEFAULT_GRAMER_REGEX = DEFAULT_GRAMMAR_REGEX;
 
     /**
      * template by bind: Highest priority
@@ -100,23 +108,23 @@ public class Configure implements Cloneable {
      * eg. {{?user}} Hello, World {{/user}}
      * </p>
      */
-    protected Pair<Character, Character> iterable = Pair.of(GramerSymbol.ITERABLE_START.getSymbol(),
-            GramerSymbol.BLOCK_END.getSymbol());
+    protected Pair<Character, Character> iterable = Pair.of(GrammarSymbol.ITERABLE_START.getSymbol(),
+            GrammarSymbol.BLOCK_END.getSymbol());
 
     /**
      * tag prefix
      */
-    protected String gramerPrefix = "{{";
+    protected String grammarPrefix = "{{";
 
     /**
      * tag suffix
      */
-    protected String gramerSuffix = "}}";
+    protected String grammarSuffix = "}}";
 
     /**
      * tag regular expression
      */
-    protected String grammerRegex = DEFAULT_GRAMER_REGEX;
+    protected String grammarRegex = DEFAULT_GRAMMAR_REGEX;
 
     /**
      * the factory of render data compute
@@ -144,12 +152,12 @@ public class Configure implements Cloneable {
     protected List<PreRenderDataCastor> preRenderDataCastors = new ArrayList<>();
 
     Configure() {
-        plugin(GramerSymbol.TEXT, new TextRenderPolicy());
-        plugin(GramerSymbol.TEXT_ALIAS, new TextRenderPolicy());
-        plugin(GramerSymbol.IMAGE, new PictureRenderPolicy());
-        plugin(GramerSymbol.TABLE, new TableRenderPolicy());
-        plugin(GramerSymbol.NUMBERING, new NumberingRenderPolicy());
-        plugin(GramerSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
+        plugin(GrammarSymbol.TEXT, new TextRenderPolicy());
+        plugin(GrammarSymbol.TEXT_ALIAS, new TextRenderPolicy());
+        plugin(GrammarSymbol.IMAGE, new PictureRenderPolicy());
+        plugin(GrammarSymbol.TABLE, new TableRenderPolicy());
+        plugin(GrammarSymbol.NUMBERING, new NumberingRenderPolicy());
+        plugin(GrammarSymbol.DOCX_TEMPLATE, new DocxRenderPolicy());
 
         RenderPolicy multiSeriesRenderPolicy = new MultiSeriesChartTemplateRenderPolicy();
         plugin(ChartTypes.AREA, multiSeriesRenderPolicy);
@@ -202,7 +210,7 @@ public class Configure implements Cloneable {
         return this;
     }
 
-    Configure plugin(GramerSymbol symbol, RenderPolicy policy) {
+    Configure plugin(GrammarSymbol symbol, RenderPolicy policy) {
         DEFAULT_POLICYS.put(symbol.getSymbol(), policy);
         return this;
     }
@@ -258,7 +266,7 @@ public class Configure implements Cloneable {
         return DEFAULT_CHART_POLICYS;
     }
 
-    public Set<Character> getGramerChars() {
+    public Set<Character> getGrammarChars() {
         Set<Character> ret = new HashSet<Character>(DEFAULT_POLICYS.keySet());
         // ? /
         ret.add(iterable.getKey());
@@ -266,16 +274,52 @@ public class Configure implements Cloneable {
         return ret;
     }
 
+    public String getGrammarPrefix() {
+        return grammarPrefix;
+    }
+
+    public String getGrammarSuffix() {
+        return grammarSuffix;
+    }
+
+    public String getGrammarRegex() {
+        return grammarRegex;
+    }
+
+    /**
+     * @return grammar chars
+     * @deprecated misspelled, use {@link #getGrammarChars()} instead.
+     */
+    @Deprecated
+    public Set<Character> getGramerChars() {
+        return getGrammarChars();
+    }
+
+    /**
+     * @return tag prefix
+     * @deprecated misspelled, use {@link #getGrammarPrefix()} instead.
+     */
+    @Deprecated
     public String getGramerPrefix() {
-        return gramerPrefix;
+        return getGrammarPrefix();
     }
 
+    /**
+     * @return tag suffix
+     * @deprecated misspelled, use {@link #getGrammarSuffix()} instead.
+     */
+    @Deprecated
     public String getGramerSuffix() {
-        return gramerSuffix;
+        return getGrammarSuffix();
     }
 
+    /**
+     * @return tag regular expression
+     * @deprecated misspelled, use {@link #getGrammarRegex()} instead.
+     */
+    @Deprecated
     public String getGrammerRegex() {
-        return grammerRegex;
+        return getGrammarRegex();
     }
 
     public ValidErrorHandler getValidErrorHandler() {
@@ -306,19 +350,20 @@ public class Configure implements Cloneable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Configure Info").append(":\n");
-        sb.append("  Basic gramer: ").append(gramerPrefix).append(gramerSuffix).append("\n");
-        sb.append("  If and foreach gramer: ").append(gramerPrefix).append(iterable.getLeft()).append(gramerSuffix);
-        sb.append(gramerPrefix).append(iterable.getRight()).append(gramerSuffix).append("\n");
-        sb.append("  Regex:").append(grammerRegex).append("\n");
+        sb.append("  Basic grammar: ").append(grammarPrefix).append(grammarSuffix).append("\n");
+        sb.append("  If and foreach grammar: ").append(grammarPrefix).append(iterable.getLeft())
+                .append(grammarSuffix);
+        sb.append(grammarPrefix).append(iterable.getRight()).append(grammarSuffix).append("\n");
+        sb.append("  Regex:").append(grammarRegex).append("\n");
         sb.append("  Valid Error Handler: ").append(handler.getClass().getSimpleName()).append("\n");
         sb.append("  Default Plugin: ").append("\n");
         DEFAULT_POLICYS.forEach((chara, policy) -> {
-            sb.append("    ").append(gramerPrefix).append(chara.charValue()).append(gramerSuffix);
+            sb.append("    ").append(grammarPrefix).append(chara.charValue()).append(grammarSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
         sb.append("  Bind Plugin: ").append("\n");
         CUSTOM_POLICYS.forEach((str, policy) -> {
-            sb.append("    ").append(gramerPrefix).append(str).append(gramerSuffix);
+            sb.append("    ").append(grammarPrefix).append(str).append(grammarSuffix);
             sb.append("->").append(policy.getClass().getSimpleName()).append("\n");
         });
         sb.append("  Chart Plugin: ").append("\n");
@@ -347,9 +392,9 @@ public class Configure implements Cloneable {
 
     public Configure copy(String prefix, String suffix) throws CloneNotSupportedException {
         Configure clone = clone();
-        clone.gramerPrefix = prefix;
-        clone.gramerSuffix = suffix;
-        clone.grammerRegex = RegexUtils.createGeneral(clone.gramerPrefix, clone.gramerSuffix);
+        clone.grammarPrefix = prefix;
+        clone.grammarSuffix = suffix;
+        clone.grammarRegex = RegexUtils.createGeneral(clone.grammarPrefix, clone.grammarSuffix);
         return clone;
     }
 

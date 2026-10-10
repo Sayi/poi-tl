@@ -34,10 +34,10 @@ public abstract class AbstractResolver implements Resolver {
     protected final Configure config;
 
     protected Pattern templatePattern;
-    protected Pattern gramerPattern;
+    protected Pattern grammarPattern;
 
     private static final String FORMAT_TEMPLATE = "{0}{1}{2}{3}";
-    private static final String FORMAT_GRAMER = "({0})|({1})";
+    private static final String FORMAT_GRAMMAR = "({0})|({1})";
 
     public AbstractResolver(Configure config) {
         this.config = config;
@@ -45,22 +45,22 @@ public abstract class AbstractResolver implements Resolver {
     }
 
     void patternCreated() {
-        String sign = getGramarRegex(config);
-        String prefix = RegexUtils.escapeExprSpecialWord(config.getGramerPrefix());
-        String suffix = RegexUtils.escapeExprSpecialWord(config.getGramerSuffix());
+        String sign = getGrammarRegex(config);
+        String prefix = RegexUtils.escapeExprSpecialWord(config.getGrammarPrefix());
+        String suffix = RegexUtils.escapeExprSpecialWord(config.getGrammarSuffix());
 
         templatePattern = Pattern
-                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefix, sign, config.getGrammerRegex(), suffix));
-        gramerPattern = Pattern.compile(MessageFormat.format(FORMAT_GRAMER, prefix, suffix));
+                .compile(MessageFormat.format(FORMAT_TEMPLATE, prefix, sign, config.getGrammarRegex(), suffix));
+        grammarPattern = Pattern.compile(MessageFormat.format(FORMAT_GRAMMAR, prefix, suffix));
     }
 
-    String getGramarRegex(Configure config) {
-        List<Character> gramerChar = new ArrayList<Character>(config.getGramerChars());
+    String getGrammarRegex(Configure config) {
+        List<Character> grammarChar = new ArrayList<Character>(config.getGrammarChars());
         StringBuilder reg = new StringBuilder("(");
         for (int i = 0;; i++) {
-            Character chara = gramerChar.get(i);
+            Character chara = grammarChar.get(i);
             String word = RegexUtils.escapeExprSpecialWord(chara.toString());
-            if (i == gramerChar.size() - 1) {
+            if (i == grammarChar.size() - 1) {
                 reg.append(word).append(")?");
                 break;
             } else reg.append(word).append("|");
@@ -72,8 +72,17 @@ public abstract class AbstractResolver implements Resolver {
         return templatePattern;
     }
 
+    public Pattern getGrammarPattern() {
+        return grammarPattern;
+    }
+
+    /**
+     * @return grammar pattern
+     * @deprecated misspelled, use {@link #getGrammarPattern()} instead.
+     */
+    @Deprecated
     public Pattern getGramerPattern() {
-        return gramerPattern;
+        return getGrammarPattern();
     }
 
 }

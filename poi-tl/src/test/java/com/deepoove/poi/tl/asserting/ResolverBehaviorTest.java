@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.deepoove.poi.config.Configure;
-import com.deepoove.poi.config.GramerSymbol;
+import com.deepoove.poi.config.GrammarSymbol;
 import com.deepoove.poi.template.ElementTemplate;
 
 @DisplayName("Template resolver behavior")
@@ -23,7 +23,7 @@ public class ResolverBehaviorTest {
         assertEquals(2, elements.size());
         assertEquals("a", elements.get(0).getTagName());
         assertEquals("b", elements.get(1).getTagName());
-        assertEquals(Character.valueOf(GramerSymbol.TEXT.getSymbol()), elements.get(0).getSign());
+        assertEquals(Character.valueOf(GrammarSymbol.TEXT.getSymbol()), elements.get(0).getSign());
     }
 
     @Test
@@ -31,15 +31,15 @@ public class ResolverBehaviorTest {
         List<ElementTemplate> elements = RenderAsserts.elementTemplates(RenderAsserts.paragraph("{{@img}}{{#grid}}"));
 
         assertEquals(2, elements.size());
-        assertEquals(Character.valueOf(GramerSymbol.IMAGE.getSymbol()), elements.get(0).getSign());
+        assertEquals(Character.valueOf(GrammarSymbol.IMAGE.getSymbol()), elements.get(0).getSign());
         assertEquals("img", elements.get(0).getTagName());
-        assertEquals(Character.valueOf(GramerSymbol.TABLE.getSymbol()), elements.get(1).getSign());
+        assertEquals(Character.valueOf(GrammarSymbol.TABLE.getSymbol()), elements.get(1).getSign());
         assertEquals("grid", elements.get(1).getTagName());
     }
 
     @Test
     public void customDelimitersAreParsedAndRendered() throws Exception {
-        Configure configure = Configure.builder().buildGramer("${", "}").build();
+        Configure configure = Configure.builder().buildGrammar("${", "}").build();
         XWPFDocument template = RenderAsserts.paragraph("${name}");
 
         List<ElementTemplate> elements = RenderAsserts.elementTemplates(template, configure);

@@ -42,18 +42,18 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     @Override
     public RunTemplate createRunTemplate(Configure config, String tag, XWPFRun run) {
         RunTemplate template = new RunTemplate();
-        Set<Character> gramerChars = config.getGramerChars();
+        Set<Character> grammarChars = config.getGrammarChars();
         Character symbol = Character.valueOf(EMPTY_CHAR);
         if (!"".equals(tag)) {
             char fisrtChar = tag.charAt(0);
-            for (Character chara : gramerChars) {
+            for (Character chara : grammarChars) {
                 if (chara.equals(fisrtChar)) {
                     symbol = Character.valueOf(fisrtChar);
                     break;
                 }
             }
         }
-        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setSource(config.getGrammarPrefix() + tag + config.getGrammarSuffix());
         template.setTagName(symbol.equals(Character.valueOf(EMPTY_CHAR)) ? tag : tag.substring(1));
         template.setSign(symbol);
         template.setRun(run);
@@ -63,7 +63,7 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     @Override
     public PictureTemplate createPicureTemplate(Configure config, String tag, XWPFPicture pic) {
         PictureTemplate template = new PictureTemplate();
-        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setSource(config.getGrammarPrefix() + tag + config.getGrammarSuffix());
         template.setTagName(tag);
         template.setSign(EMPTY_CHAR);
         template.setPicture(pic);
@@ -73,7 +73,7 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     @Override
     public ChartTemplate createChartTemplate(Configure config, String tag, XWPFChart chart, XWPFRun run) {
         ChartTemplate template = new ChartTemplate(tag, chart, run);
-        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setSource(config.getGrammarPrefix() + tag + config.getGrammarSuffix());
         template.setSign(EMPTY_CHAR);
         return template;
     }
@@ -81,7 +81,7 @@ public class DefaultElementTemplateFactory implements ElementTemplateFactory {
     @Override
     public PictImageTemplate createPictImageTemplate(Configure config, String tag, CTPictWrapper pic, XWPFRun run) {
         PictImageTemplate template = new PictImageTemplate();
-        template.setSource(config.getGramerPrefix() + tag + config.getGramerSuffix());
+        template.setSource(config.getGrammarPrefix() + tag + config.getGrammarSuffix());
         template.setTagName(tag);
         template.setSign(EMPTY_CHAR);
         template.setPicture(pic);

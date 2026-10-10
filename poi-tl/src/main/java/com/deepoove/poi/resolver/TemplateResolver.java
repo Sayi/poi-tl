@@ -359,7 +359,7 @@ public class TemplateResolver extends AbstractResolver {
         ElementTemplate elementTemplate = null;
         if (templatePattern.matcher(text).matches()) {
             String shortClassName = ClassUtils.getShortClassName(obj.getClass());
-            String tag = gramerPattern.matcher(text).replaceAll("").trim();
+            String tag = grammarPattern.matcher(text).replaceAll("").trim();
             if (StringUtils.isBlank(tag)) return null;
             if (obj.getClass() == XWPFRun.class) {
                 elementTemplate = (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);

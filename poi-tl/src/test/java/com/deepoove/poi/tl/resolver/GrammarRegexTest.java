@@ -15,12 +15,12 @@ import com.deepoove.poi.resolver.TemplateResolver;
 import com.deepoove.poi.util.RegexUtils;
 
 @DisplayName("Tag Regex test case")
-public class GramerRegexTest {
+public class GrammarRegexTest {
 
     @Test
     public void testDefaultRegex() {
         // 默认tag 正则：Chinese, letters, numbers and underscores
-        String defaultRegex = Configure.builder().build().getGrammerRegex();
+        String defaultRegex = Configure.builder().build().getGrammarRegex();
         Pattern pattern = Pattern.compile(defaultRegex);
         testMatcherTextTrue(pattern);
         testMatcherTextFalse(pattern);
@@ -131,7 +131,7 @@ public class GramerRegexTest {
     @Test
     public void testSpELWithCustomPrefixAndSuffixMatcher() {
         // Spring EL使用的正则，包含前后缀语法
-        Configure config = Configure.builder().buildGramer("${", "}").useSpringEL().build();
+        Configure config = Configure.builder().buildGrammar("${", "}").useSpringEL().build();
         TemplateResolver resolver = new TemplateResolver(config);
         Pattern pattern = resolver.getTemplatePattern();
 

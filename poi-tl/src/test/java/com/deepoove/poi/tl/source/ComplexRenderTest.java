@@ -105,8 +105,8 @@ public class ComplexRenderTest {
                         new TextRenderData("d0d0d0", "过户时间"), new TextRenderData("d0d0d0", "过户方式")).create();
                 put("table",
                         Tables.of(headers,
-                                Rows.of("1", "add new # gramer", "3").create(),
-                                        Rows.of("2", "add new # gramer", "3").create()).create());
+                                Rows.of("1", "add new # grammar", "3").create(),
+                                        Rows.of("2", "add new # grammar", "3").create()).create());
 
             }
         };

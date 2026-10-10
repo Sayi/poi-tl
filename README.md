@@ -147,7 +147,7 @@ poi-tl supports rich configurations and full **Spring Expression Language (Sprin
 ```java
 Configure config = Configure.builder()
     .useSpringEL() // Enable SpringEL expressions
-    // .buildGramer("${", "}") // Optional: customize delimiters
+    // .buildGrammar("${", "}") // Optional: customize delimiters
     .build();
 
 XWPFTemplate.compile("template.docx", config).render(data).writeToFile("out.docx");

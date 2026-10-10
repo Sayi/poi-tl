@@ -16,66 +16,28 @@
 package com.deepoove.poi.config;
 
 /**
- * Built-in template syntax
+ * Built-in template syntax.
  * 
  * @author Sayi
+ * @deprecated misspelled, use {@link GrammarSymbol} instead.
  */
-public enum GramerSymbol {
+@Deprecated
+public interface GramerSymbol {
 
-    /**
-     * Picture in the template
-     */
-    IMAGE('@'),
+    GrammarSymbol IMAGE = GrammarSymbol.IMAGE;
 
-    /**
-     * Text in the template
-     */
-    TEXT('\0'),
+    GrammarSymbol TEXT = GrammarSymbol.TEXT;
 
-    /**
-     * Text in the template, Text alias, compatible with #this, and not conflicting
-     * with existing table writing: {{=#this}}
-     */
-    TEXT_ALIAS('='),
+    GrammarSymbol TEXT_ALIAS = GrammarSymbol.TEXT_ALIAS;
 
-    /**
-     * Table in the template
-     */
-    TABLE('#'),
+    GrammarSymbol TABLE = GrammarSymbol.TABLE;
 
-    /**
-     * Numbering in the template
-     */
-    NUMBERING('*'),
+    GrammarSymbol NUMBERING = GrammarSymbol.NUMBERING;
 
-    /**
-     * Nested/Merge/Include/Reference in the template
-     */
-    DOCX_TEMPLATE('+'),
+    GrammarSymbol DOCX_TEMPLATE = GrammarSymbol.DOCX_TEMPLATE;
 
-    /**
-     * Block(if & for each) start
-     */
-    ITERABLE_START('?'),
+    GrammarSymbol ITERABLE_START = GrammarSymbol.ITERABLE_START;
 
-    /**
-     * Block end
-     */
-    BLOCK_END('/');
-
-    private char symbol;
-
-    private GramerSymbol(char symbol) {
-        this.symbol = symbol;
-    }
-
-    public char getSymbol() {
-        return this.symbol;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(this.symbol);
-    }
+    GrammarSymbol BLOCK_END = GrammarSymbol.BLOCK_END;
 
 }
