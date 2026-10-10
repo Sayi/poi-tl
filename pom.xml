@@ -37,6 +37,7 @@
 		<module>poi-tl</module>
 		<module>plugin/poi-tl-plugin-highlight</module>
 		<module>plugin/poi-tl-plugin-markdown</module>
+		<module>plugin/poi-tl-plugin-barcode</module>
 		<module>support/poi-tl-jsonmodel-support</module>
 		<module>support/poi-tl-cli</module>
 	</modules>
@@ -63,6 +64,7 @@
 		<slf4j-simple.version>1.7.7</slf4j-simple.version>
 		<codehighlight.version>1.0.3</codehighlight.version>
 		<commonmark.version>0.17.1</commonmark.version>
+		<zxing.version>3.5.2</zxing.version>
 		<jcommander.version>1.82</jcommander.version>
 		<log4j-slf4j-impl.version>2.17.2</log4j-slf4j-impl.version>
 
@@ -106,6 +108,11 @@
 			<dependency>
 				<groupId>com.deepoove</groupId>
 				<artifactId>poi-tl-plugin-markdown</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.deepoove</groupId>
+				<artifactId>poi-tl-plugin-barcode</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -205,6 +212,11 @@
 				<groupId>com.deepoove</groupId>
 				<artifactId>codehighlight</artifactId>
 				<version>${codehighlight.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>${zxing.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.commonmark</groupId>
