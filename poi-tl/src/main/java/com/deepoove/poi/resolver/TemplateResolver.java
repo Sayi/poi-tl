@@ -360,6 +360,7 @@ public class TemplateResolver extends AbstractResolver {
         if (templatePattern.matcher(text).matches()) {
             String shortClassName = ClassUtils.getShortClassName(obj.getClass());
             String tag = gramerPattern.matcher(text).replaceAll("").trim();
+            if (StringUtils.isBlank(tag)) return null;
             if (obj.getClass() == XWPFRun.class) {
                 elementTemplate = (RunTemplate) elementTemplateFactory.createRunTemplate(config, tag, (XWPFRun) obj);
             } else if (obj.getClass() == XWPFPicture.class) {

@@ -59,6 +59,9 @@ public class SpELRenderDataCompute implements RenderDataCompute {
 
     @Override
     public Object compute(String el) {
+        if (null == el || el.trim().isEmpty()) {
+            return null;
+        }
         try {
             if (null != envContext && !el.contains("#this")) {
                 try {
