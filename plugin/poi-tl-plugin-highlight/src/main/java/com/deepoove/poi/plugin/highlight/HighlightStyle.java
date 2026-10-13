@@ -15,13 +15,17 @@
  */
 package com.deepoove.poi.plugin.highlight;
 
+import java.io.Serializable;
+
 /**
  * highlight data style
  * 
  * @author Sayi
  *
  */
-public class HighlightStyle {
+public class HighlightStyle implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private boolean showLine;
     private String theme;
